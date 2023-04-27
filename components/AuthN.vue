@@ -1,9 +1,8 @@
 <template>
     <div>
-        <a v-if="!authStore.loggedIn" href="" @click.prevent="signInAction">Sign In</a>
+        <v-btn @click.stop="signInAction" v-if="!authStore.loggedIn">Sign In</v-btn>
         <span v-if="authStore.loggedIn">
-            Welcome {{ authStore.currentUser.name }} <br />
-            <a href="" @click.prevent="signOutAction">Sign Out</a>
+            <v-btn @click.stop="signOutAction">Sign Out</v-btn>
         </span>
     </div>
 </template>

@@ -2,15 +2,16 @@
     <div>
         <header>
             <nav>
-                <NuxtLink to="/">Home link</NuxtLink>
-                <ul>
-                    <li>
-                        <NuxtLink to="/">Link1</NuxtLink>
-                        <NuxtLink to="/">Link2</NuxtLink>
-                    </li>
-                </ul>
+                <v-toolbar flat app>
+                    <v-toolbar-title>
+                        <span class="font-weight-light">ClickUp Integration App</span>
+                    </v-toolbar-title>
+                    <v-spacer></v-spacer>
+                    <!-- equivalent to <NuxtLink to="/about">Link1</NuxtLink> -->
+                    <v-btn to="/newWorkOrder" nuxt>Add new work order</v-btn>
+                    <AuthN></AuthN>
+                </v-toolbar>
             </nav>
-            <AuthN></AuthN>
         </header>
         <div>
             <slot />
