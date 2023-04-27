@@ -14,7 +14,6 @@
     const { $msal } = useNuxtApp()
     
     async function signInAction() {
-        console.log("sign in clicked");
         await signIn()
     }
 
