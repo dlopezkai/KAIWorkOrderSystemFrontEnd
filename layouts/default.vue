@@ -4,10 +4,9 @@
             <nav>
                 <v-toolbar flat app>
                     <v-toolbar-title>
-                        <span class="font-weight-light">ClickUp Integration App</span>
+                        <NuxtLink class="text-decoration-none black--text" to="/">ClickUp Integration App</NuxtLink>
                     </v-toolbar-title>
                     <v-spacer></v-spacer>
-                    <!-- equivalent to <NuxtLink to="/about">Link1</NuxtLink> -->
                     <v-btn to="/newWorkOrder" nuxt>Add new work order</v-btn>
                     <AuthN></AuthN>
                 </v-toolbar>
@@ -20,7 +19,10 @@
 </template>
 
 <style scoped>
+    a {
+        color: #000000;
+    }
     .router-link-exact-active {
-        color: #12b488;
+        color: #000000;
     }
 </style>
