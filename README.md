@@ -40,3 +40,19 @@ npm run preview
 ```
 
 Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+
+## Current issues
+
+This app is using Vuetify with Nuxt3. Currently, there is a known issue where VS Code and browser dev tools console will spit out errors similar to: 
+
+VSCode:
+```bash
+Sourcemap for "plugin-vuetify:components/VPagination/VPagination.sass" points to missing source files  
+```
+
+Browser console:
+```bash
+GET http://localhost:3000/_nuxt/%EF%BF%BDplugin-vuetify:components/VPagination/VPagination.sass net::ERR_ABORTED 404 (Page not found: /_nuxt/%EF%BF%BDplugin-vuetify:components/VPagination/VPagination.sass)
+```
+
+These errors do not have an impact on functionality of application.
