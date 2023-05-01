@@ -60,86 +60,136 @@
 
 
 <script>
-  const desserts = [
+  const workOrders = [
     {
-      name: 'Frozen Yogurt',
-      calories: 159,
-      fat: 6.0,
-      carbs: 24,
-      protein: 4.0,
-      iron: '1',
+      wo_name: 'Lorem ipsum dolor sit amet',
+      wo_number: 1,
+      contract_name: '',
+      contract_number: '',
+      task_number: 1000,
+      project_manager: 'An Hori',
+      requester: 'Some requester',
+      type: 'web',
+      status: 'In Progress',
+      assigned_to: 'Tomo Shinohara',
+      due_date: '',
     },
     {
-      name: 'Jelly bean',
-      calories: 375,
-      fat: 0.0,
-      carbs: 94,
-      protein: 0.0,
-      iron: '0',
+      wo_name: 'consectetur adipiscing elit',
+      wo_number: 2,
+      contract_name: '',
+      contract_number: '',
+      task_number: 2000,
+      project_manager: 'Tony Shiflett',
+      requester: 'Some requester',
+      type: 'web',
+      status: 'In Progress',
+      assigned_to: 'Star Chin',
+      due_date: '',
     },
     {
-      name: 'KitKat',
-      calories: 518,
-      fat: 26.0,
-      carbs: 65,
-      protein: 7,
-      iron: '6',
+      wo_name: 'sed do eiusmod tempor incididunt',
+      wo_number: 3,
+      contract_name: '',
+      contract_number: '',
+      task_number: 3000,
+      project_manager: 'William Larocco',
+      requester: 'Some requester',
+      type: 'web',
+      status: 'In Progress',
+      assigned_to: 'James Bailey',
+      due_date: '',
     },
     {
-      name: 'Eclair',
-      calories: 262,
-      fat: 16.0,
-      carbs: 23,
-      protein: 6.0,
-      iron: '7',
+      wo_name: 'ut labore et dolore magna aliqua',
+      wo_number: 4,
+      contract_name: '',
+      contract_number: '',
+      task_number: 65465,
+      project_manager: 'An Hori',
+      requester: 'Some requester',
+      type: 'web',
+      status: 'Accepted',
+      assigned_to: 'Ola Johnson',
+      due_date: '',
     },
     {
-      name: 'Gingerbread',
-      calories: 356,
-      fat: 16.0,
-      carbs: 49,
-      protein: 3.9,
-      iron: '16',
+      wo_name: 'Ut enim ad minim veniam',
+      wo_number: 5,
+      contract_name: '',
+      contract_number: '',
+      task_number: 6844,
+      project_manager: 'Tony Shiflett',
+      requester: 'Some requester',
+      type: 'eBlast',
+      status: 'Accepted',
+      assigned_to: 'Matthew Myers',
+      due_date: '',
     },
     {
-      name: 'Ice cream sandwich',
-      calories: 237,
-      fat: 9.0,
-      carbs: 37,
-      protein: 4.3,
-      iron: '1',
+      wo_name: 'quis nostrud exercitation ullamco',
+      wo_number: 6,
+      contract_name: '',
+      contract_number: '',
+      task_number: 985465,
+      project_manager: 'William Larocco',
+      requester: 'Some requester',
+      type: 'eBlast',
+      status: 'Accepted',
+      assigned_to: 'David Corlett',
+      due_date: '',
     },
     {
-      name: 'Lollipop',
-      calories: 392,
-      fat: 0.2,
-      carbs: 98,
-      protein: 0,
-      iron: '2',
+      wo_name: 'laboris nisi ut aliquip ex ea commodo consequat',
+      wo_number: 7,
+      contract_name: '',
+      contract_number: '',
+      task_number: 66261,
+      project_manager: 'An Hori',
+      requester: 'Some requester',
+      type: 'eBlast',
+      status: 'Accepted',
+      assigned_to: 'David Corlett',
+      due_date: '',
     },
     {
-      name: 'Cupcake',
-      calories: 305,
-      fat: 3.7,
-      carbs: 67,
-      protein: 4.3,
-      iron: '8',
+      wo_name: 'Duis aute irure dolor in reprehenderit',
+      wo_number: 8,
+      contract_name: '',
+      contract_number: '',
+      task_number: 9685,
+      project_manager: 'Tony Shiflett',
+      requester: 'Some requester',
+      type: 'eBlast',
+      status: 'Returned',
+      assigned_to: 'Gordon Waltman',
+      due_date: '',
     },
     {
-      name: 'Honeycomb',
-      calories: 408,
-      fat: 3.2,
-      carbs: 87,
-      protein: 6.5,
-      iron: '45',
+      wo_name: 'in voluptate velit esse cillum dolore',
+      wo_number: 9,
+      contract_name: '',
+      contract_number: '',
+      task_number: 4584,
+      project_manager: 'William Larocco',
+      requester: 'Some requester',
+      type: 'eBlast',
+      status: 'Returned',
+      assigned_to: 'Belinda Reinhardt',
+      due_date: '',
     },
     {
-      name: 'Donut',
-      calories: 452,
-      fat: 25.0,
-      carbs: 51,
-      protein: 4.9,
-      iron: '22',
+      wo_name: 'eu fugiat nulla pariatur',
+      wo_number: 10,
+      contract_name: '',
+      contract_number: '',
+      task_number: 21545,
+      project_manager: 'An Hori',
+      requester: 'Some requester',
+      type: 'qc request',
+      status: 'Returned',
+      assigned_to: 'James Vanmeter',
+      due_date: '',
     },
   ]
 
@@ -149,7 +199,7 @@
         setTimeout(() => {
           const start = (page - 1) * itemsPerPage
           const end = start + itemsPerPage
-          const items = desserts.slice()
+          const items = workOrders.slice()
 
           if (sortBy.length) {
             const sortKey = sortBy[0].key
@@ -176,17 +226,16 @@
       itemsPerPage: 5,
       headers: [
         {
-          title: 'Dessert (100g serving)',
+          title: 'Number',
           align: 'start',
           sortable: false,
-          key: 'name',
+          key: 'wo_number',
         },
-        { title: 'Calories', key: 'calories', align: 'end' },
-        { title: 'Fat (g)', key: 'fat', align: 'end' },
-        { title: 'Carbs (g)', key: 'carbs', align: 'end' },
-        { title: 'Protein (g)', key: 'protein', align: 'end' },
-        { title: 'Iron (%)', key: 'iron', align: 'end' },
-        { title: 'Actions', key: 'actions', sortable: false },
+        { title: 'Work order', key: 'wo_name', align: 'start' },
+        { title: 'Assignee', key: 'assigned_to', align: 'start' },
+        { title: 'Type', key: 'type', align: 'start' },
+        { title: 'Status', key: 'status', align: 'start' },
+        { title: 'Actions', key: 'actions', align: 'end', sortable: false },
       ],
       serverItems: [],
       loading: true,
@@ -203,19 +252,19 @@
       },
 
       editItem (item) {
-        // this.editedIndex = this.desserts.indexOf(item)
+        // this.editedIndex = this.workOrders.indexOf(item)
         // this.editedItem = Object.assign({}, item)
         this.dialog = true
       },
 
       deleteItem (item) {
-        // this.editedIndex = this.desserts.indexOf(item)
+        // this.editedIndex = this.workOrders.indexOf(item)
         // this.editedItem = Object.assign({}, item)
         this.dialogDelete = true
       },
 
       deleteItemConfirm () {
-        this.desserts.splice(this.editedIndex, 1)
+        this.workOrders.splice(this.editedIndex, 1)
         this.closeDelete()
       },
 
@@ -237,9 +286,9 @@
 
       save () {
         if (this.editedIndex > -1) {
-          Object.assign(this.desserts[this.editedIndex], this.editedItem)
+          Object.assign(this.workOrders[this.editedIndex], this.editedItem)
         } else {
-          this.desserts.push(this.editedItem)
+          this.workOrders.push(this.editedItem)
         }
         this.close()
       },
