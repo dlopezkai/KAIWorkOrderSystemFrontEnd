@@ -2,16 +2,18 @@
   <v-data-table-server v-model:items-per-page="itemsPerPage" :headers="headers" :items-length="totalItems"
     :items="serverItems" :loading="loading" class="elevation-1" item-value="name" @update:options="loadItems">
     <template v-slot:top>
-      <!-- <v-toolbar
+      <v-toolbar
         flat
-      > -->
+      >
 
       <v-dialog v-model="dialog" max-width="800px">
-        <!-- <template v-slot:activator="{ props }">
+        <template v-slot:activator="{ props }">
+          <v-col class="text-center">
           <v-btn color="primary" dark class="mb-2" v-bind="props">
-            New Item
+            Add New Work Order
           </v-btn>
-        </template> -->
+        </v-col>
+        </template>
         <v-card>
           <v-card-title>
             <span class="text-h5">{{ formTitle }}</span>
@@ -136,7 +138,7 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
-      <!-- </v-toolbar> -->
+      </v-toolbar>
     </template>
 
     <template v-slot:item.actions="{ item }">

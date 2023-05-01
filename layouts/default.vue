@@ -2,14 +2,14 @@
     <v-card v-if="authStore.loggedIn">
       <v-layout>
         <v-app-bar title="ClickUp Integration App">
-            <v-btn to="/newWorkOrder" nuxt>Add new work order</v-btn>
+            <!-- <v-btn to="/newWorkOrder" nuxt>Add new work order</v-btn> -->
             <AuthN></AuthN>
         </v-app-bar>
         
         <v-navigation-drawer>
           <v-list>
-            <v-list-item to="/" title="Home"></v-list-item>
-            <v-list-item to="/newWorkOrder" title="New Work Order"></v-list-item>
+            <v-list-item to="" title="My work orders"></v-list-item>
+            <v-list-item to="" title="All work orders"></v-list-item>
           </v-list>
         </v-navigation-drawer>
   
