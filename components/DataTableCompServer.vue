@@ -8,8 +8,56 @@
     class="elevation-1"
     item-value="name"
     @update:options="loadItems"
-  ></v-data-table-server>
+  >
+    <template v-slot:top>
+      <!-- <v-toolbar
+        flat
+      > -->
+
+      <v-dialog v-model="dialog" max-width="500px">
+        <v-card>
+          <v-card-title class="text-h5">Edit record</v-card-title>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="blue-darken-1" variant="text" @click="closeDelete">Cancel</v-btn>
+            <v-btn color="blue-darken-1" variant="text" @click="deleteItemConfirm">OK</v-btn>
+            <v-spacer></v-spacer>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+
+      <v-dialog v-model="dialogDelete" max-width="500px">
+          <v-card>
+            <v-card-title class="text-h5">Are you sure you want to delete this item?</v-card-title>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="blue-darken-1" variant="text" @click="closeDelete">Cancel</v-btn>
+              <v-btn color="blue-darken-1" variant="text" @click="deleteItemConfirm">OK</v-btn>
+              <v-spacer></v-spacer>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+      <!-- </v-toolbar> -->
+    </template>
+
+    <template v-slot:item.actions="{ item }">
+        <v-icon
+          size="small"
+          class="me-2"
+          @click="editItem(item.raw)"
+        >
+          mdi-pencil
+        </v-icon>
+        <v-icon
+          size="small"
+          @click="deleteItem(item.raw)"
+        >
+          mdi-delete
+        </v-icon>
+    </template>
+  </v-data-table-server>
 </template>
+
 
 <script>
   const desserts = [
@@ -123,6 +171,8 @@
 
   export default {
     data: () => ({
+      dialog: false,
+      dialogDelete: false,
       itemsPerPage: 5,
       headers: [
         {
@@ -136,6 +186,7 @@
         { title: 'Carbs (g)', key: 'carbs', align: 'end' },
         { title: 'Protein (g)', key: 'protein', align: 'end' },
         { title: 'Iron (%)', key: 'iron', align: 'end' },
+        { title: 'Actions', key: 'actions', sortable: false },
       ],
       serverItems: [],
       loading: true,
@@ -149,6 +200,48 @@
           this.totalItems = total
           this.loading = false
         })
+      },
+
+      editItem (item) {
+        // this.editedIndex = this.desserts.indexOf(item)
+        // this.editedItem = Object.assign({}, item)
+        this.dialog = true
+      },
+
+      deleteItem (item) {
+        // this.editedIndex = this.desserts.indexOf(item)
+        // this.editedItem = Object.assign({}, item)
+        this.dialogDelete = true
+      },
+
+      deleteItemConfirm () {
+        this.desserts.splice(this.editedIndex, 1)
+        this.closeDelete()
+      },
+
+      close () {
+        this.dialog = false
+        this.$nextTick(() => {
+          this.editedItem = Object.assign({}, this.defaultItem)
+          this.editedIndex = -1
+        })
+      },
+
+      closeDelete () {
+        this.dialogDelete = false
+        this.$nextTick(() => {
+          this.editedItem = Object.assign({}, this.defaultItem)
+          this.editedIndex = -1
+        })
+      },
+
+      save () {
+        if (this.editedIndex > -1) {
+          Object.assign(this.desserts[this.editedIndex], this.editedItem)
+        } else {
+          this.desserts.push(this.editedItem)
+        }
+        this.close()
       },
     },
   }

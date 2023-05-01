@@ -6,6 +6,7 @@
   </div>
   <div v-else class="d-flex align-center flex-column">
     <data-table-comp-server></data-table-comp-server>
+    <!-- <data-table-comp-crud></data-table-comp-crud> -->
   </div>
 </template>
 
