@@ -22,15 +22,12 @@
             <span class="text-h5">{{ formTitle }}</span>
           </v-card-title>
 
-          <!-- <v-card-text> -->
-          <v-container>
+          <!-- <v-container>
             <form @submit.prevent="submit">
               <v-row>
                 <v-col cols="12" sm="12" md="12">
                   <v-text-field v-model="text.value.value" :counter="10" :error-messages="text.errorMessage.value"
                     label="Work Order"></v-text-field>
-                  <!-- <v-text-field v-model="editedItem.wo_name" :counter="10" :error-messages="text.errorMessage.value"
-                    label="Work Order"></v-text-field> -->
                 </v-col>
               </v-row>
 
@@ -83,10 +80,9 @@
                 </v-btn>
               </v-row>
             </form>
-          </v-container>
-          <!-- </v-card-text> -->
+          </v-container> -->
 
-          <!-- <v-card-text>
+          <v-card-text>
               <v-container>
                 <v-row>
                   <v-col
@@ -222,7 +218,7 @@
               >
                 Save
               </v-btn>
-            </v-card-actions> -->
+            </v-card-actions>
         </v-card>
 
 
@@ -255,8 +251,8 @@
 
 
 <script>
-import { ref } from 'vue'
-import { useField, useForm } from 'vee-validate'
+// import { ref } from 'vue'
+// import { useField, useForm } from 'vee-validate'
 
 // fake data until back-end API is developed
 const serverItems = [
@@ -419,54 +415,55 @@ const FakeAPI = {
 }
 
 export default {
-  setup() {
-    const { handleSubmit, handleReset } = useForm({
-      validationSchema: {
-        text(value) {
-          if (value?.length >= 2) return true
+  // setup() {
+  //   const { handleSubmit, handleReset } = useForm({
+  //     validationSchema: {
+  //       text(value) {
+  //         console.log('test' + value)
+  //         if (value?.length >= 2) return true
 
-          return 'Field needs to be at least 2 characters.'
-        },
-        phone(value) {
-          if (value?.length > 9 && /[0-9-]+/.test(value)) return true
+  //         return 'Field needs to be at least 2 characters.'
+  //       },
+  //       phone(value) {
+  //         if (value?.length > 9 && /[0-9-]+/.test(value)) return true
 
-          return 'Phone number needs to be at least 9 digits.'
-        },
-        email(value) {
-          if (/^[a-z.-]+@[a-z.-]+\.[a-z]+$/i.test(value)) return true
+  //         return 'Phone number needs to be at least 9 digits.'
+  //       },
+  //       email(value) {
+  //         if (/^[a-z.-]+@[a-z.-]+\.[a-z]+$/i.test(value)) return true
 
-          return 'Must be a valid e-mail.'
-        },
-        select(value) {
-          if (value) return true
+  //         return 'Must be a valid e-mail.'
+  //       },
+  //       select(value) {
+  //         if (value) return true
 
-          return 'Select an item.'
-        },
-        checkbox(value) {
-          if (value === '1') return true
+  //         return 'Select an item.'
+  //       },
+  //       checkbox(value) {
+  //         if (value === '1') return true
 
-          return 'Must be checked.'
-        },
-      },
-    })
-    const text = useField('text')
-    const phone = useField('phone')
-    const email = useField('email')
-    const select = useField('select')
-    const checkbox = useField('checkbox')
+  //         return 'Must be checked.'
+  //       },
+  //     },
+  //   })
+  //   const text = useField('text')
+  //   const phone = useField('phone')
+  //   const email = useField('email')
+  //   const select = useField('select')
+  //   const checkbox = useField('checkbox')
 
-    const wo_statuses = ref([
-      'In Progress',
-      'Accepted',
-      'Returned',
-    ])
+  //   const wo_statuses = ref([
+  //     'In Progress',
+  //     'Accepted',
+  //     'Returned',
+  //   ])
 
-    const submit = handleSubmit(values => {
-      alert(JSON.stringify(values, null, 2))
-    })
+  //   const submit = handleSubmit(values => {
+  //     alert(JSON.stringify(values, null, 2))
+  //   })
 
-    return { text, phone, email, select, checkbox, wo_statuses, submit, handleReset }
-  },
+  //   return { text, phone, email, select, checkbox, wo_statuses, submit, handleReset }
+  // },
 
 
   data: () => ({
@@ -525,7 +522,6 @@ export default {
     },
 
     editItem(item) {
-      console.log(item)
       this.editedIndex = this.serverItems.indexOf(item)
       this.editedItem = Object.assign({}, item)
       this.dialog = true
