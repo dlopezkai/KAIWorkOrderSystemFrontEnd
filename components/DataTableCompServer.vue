@@ -42,6 +42,16 @@
                     md="4"
                   >
                     <v-text-field
+                      v-model="editedItem.wo_number"
+                      label="Work order #"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col
+                    cols="12"
+                    sm="6"
+                    md="4"
+                  >
+                    <v-text-field
                       v-model="editedItem.wo_name"
                       label="Work order"
                     ></v-text-field>
@@ -56,6 +66,7 @@
                       label="Assignee"
                     ></v-text-field>
                   </v-col>
+
                   <v-col
                     cols="12"
                     sm="6"
@@ -81,10 +92,62 @@
                     sm="6"
                     md="4"
                   >
-                    <!-- <v-text-field
-                      v-model="editedItem.protein"
-                      label="some field"
-                    ></v-text-field> -->
+                    <v-text-field
+                      v-model="editedItem.project_manager"
+                      label="Project Manager"
+                    ></v-text-field>
+                  </v-col>
+
+                  <v-col
+                    cols="12"
+                    sm="6"
+                    md="4"
+                  >
+                    <v-text-field
+                      v-model="editedItem.contract_name"
+                      label="Contract Name"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col
+                    cols="12"
+                    sm="6"
+                    md="4"
+                  >
+                    <v-text-field
+                      v-model="editedItem.contract_number"
+                      label="Contract Number"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col
+                    cols="12"
+                    sm="6"
+                    md="4"
+                  >
+                    <v-text-field
+                      v-model="editedItem.due_date"
+                      label="Due date"
+                    ></v-text-field>
+                  </v-col>
+
+                  <v-col
+                    cols="12"
+                    sm="6"
+                    md="4"
+                  >
+                    <v-text-field
+                      v-model="editedItem.requester"
+                      label="Requested by"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col
+                    cols="12"
+                    sm="6"
+                    md="4"
+                  >
+                    <v-text-field
+                      v-model="editedItem.task_number"
+                      label="Task number"
+                    ></v-text-field>
                   </v-col>
                 </v-row>
               </v-container>
@@ -361,6 +424,7 @@
       },
 
       editItem (item) {
+        console.log(item)
         this.editedIndex = this.serverItems.indexOf(item)
         this.editedItem = Object.assign({}, item)
         this.dialog = true
