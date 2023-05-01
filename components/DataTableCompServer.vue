@@ -27,8 +27,10 @@
             <form @submit.prevent="submit">
               <v-row>
                 <v-col cols="12" sm="12" md="12">
-                  <v-text-field v-model="name.value.value" :counter="10" :error-messages="name.errorMessage.value"
+                  <v-text-field v-model="text.value.value" :counter="10" :error-messages="text.errorMessage.value"
                     label="Work Order"></v-text-field>
+                  <!-- <v-text-field v-model="editedItem.wo_name" :counter="10" :error-messages="text.errorMessage.value"
+                    label="Work Order"></v-text-field> -->
                 </v-col>
               </v-row>
 
@@ -38,7 +40,7 @@
                     label="Work Order Type"></v-text-field>
                 </v-col>
                 <v-col cols="12" sm="6" md="6">
-                  <v-select v-model="select.value.value" :items="items" :error-messages="select.errorMessage.value"
+                  <v-select v-model="select.value.value" :items="wo_statuses" :error-messages="select.errorMessage.value"
                     label="Status"></v-select>
                 </v-col>
               </v-row>
@@ -54,8 +56,6 @@
                 </v-col>
               </v-row>
 
-
-
               <v-row>
                 <v-col cols="12" sm="6" md="6">
                   <v-text-field v-model="email.value.value" :error-messages="email.errorMessage.value"
@@ -70,18 +70,6 @@
                 <v-col cols="12" sm="6" md="6">
                   <v-text-field v-model="email.value.value" :error-messages="email.errorMessage.value"
                     label="Project Manager"></v-text-field>
-                </v-col>
-
-              </v-row>
-
-
-
-
-
-              <v-row>
-                <v-col cols="12">
-                  <v-checkbox v-model="checkbox.value.value" :error-messages="checkbox.errorMessage.value" value="1"
-                    label="Option" type="checkbox"></v-checkbox>
                 </v-col>
               </v-row>
 
@@ -434,10 +422,10 @@ export default {
   setup() {
     const { handleSubmit, handleReset } = useForm({
       validationSchema: {
-        name(value) {
+        text(value) {
           if (value?.length >= 2) return true
 
-          return 'Name needs to be at least 2 characters.'
+          return 'Field needs to be at least 2 characters.'
         },
         phone(value) {
           if (value?.length > 9 && /[0-9-]+/.test(value)) return true
@@ -461,24 +449,23 @@ export default {
         },
       },
     })
-    const name = useField('name')
+    const text = useField('text')
     const phone = useField('phone')
     const email = useField('email')
     const select = useField('select')
     const checkbox = useField('checkbox')
 
-    const items = ref([
-      'Item 1',
-      'Item 2',
-      'Item 3',
-      'Item 4',
+    const wo_statuses = ref([
+      'In Progress',
+      'Accepted',
+      'Returned',
     ])
 
     const submit = handleSubmit(values => {
       alert(JSON.stringify(values, null, 2))
     })
 
-    return { name, phone, email, select, checkbox, items, submit, handleReset }
+    return { text, phone, email, select, checkbox, wo_statuses, submit, handleReset }
   },
 
 
