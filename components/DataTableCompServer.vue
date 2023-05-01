@@ -80,41 +80,32 @@
           <v-card-text>
             <v-container>
               <v-row>
-                <v-col cols="12" sm="6" md="4">
-                  <v-text-field v-model="editedItem.wo_number" label="Work order #"></v-text-field>
-                </v-col>
-                <v-col cols="12" sm="6" md="4">
+                <v-col cols="12" sm="12" md="12">
                   <v-text-field v-model="editedItem.wo_name" label="Work order"></v-text-field>
                 </v-col>
-                <v-col cols="12" sm="6" md="4">
+                <v-col cols="12" sm="6" md="6">
+                  <v-select v-model="editedItem.type" label="Type" :items="types"></v-select>
+                </v-col>
+                <v-col cols="12" sm="6" md="6">
+                  <v-select v-model="editedItem.status" label="Status" :items="statuses"></v-select>
+                </v-col>
+
+                <v-col cols="12" sm="6" md="6">
                   <v-text-field v-model="editedItem.assigned_to" label="Assignee"></v-text-field>
                 </v-col>
-
-                <v-col cols="12" sm="6" md="4">
-                  <v-text-field v-model="editedItem.type" label="Type"></v-text-field>
-                </v-col>
-                <v-col cols="12" sm="6" md="4">
-                  <v-text-field v-model="editedItem.status" label="Status"></v-text-field>
-                </v-col>
-                <v-col cols="12" sm="6" md="4">
-                  <v-text-field v-model="editedItem.project_manager" label="Project Manager"></v-text-field>
-                </v-col>
-
-                <v-col cols="12" sm="6" md="4">
-                  <v-text-field v-model="editedItem.contract_name" label="Contract Name"></v-text-field>
-                </v-col>
-                <v-col cols="12" sm="6" md="4">
-                  <v-text-field v-model="editedItem.contract_number" label="Contract Number"></v-text-field>
-                </v-col>
-                <v-col cols="12" sm="6" md="4">
-                  <v-text-field v-model="editedItem.due_date" label="Due date"></v-text-field>
-                </v-col>
-
-                <v-col cols="12" sm="6" md="4">
+                <v-col cols="12" sm="6" md="6">
                   <v-text-field v-model="editedItem.requester" label="Requested by"></v-text-field>
                 </v-col>
-                <v-col cols="12" sm="6" md="4">
-                  <v-text-field v-model="editedItem.task_number" label="Task number"></v-text-field>
+
+                <v-col cols="12" sm="6" md="6">
+                  <v-text-field v-model="editedItem.contract_name" label="Contract Name"></v-text-field>
+                </v-col>
+                <v-col cols="12" sm="6" md="6">
+                  <v-text-field v-model="editedItem.contract_number" label="Contract Number"></v-text-field>
+                </v-col>
+
+                <v-col cols="12" sm="12" md="12">
+                  <v-text-field v-model="editedItem.project_manager" label="Project Manager"></v-text-field>
                 </v-col>
               </v-row>
             </v-container>
@@ -413,6 +404,19 @@ export default {
       status: '',
     },
 
+    // default statuses
+    statuses: [
+      'In Progress',
+      'Accepted',
+      'Returned',
+    ],
+
+    // default types
+    types: [
+      'web',
+      'eBlast',
+      'qc request',
+    ]
   }),
 
   computed: {
