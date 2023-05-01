@@ -6,7 +6,7 @@
         flat
       > -->
 
-      <v-dialog v-model="dialog" max-width="500px">
+      <v-dialog v-model="dialog" max-width="800px">
         <!-- <template v-slot:activator="{ props }">
             <v-btn
               color="primary"
@@ -17,13 +17,88 @@
               New Item
             </v-btn>
           </template> -->
-
         <v-card>
-            <v-card-title>
-              <span class="text-h5">{{ formTitle }}</span>
-            </v-card-title>
+          <v-card-title>
+            <span class="text-h5">{{ formTitle }}</span>
+          </v-card-title>
 
-            <v-card-text>
+          <!-- <v-card-text> -->
+          <v-container>
+            <form @submit.prevent="submit">
+              <v-row>
+                <v-col cols="12" sm="12" md="12">
+                  <v-text-field v-model="name.value.value" :counter="10" :error-messages="name.errorMessage.value"
+                    label="Work Order"></v-text-field>
+                </v-col>
+              </v-row>
+
+              <v-row>
+                <v-col cols="12" sm="6" md="6">
+                  <v-text-field v-model="email.value.value" :error-messages="email.errorMessage.value"
+                    label="Work Order Type"></v-text-field>
+                </v-col>
+                <v-col cols="12" sm="6" md="6">
+                  <v-select v-model="select.value.value" :items="items" :error-messages="select.errorMessage.value"
+                    label="Status"></v-select>
+                </v-col>
+              </v-row>
+
+              <v-row>
+                <v-col cols="12" sm="6" md="6">
+                  <v-text-field v-model="phone.value.value" :counter="7" :error-messages="phone.errorMessage.value"
+                    label="Assignee"></v-text-field>
+                </v-col>
+                <v-col cols="12" sm="6" md="6">
+                  <v-select v-model="select.value.value" :items="items" :error-messages="select.errorMessage.value"
+                    label="Requested by"></v-select>
+                </v-col>
+              </v-row>
+
+
+
+              <v-row>
+                <v-col cols="12" sm="6" md="6">
+                  <v-text-field v-model="email.value.value" :error-messages="email.errorMessage.value"
+                    label="Contract Name"></v-text-field>
+                </v-col>
+                <v-col cols="12" sm="6" md="6">
+                  <v-select v-model="select.value.value" :items="items" :error-messages="select.errorMessage.value"
+                    label="Contract Number"></v-select>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col cols="12" sm="6" md="6">
+                  <v-text-field v-model="email.value.value" :error-messages="email.errorMessage.value"
+                    label="Project Manager"></v-text-field>
+                </v-col>
+
+              </v-row>
+
+
+
+
+
+              <v-row>
+                <v-col cols="12">
+                  <v-checkbox v-model="checkbox.value.value" :error-messages="checkbox.errorMessage.value" value="1"
+                    label="Option" type="checkbox"></v-checkbox>
+                </v-col>
+              </v-row>
+
+              <v-row>
+                <v-btn class="me-4" type="submit">
+                  submit
+                </v-btn>
+
+                <v-btn @click="handleReset">
+                  clear
+                </v-btn>
+              </v-row>
+            </form>
+          </v-container>
+          <!-- </v-card-text> -->
+
+          <!-- <v-card-text>
               <v-container>
                 <v-row>
                   <v-col
@@ -159,9 +234,8 @@
               >
                 Save
               </v-btn>
-            </v-card-actions>
-          </v-card>
-
+            </v-card-actions> -->
+        </v-card>
 
 
       </v-dialog>
@@ -193,6 +267,9 @@
 
 
 <script>
+import { ref } from 'vue'
+import { useField, useForm } from 'vee-validate'
+
 // fake data until back-end API is developed
 const serverItems = [
   {
@@ -354,6 +431,57 @@ const FakeAPI = {
 }
 
 export default {
+  setup() {
+    const { handleSubmit, handleReset } = useForm({
+      validationSchema: {
+        name(value) {
+          if (value?.length >= 2) return true
+
+          return 'Name needs to be at least 2 characters.'
+        },
+        phone(value) {
+          if (value?.length > 9 && /[0-9-]+/.test(value)) return true
+
+          return 'Phone number needs to be at least 9 digits.'
+        },
+        email(value) {
+          if (/^[a-z.-]+@[a-z.-]+\.[a-z]+$/i.test(value)) return true
+
+          return 'Must be a valid e-mail.'
+        },
+        select(value) {
+          if (value) return true
+
+          return 'Select an item.'
+        },
+        checkbox(value) {
+          if (value === '1') return true
+
+          return 'Must be checked.'
+        },
+      },
+    })
+    const name = useField('name')
+    const phone = useField('phone')
+    const email = useField('email')
+    const select = useField('select')
+    const checkbox = useField('checkbox')
+
+    const items = ref([
+      'Item 1',
+      'Item 2',
+      'Item 3',
+      'Item 4',
+    ])
+
+    const submit = handleSubmit(values => {
+      alert(JSON.stringify(values, null, 2))
+    })
+
+    return { name, phone, email, select, checkbox, items, submit, handleReset }
+  },
+
+
   data: () => ({
     dialog: false,
     dialogDelete: false,
