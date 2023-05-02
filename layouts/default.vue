@@ -8,8 +8,8 @@
         
         <v-navigation-drawer>
           <v-list>
-            <v-list-item to="" title="My work orders"></v-list-item>
-            <v-list-item to="" title="All work orders"></v-list-item>
+            <v-list-item to="/newWorkOrder" nuxt title="My work orders"></v-list-item>
+            <v-list-item to="/" title="All work orders"></v-list-item>
           </v-list>
         </v-navigation-drawer>
   
