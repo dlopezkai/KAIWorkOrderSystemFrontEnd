@@ -1,6 +1,14 @@
 <template>
-    <v-data-table-server v-model:items-per-page="itemsPerPage" :headers="headers" :items-length="totalItems"
-      :items="serverItems.value" :loading="loading" class="elevation-1" item-value="name" @update:options="loadItems">
+    <v-data-table-server 
+      v-model:items-per-page="itemsPerPage" 
+      :headers="headers" 
+      :items-length="totalItems"
+      :items="serverItems.value" 
+      :loading="loading" 
+      class="elevation-1" 
+      item-value="name" 
+      @update:options="loadItems"
+    >
       <template v-slot:top>
         <v-toolbar
           flat
@@ -199,7 +207,7 @@ const defaultItem = ref([
 ])
 
 // fake data until back-end API is developed
-const serverItems = [
+  const serverItems = reactive([
     {
         wo_name: 'Lorem ipsum dolor sit amet',
         wo_number: 1,
@@ -369,7 +377,7 @@ const serverItems = [
         assigned_to: 'James Vanmeter',
         due_date: '',
     },
-]
+])
 
 const FakeAPI = {
     async fetch({ page, itemsPerPage, sortBy }) {
