@@ -1,6 +1,6 @@
 <template>
     <v-data-table-server v-model:items-per-page="itemsPerPage" :headers="headers" :items-length="totalItems"
-      :items="serverItems" :loading="loading" class="elevation-1" item-value="name" @update:options="loadItems">
+      :items="serverItems.value" :loading="loading" class="elevation-1" item-value="name" @update:options="loadItems">
       <template v-slot:top>
         <v-toolbar
           flat
@@ -320,6 +320,45 @@ const serverItems = [
     {
         wo_name: 'eu fugiat nulla pariatur',
         wo_number: 10,
+        contract_name: '',
+        contract_number: '',
+        task_number: 21545,
+        project_manager: 'An Hori',
+        requester: 'Some requester',
+        type: 'qc request',
+        status: 'Returned',
+        assigned_to: 'James Vanmeter',
+        due_date: '',
+    },
+    {
+        wo_name: 'eu fugiat nulla pariatur',
+        wo_number: 11,
+        contract_name: '',
+        contract_number: '',
+        task_number: 21545,
+        project_manager: 'An Hori',
+        requester: 'Some requester',
+        type: 'qc request',
+        status: 'Returned',
+        assigned_to: 'James Vanmeter',
+        due_date: '',
+    },
+    {
+        wo_name: 'eu fugiat nulla pariatur',
+        wo_number: 12,
+        contract_name: '',
+        contract_number: '',
+        task_number: 21545,
+        project_manager: 'An Hori',
+        requester: 'Some requester',
+        type: 'qc request',
+        status: 'Returned',
+        assigned_to: 'James Vanmeter',
+        due_date: '',
+    },
+    {
+        wo_name: 'eu fugiat nulla pariatur',
+        wo_number: 13,
         contract_name: '',
         contract_number: '',
         task_number: 21545,
