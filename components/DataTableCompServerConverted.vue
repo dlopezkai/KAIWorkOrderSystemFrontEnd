@@ -340,19 +340,21 @@ const FakeAPI = {
 }
 
 // check if API will provide these
+// if API provides integer-based values, we will need to map v-data-table to render properly
 const statuses = [
   { title: '-- Select --', value: '' },
-  { title: 'In Progress', value: 1 },
-  { title: 'Accepted', value: 2 },
-  { title: 'Returned', value: 3 },
+  { title: 'In Progress', value: 'In Progress' },
+  { title: 'Accepted', value: 'Accepted' },
+  { title: 'Returned', value: 'Returned' },
 ]
 
 // check if API will provide these
+// if API provides integer-based values, we will need to map v-data-table to render properly
 const types = [
   { title: '-- Select --', value: '' },
-  { title: 'web', value: 1 },
-  { title: 'eBlast', value: 2 },
-  { title: 'qc request', value: 3 },
+  { title: 'web', value: 'web' },
+  { title: 'eBlast', value: 'eBlast' },
+  { title: 'qc request', value: 'qc request' },
 ]
 
 // computed value for form title
@@ -365,7 +367,7 @@ const rules =
 {
   required: v => !!v || 'Field is required',
   length: v => v.length >= 3 || 'Minimum length is 3 characters',
-  select: v => v > 0 || 'Select a valid option',
+  select: v => !!v || 'Select a valid option',
 }
 
 const form = ref(null)
