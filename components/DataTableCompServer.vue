@@ -86,10 +86,7 @@
               </v-form>
               <!-- </v-container> -->
             </v-card-text>
-
           </v-card>
-
-
         </v-dialog>
 
         <!-- <v-dialog v-model="dialogDelete" max-width="500px">
