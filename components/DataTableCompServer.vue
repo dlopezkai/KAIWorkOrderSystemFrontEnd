@@ -1,17 +1,39 @@
 <template>
+  <v-navigation-drawer class="mt-2">
+    <v-btn color="blue-darken-1" variant="text" @click="myWorkOrders">
+      <v-icon class="mr-2">
+        mdi-account-box
+      </v-icon>
+      My work orders
+    </v-btn>
+    <v-btn color="blue-darken-1" variant="text" @click="allWorkOrders">
+      <v-icon class="mr-2">
+        mdi-account-box-multiple
+      </v-icon>
+      All work orders
+    </v-btn>
+    <v-btn color="blue-darken-1" variant="text" @click="editItem(item)">
+      <v-icon class="mr-2">
+        mdi-form-select
+      </v-icon>
+      Add New Work Order
+    </v-btn>
+  </v-navigation-drawer>
+
+
   <v-data-table-server v-model:items-per-page="itemsPerPage" :headers="headers" :items-length="totalItems"
     :items="serverItems.value" :loading="loading" class="elevation-1" item-value="name" @update:options="loadItems">
     <template v-slot:top>
-      <v-toolbar flat>
+      <!-- <v-toolbar flat> -->
 
         <v-dialog v-model="dialog" max-width="800px">
-          <template v-slot:activator="{ props }">
+          <!-- <template v-slot:activator="{ props }">
             <v-col class="text-center">
               <v-btn color="primary" dark class="mb-2" v-bind="props">
                 Add New Work Order
               </v-btn>
             </v-col>
-          </template>
+          </template> -->
           <v-card>
             <v-card-title>
               <span class="text-h5">{{ formTitle }}</span>
@@ -19,7 +41,7 @@
 
             <v-card-text>
               <!-- <v-container> -->
-              <v-form ref="form">
+              <v-form ref="form" @submit.prevent="submit">
                 <v-row>
                   <v-col cols="12" sm="12" md="12">
                     <v-text-field v-model="editedItem.wo_name" label="Work order"
@@ -30,8 +52,8 @@
                       :rules="[rules.select]"></v-select>
                   </v-col>
                   <v-col cols="12" sm="6" md="6">
-                    <v-select v-model="editedItem.status" label="Status" :items="statuses" item-title="title" item-value="value"
-                      :rules="[rules.select]"></v-select>
+                    <v-select v-model="editedItem.status" label="Status" :items="statuses" item-title="title"
+                      item-value="value" :rules="[rules.select]"></v-select>
                   </v-col>
 
                   <v-col cols="12" sm="6" md="6">
@@ -81,7 +103,7 @@
             </v-card-actions>
           </v-card>
         </v-dialog> -->
-      </v-toolbar>
+      <!-- </v-toolbar> -->
     </template>
 
     <template v-slot:item.actions="{ item }">
@@ -431,5 +453,13 @@ function save() {
 //         editedIndex.value = -1
 //     })
 // }
+
+function myWorkOrders() {
+  alert("This will display logged-in user's work orders")
+}
+
+function allWorkOrders() {
+  alert("This will display all work orders")
+}
 
 </script>
