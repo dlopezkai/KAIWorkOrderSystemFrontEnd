@@ -2,7 +2,7 @@
     <div>
         <v-btn @click.stop="signInAction" v-if="!authStore.loggedIn">Sign In</v-btn>
         <span v-if="authStore.loggedIn">
-            <v-btn @click.stop="signOutAction">Sign Out</v-btn>
+            <v-btn prepend-icon="mdi-logout-variant" @click.stop="signOutAction">Sign Out</v-btn>
         </span>
     </div>
 </template>
