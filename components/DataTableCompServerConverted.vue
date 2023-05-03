@@ -19,7 +19,7 @@
 
             <v-card-text>
               <!-- <v-container> -->
-              <v-form>
+              <v-form ref="form">
                 <v-row>
                   <v-col cols="12" sm="12" md="12">
                     <v-text-field v-model="editedItem.wo_name" label="Work order"
@@ -367,9 +367,16 @@ const rules =
   select: v => console.log(v),
 }
 
+const form = ref(null)
+
 // form submit process
-function submit() {
-  alert(JSON.stringify(editedItem.value, null, 2))
+async function submit() {
+  const { valid } = await form.value.validate()
+  if (valid) {
+    alert(JSON.stringify(editedItem.value, null, 2))
+  } else {
+    alert ("fix errors")
+  }
 }
 
 function loadItems({ page, itemsPerPage, sortBy }) {
