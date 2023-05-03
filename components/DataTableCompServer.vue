@@ -40,7 +40,6 @@
             </v-card-title>
 
             <v-card-text>
-              <!-- <v-container> -->
               <v-form ref="form" @submit.prevent="submit">
                 <v-row>
                   <v-col cols="12" sm="12" md="12">
@@ -84,7 +83,6 @@
                   </v-col>
                 </v-row>
               </v-form>
-              <!-- </v-container> -->
             </v-card-text>
           </v-card>
         </v-dialog>
