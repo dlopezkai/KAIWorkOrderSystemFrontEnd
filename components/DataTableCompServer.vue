@@ -131,8 +131,8 @@ const totalItems = ref(0)
 const editedIndex = ref(-1)
 
 const headers = [
-  { title: 'Number', align: 'start', key: 'wo_number'},
-  { title: 'Work order', key: 'wo_name', align: 'start', sortable: false },
+  { title: 'Number', key: 'wo_number', align: 'start' },
+  { title: 'Work order', key: 'wo_name', align: 'start' },
   { title: 'Assignee', key: 'assigned_to', align: 'start', sortable: false },
   { title: 'Type', key: 'type', align: 'start', sortable: false },
   { title: 'Status', key: 'status', align: 'start', sortable: false },
