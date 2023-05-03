@@ -5,8 +5,7 @@
     <p>Please login using your Active Directory credentials</p>
   </div>
   <div v-else class="d-flex align-center flex-column">
-    <!-- <data-table-comp-server></data-table-comp-server> -->
-    <data-table-comp-server-converted></data-table-comp-server-converted>
+    <data-table-comp-server></data-table-comp-server>
   </div>
 </template>
 

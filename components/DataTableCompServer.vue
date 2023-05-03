@@ -1,143 +1,86 @@
 <template>
   <v-data-table-server v-model:items-per-page="itemsPerPage" :headers="headers" :items-length="totalItems"
-    :items="serverItems" :loading="loading" class="elevation-1" item-value="name" @update:options="loadItems">
+    :items="serverItems.value" :loading="loading" class="elevation-1" item-value="name" @update:options="loadItems">
     <template v-slot:top>
-      <v-toolbar
-        flat
-      >
+      <v-toolbar flat>
 
-      <v-dialog v-model="dialog" max-width="800px">
-        <template v-slot:activator="{ props }">
-          <v-col class="text-center">
-          <v-btn color="primary" dark class="mb-2" v-bind="props">
-            Add New Work Order
-          </v-btn>
-        </v-col>
-        </template>
-        <v-card>
-          <v-card-title>
-            <span class="text-h5">{{ formTitle }}</span>
-          </v-card-title>
+        <v-dialog v-model="dialog" max-width="800px">
+          <template v-slot:activator="{ props }">
+            <v-col class="text-center">
+              <v-btn color="primary" dark class="mb-2" v-bind="props">
+                Add New Work Order
+              </v-btn>
+            </v-col>
+          </template>
+          <v-card>
+            <v-card-title>
+              <span class="text-h5">{{ formTitle }}</span>
+            </v-card-title>
 
-          <!-- <v-container>
-            <form @submit.prevent="submit">
-              <v-row>
-                <v-col cols="12" sm="12" md="12">
-                  <v-text-field v-model="text.value.value" :counter="10" :error-messages="text.errorMessage.value"
-                    label="Work Order"></v-text-field>
-                </v-col>
-              </v-row>
+            <v-card-text>
+              <!-- <v-container> -->
+              <v-form ref="form">
+                <v-row>
+                  <v-col cols="12" sm="12" md="12">
+                    <v-text-field v-model="editedItem.wo_name" label="Work order"
+                      :rules="[rules.required, rules.length]"></v-text-field>
+                  </v-col>
+                  <v-col cols="12" sm="6" md="6">
+                    <v-select v-model="editedItem.type" label="Type" :items="types" item-title="title" item-value="value"
+                      :rules="[rules.select]"></v-select>
+                  </v-col>
+                  <v-col cols="12" sm="6" md="6">
+                    <v-select v-model="editedItem.status" label="Status" :items="statuses" item-title="title" item-value="value"
+                      :rules="[rules.select]"></v-select>
+                  </v-col>
 
-              <v-row>
-                <v-col cols="12" sm="6" md="6">
-                  <v-text-field v-model="email.value.value" :error-messages="email.errorMessage.value"
-                    label="Work Order Type"></v-text-field>
-                </v-col>
-                <v-col cols="12" sm="6" md="6">
-                  <v-select v-model="select.value.value" :items="wo_statuses" :error-messages="select.errorMessage.value"
-                    label="Status"></v-select>
-                </v-col>
-              </v-row>
+                  <v-col cols="12" sm="6" md="6">
+                    <v-text-field v-model="editedItem.assigned_to" label="Assignee"></v-text-field>
+                  </v-col>
+                  <v-col cols="12" sm="6" md="6">
+                    <v-text-field v-model="editedItem.requester" label="Requested by"></v-text-field>
+                  </v-col>
 
-              <v-row>
-                <v-col cols="12" sm="6" md="6">
-                  <v-text-field v-model="phone.value.value" :counter="7" :error-messages="phone.errorMessage.value"
-                    label="Assignee"></v-text-field>
-                </v-col>
-                <v-col cols="12" sm="6" md="6">
-                  <v-select v-model="select.value.value" :items="items" :error-messages="select.errorMessage.value"
-                    label="Requested by"></v-select>
-                </v-col>
-              </v-row>
+                  <v-col cols="12" sm="6" md="6">
+                    <v-text-field v-model="editedItem.contract_name" label="Contract Name"></v-text-field>
+                  </v-col>
+                  <v-col cols="12" sm="6" md="6">
+                    <v-text-field v-model="editedItem.contract_number" label="Contract Number"></v-text-field>
+                  </v-col>
 
-              <v-row>
-                <v-col cols="12" sm="6" md="6">
-                  <v-text-field v-model="email.value.value" :error-messages="email.errorMessage.value"
-                    label="Contract Name"></v-text-field>
-                </v-col>
-                <v-col cols="12" sm="6" md="6">
-                  <v-select v-model="select.value.value" :items="items" :error-messages="select.errorMessage.value"
-                    label="Contract Number"></v-select>
-                </v-col>
-              </v-row>
-              <v-row>
-                <v-col cols="12" sm="6" md="6">
-                  <v-text-field v-model="email.value.value" :error-messages="email.errorMessage.value"
-                    label="Project Manager"></v-text-field>
-                </v-col>
-              </v-row>
+                  <v-col cols="12" sm="12" md="12">
+                    <v-text-field v-model="editedItem.project_manager" label="Project Manager"></v-text-field>
+                  </v-col>
 
-              <v-row>
-                <v-btn class="me-4" type="submit">
-                  submit
-                </v-btn>
+                  <v-col class="text-right">
+                    <v-btn color="blue-darken-1" variant="text" @click="close">
+                      Cancel
+                    </v-btn>
+                    <v-btn color="blue-darken-1" variant="text" @click="submit">
+                      Submit
+                    </v-btn>
+                  </v-col>
+                </v-row>
+              </v-form>
+              <!-- </v-container> -->
+            </v-card-text>
 
-                <v-btn @click="handleReset">
-                  clear
-                </v-btn>
-              </v-row>
-            </form>
-          </v-container> -->
-
-          <v-card-text>
-            <v-container>
-              <v-row>
-                <v-col cols="12" sm="12" md="12">
-                  <v-text-field v-model="editedItem.wo_name" label="Work order"></v-text-field>
-                </v-col>
-                <v-col cols="12" sm="6" md="6">
-                  <v-select v-model="editedItem.type" label="Type" :items="types"></v-select>
-                </v-col>
-                <v-col cols="12" sm="6" md="6">
-                  <v-select v-model="editedItem.status" label="Status" :items="statuses"></v-select>
-                </v-col>
-
-                <v-col cols="12" sm="6" md="6">
-                  <v-text-field v-model="editedItem.assigned_to" label="Assignee"></v-text-field>
-                </v-col>
-                <v-col cols="12" sm="6" md="6">
-                  <v-text-field v-model="editedItem.requester" label="Requested by"></v-text-field>
-                </v-col>
-
-                <v-col cols="12" sm="6" md="6">
-                  <v-text-field v-model="editedItem.contract_name" label="Contract Name"></v-text-field>
-                </v-col>
-                <v-col cols="12" sm="6" md="6">
-                  <v-text-field v-model="editedItem.contract_number" label="Contract Number"></v-text-field>
-                </v-col>
-
-                <v-col cols="12" sm="12" md="12">
-                  <v-text-field v-model="editedItem.project_manager" label="Project Manager"></v-text-field>
-                </v-col>
-              </v-row>
-            </v-container>
-          </v-card-text>
-
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="blue-darken-1" variant="text" @click="close">
-              Cancel
-            </v-btn>
-            <v-btn color="blue-darken-1" variant="text" @click="save">
-              Save
-            </v-btn>
-          </v-card-actions>
-        </v-card>
+          </v-card>
 
 
-      </v-dialog>
+        </v-dialog>
 
-      <v-dialog v-model="dialogDelete" max-width="500px">
-        <v-card>
-          <v-card-title class="text-h5">Are you sure you want to delete this item?</v-card-title>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="blue-darken-1" variant="text" @click="closeDelete">Cancel</v-btn>
-            <v-btn color="blue-darken-1" variant="text" @click="deleteItemConfirm">OK</v-btn>
-            <v-spacer></v-spacer>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
+        <!-- <v-dialog v-model="dialogDelete" max-width="500px">
+          <v-card>
+            <v-card-title class="text-h5">Are you sure you want to delete this item?</v-card-title>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="blue-darken-1" variant="text" @click="closeDelete">Cancel</v-btn>
+              <v-btn color="blue-darken-1" variant="text" @click="deleteItemConfirm">OK</v-btn>
+              <v-spacer></v-spacer>
+            </v-card-actions>
+          </v-card>
+        </v-dialog> -->
       </v-toolbar>
     </template>
 
@@ -145,20 +88,59 @@
       <v-icon size="small" class="me-2" @click="editItem(item.raw)">
         mdi-pencil
       </v-icon>
-      <v-icon size="small" @click="deleteItem(item.raw)">
-        mdi-delete
-      </v-icon>
+      <!-- <v-icon size="small" @click="deleteItem(item.raw)">
+          mdi-delete
+        </v-icon> -->
     </template>
   </v-data-table-server>
 </template>
 
+<script setup>
+import { ref, nextTick } from 'vue'
 
-<script>
-// import { ref } from 'vue'
-// import { useField, useForm } from 'vee-validate'
+const dialog = ref(false)
+// const dialogDelete = ref(false)
+const itemsPerPage = ref(5)
+const loading = ref(true)
+const totalItems = ref(0)
+const editedIndex = ref(-1)
+
+const headers = [
+  {
+    title: 'Number',
+    align: 'start',
+    sortable: false,
+    key: 'wo_number',
+  },
+  { title: 'Work order', key: 'wo_name', align: 'start' },
+  { title: 'Assignee', key: 'assigned_to', align: 'start' },
+  { title: 'Type', key: 'type', align: 'start' },
+  { title: 'Status', key: 'status', align: 'start' },
+  { title: 'Actions', key: 'actions', align: 'end', sortable: false },
+]
+
+const editedItem = ref([
+  {
+    wo_number: 0,
+    wo_name: '',
+    assigned_to: '',
+    type: '',
+    status: '',
+  },
+])
+
+const defaultItem = ref([
+  {
+    wo_number: 0,
+    wo_name: '',
+    assigned_to: '',
+    type: '',
+    status: '',
+  }
+])
 
 // fake data until back-end API is developed
-const serverItems = [
+const serverItems = reactive([
   {
     wo_name: 'Lorem ipsum dolor sit amet',
     wo_number: 1,
@@ -289,8 +271,48 @@ const serverItems = [
     assigned_to: 'James Vanmeter',
     due_date: '',
   },
-]
+  {
+    wo_name: 'eu fugiat nulla pariatur',
+    wo_number: 11,
+    contract_name: '',
+    contract_number: '',
+    task_number: 21545,
+    project_manager: 'An Hori',
+    requester: 'Some requester',
+    type: 'qc request',
+    status: 'Returned',
+    assigned_to: 'James Vanmeter',
+    due_date: '',
+  },
+  {
+    wo_name: 'eu fugiat nulla pariatur',
+    wo_number: 12,
+    contract_name: '',
+    contract_number: '',
+    task_number: 21545,
+    project_manager: 'An Hori',
+    requester: 'Some requester',
+    type: 'qc request',
+    status: 'Returned',
+    assigned_to: 'James Vanmeter',
+    due_date: '',
+  },
+  {
+    wo_name: 'eu fugiat nulla pariatur',
+    wo_number: 13,
+    contract_name: '',
+    contract_number: '',
+    task_number: 21545,
+    project_manager: 'An Hori',
+    requester: 'Some requester',
+    type: 'qc request',
+    status: 'Returned',
+    assigned_to: 'James Vanmeter',
+    due_date: '',
+  },
+])
 
+// fake API to simiulate pulling of data
 const FakeAPI = {
   async fetch({ page, itemsPerPage, sortBy }) {
     return new Promise(resolve => {
@@ -317,167 +339,97 @@ const FakeAPI = {
   },
 }
 
-export default {
-  // setup() {
-  //   const { handleSubmit, handleReset } = useForm({
-  //     validationSchema: {
-  //       text(value) {
-  //         console.log('test' + value)
-  //         if (value?.length >= 2) return true
+// check if API will provide these
+// if API provides integer-based values, we will need to map v-data-table to render properly
+const statuses = [
+  { title: '-- Select --', value: '' },
+  { title: 'In Progress', value: 'In Progress' },
+  { title: 'Accepted', value: 'Accepted' },
+  { title: 'Returned', value: 'Returned' },
+]
 
-  //         return 'Field needs to be at least 2 characters.'
-  //       },
-  //       phone(value) {
-  //         if (value?.length > 9 && /[0-9-]+/.test(value)) return true
+// check if API will provide these
+// if API provides integer-based values, we will need to map v-data-table to render properly
+const types = [
+  { title: '-- Select --', value: '' },
+  { title: 'web', value: 'web' },
+  { title: 'eBlast', value: 'eBlast' },
+  { title: 'qc request', value: 'qc request' },
+]
 
-  //         return 'Phone number needs to be at least 9 digits.'
-  //       },
-  //       email(value) {
-  //         if (/^[a-z.-]+@[a-z.-]+\.[a-z]+$/i.test(value)) return true
+// computed value for form title
+const formTitle = computed(() => {
+  return editedIndex.value === -1 ? 'New Item' : 'Edit Item'
+})
 
-  //         return 'Must be a valid e-mail.'
-  //       },
-  //       select(value) {
-  //         if (value) return true
-
-  //         return 'Select an item.'
-  //       },
-  //       checkbox(value) {
-  //         if (value === '1') return true
-
-  //         return 'Must be checked.'
-  //       },
-  //     },
-  //   })
-  //   const text = useField('text')
-  //   const phone = useField('phone')
-  //   const email = useField('email')
-  //   const select = useField('select')
-  //   const checkbox = useField('checkbox')
-
-  //   const wo_statuses = ref([
-  //     'In Progress',
-  //     'Accepted',
-  //     'Returned',
-  //   ])
-
-  //   const submit = handleSubmit(values => {
-  //     alert(JSON.stringify(values, null, 2))
-  //   })
-
-  //   return { text, phone, email, select, checkbox, wo_statuses, submit, handleReset }
-  // },
-
-
-  data: () => ({
-    dialog: false,
-    dialogDelete: false,
-    itemsPerPage: 5,
-    headers: [
-      {
-        title: 'Number',
-        align: 'start',
-        sortable: false,
-        key: 'wo_number',
-      },
-      { title: 'Work order', key: 'wo_name', align: 'start' },
-      { title: 'Assignee', key: 'assigned_to', align: 'start' },
-      { title: 'Type', key: 'type', align: 'start' },
-      { title: 'Status', key: 'status', align: 'start' },
-      { title: 'Actions', key: 'actions', align: 'end', sortable: false },
-    ],
-    serverItems: [],
-    loading: true,
-    totalItems: 0,
-
-    editedIndex: -1,
-    editedItem: {
-      wo_number: 0,
-      wo_name: '',
-      assigned_to: '',
-      type: '',
-      status: '',
-    },
-    defaultItem: {
-      wo_number: 0,
-      wo_name: '',
-      assigned_to: '',
-      type: '',
-      status: '',
-    },
-
-    // default statuses
-    statuses: [
-      'In Progress',
-      'Accepted',
-      'Returned',
-    ],
-
-    // default types
-    types: [
-      'web',
-      'eBlast',
-      'qc request',
-    ]
-  }),
-
-  computed: {
-    formTitle() {
-      return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
-    },
-  },
-
-  methods: {
-    loadItems({ page, itemsPerPage, sortBy }) {
-      this.loading = true
-      FakeAPI.fetch({ page, itemsPerPage, sortBy }).then(({ items, total }) => {
-        this.serverItems = items
-        this.totalItems = total
-        this.loading = false
-      })
-    },
-
-    editItem(item) {
-      this.editedIndex = this.serverItems.indexOf(item)
-      this.editedItem = Object.assign({}, item)
-      this.dialog = true
-    },
-
-    deleteItem(item) {
-      this.editedIndex = this.serverItems.indexOf(item)
-      this.editedItem = Object.assign({}, item)
-      this.dialogDelete = true
-    },
-
-    deleteItemConfirm() {
-      this.serverItems.splice(this.editedIndex, 1)
-      this.closeDelete()
-    },
-
-    close() {
-      this.dialog = false
-      this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem)
-        this.editedIndex = -1
-      })
-    },
-
-    closeDelete() {
-      this.dialogDelete = false
-      this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem)
-        this.editedIndex = -1
-      })
-    },
-
-    save() {
-      if (this.editedIndex > -1) {
-        Object.assign(this.serverItems[this.editedIndex], this.editedItem)
-      } else {
-        this.serverItems.push(this.editedItem)
-      }
-      this.close()
-    },
-  },
+// form field validation rules
+const rules =
+{
+  required: v => !!v || 'Field is required',
+  length: v => v.length >= 3 || 'Minimum length is 3 characters',
+  select: v => !!v || 'Select a valid option',
 }
+
+const form = ref(null)
+
+// form submit process
+async function submit() {
+  const { valid } = await form.value.validate()
+  if (valid) {
+    alert(JSON.stringify(editedItem.value, null, 2))
+    save()
+  }
+}
+
+function loadItems({ page, itemsPerPage, sortBy }) {
+  loading.value = true
+  FakeAPI.fetch({ page, itemsPerPage, sortBy }).then(({ items, total }) => {
+    serverItems.value = items
+    totalItems.value = total
+    loading.value = false
+  })
+}
+
+function editItem(item) {
+  editedIndex.value = serverItems.indexOf(item)
+  editedItem.value = Object.assign({}, item)
+  dialog.value = true
+}
+
+function close() {
+  dialog.value = false
+  nextTick(() => {
+    editedItem.value = Object.assign({}, defaultItem.value)
+    editedIndex.value = -1
+  })
+}
+
+function save() {
+  if (editedIndex.value > -1) {
+    Object.assign(serverItems[editedIndex.value], editedItem.value)
+  } else {
+    serverItems.push(editedItem.value)
+  }
+  close()
+}
+
+// function deleteItem(item) {
+//     editedIndex.value = serverItems.indexOf(item)
+//     editedItem.value = Object.assign({}, item)
+//     dialogDelete.value = true
+// }
+
+// function deleteItemConfirm() {
+//     serverItems.value.splice(editedIndex.value, 1)
+//     closeDelete()
+// }
+
+// function closeDelete() {
+//     dialogDelete.value = false
+//     nextTick(() => {
+//         editedItem.value = Object.assign({}, defaultItem.value)
+//         editedIndex.value = -1
+//     })
+// }
+
 </script>
