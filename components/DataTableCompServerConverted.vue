@@ -26,10 +26,11 @@
                       :rules="[rules.required, rules.length]"></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="6">
-                    <v-select v-model="editedItem.type" label="Type" :items="types"></v-select>
+                    <v-select v-model="editedItem.type" label="Type" :items="types" item-title="title" item-value="value"
+                      :rules="[rules.select]"></v-select>
                   </v-col>
                   <v-col cols="12" sm="6" md="6">
-                    <v-select v-model="editedItem.status" label="Status" :items="statuses"
+                    <v-select v-model="editedItem.status" label="Status" :items="statuses" item-title="title" item-value="value"
                       :rules="[rules.select]"></v-select>
                   </v-col>
 
@@ -340,16 +341,18 @@ const FakeAPI = {
 
 // check if API will provide these
 const statuses = [
-  'In Progress',
-  'Accepted',
-  'Returned',
+  { title: '-- Select --', value: '' },
+  { title: 'In Progress', value: 1 },
+  { title: 'Accepted', value: 2 },
+  { title: 'Returned', value: 3 },
 ]
 
 // check if API will provide these
 const types = [
-  'web',
-  'eBlast',
-  'qc request',
+  { title: '-- Select --', value: '' },
+  { title: 'web', value: 1 },
+  { title: 'eBlast', value: 2 },
+  { title: 'qc request', value: 3 },
 ]
 
 // computed value for form title
@@ -362,7 +365,7 @@ const rules =
 {
   required: v => !!v || 'Field is required',
   length: v => v.length >= 3 || 'Minimum length is 3 characters',
-  select: v => console.log(v),
+  select: v => v > 0 || 'Select a valid option',
 }
 
 const form = ref(null)
