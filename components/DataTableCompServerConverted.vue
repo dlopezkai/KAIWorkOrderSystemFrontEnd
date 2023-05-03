@@ -313,6 +313,7 @@ const serverItems = reactive([
   },
 ])
 
+// fake API to simiulate pulling of data
 const FakeAPI = {
   async fetch({ page, itemsPerPage, sortBy }) {
     return new Promise(resolve => {
@@ -339,22 +340,26 @@ const FakeAPI = {
   },
 }
 
-
-// default statuses
+// check if API will provide these
 const statuses = [
   'In Progress',
   'Accepted',
   'Returned',
 ]
 
-// default types
+// check if API will provide these
 const types = [
   'web',
   'eBlast',
   'qc request',
 ]
 
-// field validation rules
+// computed value for form title
+const formTitle = computed(() => {
+  return editedIndex.value === -1 ? 'New Item' : 'Edit Item'
+})
+
+// form field validation rules
 const rules =
 {
   required: v => !!v || 'Field is required',
@@ -362,10 +367,7 @@ const rules =
   select: v => console.log(v),
 }
 
-const formTitle = computed(() => {
-  return editedIndex.value === -1 ? 'New Item' : 'Edit Item'
-})
-
+// form submit process
 function submit() {
   alert(JSON.stringify(editedItem.value, null, 2))
 }
