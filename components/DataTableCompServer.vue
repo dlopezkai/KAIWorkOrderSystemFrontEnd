@@ -1,21 +1,12 @@
 <template>
-  <v-navigation-drawer class="mt-2">
-    <v-btn color="blue-darken-1" variant="text" @click="myWorkOrders">
-      <v-icon class="mr-2">
-        mdi-account-box
-      </v-icon>
+  <v-navigation-drawer style="background: #428086" class="mt-2">
+    <v-btn prepend-icon="mdi-account-box" color="white" variant="text" @click="myWorkOrders">
       My work orders
     </v-btn>
-    <v-btn color="blue-darken-1" variant="text" @click="allWorkOrders">
-      <v-icon class="mr-2">
-        mdi-account-box-multiple
-      </v-icon>
+    <v-btn prepend-icon="mdi-account-box-multiple" color="white" variant="text" @click="allWorkOrders">
       All work orders
     </v-btn>
-    <v-btn color="blue-darken-1" variant="text" @click="editItem(item)">
-      <v-icon class="mr-2">
-        mdi-form-select
-      </v-icon>
+    <v-btn class="v-btn-not-rounded" prepend-icon="mdi-form-select" color="white" variant="tonal" @click="editItem(item)">
       Add New Work Order
     </v-btn>
   </v-navigation-drawer>
@@ -475,3 +466,9 @@ function getColor (status) {
 }
 
 </script>
+
+<style scoped>
+ .v-btn-not-rounded {
+  border-radius:4px!important;
+ }
+</style>
