@@ -21,8 +21,16 @@
   </v-navigation-drawer>
 
 
-  <v-data-table-server v-model:items-per-page="itemsPerPage" :headers="headers" :items-length="totalItems"
-    :items="serverItems.value" :loading="loading" class="elevation-1" item-value="name" @update:options="loadItems">
+  <v-data-table-server 
+    v-model:items-per-page="itemsPerPage" 
+    :headers="headers" 
+    :items-length="totalItems"
+    :items="serverItems.value" 
+    :loading="loading" 
+    class="elevation-1" 
+    item-value="name" 
+    @update:options="loadItems"
+  >
     <template v-slot:top>
       <!-- <v-toolbar flat> -->
 
@@ -123,7 +131,7 @@ const totalItems = ref(0)
 const editedIndex = ref(-1)
 
 const headers = [
-  { title: 'Number', align: 'start', key: 'wo_number' },
+  { title: 'Number', align: 'start', key: 'wo_number'},
   { title: 'Work order', key: 'wo_name', align: 'start', sortable: false },
   { title: 'Assignee', key: 'assigned_to', align: 'start', sortable: false },
   { title: 'Type', key: 'type', align: 'start', sortable: false },
