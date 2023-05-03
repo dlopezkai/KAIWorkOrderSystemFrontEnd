@@ -50,17 +50,16 @@
                   <v-col cols="12" sm="12" md="12">
                     <v-text-field v-model="editedItem.project_manager" label="Project Manager"></v-text-field>
                   </v-col>
+
+                  <v-col class="text-right">
+                    <v-btn color="blue-darken-1" variant="text" @click="close">
+                      Cancel
+                    </v-btn>
+                    <v-btn color="blue-darken-1" variant="text" @click="submit">
+                      Submit
+                    </v-btn>
+                  </v-col>
                 </v-row>
-
-                <v-spacer></v-spacer>
-                <v-btn color="blue-darken-1" variant="text" @click="close">
-                  Cancel
-                </v-btn>
-                <v-btn color="blue-darken-1" variant="text" @click="submit">
-                  Submit
-                </v-btn>
-
-
               </v-form>
               <!-- </v-container> -->
             </v-card-text>
@@ -375,7 +374,7 @@ async function submit() {
     alert(JSON.stringify(editedItem.value, null, 2))
     save()
   } else {
-    alert ("fix errors")
+    alert("fix errors")
   }
 }
 
