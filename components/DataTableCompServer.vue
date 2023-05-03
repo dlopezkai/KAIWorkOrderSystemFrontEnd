@@ -117,6 +117,13 @@
           mdi-delete
         </v-icon> -->
     </template>
+
+    <template v-slot:item.status="{ item }">
+      <v-chip :color="getColor(item.raw.status)">
+        {{ item.raw.status }}
+      </v-chip>
+    </template>
+
   </v-data-table-server>
 </template>
 
@@ -458,6 +465,13 @@ function myWorkOrders() {
 
 function allWorkOrders() {
   alert("This will display all work orders")
+}
+
+// color method for v-chip component
+function getColor (status) {
+  if (status === 'In Progress') return 'red'
+  else if (status === 'Accepted') return 'green'
+  else return 'orange'
 }
 
 </script>
