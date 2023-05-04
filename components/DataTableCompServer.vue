@@ -1,14 +1,15 @@
 <template>
-  <v-navigation-drawer style="background: #428086" class="mt-2">
-    <v-btn prepend-icon="mdi-account-box" color="white" variant="text" @click="myWorkOrders">
-      My work orders
-    </v-btn>
-    <v-btn prepend-icon="mdi-account-box-multiple" color="white" variant="text" @click="allWorkOrders">
-      All work orders
-    </v-btn>
-    <v-btn class="v-btn-not-rounded" prepend-icon="mdi-form-select" color="white" variant="tonal" @click="editItem(item)">
-      Add New Work Order
-    </v-btn>
+  <!-- TODO:find where 'class="bg-deep-purple"' is defined -->
+  <v-navigation-drawer
+    style="background: #428086"
+    theme="dark"
+    permanent
+  >
+    <v-list color="transparent">
+      <v-list-item prepend-icon="mdi-account-box" title="My work orders" @click="allWorkOrders"></v-list-item>
+      <v-list-item prepend-icon="mdi-account-box-multiple" title=" All work orders" @click="allWorkOrders"></v-list-item>
+      <v-list-item prepend-icon="mdi-form-select" title="Add New Work Order" @click="editItem(item)"></v-list-item>
+    </v-list>
   </v-navigation-drawer>
 
 
@@ -325,9 +326,3 @@ function getColor (status) {
 }
 
 </script>
-
-<style scoped>
- .v-btn-not-rounded {
-  border-radius:4px!important;
- }
-</style>
