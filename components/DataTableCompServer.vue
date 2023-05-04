@@ -6,7 +6,7 @@
     permanent
   >
     <v-list color="transparent">
-      <v-list-item prepend-icon="mdi-account-box" title="My work orders" @click="allWorkOrders"></v-list-item>
+      <v-list-item prepend-icon="mdi-account-box" title="My work orders" @click="myWorkOrders"></v-list-item>
       <v-list-item prepend-icon="mdi-account-box-multiple" title=" All work orders" @click="allWorkOrders"></v-list-item>
       <v-list-item prepend-icon="mdi-form-select" title="Add New Work Order" @click="editItem(item)"></v-list-item>
     </v-list>
