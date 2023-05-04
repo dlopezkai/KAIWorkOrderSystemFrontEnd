@@ -256,7 +256,7 @@ function loadItems({ page, itemsPerPage, sortBy }) {
 }
 
 function editItem(item) {
-  editedIndex.value = serverItems.indexOf(item)
+  editedIndex.value = data.value.indexOf(item)
   editedItem.value = Object.assign({}, item)
   dialog.value = true
 }
@@ -271,21 +271,21 @@ function close() {
 
 function save() {
   if (editedIndex.value > -1) {
-    Object.assign(serverItems[editedIndex.value], editedItem.value)
+    Object.assign(data.value[editedIndex.value], editedItem.value)
   } else {
-    serverItems.push(editedItem.value)
+    data.value.push(editedItem.value)
   }
   close()
 }
 
 // function deleteItem(item) {
-//     editedIndex.value = serverItems.indexOf(item)
+//     editedIndex.value = data.value.indexOf(item)
 //     editedItem.value = Object.assign({}, item)
 //     dialogDelete.value = true
 // }
 
 // function deleteItemConfirm() {
-//     serverItems.value.splice(editedIndex.value, 1)
+//     data.value.value.splice(editedIndex.value, 1)
 //     closeDelete()
 // }
 
