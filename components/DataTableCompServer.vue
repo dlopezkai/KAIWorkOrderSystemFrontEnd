@@ -134,7 +134,7 @@ const data = ref([])
 
 const headers = [
   { title: 'Number', key: 'wo_number', align: 'start' },
-  { title: 'Work order', key: 'wo_name', align: 'start', sortable: false },
+  { title: 'Work order', key: 'wo_name', align: 'start' },
   { title: 'Assignee', key: 'assigned_to', align: 'start', sortable: false },
   { title: 'Type', key: 'type', align: 'start', sortable: false },
   { title: 'Status', key: 'status', align: 'start', sortable: false },
