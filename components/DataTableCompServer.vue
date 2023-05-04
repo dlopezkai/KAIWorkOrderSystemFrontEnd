@@ -125,7 +125,7 @@ import axios from 'axios'
 
 const dialog = ref(false)
 // const dialogDelete = ref(false)
-const itemsPerPage = ref(5)
+const itemsPerPage = ref(10)
 const loading = ref(true)
 const totalItems = ref(0)
 const editedIndex = ref(-1)
