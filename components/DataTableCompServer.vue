@@ -102,9 +102,9 @@
     </template>
 
     <template v-slot:item.actions="{ item }">
-      <v-icon size="small" class="me-2" @click="editItem(item.raw)">
+      <!-- <v-icon size="small" class="me-2" @click="editItem(item.raw)">
         mdi-pencil
-      </v-icon>
+      </v-icon> -->
       <!-- <v-icon size="small" @click="deleteItem(item.raw)">
           mdi-delete
         </v-icon> -->
@@ -135,7 +135,7 @@ const headers = [
   { title: 'Assignee', key: 'assigned_to', align: 'start', sortable: false },
   { title: 'Type', key: 'type', align: 'start', sortable: false },
   { title: 'Status', key: 'status', align: 'start', sortable: false },
-  { title: 'Actions', key: 'actions', align: 'end', sortable: false },
+  // { title: 'Actions', key: 'actions', align: 'end', sortable: false },
 ]
 
 const editedItem = ref([
