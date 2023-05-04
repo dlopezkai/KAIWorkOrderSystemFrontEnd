@@ -13,14 +13,10 @@
 
 
   <v-data-table
-    v-model:items-per-page="itemsPerPage" 
     :headers="headers" 
-    :items-length="totalItems"
     :items="data" 
     :loading="loading" 
     class="elevation-1" 
-    item-value="name" 
-    @update:options="loadItems"
     @click:row="(pointerEvent, {item}) => editItem(item.raw)"
   >
     <template v-slot:top>
@@ -230,7 +226,12 @@ async function submit() {
   }
 }
 
-function loadItems({ page, itemsPerPage, sortBy }) {
+// mounted life-cycle hook
+onMounted(() => {
+  loadItems()
+})
+
+function loadItems() {
   loading.value = true
   axios.get('test.json')
   .then((response) => {
@@ -274,6 +275,7 @@ function save() {
     Object.assign(data.value[editedIndex.value], editedItem.value)
   } else {
     data.value.push(editedItem.value)
+    axios.post('test.json', JSON.stringify(editedItem.value, null, 2))
   }
   close()
 }
