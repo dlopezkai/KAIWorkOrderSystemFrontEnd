@@ -12,11 +12,11 @@
   </v-navigation-drawer>
 
 
-  <v-data-table-server 
+  <v-data-table
     v-model:items-per-page="itemsPerPage" 
     :headers="headers" 
     :items-length="totalItems"
-    :items="serverItems.value" 
+    :items="data" 
     :loading="loading" 
     class="elevation-1" 
     item-value="name" 
@@ -116,11 +116,12 @@
       </v-chip>
     </template>
 
-  </v-data-table-server>
+  </v-data-table>
 </template>
 
 <script setup>
 import { ref, nextTick } from 'vue'
+import axios from 'axios'
 
 const dialog = ref(false)
 // const dialogDelete = ref(false)
@@ -128,6 +129,8 @@ const itemsPerPage = ref(5)
 const loading = ref(true)
 const totalItems = ref(0)
 const editedIndex = ref(-1)
+
+const data = ref([])
 
 const headers = [
   { title: 'Number', key: 'wo_number', align: 'start' },
@@ -402,11 +405,27 @@ async function submit() {
 
 function loadItems({ page, itemsPerPage, sortBy }) {
   loading.value = true
-  FakeAPI.fetch({ page, itemsPerPage, sortBy }).then(({ items, total }) => {
-    serverItems.value = items
-    totalItems.value = total
-    loading.value = false
+  axios.get('test.json')
+  .then((response) => {
+      data.value = response.data.serverItems.map((item) => {
+          return {
+              wo_name: item.wo_name,
+              wo_number: item.wo_number,
+              contract_name: item.contract_name,
+              contract_number: item.contract_number,
+              task_number: item.task_number,
+              project_manager: item.project_manager,
+              requester: item.requester,
+              type: item.type,
+              status: item.status,
+              assigned_to: item.assigned_to,
+              due_date: item.due_date
+          }
+        })
+      totalItems.value = response.data.serverItems.length
+      loading.value = false
   })
+  .catch(err => console.log(err))
 }
 
 function editItem(item) {
