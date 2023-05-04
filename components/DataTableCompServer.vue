@@ -16,10 +16,20 @@
     :headers="headers" 
     :items="data" 
     :loading="loading" 
-    class="elevation-1" 
+    class="elevation-1"
+    :search="search"
     @click:row="(pointerEvent, {item}) => editItem(item.raw)"
   >
     <template v-slot:top>
+
+      <v-text-field
+        v-model="search"
+        append-icon="mdi-magnify"
+        label="Search"
+        single-line
+        hide-details
+      ></v-text-field>
+
       <!-- <v-toolbar flat> -->
 
         <v-dialog v-model="dialog" max-width="800px">
@@ -125,8 +135,8 @@ const itemsPerPage = ref(10)
 const loading = ref(true)
 const totalItems = ref(0)
 const editedIndex = ref(-1)
-
 const data = ref([])
+const search = ref('')
 
 const headers = [
   { title: 'Number', key: 'wo_number', align: 'start' },
