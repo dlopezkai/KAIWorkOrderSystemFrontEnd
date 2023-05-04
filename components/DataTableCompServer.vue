@@ -21,6 +21,7 @@
     class="elevation-1" 
     item-value="name" 
     @update:options="loadItems"
+    @click:row="(pointerEvent, {item}) => editItem(item.raw)"
   >
     <template v-slot:top>
       <!-- <v-toolbar flat> -->
