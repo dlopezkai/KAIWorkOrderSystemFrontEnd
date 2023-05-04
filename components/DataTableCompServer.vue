@@ -161,32 +161,32 @@ const defaultItem = ref([
   }
 ])
 
-// fake API to simiulate pulling of data
-const FakeAPI = {
-  async fetch({ page, itemsPerPage, sortBy }) {
-    return new Promise(resolve => {
-      setTimeout(() => {
-        const start = (page - 1) * itemsPerPage
-        const end = start + itemsPerPage
-        const items = serverItems.slice()
+// no longer used, but keep for reference just in case...
+// const FakeAPI = {
+//   async fetch({ page, itemsPerPage, sortBy }) {
+//     return new Promise(resolve => {
+//       setTimeout(() => {
+//         const start = (page - 1) * itemsPerPage
+//         const end = start + itemsPerPage
+//         const items = serverItems.slice()
 
-        if (sortBy.length) {
-          const sortKey = sortBy[0].key
-          const sortOrder = sortBy[0].order
-          items.sort((a, b) => {
-            const aValue = a[sortKey]
-            const bValue = b[sortKey]
-            return sortOrder === 'desc' ? bValue - aValue : aValue - bValue
-          })
-        }
+//         if (sortBy.length) {
+//           const sortKey = sortBy[0].key
+//           const sortOrder = sortBy[0].order
+//           items.sort((a, b) => {
+//             const aValue = a[sortKey]
+//             const bValue = b[sortKey]
+//             return sortOrder === 'desc' ? bValue - aValue : aValue - bValue
+//           })
+//         }
 
-        const paginated = items.slice(start, end)
+//         const paginated = items.slice(start, end)
 
-        resolve({ items: paginated, total: items.length })
-      }, 500)
-    })
-  },
-}
+//         resolve({ items: paginated, total: items.length })
+//       }, 500)
+//     })
+//   },
+// }
 
 // check if API will provide these
 // if API provides integer-based values, we will need to map v-data-table to render properly
