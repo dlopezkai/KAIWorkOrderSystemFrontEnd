@@ -7,7 +7,7 @@
     </div>
   </div>
   <div v-else>
-    <data-table-comp-server></data-table-comp-server>
+    <data-table-component></data-table-component>
   </div>
 </template>
 
