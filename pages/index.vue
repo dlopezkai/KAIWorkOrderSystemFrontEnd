@@ -1,10 +1,12 @@
 <template>
   <!-- use conditional rendering for logged in experience -->
-  <div v-if="!authStore.loggedIn" class="d-flex align-center flex-column mt-5">
-    <h2>ClickUp Integration App</h2>
-    <p>Please login using your Active Directory credentials</p>
+  <div v-if="!authStore.loggedIn">
+    <div class="d-flex align-center flex-column mt-5">
+      <h2>ClickUp Integration App</h2>
+      <p>Please login using your Active Directory credentials</p>
+    </div>
   </div>
-  <div v-else class="d-flex align-center flex-column">
+  <div v-else>
     <data-table-comp-server></data-table-comp-server>
   </div>
 </template>
