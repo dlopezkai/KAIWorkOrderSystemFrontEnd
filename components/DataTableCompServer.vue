@@ -6,8 +6,8 @@
     permanent
   >
     <v-list color="transparent">
-      <v-list-item prepend-icon="mdi-account-box" title="My work orders" @click="myWorkOrders"></v-list-item>
-      <v-list-item prepend-icon="mdi-account-box-multiple" title=" All work orders" @click="allWorkOrders"></v-list-item>
+      <v-list-item prepend-icon="mdi-account-box" title="My work orders" @click="filterByUserToggle('user')"></v-list-item>
+      <v-list-item prepend-icon="mdi-account-box-multiple" title=" All work orders" @click="filterByUserToggle('all')"></v-list-item>
       <v-list-item prepend-icon="mdi-form-select" title="Add New Work Order" @click="editItem(item)"></v-list-item>
     </v-list>
   </v-navigation-drawer>
@@ -15,7 +15,7 @@
 
   <v-data-table
     :headers="headers" 
-    :items="data" 
+    :items="filteredData" 
     :loading="loading" 
     class="elevation-1"
     :search="search"
@@ -138,6 +138,7 @@ const totalItems = ref(0)
 const editedIndex = ref(-1)
 const data = ref([])
 const search = ref('')
+const filterByUser = ref(false)
 
 const headers = [
   { title: 'Number', key: 'wo_number', align: 'start' },
@@ -216,6 +217,14 @@ const types = [
 // computed value for form title
 const formTitle = computed(() => {
   return editedIndex.value === -1 ? 'New Item' : 'Edit Item'
+})
+
+// computed value for filtering data by logged-in user
+const filteredData = computed(() => {
+  if(filterByUser.value){
+    return data.value.filter(item => item.assigned_to == "James Vanmeter")
+  }
+  return data.value
 })
 
 // form field validation rules
@@ -310,12 +319,12 @@ function save() {
 //     })
 // }
 
-function myWorkOrders() {
-  alert("This will display logged-in user's work orders")
-}
-
-function allWorkOrders() {
-  alert("This will display all work orders")
+function filterByUserToggle (type) {
+  if(type === 'user') {
+    filterByUser.value = true
+  } else {
+    filterByUser.value = false
+  } 
 }
 
 // color method for v-chip component
