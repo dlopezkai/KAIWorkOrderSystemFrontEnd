@@ -129,7 +129,9 @@
 <script setup>
 import { ref, nextTick } from 'vue'
 import axios from 'axios'
-
+import { useAuthStore } from '~/store/auth';
+    
+const authStore = useAuthStore()
 const dialog = ref(false)
 // const dialogDelete = ref(false)
 const itemsPerPage = ref(10)
@@ -219,10 +221,11 @@ const formTitle = computed(() => {
   return editedIndex.value === -1 ? 'New Item' : 'Edit Item'
 })
 
-// computed value for filtering data by logged-in user
+// computed value for filtering data by logged-in user 
+// checks work order's assignee's email address against logged-in user's AD email
 const filteredData = computed(() => {
   if(filterByUser.value){
-    return data.value.filter(item => item.assigned_to_email_address == "david.lopez@kauffmaninc.com")
+    return data.value.filter(item => item.assigned_to_email_address == authStore.currentUser.username)
   }
   return data.value
 })
