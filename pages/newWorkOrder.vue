@@ -1,6 +1,6 @@
 <template>
     <div>
-        <span>page for new work order</span>
+        <span>TODO: refresh table to only display the logged-in user's work orders</span>
     </div>
 </template>
 
