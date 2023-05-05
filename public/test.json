@@ -10,11 +10,12 @@
       "requester": "Some requester",
       "type": "web",
       "status": "In Progress",
-      "assigned_to": "Tomo Shinohara",
+      "assigned_to": "David Lopez",
+      "assigned_to_email_address": "david.lopez@kauffmaninc.com",
       "due_date": ""
     },
     {
-      "wo_name": "consectetur adipiscing elit",
+      "wo_name": "test test test 123123123",
       "wo_number": 2,
       "contract_name": "",
       "contract_number": "",
@@ -23,11 +24,12 @@
       "requester": "Some requester",
       "type": "web",
       "status": "In Progress",
-      "assigned_to": "Star Chin",
+      "assigned_to": "Jim Huber",
+      "assigned_to_email_address": "jim.huber@kauffmaninc.com",
       "due_date": ""
     },
     {
-      "wo_name": "sed do eiusmod tempor incididunt",
+      "wo_name": "test test test 123123123",
       "wo_number": 3,
       "contract_name": "",
       "contract_number": "",
@@ -36,7 +38,8 @@
       "requester": "Some requester",
       "type": "web",
       "status": "In Progress",
-      "assigned_to": "James Bailey",
+      "assigned_to": "Kerrick Young",
+      "assigned_to_email_address": "kerrick.young@kauffmaninc.com",
       "due_date": ""
     },
     {
@@ -49,7 +52,8 @@
       "requester": "Some requester",
       "type": "web",
       "status": "Accepted",
-      "assigned_to": "Ola Johnson",
+      "assigned_to": "David Lopez",
+      "assigned_to_email_address": "david.lopez@kauffmaninc.com",
       "due_date": ""
     },
     {
@@ -63,6 +67,7 @@
       "type": "eBlast",
       "status": "Accepted",
       "assigned_to": "Matthew Myers",
+      "assigned_to_email_address": "Matthew.Myers@test.com",
       "due_date": ""
     },
     {
@@ -76,6 +81,7 @@
       "type": "eBlast",
       "status": "Accepted",
       "assigned_to": "David Corlett",
+      "assigned_to_email_address": "David.Corlett@test.com",
       "due_date": ""
     },
     {
@@ -89,6 +95,7 @@
       "type": "eBlast",
       "status": "Accepted",
       "assigned_to": "David Corlett",
+      "assigned_to_email_address": "David.Corlett@test.com",
       "due_date": ""
     },
     {
@@ -102,6 +109,7 @@
       "type": "eBlast",
       "status": "Returned",
       "assigned_to": "Gordon Waltman",
+      "assigned_to_email_address": "Gordon.Waltman@test.com",
       "due_date": ""
     },
     {
@@ -115,6 +123,7 @@
       "type": "eBlast",
       "status": "Returned",
       "assigned_to": "Belinda Reinhardt",
+      "assigned_to_email_address": "Belinda.Reinhardt@test.com",
       "due_date": ""
     },
     {
@@ -128,6 +137,7 @@
       "type": "qc request",
       "status": "Returned",
       "assigned_to": "James Vanmeter",
+      "assigned_to_email_address": "James.Vanmeter@test.com",
       "due_date": ""
     },
     {
@@ -141,6 +151,7 @@
       "type": "qc request",
       "status": "Returned",
       "assigned_to": "James Vanmeter",
+      "assigned_to_email_address": "James.Vanmeter@test.com",
       "due_date": ""
     },
     {
@@ -154,6 +165,7 @@
       "type": "qc request",
       "status": "Returned",
       "assigned_to": "James Vanmeter",
+      "assigned_to_email_address": "James.Vanmeter@test.com",
       "due_date": ""
     },
     {
@@ -167,6 +179,7 @@
       "type": "qc request",
       "status": "Returned",
       "assigned_to": "James Vanmeter",
+      "assigned_to_email_address": "James.Vanmeter@test.com",
       "due_date": ""
     },
     {
@@ -180,6 +193,7 @@
       "type": "qc request",
       "status": "Returned",
       "assigned_to": "James Vanmeter",
+      "assigned_to_email_address": "James.Vanmeter@test.com",
       "due_date": ""
     },
     {
@@ -192,7 +206,8 @@
       "requester": "Some requester",
       "type": "web",
       "status": "In Progress",
-      "assigned_to": "Tomo Shinohara",
+      "assigned_to": "David Lopez",
+      "assigned_to_email_address": "david.lopez@kauffmaninc.com",
       "due_date": ""
     },
     {
@@ -205,7 +220,8 @@
       "requester": "Some requester",
       "type": "web",
       "status": "In Progress",
-      "assigned_to": "Star Chin",
+      "assigned_to": "Jim Huber",
+      "assigned_to_email_address": "jim.huber@kauffmaninc.com",
       "due_date": ""
     },
     {
@@ -218,7 +234,8 @@
       "requester": "Some requester",
       "type": "web",
       "status": "In Progress",
-      "assigned_to": "James Bailey",
+      "assigned_to": "Kerrick Young",
+      "assigned_to_email_address": "kerrick.young@kauffmaninc.com",
       "due_date": ""
     },
     {
@@ -231,7 +248,8 @@
       "requester": "Some requester",
       "type": "web",
       "status": "Accepted",
-      "assigned_to": "Ola Johnson",
+      "assigned_to": "David Lopez",
+      "assigned_to_email_address": "david.lopez@kauffmaninc.com",
       "due_date": ""
     },
     {
@@ -245,6 +263,7 @@
       "type": "eBlast",
       "status": "Accepted",
       "assigned_to": "Matthew Myers",
+      "assigned_to_email_address": "Matthew.Myers@test.com",
       "due_date": ""
     },
     {
@@ -258,6 +277,7 @@
       "type": "eBlast",
       "status": "Accepted",
       "assigned_to": "David Corlett",
+      "assigned_to_email_address": "David.Corlett@test.com",
       "due_date": ""
     },
     {
@@ -271,6 +291,7 @@
       "type": "eBlast",
       "status": "Accepted",
       "assigned_to": "David Corlett",
+      "assigned_to_email_address": "David.Corlett@test.com",
       "due_date": ""
     },
     {
@@ -284,6 +305,7 @@
       "type": "eBlast",
       "status": "Returned",
       "assigned_to": "Gordon Waltman",
+      "assigned_to_email_address": "Gordon.Waltman@test.com",
       "due_date": ""
     },
     {
@@ -297,6 +319,7 @@
       "type": "eBlast",
       "status": "Returned",
       "assigned_to": "Belinda Reinhardt",
+      "assigned_to_email_address": "Belinda.Reinhardt@test.com",
       "due_date": ""
     },
     {
@@ -310,6 +333,7 @@
       "type": "qc request",
       "status": "Returned",
       "assigned_to": "James Vanmeter",
+      "assigned_to_email_address": "James.Vanmeter@test.com",
       "due_date": ""
     },
     {
@@ -323,6 +347,7 @@
       "type": "qc request",
       "status": "Returned",
       "assigned_to": "James Vanmeter",
+      "assigned_to_email_address": "James.Vanmeter@test.com",
       "due_date": ""
     },
     {
@@ -336,6 +361,7 @@
       "type": "qc request",
       "status": "Returned",
       "assigned_to": "James Vanmeter",
+      "assigned_to_email_address": "James.Vanmeter@test.com",
       "due_date": ""
     },
     {
@@ -349,6 +375,7 @@
       "type": "qc request",
       "status": "Returned",
       "assigned_to": "James Vanmeter",
+      "assigned_to_email_address": "James.Vanmeter@test.com",
       "due_date": ""
     },
     {
@@ -362,6 +389,7 @@
       "type": "qc request",
       "status": "Returned",
       "assigned_to": "James Vanmeter",
+      "assigned_to_email_address": "James.Vanmeter@test.com",
       "due_date": ""
     },
     {
@@ -374,7 +402,8 @@
       "requester": "Some requester",
       "type": "web",
       "status": "In Progress",
-      "assigned_to": "Tomo Shinohara",
+      "assigned_to": "David Lopez",
+      "assigned_to_email_address": "david.lopez@kauffmaninc.com",
       "due_date": ""
     },
     {
@@ -387,7 +416,8 @@
       "requester": "Some requester",
       "type": "web",
       "status": "In Progress",
-      "assigned_to": "Star Chin",
+      "assigned_to": "Jim Huber",
+      "assigned_to_email_address": "jim.huber@kauffmaninc.com",
       "due_date": ""
     },
     {
@@ -400,7 +430,8 @@
       "requester": "Some requester",
       "type": "web",
       "status": "In Progress",
-      "assigned_to": "James Bailey",
+      "assigned_to": "Kerrick Young",
+      "assigned_to_email_address": "kerrick.young@kauffmaninc.com",
       "due_date": ""
     },
     {
@@ -413,7 +444,8 @@
       "requester": "Some requester",
       "type": "web",
       "status": "Accepted",
-      "assigned_to": "Ola Johnson",
+      "assigned_to": "David Lopez",
+      "assigned_to_email_address": "david.lopez@kauffmaninc.com",
       "due_date": ""
     },
     {
@@ -427,6 +459,7 @@
       "type": "eBlast",
       "status": "Accepted",
       "assigned_to": "Matthew Myers",
+      "assigned_to_email_address": "Matthew.Myers@test.com",
       "due_date": ""
     },
     {
@@ -440,6 +473,7 @@
       "type": "eBlast",
       "status": "Accepted",
       "assigned_to": "David Corlett",
+      "assigned_to_email_address": "David.Corlett@test.com",
       "due_date": ""
     },
     {
@@ -453,6 +487,7 @@
       "type": "eBlast",
       "status": "Accepted",
       "assigned_to": "David Corlett",
+      "assigned_to_email_address": "David.Corlett@test.com",
       "due_date": ""
     },
     {
@@ -466,6 +501,7 @@
       "type": "eBlast",
       "status": "Returned",
       "assigned_to": "Gordon Waltman",
+      "assigned_to_email_address": "Gordon.Waltman@test.com",
       "due_date": ""
     },
     {
@@ -479,6 +515,7 @@
       "type": "eBlast",
       "status": "Returned",
       "assigned_to": "Belinda Reinhardt",
+      "assigned_to_email_address": "Belinda.Reinhardt@test.com",
       "due_date": ""
     },
     {
@@ -492,6 +529,7 @@
       "type": "qc request",
       "status": "Returned",
       "assigned_to": "James Vanmeter",
+      "assigned_to_email_address": "James.Vanmeter@test.com",
       "due_date": ""
     },
     {
@@ -505,6 +543,7 @@
       "type": "qc request",
       "status": "Returned",
       "assigned_to": "James Vanmeter",
+      "assigned_to_email_address": "James.Vanmeter@test.com",
       "due_date": ""
     },
     {
@@ -518,6 +557,7 @@
       "type": "qc request",
       "status": "Returned",
       "assigned_to": "James Vanmeter",
+      "assigned_to_email_address": "James.Vanmeter@test.com",
       "due_date": ""
     },
     {
@@ -531,6 +571,7 @@
       "type": "qc request",
       "status": "Returned",
       "assigned_to": "James Vanmeter",
+      "assigned_to_email_address": "James.Vanmeter@test.com",
       "due_date": ""
     },
     {
@@ -544,6 +585,7 @@
       "type": "qc request",
       "status": "Returned",
       "assigned_to": "James Vanmeter",
+      "assigned_to_email_address": "James.Vanmeter@test.com",
       "due_date": ""
     },
     {
@@ -556,7 +598,8 @@
       "requester": "Some requester",
       "type": "web",
       "status": "In Progress",
-      "assigned_to": "Tomo Shinohara",
+      "assigned_to": "David Lopez",
+      "assigned_to_email_address": "david.lopez@kauffmaninc.com",
       "due_date": ""
     },
     {
@@ -569,7 +612,8 @@
       "requester": "Some requester",
       "type": "web",
       "status": "In Progress",
-      "assigned_to": "Star Chin",
+      "assigned_to": "Jim Huber",
+      "assigned_to_email_address": "jim.huber@kauffmaninc.com",
       "due_date": ""
     },
     {
@@ -582,7 +626,8 @@
       "requester": "Some requester",
       "type": "web",
       "status": "In Progress",
-      "assigned_to": "James Bailey",
+      "assigned_to": "Kerrick Young",
+      "assigned_to_email_address": "kerrick.young@kauffmaninc.com",
       "due_date": ""
     },
     {
@@ -595,7 +640,8 @@
       "requester": "Some requester",
       "type": "web",
       "status": "Accepted",
-      "assigned_to": "Ola Johnson",
+      "assigned_to": "David Lopez",
+      "assigned_to_email_address": "david.lopez@kauffmaninc.com",
       "due_date": ""
     },
     {
@@ -609,6 +655,7 @@
       "type": "eBlast",
       "status": "Accepted",
       "assigned_to": "Matthew Myers",
+      "assigned_to_email_address": "Matthew.Myers@test.com",
       "due_date": ""
     },
     {
@@ -622,6 +669,7 @@
       "type": "eBlast",
       "status": "Accepted",
       "assigned_to": "David Corlett",
+      "assigned_to_email_address": "David.Corlett@test.com",
       "due_date": ""
     },
     {
@@ -635,6 +683,7 @@
       "type": "eBlast",
       "status": "Accepted",
       "assigned_to": "David Corlett",
+      "assigned_to_email_address": "David.Corlett@test.com",
       "due_date": ""
     },
     {
@@ -648,6 +697,7 @@
       "type": "eBlast",
       "status": "Returned",
       "assigned_to": "Gordon Waltman",
+      "assigned_to_email_address": "Gordon.Waltman@test.com",
       "due_date": ""
     },
     {
@@ -661,6 +711,7 @@
       "type": "eBlast",
       "status": "Returned",
       "assigned_to": "Belinda Reinhardt",
+      "assigned_to_email_address": "Belinda.Reinhardt@test.com",
       "due_date": ""
     },
     {
@@ -674,6 +725,7 @@
       "type": "qc request",
       "status": "Returned",
       "assigned_to": "James Vanmeter",
+      "assigned_to_email_address": "James.Vanmeter@test.com",
       "due_date": ""
     },
     {
@@ -687,6 +739,7 @@
       "type": "qc request",
       "status": "Returned",
       "assigned_to": "James Vanmeter",
+      "assigned_to_email_address": "James.Vanmeter@test.com",
       "due_date": ""
     },
     {
@@ -700,6 +753,7 @@
       "type": "qc request",
       "status": "Returned",
       "assigned_to": "James Vanmeter",
+      "assigned_to_email_address": "James.Vanmeter@test.com",
       "due_date": ""
     },
     {
@@ -713,6 +767,7 @@
       "type": "qc request",
       "status": "Returned",
       "assigned_to": "James Vanmeter",
+      "assigned_to_email_address": "James.Vanmeter@test.com",
       "due_date": ""
     },
     {
@@ -726,6 +781,7 @@
       "type": "qc request",
       "status": "Returned",
       "assigned_to": "James Vanmeter",
+      "assigned_to_email_address": "James.Vanmeter@test.com",
       "due_date": ""
     },
     {
@@ -738,7 +794,8 @@
       "requester": "Some requester",
       "type": "web",
       "status": "In Progress",
-      "assigned_to": "Tomo Shinohara",
+      "assigned_to": "David Lopez",
+      "assigned_to_email_address": "david.lopez@kauffmaninc.com",
       "due_date": ""
     },
     {
@@ -751,7 +808,8 @@
       "requester": "Some requester",
       "type": "web",
       "status": "In Progress",
-      "assigned_to": "Star Chin",
+      "assigned_to": "Jim Huber",
+      "assigned_to_email_address": "jim.huber@kauffmaninc.com",
       "due_date": ""
     },
     {
@@ -764,7 +822,8 @@
       "requester": "Some requester",
       "type": "web",
       "status": "In Progress",
-      "assigned_to": "James Bailey",
+      "assigned_to": "Kerrick Young",
+      "assigned_to_email_address": "kerrick.young@kauffmaninc.com",
       "due_date": ""
     },
     {
@@ -777,7 +836,8 @@
       "requester": "Some requester",
       "type": "web",
       "status": "Accepted",
-      "assigned_to": "Ola Johnson",
+      "assigned_to": "David Lopez",
+      "assigned_to_email_address": "david.lopez@kauffmaninc.com",
       "due_date": ""
     },
     {
@@ -791,6 +851,7 @@
       "type": "eBlast",
       "status": "Accepted",
       "assigned_to": "Matthew Myers",
+      "assigned_to_email_address": "Matthew.Myers@test.com",
       "due_date": ""
     },
     {
@@ -804,6 +865,7 @@
       "type": "eBlast",
       "status": "Accepted",
       "assigned_to": "David Corlett",
+      "assigned_to_email_address": "David.Corlett@test.com",
       "due_date": ""
     },
     {
@@ -817,6 +879,7 @@
       "type": "eBlast",
       "status": "Accepted",
       "assigned_to": "David Corlett",
+      "assigned_to_email_address": "David.Corlett@test.com",
       "due_date": ""
     },
     {
@@ -830,6 +893,7 @@
       "type": "eBlast",
       "status": "Returned",
       "assigned_to": "Gordon Waltman",
+      "assigned_to_email_address": "Gordon.Waltman@test.com",
       "due_date": ""
     },
     {
@@ -843,6 +907,7 @@
       "type": "eBlast",
       "status": "Returned",
       "assigned_to": "Belinda Reinhardt",
+      "assigned_to_email_address": "Belinda.Reinhardt@test.com",
       "due_date": ""
     },
     {
@@ -856,6 +921,7 @@
       "type": "qc request",
       "status": "Returned",
       "assigned_to": "James Vanmeter",
+      "assigned_to_email_address": "James.Vanmeter@test.com",
       "due_date": ""
     },
     {
@@ -869,6 +935,7 @@
       "type": "qc request",
       "status": "Returned",
       "assigned_to": "James Vanmeter",
+      "assigned_to_email_address": "James.Vanmeter@test.com",
       "due_date": ""
     },
     {
@@ -882,6 +949,7 @@
       "type": "qc request",
       "status": "Returned",
       "assigned_to": "James Vanmeter",
+      "assigned_to_email_address": "James.Vanmeter@test.com",
       "due_date": ""
     },
     {
@@ -895,6 +963,7 @@
       "type": "qc request",
       "status": "Returned",
       "assigned_to": "James Vanmeter",
+      "assigned_to_email_address": "James.Vanmeter@test.com",
       "due_date": ""
     },
     {
@@ -908,6 +977,7 @@
       "type": "qc request",
       "status": "Returned",
       "assigned_to": "James Vanmeter",
+      "assigned_to_email_address": "James.Vanmeter@test.com",
       "due_date": ""
     },
     {
@@ -920,7 +990,8 @@
       "requester": "Some requester",
       "type": "web",
       "status": "In Progress",
-      "assigned_to": "Tomo Shinohara",
+      "assigned_to": "David Lopez",
+      "assigned_to_email_address": "david.lopez@kauffmaninc.com",
       "due_date": ""
     },
     {
@@ -933,7 +1004,8 @@
       "requester": "Some requester",
       "type": "web",
       "status": "In Progress",
-      "assigned_to": "Star Chin",
+      "assigned_to": "Jim Huber",
+      "assigned_to_email_address": "jim.huber@kauffmaninc.com",
       "due_date": ""
     },
     {
@@ -946,7 +1018,8 @@
       "requester": "Some requester",
       "type": "web",
       "status": "In Progress",
-      "assigned_to": "James Bailey",
+      "assigned_to": "Kerrick Young",
+      "assigned_to_email_address": "kerrick.young@kauffmaninc.com",
       "due_date": ""
     },
     {
@@ -959,7 +1032,8 @@
       "requester": "Some requester",
       "type": "web",
       "status": "Accepted",
-      "assigned_to": "Ola Johnson",
+      "assigned_to": "David Lopez",
+      "assigned_to_email_address": "david.lopez@kauffmaninc.com",
       "due_date": ""
     },
     {
@@ -973,6 +1047,7 @@
       "type": "eBlast",
       "status": "Accepted",
       "assigned_to": "Matthew Myers",
+      "assigned_to_email_address": "Matthew.Myers@test.com",
       "due_date": ""
     },
     {
@@ -986,6 +1061,7 @@
       "type": "eBlast",
       "status": "Accepted",
       "assigned_to": "David Corlett",
+      "assigned_to_email_address": "David.Corlett@test.com",
       "due_date": ""
     },
     {
@@ -999,6 +1075,7 @@
       "type": "eBlast",
       "status": "Accepted",
       "assigned_to": "David Corlett",
+      "assigned_to_email_address": "David.Corlett@test.com",
       "due_date": ""
     },
     {
@@ -1012,6 +1089,7 @@
       "type": "eBlast",
       "status": "Returned",
       "assigned_to": "Gordon Waltman",
+      "assigned_to_email_address": "Gordon.Waltman@test.com",
       "due_date": ""
     },
     {
@@ -1025,6 +1103,7 @@
       "type": "eBlast",
       "status": "Returned",
       "assigned_to": "Belinda Reinhardt",
+      "assigned_to_email_address": "Belinda.Reinhardt@test.com",
       "due_date": ""
     },
     {
@@ -1038,6 +1117,7 @@
       "type": "qc request",
       "status": "Returned",
       "assigned_to": "James Vanmeter",
+      "assigned_to_email_address": "James.Vanmeter@test.com",
       "due_date": ""
     },
     {
@@ -1051,6 +1131,7 @@
       "type": "qc request",
       "status": "Returned",
       "assigned_to": "James Vanmeter",
+      "assigned_to_email_address": "James.Vanmeter@test.com",
       "due_date": ""
     },
     {
@@ -1064,6 +1145,7 @@
       "type": "qc request",
       "status": "Returned",
       "assigned_to": "James Vanmeter",
+      "assigned_to_email_address": "James.Vanmeter@test.com",
       "due_date": ""
     },
     {
@@ -1077,6 +1159,7 @@
       "type": "qc request",
       "status": "Returned",
       "assigned_to": "James Vanmeter",
+      "assigned_to_email_address": "James.Vanmeter@test.com",
       "due_date": ""
     },
     {
@@ -1090,6 +1173,7 @@
       "type": "qc request",
       "status": "Returned",
       "assigned_to": "James Vanmeter",
+      "assigned_to_email_address": "James.Vanmeter@test.com",
       "due_date": ""
     }
   ]
