@@ -244,7 +244,6 @@ const form = ref(null)
 async function submit() {
   const { valid } = await form.value.validate()
   if (valid) {
-    alert(JSON.stringify(editedItem.value, null, 2))
     save()
   }
 }
