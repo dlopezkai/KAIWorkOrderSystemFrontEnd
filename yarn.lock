@@ -4328,10 +4328,10 @@ vue-router@^4.1.6:
     "@vue/server-renderer" "3.2.47"
     "@vue/shared" "3.2.47"
 
-vuetify@^3.0.0-beta.4, vuetify@^3.1.16:
-  version "3.1.16"
-  resolved "https://registry.npmjs.org/vuetify/-/vuetify-3.1.16.tgz"
-  integrity sha512-KU3EdCCciqIDeK2M35RJtqKy1Ue6nrYi48H/EtWFsgcI6ZpQrXbzfPAebif71dl2Vy5s1a7p4coPyD8DGOEOuw==
+vuetify@^3.0.0-beta.4, vuetify@^3.2.2:
+  version "3.2.2"
+  resolved "https://registry.npmjs.org/vuetify/-/vuetify-3.2.2.tgz"
+  integrity sha512-syFfeZVH6dycltqVCx4tDn68fR3r697+Jt7vJW1l3i9a5ClnwpdRBWtE6dt2bjClS2K/VpWYt+rAsLiG7sGU/g==
 
 wcwidth@^1.0.1:
   version "1.0.1"
