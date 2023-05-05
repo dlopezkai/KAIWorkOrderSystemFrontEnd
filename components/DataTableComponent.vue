@@ -80,6 +80,10 @@
                     <v-text-field v-model="editedItem.project_manager" label="Project Manager"></v-text-field>
                   </v-col>
 
+                  <v-col cols="12" sm="12" md="12">
+                    <v-textarea v-model="editedItem.notes" label="Notes"></v-textarea>
+                  </v-col>
+
                   <v-col class="text-right">
                     <v-btn color="blue-darken-1" variant="text" @click="close">
                       Cancel
@@ -270,7 +274,8 @@ function loadItems() {
               status: item.status,
               assigned_to: item.assigned_to,
               assigned_to_email_address: item.assigned_to_email_address,
-              due_date: item.due_date
+              due_date: item.due_date,
+              notes: item.notes
           }
         })
       totalItems.value = response.data.serverItems.length
