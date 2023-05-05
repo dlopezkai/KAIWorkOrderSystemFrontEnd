@@ -298,12 +298,15 @@ function close() {
   })
 }
 
+// TODO: assuming API will provide ID, we'll need to remove wo_number incrementer 
 function save() {
   if (editedIndex.value > -1) {
+    axios.post('test.json', JSON.stringify(editedItem.value, null, 2))
     Object.assign(data.value[editedIndex.value], editedItem.value)
   } else {
-    data.value.push(editedItem.value)
     axios.post('test.json', JSON.stringify(editedItem.value, null, 2))
+    editedItem.value.wo_number = data.value.length + 1
+    data.value.push(editedItem.value)
   }
   close()
 }
