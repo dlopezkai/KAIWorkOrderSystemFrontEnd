@@ -222,7 +222,7 @@ const formTitle = computed(() => {
 // computed value for filtering data by logged-in user
 const filteredData = computed(() => {
   if(filterByUser.value){
-    return data.value.filter(item => item.assigned_to == "James Vanmeter")
+    return data.value.filter(item => item.assigned_to_email_address == "david.lopez@kauffmaninc.com")
   }
   return data.value
 })
@@ -267,6 +267,7 @@ function loadItems() {
               type: item.type,
               status: item.status,
               assigned_to: item.assigned_to,
+              assigned_to_email_address: item.assigned_to_email_address,
               due_date: item.due_date
           }
         })
