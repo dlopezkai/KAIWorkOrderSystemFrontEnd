@@ -1,9 +1,8 @@
 <template>
   <!-- TODO:find where 'class="bg-deep-purple"' is defined -->
   <v-navigation-drawer
-    style="background: #428086"
+    color="#428086"
     theme="dark"
-    permanent
   >
     <v-list color="transparent">
       <v-list-item prepend-icon="mdi-account-box" title="My work orders" @click="filterByUserToggle('user')"></v-list-item>
