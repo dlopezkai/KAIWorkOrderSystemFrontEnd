@@ -23,6 +23,7 @@
   <v-data-table
     :headers="headers" 
     :items="filteredData" 
+    :group-by="groupBy"
     :loading="loading" 
     class="elevation-1"
     :search="search"
@@ -163,7 +164,7 @@ const drawer = ref(false)
 
 const headers = [
   { title: 'Number', key: 'wo_number', align: 'start' },
-  { title: 'Description', key: 'description', align: 'start' },
+  { title: 'Description', key: 'description', align: 'start', width: '35%' },
   { title: 'Assignee', key: 'assigned_to', align: 'start', sortable: false },
   { title: 'Type', key: 'tags', align: 'start', sortable: false },
   { title: 'Status', key: 'status', align: 'start', sortable: false },
@@ -285,6 +286,13 @@ const filteredData = computed(() => {
     return data.value.filter(item => item.assigned_to_email_address == authStore.currentUser.username)
   }
   return data.value
+})
+
+// computed value for toggling group-by behavior
+const groupBy = computed(() => {
+  if(!filterByUser.value){
+    return [{key: 'assigned_to'}]
+  }
 })
 
 // form field validation rules
