@@ -165,6 +165,7 @@ const headers = [
   { title: 'Assignee', key: 'assigned_to', align: 'start', sortable: false },
   { title: 'Type', key: 'type', align: 'start', sortable: false },
   { title: 'Status', key: 'status', align: 'start', sortable: false },
+  { title: 'Priority', key: 'priority', align: 'start', sortable: false },
   // { title: 'Actions', key: 'actions', align: 'end', sortable: false },
 ]
 
@@ -246,10 +247,10 @@ const contracts = [
 // if API provides integer-based values, we will need to map v-data-table to render properly
 const priorities = [
   { title: '-- Select --', value: '' },
-  { title: 'Low', value: 'low' },
-  { title: 'Normal', value: 'normal' },
-  { title: 'High', value: 'high' },
-  { title: 'Urgent', value: 'urgent' },
+  { title: 'Low', value: 'Low' },
+  { title: 'Normal', value: 'Normal' },
+  { title: 'High', value: 'High' },
+  { title: 'Urgent', value: 'Urgent' },
 ]
 
 // computed value for form title
