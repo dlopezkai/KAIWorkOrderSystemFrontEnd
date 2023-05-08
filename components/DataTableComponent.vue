@@ -142,6 +142,10 @@
       </v-chip>
     </template>
 
+    <template v-slot:item.description="{ item }">
+      <td class="truncate">{{ item.raw.description }}</td>
+    </template>
+
   </v-data-table>
 </template>
 
@@ -164,7 +168,7 @@ const drawer = ref(false)
 
 const headers = [
   { title: 'Number', key: 'wo_number', align: 'start' },
-  { title: 'Description', key: 'description', align: 'start', width: '35%' },
+  { title: 'Description', key: 'description', align: 'start' },
   { title: 'Assignee', key: 'assigned_to', align: 'start', sortable: false },
   { title: 'Type', key: 'tags', align: 'start', sortable: false },
   { title: 'Status', key: 'status', align: 'start', sortable: false },
@@ -406,3 +410,12 @@ function getColor (status) {
 }
 
 </script>
+
+<style scoped>
+.truncate {
+  max-width: 50vw;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+</style>
