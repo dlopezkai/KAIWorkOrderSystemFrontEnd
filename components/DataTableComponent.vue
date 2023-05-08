@@ -56,39 +56,46 @@
             <v-card-text>
               <v-form ref="form" @submit.prevent="submit">
                 <v-row>
-                  <v-col cols="12" sm="12" md="12">
-                    <v-text-field v-model="editedItem.wo_name" label="Work order"
-                      :rules="[rules.required, rules.length]"></v-text-field>
-                  </v-col>
                   <v-col cols="12" sm="6" md="6">
-                    <v-select v-model="editedItem.type" label="Type" :items="types" item-title="title" item-value="value"
+                    <v-select v-model="editedItem.contract" label="Contract" :items="contracts" item-title="title" item-value="value"
                       :rules="[rules.select]"></v-select>
                   </v-col>
                   <v-col cols="12" sm="6" md="6">
-                    <v-select v-model="editedItem.status" label="Status" :items="statuses" item-title="title"
-                      item-value="value" :rules="[rules.select]"></v-select>
+                    <v-select v-model="editedItem.tags" label="Type" :items="types" item-title="title" item-value="value" multiple chips clearable
+                      :rules="[rules.select]"></v-select>
                   </v-col>
 
+                  <v-col cols="12" sm="6" md="6">
+                    <v-select v-model="editedItem.status" label="Status" :items="statuses" item-title="title"
+                      item-value="value" readonly :rules="[rules.select]"></v-select>
+                  </v-col>
                   <v-col cols="12" sm="6" md="6">
                     <v-text-field v-model="editedItem.assigned_to" label="Assignee"></v-text-field>
                   </v-col>
+
                   <v-col cols="12" sm="6" md="6">
-                    <v-text-field v-model="editedItem.requester" label="Requested by"></v-text-field>
+                    <v-text-field v-model="editedItem.due_date" label="Due Date" type="date"
+                      :rules="[rules.due_date]"></v-text-field>
+                  </v-col>
+                  <v-col cols="12" sm="6" md="6">
+                    <v-select v-model="editedItem.notify_person" label="Notify Person" :items="staff" item-title="title" item-value="value" multiple chips clearable
+                      :rules="[rules.select]"></v-select>
                   </v-col>
 
                   <v-col cols="12" sm="6" md="6">
-                    <v-text-field v-model="editedItem.contract_name" label="Contract Name"></v-text-field>
+                    <v-text-field v-model="editedItem.estimate" label="Hours Allocated"></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="6">
-                    <v-text-field v-model="editedItem.contract_number" label="Contract Number"></v-text-field>
+                    <v-select v-model="editedItem.priority" label="Priority" :items="priorities" item-title="title" item-value="value"
+                      :rules="[rules.select]"></v-select>
                   </v-col>
 
                   <v-col cols="12" sm="12" md="12">
-                    <v-text-field v-model="editedItem.project_manager" label="Project Manager"></v-text-field>
+                    <v-textarea v-model="editedItem.description" label="Description"></v-textarea>
                   </v-col>
 
                   <v-col cols="12" sm="12" md="12">
-                    <v-textarea v-model="editedItem.notes" label="Notes"></v-textarea>
+                    <v-text-field label="SharePoint File"></v-text-field>
                   </v-col>
 
                   <v-col class="text-right">
@@ -156,17 +163,18 @@ const drawer = ref(false)
 
 const headers = [
   { title: 'Number', key: 'wo_number', align: 'start' },
-  { title: 'Work order', key: 'wo_name', align: 'start' },
+  { title: 'Description', key: 'description', align: 'start' },
   { title: 'Assignee', key: 'assigned_to', align: 'start', sortable: false },
-  { title: 'Type', key: 'type', align: 'start', sortable: false },
+  { title: 'Type', key: 'tags', align: 'start', sortable: false },
   { title: 'Status', key: 'status', align: 'start', sortable: false },
+  { title: 'Priority', key: 'priority', align: 'start', sortable: false },
   // { title: 'Actions', key: 'actions', align: 'end', sortable: false },
 ]
 
 const editedItem = ref([
   {
     wo_number: 0,
-    wo_name: '',
+    description: '',
     assigned_to: '',
     type: '',
     status: '',
@@ -176,7 +184,7 @@ const editedItem = ref([
 const defaultItem = ref([
   {
     wo_number: 0,
-    wo_name: '',
+    description: '',
     assigned_to: '',
     type: '',
     status: '',
@@ -213,24 +221,61 @@ const defaultItem = ref([
 // check if API will provide these
 // if API provides integer-based values, we will need to map v-data-table to render properly
 const statuses = [
-  { title: '-- Select --', value: '' },
+  { title: 'Int Request', value: 'Int Request' },
   { title: 'In Progress', value: 'In Progress' },
-  { title: 'Accepted', value: 'Accepted' },
-  { title: 'Returned', value: 'Returned' },
+  { title: 'Internal QC', value: 'Internal QC' },
+  { title: 'Post Production', value: 'Post Production' },
+  { title: 'Client Review', value: 'Client Review' },
+  { title: 'On-hold', value: 'On-hold' },
+  { title: 'Scheduled', value: 'Scheduled' },
+  { title: 'Done', value: 'Done' },
+  { title: 'Complete', value: 'Complete' },
 ]
 
 // check if API will provide these
 // if API provides integer-based values, we will need to map v-data-table to render properly
 const types = [
-  { title: '-- Select --', value: '' },
-  { title: 'web', value: 'web' },
-  { title: 'eBlast', value: 'eBlast' },
-  { title: 'qc request', value: 'qc request' },
+  { title: 'Writing', value: 'Writing' },
+  { title: 'Editing', value: 'Editing' },
+  { title: 'Graphics', value: 'Graphics' },
+  { title: '508 Compliance', value: '508 Compliance' },
+  { title: 'Video/Audio', value: 'Video/Audio' },
+  { title: 'Social Media', value: 'Social Media' },
+  { title: 'Web', value: 'Web' },
+  { title: 'Eblast', value: 'Eblast' },
+]
+
+// check if API will provide these
+// if API provides integer-based values, we will need to map v-data-table to render properly
+const contracts = [
+  { title: 'Contract 1', value: 'contract1' },
+  { title: 'Contract 2', value: 'contract2' },
+  { title: 'Contract 3', value: 'contract3' },
+]
+
+// check if API will provide these
+// if API provides integer-based values, we will need to map v-data-table to render properly
+const priorities = [
+  { title: 'Low', value: 'Low' },
+  { title: 'Normal', value: 'Normal' },
+  { title: 'High', value: 'High' },
+  { title: 'Urgent', value: 'Urgent' },
+]
+
+// check if API will provide these
+// if API provides integer-based values, we will need to map v-data-table to render properly
+const staff = [
+  { title: 'Hollie Austin', value: 'staff1' },
+  { title: 'Jeremiah Simmons', value: 'staff2' },
+  { title: 'Leanne Galvan', value: 'staff3' },
+  { title: 'Freddie Johnston', value: 'staff4' },
+  { title: 'Junaid Howe', value: 'staff5' },
+  { title: 'Casper Pennington', value: 'staff6' },
 ]
 
 // computed value for form title
 const formTitle = computed(() => {
-  return editedIndex.value === -1 ? 'New Item' : 'Edit Item'
+  return editedIndex.value === -1 ? 'New Work Order Form' : 'Edit Work Order Form'
 })
 
 // computed value for filtering data by logged-in user 
@@ -248,6 +293,7 @@ const rules =
   required: v => !!v || 'Field is required',
   length: v => v.length >= 3 || 'Minimum length is 3 characters',
   select: v => !!v || 'Select a valid option',
+  due_date: v => console.log(v)
 }
 
 const form = ref(null)
@@ -267,23 +313,21 @@ onMounted(() => {
 
 function loadItems() {
   loading.value = true
-  axios.get('test.json')
+  axios.get('test2.json')
   .then((response) => {
       data.value = response.data.serverItems.map((item) => {
           return {
-              wo_name: item.wo_name,
               wo_number: item.wo_number,
-              contract_name: item.contract_name,
-              contract_number: item.contract_number,
-              task_number: item.task_number,
-              project_manager: item.project_manager,
-              requester: item.requester,
-              type: item.type,
+              contract: item.contract,
+              tags: item.tags,
               status: item.status,
               assigned_to: item.assigned_to,
-              assigned_to_email_address: item.assigned_to_email_address,
               due_date: item.due_date,
-              notes: item.notes
+              notify_person: item.notify_person,
+              estimate: item.estimate,
+              priority: item.priority,
+              assigned_to_email_address: item.assigned_to_email_address,
+              description: item.description
           }
         })
       totalItems.value = response.data.serverItems.length
@@ -294,7 +338,7 @@ function loadItems() {
 
 function editItem(item) {
   editedIndex.value = data.value.indexOf(item)
-  editedItem.value = Object.assign({}, item)
+  editedItem.value = Object.assign({status: "Int Request"}, item)
   dialog.value = true
 }
 
@@ -309,10 +353,10 @@ function close() {
 // TODO: assuming API will provide ID, we'll need to remove wo_number incrementer 
 function save() {
   if (editedIndex.value > -1) {
-    axios.post('test.json', JSON.stringify(editedItem.value, null, 2))
+    axios.post('test2.json', JSON.stringify(editedItem.value, null, 2))
     Object.assign(data.value[editedIndex.value], editedItem.value)
   } else {
-    axios.post('test.json', JSON.stringify(editedItem.value, null, 2))
+    axios.post('test2.json', JSON.stringify(editedItem.value, null, 2))
     editedItem.value.wo_number = data.value.length + 1
     data.value.push(editedItem.value)
   }
@@ -349,7 +393,7 @@ function filterByUserToggle (type) {
 // color method for v-chip component
 function getColor (status) {
   if (status === 'In Progress') return 'red'
-  else if (status === 'Accepted') return 'green'
+  else if (status === 'Done' || status === 'Complete') return 'green'
   else return 'orange'
 }
 
