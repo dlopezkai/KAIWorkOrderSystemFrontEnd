@@ -61,7 +61,7 @@
                       :rules="[rules.select]"></v-select>
                   </v-col>
                   <v-col cols="12" sm="6" md="6">
-                    <v-select v-model="editedItem.type" label="Type" :items="types" item-title="title" item-value="value" multiple chips clearable
+                    <v-select v-model="editedItem.tags" label="Type" :items="types" item-title="title" item-value="value" multiple chips clearable
                       :rules="[rules.select]"></v-select>
                   </v-col>
 
@@ -82,7 +82,7 @@
                   </v-col>
 
                   <v-col cols="12" sm="6" md="6">
-                    <v-text-field v-model="editedItem.hours" label="Hours Allocated"></v-text-field>
+                    <v-text-field v-model="editedItem.estimate" label="Hours Allocated"></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="6">
                     <v-select v-model="editedItem.priority" label="Priority" :items="priorities" item-title="title" item-value="value"
@@ -316,12 +316,12 @@ function loadItems() {
           return {
               wo_number: item.wo_number,
               contract: item.contract,
-              type: item.type,
+              tags: item.tags,
               status: item.status,
               assigned_to: item.assigned_to,
               due_date: item.due_date,
               notify_person: item.notify_person,
-              hours: item.hours,
+              estimate: item.estimate,
               priority: item.priority,
               assigned_to_email_address: item.assigned_to_email_address,
               description: item.description
