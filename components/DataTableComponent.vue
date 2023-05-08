@@ -56,39 +56,44 @@
             <v-card-text>
               <v-form ref="form" @submit.prevent="submit">
                 <v-row>
-                  <v-col cols="12" sm="12" md="12">
-                    <v-text-field v-model="editedItem.wo_name" label="Work order"
-                      :rules="[rules.required, rules.length]"></v-text-field>
+                  <v-col cols="12" sm="6" md="6">
+                    <v-select v-model="editedItem.contract" label="Contract" :items="contracts" item-title="title" item-value="value"
+                      :rules="[rules.select]"></v-select>
                   </v-col>
                   <v-col cols="12" sm="6" md="6">
                     <v-select v-model="editedItem.type" label="Type" :items="types" item-title="title" item-value="value"
                       :rules="[rules.select]"></v-select>
                   </v-col>
+
                   <v-col cols="12" sm="6" md="6">
                     <v-select v-model="editedItem.status" label="Status" :items="statuses" item-title="title"
                       item-value="value" :rules="[rules.select]"></v-select>
                   </v-col>
-
                   <v-col cols="12" sm="6" md="6">
                     <v-text-field v-model="editedItem.assigned_to" label="Assignee"></v-text-field>
                   </v-col>
+
                   <v-col cols="12" sm="6" md="6">
-                    <v-text-field v-model="editedItem.requester" label="Requested by"></v-text-field>
+                    <v-text-field v-model="editedItem.due_date" label="Due Date"></v-text-field>
+                  </v-col>
+                  <v-col cols="12" sm="6" md="6">
+                    <v-text-field v-model="editedItem.notify_person" label="Notify Person"></v-text-field>
                   </v-col>
 
                   <v-col cols="12" sm="6" md="6">
-                    <v-text-field v-model="editedItem.contract_name" label="Contract Name"></v-text-field>
+                    <v-text-field v-model="editedItem.hours" label="Hours Allocated"></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="6">
-                    <v-text-field v-model="editedItem.contract_number" label="Contract Number"></v-text-field>
+                    <v-select v-model="editedItem.priority" label="Priority" :items="priorities" item-title="title" item-value="value"
+                      :rules="[rules.select]"></v-select>
                   </v-col>
 
                   <v-col cols="12" sm="12" md="12">
-                    <v-text-field v-model="editedItem.project_manager" label="Project Manager"></v-text-field>
+                    <v-textarea v-model="editedItem.description" label="Description"></v-textarea>
                   </v-col>
 
                   <v-col cols="12" sm="12" md="12">
-                    <v-textarea v-model="editedItem.notes" label="Notes"></v-textarea>
+                    <v-text-field label="SharePoint File"></v-text-field>
                   </v-col>
 
                   <v-col class="text-right">
@@ -156,7 +161,7 @@ const drawer = ref(false)
 
 const headers = [
   { title: 'Number', key: 'wo_number', align: 'start' },
-  { title: 'Work order', key: 'wo_name', align: 'start' },
+  { title: 'Description', key: 'description', align: 'start' },
   { title: 'Assignee', key: 'assigned_to', align: 'start', sortable: false },
   { title: 'Type', key: 'type', align: 'start', sortable: false },
   { title: 'Status', key: 'status', align: 'start', sortable: false },
@@ -166,7 +171,7 @@ const headers = [
 const editedItem = ref([
   {
     wo_number: 0,
-    wo_name: '',
+    description: '',
     assigned_to: '',
     type: '',
     status: '',
@@ -176,7 +181,7 @@ const editedItem = ref([
 const defaultItem = ref([
   {
     wo_number: 0,
-    wo_name: '',
+    description: '',
     assigned_to: '',
     type: '',
     status: '',
@@ -228,9 +233,28 @@ const types = [
   { title: 'qc request', value: 'qc request' },
 ]
 
+// check if API will provide these
+// if API provides integer-based values, we will need to map v-data-table to render properly
+const contracts = [
+  { title: '-- Select --', value: '' },
+  { title: 'Contract 1', value: 'contract1' },
+  { title: 'Contract 2', value: 'contract2' },
+  { title: 'Contract 3', value: 'contract3' },
+]
+
+// check if API will provide these
+// if API provides integer-based values, we will need to map v-data-table to render properly
+const priorities = [
+  { title: '-- Select --', value: '' },
+  { title: 'Low', value: 'low' },
+  { title: 'Normal', value: 'normal' },
+  { title: 'High', value: 'high' },
+  { title: 'Urgent', value: 'urgent' },
+]
+
 // computed value for form title
 const formTitle = computed(() => {
-  return editedIndex.value === -1 ? 'New Item' : 'Edit Item'
+  return editedIndex.value === -1 ? 'New Work Order Form' : 'Edit Work Order Form'
 })
 
 // computed value for filtering data by logged-in user 
@@ -267,23 +291,21 @@ onMounted(() => {
 
 function loadItems() {
   loading.value = true
-  axios.get('test.json')
+  axios.get('test2.json')
   .then((response) => {
       data.value = response.data.serverItems.map((item) => {
           return {
-              wo_name: item.wo_name,
               wo_number: item.wo_number,
-              contract_name: item.contract_name,
-              contract_number: item.contract_number,
-              task_number: item.task_number,
-              project_manager: item.project_manager,
-              requester: item.requester,
+              contract: item.contract,
               type: item.type,
               status: item.status,
               assigned_to: item.assigned_to,
-              assigned_to_email_address: item.assigned_to_email_address,
               due_date: item.due_date,
-              notes: item.notes
+              notify_person: item.notify_person,
+              hours: item.hours,
+              priority: item.priority,
+              assigned_to_email_address: item.assigned_to_email_address,
+              description: item.description
           }
         })
       totalItems.value = response.data.serverItems.length
@@ -309,10 +331,10 @@ function close() {
 // TODO: assuming API will provide ID, we'll need to remove wo_number incrementer 
 function save() {
   if (editedIndex.value > -1) {
-    axios.post('test.json', JSON.stringify(editedItem.value, null, 2))
+    axios.post('test2.json', JSON.stringify(editedItem.value, null, 2))
     Object.assign(data.value[editedIndex.value], editedItem.value)
   } else {
-    axios.post('test.json', JSON.stringify(editedItem.value, null, 2))
+    axios.post('test2.json', JSON.stringify(editedItem.value, null, 2))
     editedItem.value.wo_number = data.value.length + 1
     data.value.push(editedItem.value)
   }
