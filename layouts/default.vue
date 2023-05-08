@@ -1,5 +1,5 @@
 <template>
-    <v-card v-if="authStore.loggedIn">
+    <!-- <v-card v-if="authStore.loggedIn">
       <v-layout>
         <v-app-bar title="ClickUp Integration App">
             <AuthN></AuthN>
@@ -14,11 +14,22 @@
     </v-card>
 
     <v-card v-else>
+    <v-card>
       <v-layout>
         <v-app-bar title="ClickUp Integration App">
             <AuthN></AuthN>
         </v-app-bar>
           
+        <v-main style="min-height: 300px;">
+            <div>
+                <slot />
+            </div>
+        </v-main>
+      </v-layout>
+    </v-card> -->
+
+    <v-card>
+      <v-layout>
         <v-main style="min-height: 300px;">
             <div>
                 <slot />

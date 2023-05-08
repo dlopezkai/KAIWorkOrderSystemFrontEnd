@@ -4,6 +4,8 @@
     <div class="d-flex align-center flex-column mt-5">
       <h2>ClickUp Integration App</h2>
       <p>Please login using your Active Directory credentials</p>
+      <br />
+      <v-btn @click.stop="signInAction" v-if="!authStore.loggedIn">Sign In</v-btn>
     </div>
   </div>
   <div v-else>
@@ -17,6 +19,10 @@
 
   const authStore = useAuthStore()
   // const { currentUser } = storeToRefs(authStore)
+
+  async function signInAction() {
+    await signIn()
+  }
 </script>
 
 <style scoped>
