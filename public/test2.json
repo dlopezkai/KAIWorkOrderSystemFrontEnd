@@ -3,7 +3,7 @@
     {
       "wo_number": 1,
       "contract": "contract1",
-      "type": "web",
+      "type": ["Web", "Eblast"],
       "status": "In Progress",
       "assigned_to": "David Lopez",
       "assigned_to_email_address": "david.lopez@kauffmaninc.com",
@@ -16,7 +16,7 @@
     {
       "wo_number": 2,
       "contract": "contract2",
-      "type": "web",
+      "type": ["Web"],
       "status": "In Progress",
       "assigned_to": "Jim Huber",
       "assigned_to_email_address": "jim.huber@kauffmaninc.com",

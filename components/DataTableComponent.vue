@@ -61,7 +61,7 @@
                       :rules="[rules.select]"></v-select>
                   </v-col>
                   <v-col cols="12" sm="6" md="6">
-                    <v-select v-model="editedItem.type" label="Type" :items="types" item-title="title" item-value="value"
+                    <v-select v-model="editedItem.type" label="Type" :items="types" item-title="title" item-value="value" multiple
                       :rules="[rules.select]"></v-select>
                   </v-col>
 
@@ -229,9 +229,14 @@ const statuses = [
 // if API provides integer-based values, we will need to map v-data-table to render properly
 const types = [
   { title: '-- Select --', value: '' },
-  { title: 'web', value: 'web' },
-  { title: 'eBlast', value: 'eBlast' },
-  { title: 'qc request', value: 'qc request' },
+  { title: 'Writing', value: 'Writing' },
+  { title: 'Editing', value: 'Editing' },
+  { title: 'Graphics', value: 'Graphics' },
+  { title: '508 Compliance', value: '508 Compliance' },
+  { title: 'Video/Audio', value: 'Video/Audio' },
+  { title: 'Social Media', value: 'Social Media' },
+  { title: 'Web', value: 'Web' },
+  { title: 'Eblast', value: 'Eblast' },
 ]
 
 // check if API will provide these
