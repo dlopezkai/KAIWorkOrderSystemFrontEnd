@@ -74,7 +74,8 @@
                   </v-col>
 
                   <v-col cols="12" sm="6" md="6">
-                    <v-text-field v-model="editedItem.due_date" label="Due Date"></v-text-field>
+                    <v-text-field v-model="editedItem.due_date" label="Due Date" type="date"
+                      :rules="[rules.due_date]"></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="6">
                     <v-select v-model="editedItem.notify_person" label="Notify Person" :items="staff" item-title="title" item-value="value" multiple chips clearable
@@ -291,6 +292,7 @@ const rules =
   required: v => !!v || 'Field is required',
   length: v => v.length >= 3 || 'Minimum length is 3 characters',
   select: v => !!v || 'Select a valid option',
+  due_date: v => console.log(v)
 }
 
 const form = ref(null)
