@@ -222,9 +222,15 @@ const defaultItem = ref([
 // if API provides integer-based values, we will need to map v-data-table to render properly
 const statuses = [
   { title: '-- Select --', value: '' },
+  { title: 'Int Request', value: 'Int Request' },
   { title: 'In Progress', value: 'In Progress' },
-  { title: 'Accepted', value: 'Accepted' },
-  { title: 'Returned', value: 'Returned' },
+  { title: 'Internal QC', value: 'Internal QC' },
+  { title: 'Post Production', value: 'Post Production' },
+  { title: 'Client Review', value: 'Client Review' },
+  { title: 'On-hold', value: 'On-hold' },
+  { title: 'Scheduled', value: 'Scheduled' },
+  { title: 'Done', value: 'Done' },
+  { title: 'Complete', value: 'Complete' },
 ]
 
 // check if API will provide these
@@ -392,7 +398,7 @@ function filterByUserToggle (type) {
 // color method for v-chip component
 function getColor (status) {
   if (status === 'In Progress') return 'red'
-  else if (status === 'Accepted') return 'green'
+  else if (status === 'Done' || status === 'Complete') return 'green'
   else return 'orange'
 }
 
