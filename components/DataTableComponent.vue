@@ -67,7 +67,7 @@
 
                   <v-col cols="12" sm="6" md="6">
                     <v-select v-model="editedItem.status" label="Status" :items="statuses" item-title="title"
-                      item-value="value" :rules="[rules.select]"></v-select>
+                      item-value="value" readonly :rules="[rules.select]"></v-select>
                   </v-col>
                   <v-col cols="12" sm="6" md="6">
                     <v-text-field v-model="editedItem.assigned_to" label="Assignee"></v-text-field>
@@ -343,7 +343,7 @@ function loadItems() {
 
 function editItem(item) {
   editedIndex.value = data.value.indexOf(item)
-  editedItem.value = Object.assign({}, item)
+  editedItem.value = Object.assign({status: "Int Request"}, item)
   dialog.value = true
 }
 
