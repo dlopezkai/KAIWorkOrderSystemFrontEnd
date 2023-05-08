@@ -165,7 +165,7 @@ const headers = [
   { title: 'Number', key: 'wo_number', align: 'start' },
   { title: 'Description', key: 'description', align: 'start' },
   { title: 'Assignee', key: 'assigned_to', align: 'start', sortable: false },
-  { title: 'Type', key: 'type', align: 'start', sortable: false },
+  { title: 'Type', key: 'tags', align: 'start', sortable: false },
   { title: 'Status', key: 'status', align: 'start', sortable: false },
   { title: 'Priority', key: 'priority', align: 'start', sortable: false },
   // { title: 'Actions', key: 'actions', align: 'end', sortable: false },
