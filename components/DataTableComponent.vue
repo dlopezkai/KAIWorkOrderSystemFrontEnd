@@ -221,7 +221,6 @@ const defaultItem = ref([
 // check if API will provide these
 // if API provides integer-based values, we will need to map v-data-table to render properly
 const statuses = [
-  { title: '-- Select --', value: '' },
   { title: 'Int Request', value: 'Int Request' },
   { title: 'In Progress', value: 'In Progress' },
   { title: 'Internal QC', value: 'Internal QC' },
@@ -236,7 +235,6 @@ const statuses = [
 // check if API will provide these
 // if API provides integer-based values, we will need to map v-data-table to render properly
 const types = [
-  { title: '-- Select --', value: '' },
   { title: 'Writing', value: 'Writing' },
   { title: 'Editing', value: 'Editing' },
   { title: 'Graphics', value: 'Graphics' },
@@ -250,7 +248,6 @@ const types = [
 // check if API will provide these
 // if API provides integer-based values, we will need to map v-data-table to render properly
 const contracts = [
-  { title: '-- Select --', value: '' },
   { title: 'Contract 1', value: 'contract1' },
   { title: 'Contract 2', value: 'contract2' },
   { title: 'Contract 3', value: 'contract3' },
@@ -259,7 +256,6 @@ const contracts = [
 // check if API will provide these
 // if API provides integer-based values, we will need to map v-data-table to render properly
 const priorities = [
-  { title: '-- Select --', value: '' },
   { title: 'Low', value: 'Low' },
   { title: 'Normal', value: 'Normal' },
   { title: 'High', value: 'High' },
@@ -269,7 +265,6 @@ const priorities = [
 // check if API will provide these
 // if API provides integer-based values, we will need to map v-data-table to render properly
 const staff = [
-  { title: '-- Select --', value: '' },
   { title: 'Hollie Austin', value: 'staff1' },
   { title: 'Jeremiah Simmons', value: 'staff2' },
   { title: 'Leanne Galvan', value: 'staff3' },
