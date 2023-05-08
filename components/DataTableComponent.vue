@@ -61,7 +61,7 @@
                       :rules="[rules.select]"></v-select>
                   </v-col>
                   <v-col cols="12" sm="6" md="6">
-                    <v-select v-model="editedItem.type" label="Type" :items="types" item-title="title" item-value="value" multiple
+                    <v-select v-model="editedItem.type" label="Type" :items="types" item-title="title" item-value="value" multiple chips clearable
                       :rules="[rules.select]"></v-select>
                   </v-col>
 
@@ -77,7 +77,7 @@
                     <v-text-field v-model="editedItem.due_date" label="Due Date"></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="6">
-                    <v-select v-model="editedItem.notify_person" label="Notify Person" :items="staff" item-title="title" item-value="value" multiple 
+                    <v-select v-model="editedItem.notify_person" label="Notify Person" :items="staff" item-title="title" item-value="value" multiple chips clearable
                       :rules="[rules.select]"></v-select>
                   </v-col>
 
