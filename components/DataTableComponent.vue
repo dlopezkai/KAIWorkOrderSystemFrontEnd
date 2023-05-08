@@ -77,7 +77,8 @@
                     <v-text-field v-model="editedItem.due_date" label="Due Date"></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="6">
-                    <v-text-field v-model="editedItem.notify_person" label="Notify Person"></v-text-field>
+                    <v-select v-model="editedItem.notify_person" label="Notify Person" :items="staff" item-title="title" item-value="value" multiple 
+                      :rules="[rules.select]"></v-select>
                   </v-col>
 
                   <v-col cols="12" sm="6" md="6">
@@ -256,6 +257,18 @@ const priorities = [
   { title: 'Normal', value: 'Normal' },
   { title: 'High', value: 'High' },
   { title: 'Urgent', value: 'Urgent' },
+]
+
+// check if API will provide these
+// if API provides integer-based values, we will need to map v-data-table to render properly
+const staff = [
+  { title: '-- Select --', value: '' },
+  { title: 'Hollie Austin', value: 'staff1' },
+  { title: 'Jeremiah Simmons', value: 'staff2' },
+  { title: 'Leanne Galvan', value: 'staff3' },
+  { title: 'Freddie Johnston', value: 'staff4' },
+  { title: 'Junaid Howe', value: 'staff5' },
+  { title: 'Casper Pennington', value: 'staff6' },
 ]
 
 // computed value for form title

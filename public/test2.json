@@ -8,7 +8,7 @@
       "assigned_to": "David Lopez",
       "assigned_to_email_address": "david.lopez@kauffmaninc.com",
       "due_date": "",
-      "notify_person": "An Hori",
+      "notify_person": ["staff1", "staff2"],
       "hours": 2,
       "priority": "High",
       "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut a condimentum tellus, eu tristique nisi. Sed et nunc sed ex vehicula bibendum id ac est. Aenean risus turpis, ornare nec viverra ac, dignissim id nisl. Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque eu leo a risus viverra eleifend eu vitae lacus. Cras nec nibh fringilla, finibus risus id, pulvinar nibh. Donec finibus tincidunt dolor, tempus dignissim ex finibus non. Aliquam vulputate vulputate aliquet. Duis eget placerat metus. Vestibulum a dui auctor, viverra urna sit amet, pulvinar mi. Aenean turpis massa, facilisis in porttitor quis, pharetra nec nibh."
@@ -21,7 +21,7 @@
       "assigned_to": "Jim Huber",
       "assigned_to_email_address": "jim.huber@kauffmaninc.com",
       "due_date": "",
-      "notify_person": "An Hori",
+      "notify_person": ["staff1", "staff3", "staff4"],
       "hours": 2,
       "priority": "Low",
       "description": "Sed et nunc sed ex vehicula bibendum id ac est. Aenean risus turpis, ornare nec viverra ac, dignissim id nisl. Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque eu leo a risus viverra eleifend eu vitae lacus. Cras nec nibh fringilla, finibus risus id, pulvinar nibh. Donec finibus tincidunt dolor, tempus dignissim ex finibus non. Aliquam vulputate vulputate aliquet. Duis eget placerat metus. Vestibulum a dui auctor, viverra urna sit amet, pulvinar mi. Aenean turpis massa, facilisis in porttitor quis, pharetra nec nibh."
@@ -34,7 +34,7 @@
       "assigned_to": "Kerrick Young",
       "assigned_to_email_address": "kerrick.young@kauffmaninc.com",
       "due_date": "",
-      "notify_person": "An Hori",
+      "notify_person": ["staff2", "staff5", "staff6"],
       "hours": 2,
       "priority": "Low",
       "description": "Aenean risus turpis, ornare nec viverra ac, dignissim id nisl. Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque eu leo a risus viverra eleifend eu vitae lacus. Cras nec nibh fringilla, finibus risus id, pulvinar nibh. Donec finibus tincidunt dolor, tempus dignissim ex finibus non. Aliquam vulputate vulputate aliquet. Duis eget placerat metus. Vestibulum a dui auctor, viverra urna sit amet, pulvinar mi. Aenean turpis massa, facilisis in porttitor quis, pharetra nec nibh."
@@ -47,7 +47,7 @@
       "assigned_to": "Kerrick Young",
       "assigned_to_email_address": "kerrick.young@kauffmaninc.com",
       "due_date": "",
-      "notify_person": "An Hori",
+      "notify_person": ["staff2", "staff5", "staff6"],
       "hours": 2,
       "priority": "Normal",
       "description": "Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque eu leo a risus viverra eleifend eu vitae lacus. Cras nec nibh fringilla, finibus risus id, pulvinar nibh. Donec finibus tincidunt dolor, tempus dignissim ex finibus non. Aliquam vulputate vulputate aliquet. Duis eget placerat metus. Vestibulum a dui auctor, viverra urna sit amet, pulvinar mi. Aenean turpis massa, facilisis in porttitor quis, pharetra nec nibh."
@@ -60,7 +60,7 @@
       "assigned_to": "Jim Huber",
       "assigned_to_email_address": "jim.huber@kauffmaninc.com",
       "due_date": "",
-      "notify_person": "An Hori",
+      "notify_person": ["staff1", "staff2"],
       "hours": 2,
       "priority": "Urgent",
       "description": "Sed et nunc sed ex vehicula bibendum id ac est. Aenean risus turpis, ornare nec viverra ac, dignissim id nisl. Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque eu leo a risus viverra eleifend eu vitae lacus. Cras nec nibh fringilla, finibus risus id, pulvinar nibh. Donec finibus tincidunt dolor, tempus dignissim ex finibus non. Aliquam vulputate vulputate aliquet. Duis eget placerat metus. Vestibulum a dui auctor, viverra urna sit amet, pulvinar mi. Aenean turpis massa, facilisis in porttitor quis, pharetra nec nibh."
@@ -73,7 +73,7 @@
       "assigned_to": "Kerrick Young",
       "assigned_to_email_address": "kerrick.young@kauffmaninc.com",
       "due_date": "",
-      "notify_person": "An Hori",
+      "notify_person": ["staff5"],
       "hours": 2,
       "priority": "High",
       "description": "eu tristique nisi. Sed et nunc sed ex vehicula bibendum id ac est. Aenean risus turpis, ornare nec viverra ac, dignissim id nisl. Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque eu leo a risus viverra eleifend eu vitae lacus. Cras nec nibh fringilla, finibus risus id, pulvinar nibh. Donec finibus tincidunt dolor, tempus dignissim ex finibus non. Aliquam vulputate vulputate aliquet. Duis eget placerat metus. Vestibulum a dui auctor, viverra urna sit amet, pulvinar mi. Aenean turpis massa, facilisis in porttitor quis, pharetra nec nibh."
@@ -86,7 +86,7 @@
       "assigned_to": "David Lopez",
       "assigned_to_email_address": "david.lopez@kauffmaninc.com",
       "due_date": "",
-      "notify_person": "An Hori",
+      "notify_person": ["staff3"],
       "hours": 2,
       "priority": "Urgent",
       "description": "Aenean turpis massa, facilisis in porttitor quis, pharetra nec nibh."
@@ -99,7 +99,7 @@
       "assigned_to": "David Lopez",
       "assigned_to_email_address": "david.lopez@kauffmaninc.com",
       "due_date": "",
-      "notify_person": "An Hori",
+      "notify_person": ["staff4", "staff6"],
       "hours": 2,
       "priority": "low",
       "description": "iverra urna sit amet, pulvinar mi. Aenean turpis massa, facilisis in porttitor quis, pharetra nec nibh."
@@ -112,7 +112,7 @@
       "assigned_to": "Kerrick Young",
       "assigned_to_email_address": "kerrick.young@kauffmaninc.com",
       "due_date": "",
-      "notify_person": "An Hori",
+      "notify_person": ["staff3"],
       "hours": 2,
       "priority": "High",
       "description": "Loreique nisi. Sed et nunc sed ex vehicula bibendum id ac est. Aenean risus turpis, ornare nec viverra ac, dignissim id nisl. Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque eu leo a risus viverra eleifend eu vitae lacus. Cras nec nibh fringilla, finibus risus id, pulvinar nibh. Donec finibus tincidunt dolor, tempus dignissim ex finibus non. Aliquam vulputate vulputate aliquet. Duis eget placerat metus. Vestibulum a dui auctor, viverra urna sit amet, pulvinar mi. Aenean turpis massa, facilisis in porttitor quis, pharetra nec nibh."
@@ -125,7 +125,7 @@
       "assigned_to": "Jim Huber",
       "assigned_to_email_address": "jim.huber@kauffmaninc.com",
       "due_date": "",
-      "notify_person": "An Hori",
+      "notify_person": ["staff4", "staff5", "staff6"],
       "hours": 2,
       "priority": "Normal",
       "description": "eu tristique nisi. Sed et nunc sed ex vehicula bibendum id ac est. Aenean risus turpis, ornare nec viverra ac, dignissim id nisl. Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque eu leo a risus viverra eleifend eu vitae lacus. Cras nec nibh fringilla, finibus risus id, pulvinar nibh. Donec finibus tincidunt dolor, tempus dignissim ex finibus non. Aliquam vulputate vulputate aliquet. Duis eget placerat metus. Vestibulum a dui auctor, viverra urna sit amet, pulvinar mi. Aenean turpis massa, facilisis in porttitor quis, pharetra nec nibh."
@@ -138,46 +138,46 @@
       "assigned_to": "Kerrick Young",
       "assigned_to_email_address": "kerrick.young@kauffmaninc.com",
       "due_date": "",
-      "notify_person": "An Hori",
+      "notify_person": ["staff1", "staff2", "staff3"],
       "hours": 2,
       "priority": "Normal",
       "description": "Ut a condimentum tellus, eu tristique nisi. Sed et nunc sed ex vehicula bibendum id ac est. Aenean risus turpis, ornare nec viverra ac, dignissim id nisl. Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque eu leo a risus viverra eleifend eu vitae lacus. Cras nec nibh fringilla, finibus risus id, pulvinar nibh. Donec finibus tincidunt dolor, tempus dignissim ex finibus non. Aliquam vulputate vulputate aliquet. Duis eget placerat metus. Vestibulum a dui auctor, viverra urna sit amet, pulvinar mi. Aenean turpis massa, facilisis in porttitor quis, pharetra nec nibh."
     },
     {
-      "wo_number": 13,
+      "wo_number": 12,
       "contract": "contract2",
       "type": "web",
       "status": "In Progress",
       "assigned_to": "David Lopez",
       "assigned_to_email_address": "david.lopez@kauffmaninc.com",
       "due_date": "",
-      "notify_person": "An Hori",
+      "notify_person": ["staff6"],
       "hours": 2,
       "priority": "Low",
       "description": "eu tristique nisi. Sed et nunc sed ex vehicula bibendum id ac est. Aenean risus turpis, ornare nec viverra ac, dignissim id nisl. Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque eu leo a risus viverra eleifend eu vitae lacus. Cras nec nibh fringilla, finibus risus id, pulvinar nibh. Donec finibus tincidunt dolor, tempus dignissim ex finibus non. Aliquam vulputate vulputate aliquet. Duis eget placerat metus. Vestibulum a dui auctor, viverra urna sit amet, pulvinar mi. Aenean turpis massa, facilisis in porttitor quis, pharetra nec nibh."
     },
     {
-      "wo_number": 14,
+      "wo_number": 13,
       "contract": "contract1",
       "type": "web",
       "status": "In Progress",
       "assigned_to": "Jim Huber",
       "assigned_to_email_address": "jim.huber@kauffmaninc.com",
       "due_date": "",
-      "notify_person": "An Hori",
+      "notify_person": ["staff3"],
       "hours": 2,
       "priority": "Low",
       "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut a condimentum tellus, eu tristique nisi. Sed et nunc sed ex vehicula bibendum id ac est. Aenean risus turpis, ornare nec viverra ac, dignissim id nisl. Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque eu leo a risus viverra eleifend eu vitae lacus. Cras nec nibh fringilla, finibus risus id, pulvinar nibh. Donec finibus tincidunt dolor, tempus dignissim ex finibus non. Aliquam vulputate vulputate aliquet. Duis eget placerat metus. Vestibulum a dui auctor, viverra urna sit amet, pulvinar mi. Aenean turpis massa, facilisis in porttitor quis, pharetra nec nibh."
     },
     {
-      "wo_number": 15,
+      "wo_number": 14,
       "contract": "contract3",
       "type": "web",
       "status": "In Progress",
       "assigned_to": "Jim Huber",
       "assigned_to_email_address": "jim.huber@kauffmaninc.com",
       "due_date": "",
-      "notify_person": "An Hori",
+      "notify_person": ["staff1", "staff5"],
       "hours": 2,
       "priority": "Low",
       "description": "tristique nisi. Sed et nunc sed ex vehicula bibendum id ac est. Aenean risus turpis, ornare nec viverra ac, dignissim id nisl. Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque eu leo a risus viverra eleifend eu vitae lacus. Cras nec nibh fringilla, finibus risus id, pulvinar nibh. Donec finibus tincidunt dolor, tempus dignissim ex finibus non. Aliquam vulputate vulputate aliquet. Duis eget placerat metus. Vestibulum a dui auctor, viverra urna sit amet, pulvinar mi. Aenean turpis massa, facilisis in porttitor quis, pharetra nec nibh."
