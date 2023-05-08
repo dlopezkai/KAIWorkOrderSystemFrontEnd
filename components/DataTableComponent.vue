@@ -3,6 +3,9 @@
   <v-navigation-drawer
     color="#428086"
     theme="dark"
+    v-model="drawer"
+    clipped 
+    hide-overlay
   >
     <v-list color="transparent">
       <v-list-item prepend-icon="mdi-account-box" title="My work orders" @click="filterByUserToggle('user')"></v-list-item>
@@ -11,6 +14,11 @@
     </v-list>
   </v-navigation-drawer>
 
+  <v-app-bar app clipped-left dark>
+    <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+    <v-toolbar-title>ClickUp Integration App</v-toolbar-title>
+    <AuthN></AuthN>
+  </v-app-bar>
 
   <v-data-table
     :headers="headers" 
@@ -144,6 +152,7 @@ const editedIndex = ref(-1)
 const data = ref([])
 const search = ref('')
 const filterByUser = ref(false)
+const drawer = ref(false)
 
 const headers = [
   { title: 'Number', key: 'wo_number', align: 'start' },
