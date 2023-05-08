@@ -168,7 +168,7 @@ const drawer = ref(false)
 
 const headers = [
   { title: 'Number', key: 'wo_number', align: 'start' },
-  { title: 'Description', key: 'description', align: 'start' },
+  { title: 'Description', key: 'description', align: 'start', width: '35%' },
   { title: 'Assignee', key: 'assigned_to', align: 'start', sortable: false },
   { title: 'Type', key: 'tags', align: 'start', sortable: false },
   { title: 'Status', key: 'status', align: 'start', sortable: false },
@@ -413,8 +413,10 @@ function getColor (status) {
 
 <style scoped>
 .truncate {
-  max-width: 50vw;
-  white-space: nowrap;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  white-space: normal;
   overflow: hidden;
   text-overflow: ellipsis;
 }
