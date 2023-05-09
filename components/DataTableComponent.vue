@@ -306,29 +306,35 @@ const rules =
   length: v => v.length >= 3 || 'Minimum length is 3 characters',
   select: v => !!v || 'Select a valid option',
   due_date: v => !!v || 'Date must be selected',
-  due_date_threshold: v => dateValidation(v) || 'Date must be 2 days from today',
+  due_date_threshold: v => dateValidation(v) || 'Date must be 2 business days from today',
   
 }
 
 // checks for the 2 business days rule
-function dateValidation(date) {
+function dateValidation(input) {
+  console.log(input)
   
-  const numberOfDaysToAdd = 2;
-  
-  let todaysDate = new Date () 
-  let todaysDatePlusTwoDays = new Date(todaysDate.setDate(todaysDate.getDate() + numberOfDaysToAdd))
+  // get the current date + 2 days and format it
+  let todaysDate = new Date() 
+  let todaysDatePlusTwoDays = new Date(todaysDate.setDate(todaysDate.getDate() + 2))
   let thresholdDate = todaysDatePlusTwoDays.toISOString().split('T')[0]
 
-  let selectedDate = new Date (date)
-  let selectedDateFormatted = selectedDate.toISOString()
-
-  if (selectedDateFormatted < thresholdDate) {
-    console.log("not valid")
-    return false
+  // get the date set by the user and format it
+  let date = new Date(input)
+  let selectedDate = new Date(date.setDate(date.getDate() + 1))
+  let selectedDateDay = selectedDate.getDay()
+  let selectedDateFormatted = selectedDate.toISOString().split('T')[0]
+ 
+  // first check if the selected date (by user) is a Saturday or Sunday
+  // then check if the selected date is at least 2 days from the current date
+  if(selectedDateDay !== 0 && selectedDateDay !== 6) {
+    if (selectedDateFormatted > thresholdDate) {
+      return true
+    }
   } else {
-    console.log("valid")
-    return true
+    return false
   }
+
 }
 
 const form = ref(null)
