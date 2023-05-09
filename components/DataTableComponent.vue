@@ -323,16 +323,21 @@ function dateValidation(input) {
     // initialize the parsed date
     let selectedDate = new Date(formattedDate);
 
+    // get day of week
+    let selectedDateDay = selectedDate.getDay()
+
     // get the current date plus 2 days
     let todaysDate = new Date();
     let todaysDatePlusTwoDays = new Date(todaysDate.setDate(todaysDate.getDate() + 2))
     let thresholdDate = new Date(todaysDatePlusTwoDays.getFullYear(),todaysDatePlusTwoDays.getMonth(),todaysDatePlusTwoDays.getDate())
 
     // logic to determine if selected date is valid
-    if(selectedDate >= thresholdDate) {
+    if(selectedDateDay !== 0 && selectedDateDay !== 6) {
+      if(selectedDate >= thresholdDate) {
         return true
-    } else {
+      } else {
         return false
+      }
     }
 
 
@@ -355,13 +360,13 @@ function dateValidation(input) {
  
   // first check if the selected date (by user) is a Saturday or Sunday
   // then check if the selected date is at least 2 days from the current date
-  // if(selectedDateDay !== 5 && selectedDateDay !== 6) {
-  //   if (selectedDateFormatted > thresholdDate) {
-  //     return true
-  //   }
-  // } else {
-  //   return false
-  // }
+  if(selectedDateDay !== 0 && selectedDateDay !== 6) {
+    if (selectedDateFormatted > thresholdDate) {
+      return true
+    }
+  } else {
+    return false
+  }
 
 }
 
