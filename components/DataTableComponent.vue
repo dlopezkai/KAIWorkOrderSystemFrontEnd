@@ -23,12 +23,20 @@
   <v-data-table
     :headers="headers" 
     :items="filteredData" 
-    :group-by="groupBy"
     :loading="loading" 
     class="elevation-1"
     :search="search"
     @click:row="(pointerEvent, {item}) => editItem(item.raw)"
   >
+  <!-- <v-data-table
+    :headers="headers" 
+    :items="filteredData" 
+    :group-by="groupBy"
+    :loading="loading" 
+    class="elevation-1"
+    :search="search"
+    @click:row="(pointerEvent, {item}) => editItem(item.raw)"
+  > -->
     <template v-slot:top>
 
       <v-text-field
@@ -57,6 +65,10 @@
             <v-card-text>
               <v-form ref="form" @submit.prevent="submit">
                 <v-row>
+                  <v-col cols="12" sm="12" md="12">
+                    <v-text-field v-model="editedItem.name" label="Name"></v-text-field>
+                  </v-col>
+
                   <v-col cols="12" sm="6" md="6">
                     <v-select v-model="editedItem.contract" label="Contract" :items="contracts" item-title="title" item-value="value"
                       :rules="[rules.select]"></v-select>
@@ -169,7 +181,7 @@ const form = ref(null)
 
 const headers = [
   { title: 'Number', key: 'wo_number', align: 'start' },
-  { title: 'Description', key: 'description', align: 'start', width: '35%' },
+  { title: 'Name', key: 'name', align: 'start', width: '35%' },
   { title: 'Assignee', key: 'assigned_to', align: 'start', sortable: false },
   { title: 'Type', key: 'tags', align: 'start', sortable: false },
   { title: 'Status', key: 'status', align: 'start', sortable: false },
@@ -358,24 +370,27 @@ onMounted(() => {
 
 function loadItems() {
   loading.value = true
-  axios.get('test2.json')
+  // axios.get('https://kai.huberspace.net/tasks/')
+  axios.get('test3.json')
   .then((response) => {
-    data.value = response.data.serverItems.map((item) => {
+    console.log(response.data.data.tasks)
+    data.value = response.data.data.tasks.map((item) => {
       return {
-        wo_number: item.wo_number,
-        contract: item.contract,
-        tags: item.tags,
-        status: item.status,
-        assigned_to: item.assigned_to,
+        wo_number: item.id,
+        // contract: item.contract,
+        // tags: item.tags,
+        status: item.status.status,
+        // assigned_to: item.assignees,
         due_date: item.due_date,
-        notify_person: item.notify_person,
-        estimate: item.estimate,
-        priority: item.priority,
-        assigned_to_email_address: item.assigned_to_email_address,
-        description: item.description
+        // notify_person: item.notify_person,
+        estimate: item.time_estimate,
+        // priority: item.priority,
+        // assigned_to_email_address: item.assigned_to_email_address,
+        description: item.text_content,
+        name: item.name
       }
     })
-    totalItems.value = response.data.serverItems.length
+    totalItems.value = response.data.data.tasks.length
     loading.value = false
   })
   .catch(err => console.log(err))
