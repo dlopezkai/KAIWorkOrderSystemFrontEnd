@@ -74,7 +74,7 @@
                       :rules="[rules.select]"></v-select>
                   </v-col>
                   <v-col cols="12" sm="6" md="6">
-                    <v-select v-model="editedItem.tags" label="Type" :items="types" item-title="name" item-value="name" multiple chips clearable
+                    <v-select v-model="editedItem.tags" label="Type" :items="tags" item-title="name" item-value="name" multiple chips clearable
                       :rules="[rules.select]"></v-select>
                   </v-col>
 
@@ -179,6 +179,7 @@ const search = ref('')
 const filterByUser = ref(false)
 const drawer = ref(false)
 const form = ref(null)
+const tags = ref([])
 
 const headers = [
   { title: 'Name', key: 'name', align: 'start', width: '35%' },
@@ -248,18 +249,7 @@ const statuses = [
   { title: 'Complete', value: 'Complete' },
 ]
 
-// check if API will provide these
-// if API provides integer-based values, we will need to map v-data-table to render properly
-const types = [
-  { title: 'Writing', value: 'Writing' },
-  { title: 'Editing', value: 'Editing' },
-  { title: 'Graphics', value: 'Graphics' },
-  { title: '508 Compliance', value: '508 Compliance' },
-  { title: 'Video/Audio', value: 'Video/Audio' },
-  { title: 'Social Media', value: 'Social Media' },
-  { title: 'Web', value: 'Web' },
-  { title: 'Eblast', value: 'Eblast' },
-]
+
 
 // check if API will provide these
 // if API provides integer-based values, we will need to map v-data-table to render properly
@@ -364,6 +354,7 @@ async function submit() {
 // mounted life-cycle hook
 onMounted(() => {
   loadItems()
+  loadTags()
 })
 
 function loadItems() {
@@ -371,7 +362,6 @@ function loadItems() {
   // axios.get('https://kai.huberspace.net/tasks/')
   axios.get('test3.json')
   .then((response) => {
-    console.log(response.data.data.tasks)
     data.value = response.data.data.tasks.map((item) => {
       return {
         // contract: item.contract,
@@ -384,6 +374,21 @@ function loadItems() {
         // priority: item.priority,
         // assigned_to_email_address: item.assigned_to_email_address,
         description: item.text_content,
+        name: item.name
+      }
+    })
+    totalItems.value = response.data.data.tasks.length
+    loading.value = false
+  })
+  .catch(err => console.log(err))
+}
+
+function loadTags() {
+  loading.value = true
+  axios.get('https://kai.huberspace.net/tags/')
+  .then((response) => {
+    tags.value = response.data.data.map((item) => {
+      return {
         name: item.name
       }
     })
