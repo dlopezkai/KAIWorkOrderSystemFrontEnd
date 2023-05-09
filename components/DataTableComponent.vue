@@ -165,6 +165,7 @@ const data = ref([])
 const search = ref('')
 const filterByUser = ref(false)
 const drawer = ref(false)
+const form = ref(null)
 
 const headers = [
   { title: 'Number', key: 'wo_number', align: 'start' },
@@ -341,8 +342,6 @@ function dateValidation(input) {
   }
 
 }
-
-const form = ref(null)
 
 // form submit process
 async function submit() {
