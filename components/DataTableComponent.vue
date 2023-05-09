@@ -313,59 +313,31 @@ const rules =
 // checks for the 2 business days rule
 function dateValidation(input) {
 
-    // parse raw input date string
-    let parsedInput = input.split('-')
-    let inputYear = parsedInput[0]
-    let inputMonth = parsedInput[1]
-    let inputDay = parsedInput[2]
-    let formattedDate = inputMonth + '-' + inputDay + '-' + inputYear
+  // parse raw input date string
+  let parsedInput = input.split('-')
+  let inputYear = parsedInput[0]
+  let inputMonth = parsedInput[1]
+  let inputDay = parsedInput[2]
+  let formattedDate = inputMonth + '-' + inputDay + '-' + inputYear
 
-    // initialize the parsed date
-    let selectedDate = new Date(formattedDate);
+  // initialize the parsed date
+  let selectedDate = new Date(formattedDate);
 
-    // get day of week
-    let selectedDateDay = selectedDate.getDay()
+  // get day of week
+  let selectedDateDay = selectedDate.getDay()
 
-    // get the current date plus 2 days
-    let todaysDate = new Date();
-    let todaysDatePlusTwoDays = new Date(todaysDate.setDate(todaysDate.getDate() + 2))
-    let thresholdDate = new Date(todaysDatePlusTwoDays.getFullYear(),todaysDatePlusTwoDays.getMonth(),todaysDatePlusTwoDays.getDate())
+  // get the current date plus 2 days
+  let todaysDate = new Date();
+  let todaysDatePlusTwoDays = new Date(todaysDate.setDate(todaysDate.getDate() + 2))
+  let thresholdDate = new Date(todaysDatePlusTwoDays.getFullYear(),todaysDatePlusTwoDays.getMonth(),todaysDatePlusTwoDays.getDate())
 
-    // logic to determine if selected date is valid
-    if(selectedDateDay !== 0 && selectedDateDay !== 6) {
-      if(selectedDate >= thresholdDate) {
-        return true
-      } else {
-        return false
-      }
-    }
-
-
-
-
-
-
-
-  
-  // get the current date + 2 days and format it
-  // let todaysDate = new Date() 
-  // let todaysDatePlusTwoDays = new Date(todaysDate.setDate(todaysDate.getDate() + 2))
-  // let thresholdDate = todaysDatePlusTwoDays.toISOString().split('T')[0]
-
-  // get the date set by the user and format it
-  // let date = new Date(input)
-  // let selectedDate = new Date(date.setDate(date.getDate() + 1))
-  // let selectedDateDay = selectedDate.getDay()
-  // let selectedDateFormatted = selectedDate.toISOString().split('T')[0]
- 
-  // first check if the selected date (by user) is a Saturday or Sunday
-  // then check if the selected date is at least 2 days from the current date
+  // logic to determine if selected date is valid
   if(selectedDateDay !== 0 && selectedDateDay !== 6) {
-    if (selectedDateFormatted > thresholdDate) {
+    if(selectedDate >= thresholdDate) {
       return true
+    } else {
+      return false
     }
-  } else {
-    return false
   }
 
 }
