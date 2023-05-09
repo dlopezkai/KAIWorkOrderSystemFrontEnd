@@ -74,7 +74,7 @@
                       :rules="[rules.select]"></v-select>
                   </v-col>
                   <v-col cols="12" sm="6" md="6">
-                    <v-select v-model="editedItem.tags" label="Type" :items="types" item-title="title" item-value="value" multiple chips clearable
+                    <v-select v-model="editedItem.tags" label="Type" :items="types" item-title="name" item-value="name" multiple chips clearable
                       :rules="[rules.select]"></v-select>
                   </v-col>
 
@@ -83,7 +83,8 @@
                       item-value="value" readonly :rules="[rules.select]"></v-select>
                   </v-col>
                   <v-col cols="12" sm="6" md="6">
-                    <v-text-field v-model="editedItem.assigned_to" label="Assignee"></v-text-field>
+                    <v-select v-model="editedItem.assigned_to" label="Assignee(s)" :items="staff" item-title="username" item-value="id" multiple chips clearable
+                      :rules="[rules.select]"></v-select>
                   </v-col>
 
                   <v-col cols="12" sm="6" md="6">
@@ -280,12 +281,12 @@ const priorities = [
 // check if API will provide these
 // if API provides integer-based values, we will need to map v-data-table to render properly
 const staff = [
-  { title: 'Hollie Austin', value: 'staff1' },
-  { title: 'Jeremiah Simmons', value: 'staff2' },
-  { title: 'Leanne Galvan', value: 'staff3' },
-  { title: 'Freddie Johnston', value: 'staff4' },
-  { title: 'Junaid Howe', value: 'staff5' },
-  { title: 'Casper Pennington', value: 'staff6' },
+  { username: 'Hollie Austin', id: 'staff1' },
+  { username: 'Jeremiah Simmons', id: 'staff2' },
+  { username: 'Leanne Galvan', id: 'staff3' },
+  { username: 'Freddie Johnston', id: 'staff4' },
+  { username: 'Junaid Howe', id: 'staff5' },
+  { username: 'Casper Pennington', id: 'staff6' },
 ]
 
 // computed value for form title
@@ -374,9 +375,9 @@ function loadItems() {
     data.value = response.data.data.tasks.map((item) => {
       return {
         // contract: item.contract,
-        // tags: item.tags,
+        tags: item.tags,
         status: item.status.status,
-        // assigned_to: item.assignees,
+        assigned_to: item.assignees,
         due_date: item.due_date,
         // notify_person: item.notify_person,
         estimate: item.time_estimate,
