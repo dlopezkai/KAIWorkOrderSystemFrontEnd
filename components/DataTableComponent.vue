@@ -76,7 +76,7 @@
 
                   <v-col cols="12" sm="6" md="6">
                     <v-text-field v-model="editedItem.due_date" label="Due Date" type="date"
-                      :rules="[rules.due_date]"></v-text-field>
+                      :rules="[rules.due_date, rules.due_date_threshold]"></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="6">
                     <v-select v-model="editedItem.notify_person" label="Notify Person" :items="staff" item-title="title" item-value="value" multiple chips clearable
@@ -165,6 +165,7 @@ const data = ref([])
 const search = ref('')
 const filterByUser = ref(false)
 const drawer = ref(false)
+const form = ref(null)
 
 const headers = [
   { title: 'Number', key: 'wo_number', align: 'start' },
@@ -305,10 +306,42 @@ const rules =
   required: v => !!v || 'Field is required',
   length: v => v.length >= 3 || 'Minimum length is 3 characters',
   select: v => !!v || 'Select a valid option',
-  due_date: v => console.log(v)
+  due_date: v => !!v || 'Date must be selected',
+  due_date_threshold: v => dateValidation(v) || 'Date must be 2 business days from today',
+  
 }
 
-const form = ref(null)
+// checks for the 2 business days rule
+function dateValidation(input) {
+
+  // parse raw input date string
+  let parsedInput = input.split('-')
+  let inputYear = parsedInput[0]
+  let inputMonth = parsedInput[1]
+  let inputDay = parsedInput[2]
+  let formattedDate = inputMonth + '-' + inputDay + '-' + inputYear
+
+  // initialize the parsed date
+  let selectedDate = new Date(formattedDate);
+
+  // get day of week
+  let selectedDateDay = selectedDate.getDay()
+
+  // get the current date plus 2 days
+  let todaysDate = new Date();
+  let todaysDatePlusTwoDays = new Date(todaysDate.setDate(todaysDate.getDate() + 2))
+  let thresholdDate = new Date(todaysDatePlusTwoDays.getFullYear(),todaysDatePlusTwoDays.getMonth(),todaysDatePlusTwoDays.getDate())
+
+  // logic to determine if selected date is valid
+  if(selectedDateDay !== 0 && selectedDateDay !== 6) {
+    if(selectedDate >= thresholdDate) {
+      return true
+    } else {
+      return false
+    }
+  }
+
+}
 
 // form submit process
 async function submit() {
@@ -327,23 +360,23 @@ function loadItems() {
   loading.value = true
   axios.get('test2.json')
   .then((response) => {
-      data.value = response.data.serverItems.map((item) => {
-          return {
-              wo_number: item.wo_number,
-              contract: item.contract,
-              tags: item.tags,
-              status: item.status,
-              assigned_to: item.assigned_to,
-              due_date: item.due_date,
-              notify_person: item.notify_person,
-              estimate: item.estimate,
-              priority: item.priority,
-              assigned_to_email_address: item.assigned_to_email_address,
-              description: item.description
-          }
-        })
-      totalItems.value = response.data.serverItems.length
-      loading.value = false
+    data.value = response.data.serverItems.map((item) => {
+      return {
+        wo_number: item.wo_number,
+        contract: item.contract,
+        tags: item.tags,
+        status: item.status,
+        assigned_to: item.assigned_to,
+        due_date: item.due_date,
+        notify_person: item.notify_person,
+        estimate: item.estimate,
+        priority: item.priority,
+        assigned_to_email_address: item.assigned_to_email_address,
+        description: item.description
+      }
+    })
+    totalItems.value = response.data.serverItems.length
+    loading.value = false
   })
   .catch(err => console.log(err))
 }
