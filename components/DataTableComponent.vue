@@ -180,7 +180,6 @@ const drawer = ref(false)
 const form = ref(null)
 
 const headers = [
-  { title: 'Number', key: 'wo_number', align: 'start' },
   { title: 'Name', key: 'name', align: 'start', width: '35%' },
   { title: 'Assignee', key: 'assigned_to', align: 'start', sortable: false },
   { title: 'Type', key: 'tags', align: 'start', sortable: false },
@@ -191,7 +190,6 @@ const headers = [
 
 const editedItem = ref([
   {
-    wo_number: 0,
     description: '',
     assigned_to: '',
     type: '',
@@ -201,7 +199,6 @@ const editedItem = ref([
 
 const defaultItem = ref([
   {
-    wo_number: 0,
     description: '',
     assigned_to: '',
     type: '',
@@ -376,7 +373,6 @@ function loadItems() {
     console.log(response.data.data.tasks)
     data.value = response.data.data.tasks.map((item) => {
       return {
-        wo_number: item.id,
         // contract: item.contract,
         // tags: item.tags,
         status: item.status.status,
@@ -410,14 +406,13 @@ function close() {
   })
 }
 
-// TODO: assuming API will provide ID, we'll need to remove wo_number incrementer 
+// TODO: assuming API will provide ID
 function save() {
   if (editedIndex.value > -1) {
     axios.post('test2.json', JSON.stringify(editedItem.value, null, 2))
     Object.assign(data.value[editedIndex.value], editedItem.value)
   } else {
     axios.post('test2.json', JSON.stringify(editedItem.value, null, 2))
-    editedItem.value.wo_number = data.value.length + 1
     data.value.push(editedItem.value)
   }
   close()
