@@ -360,23 +360,23 @@ function loadItems() {
   loading.value = true
   axios.get('test2.json')
   .then((response) => {
-      data.value = response.data.serverItems.map((item) => {
-          return {
-              wo_number: item.wo_number,
-              contract: item.contract,
-              tags: item.tags,
-              status: item.status,
-              assigned_to: item.assigned_to,
-              due_date: item.due_date,
-              notify_person: item.notify_person,
-              estimate: item.estimate,
-              priority: item.priority,
-              assigned_to_email_address: item.assigned_to_email_address,
-              description: item.description
-          }
-        })
-      totalItems.value = response.data.serverItems.length
-      loading.value = false
+    data.value = response.data.serverItems.map((item) => {
+      return {
+        wo_number: item.wo_number,
+        contract: item.contract,
+        tags: item.tags,
+        status: item.status,
+        assigned_to: item.assigned_to,
+        due_date: item.due_date,
+        notify_person: item.notify_person,
+        estimate: item.estimate,
+        priority: item.priority,
+        assigned_to_email_address: item.assigned_to_email_address,
+        description: item.description
+      }
+    })
+    totalItems.value = response.data.serverItems.length
+    loading.value = false
   })
   .catch(err => console.log(err))
 }
