@@ -100,7 +100,7 @@
                     <v-text-field v-model="editedItem.estimate" label="Hours Allocated"></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="6">
-                    <v-select v-model="editedItem.priority" label="Priority" :items="priorities" item-title="title" item-value="value"
+                    <v-select v-model="editedItem.priority" label="Priority" :items="priorities" item-title="priority" item-value="id"
                       :rules="[rules.select]"></v-select>
                   </v-col>
 
@@ -279,10 +279,14 @@ const contracts = [
 // check if API will provide these
 // if API provides integer-based values, we will need to map v-data-table to render properly
 const priorities = [
-  { title: 'Low', value: 'Low' },
-  { title: 'Normal', value: 'Normal' },
-  { title: 'High', value: 'High' },
-  { title: 'Urgent', value: 'Urgent' },
+  // { priority: 'low', value: { color: '#d8d8d8', id: '4', 'orderindex': '4', priority: 'low' } },
+  // { priority: 'normal', value: { color: '#6fddff', id: '3', 'orderindex': '3', priority: 'normal' } },
+  // { priority: 'high', value: { color: '#ffcc00', id: '2', 'orderindex': '2', priority: 'high' } },
+  // { priority: 'urgent', value: { color: '#f50000', id: '1', 'orderindex': '1', priority: 'urgent' } },
+  { priority: 'low', id: 4 },
+  { priority: 'normal', id: 3 },
+  { priority: 'high', id: 2 },
+  { priority: 'urgent', id: 1 },
 ]
 
 // computed value for form title

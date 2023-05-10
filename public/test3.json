@@ -61,7 +61,7 @@
           "due_date": "1676282400000",
           "start_date": null,
           "points": null,
-          "time_estimate": null,
+          "time_estimate": 1800000,
           "custom_fields": [],
           "dependencies": [],
           "linked_tasks": [],
