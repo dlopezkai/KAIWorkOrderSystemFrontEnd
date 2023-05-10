@@ -140,19 +140,8 @@
       <!-- </v-toolbar> -->
     </template>
 
-    <template v-slot:item.actions="{ item }">
-      <!-- <v-icon size="small" class="me-2" @click="editItem(item.raw)">
-        mdi-pencil
-      </v-icon> -->
-      <!-- <v-icon size="small" @click="deleteItem(item.raw)">
-          mdi-delete
-        </v-icon> -->
-    </template>
-
-    <template v-slot:item.status="{ item }">
-      <v-chip :color="getColor(item.raw.status)">
-        {{ item.raw.status }}
-      </v-chip>
+    <template v-slot:item.description="{ item }">
+      <td class="truncate">{{ item.raw.description }}</td>
     </template>
 
     <template v-slot:item.assigned_to="{ item }">
@@ -164,12 +153,23 @@
       <v-chip v-for="tag in item.raw.tags">{{ tag.name }}</v-chip>
     </template>
 
+    <template v-slot:item.status="{ item }">
+      <v-chip :color="getColor(item.raw.status)">
+        {{ item.raw.status }}
+      </v-chip>
+    </template>
+
     <template v-slot:item.due_date="{ item }">
       {{ convertToDate(item.raw.due_date) }}
     </template>
 
-    <template v-slot:item.description="{ item }">
-      <td class="truncate">{{ item.raw.description }}</td>
+    <template v-slot:item.actions="{ item }">
+      <!-- <v-icon size="small" class="me-2" @click="editItem(item.raw)">
+        mdi-pencil
+      </v-icon> -->
+      <!-- <v-icon size="small" @click="deleteItem(item.raw)">
+          mdi-delete
+        </v-icon> -->
     </template>
 
   </v-data-table>
