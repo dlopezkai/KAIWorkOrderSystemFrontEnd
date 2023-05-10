@@ -83,7 +83,7 @@
                       item-value="value" readonly :rules="[rules.select]"></v-select>
                   </v-col>
                   <v-col cols="12" sm="6" md="6">
-                    <v-select v-model="editedItem.assigned_to" label="Assignee(s)" :items="staff" item-title="username" item-value="id" multiple chips clearable
+                    <v-select v-model="editedItem.assigned_to" label="Assignee(s)" :items="members" item-title="username" item-value="id" multiple chips clearable
                       :rules="[rules.select]"></v-select>
                   </v-col>
 
@@ -92,7 +92,7 @@
                       :rules="[rules.due_date, rules.due_date_threshold]"></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="6">
-                    <v-select v-model="editedItem.notify_person" label="Notify Person" :items="staff" item-title="title" item-value="value" multiple chips clearable
+                    <v-select v-model="editedItem.notify_person" label="Notify Person" :items="members" item-title="username" item-value="id" multiple chips clearable
                       :rules="[rules.select]"></v-select>
                   </v-col>
 
@@ -270,14 +270,7 @@ const priorities = [
 
 // check if API will provide these
 // if API provides integer-based values, we will need to map v-data-table to render properly
-const staff = [
-  { username: 'Hollie Austin', id: 'staff1' },
-  { username: 'Jeremiah Simmons', id: 'staff2' },
-  { username: 'Leanne Galvan', id: 'staff3' },
-  { username: 'Freddie Johnston', id: 'staff4' },
-  { username: 'Junaid Howe', id: 'staff5' },
-  { username: 'Casper Pennington', id: 'staff6' },
-]
+const members = ref([])
 
 // computed value for form title
 const formTitle = computed(() => {
@@ -355,12 +348,12 @@ async function submit() {
 onMounted(() => {
   loadItems()
   loadTags()
+  loadMembers()
 })
 
 function loadItems() {
   loading.value = true
-  // axios.get('https://kai.huberspace.net/tasks/')
-  axios.get('test3.json')
+  axios.get('https://kai.huberspace.net/tasks/')
   .then((response) => {
     data.value = response.data.data.tasks.map((item) => {
       return {
@@ -392,7 +385,21 @@ function loadTags() {
         name: item.name
       }
     })
-    totalItems.value = response.data.data.tasks.length
+    loading.value = false
+  })
+  .catch(err => console.log(err))
+}
+
+function loadMembers() {
+  loading.value = true
+  axios.get('https://kai.huberspace.net/members/')
+  .then((response) => {
+    members.value = response.data.data.members.map((item) => {
+      return {
+        id: item.id,
+        username: item.username
+      }
+    })
     loading.value = false
   })
   .catch(err => console.log(err))
