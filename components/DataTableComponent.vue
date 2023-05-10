@@ -164,6 +164,10 @@
       <v-chip v-for="tag in item.raw.tags">{{ tag.name }}</v-chip>
     </template>
 
+    <template v-slot:item.due_date="{ item }">
+      {{ convertToDate(item.raw.due_date) }}
+    </template>
+
     <template v-slot:item.description="{ item }">
       <td class="truncate">{{ item.raw.description }}</td>
     </template>
@@ -197,6 +201,7 @@ const headers = [
   { title: 'Type', key: 'tags', align: 'start', sortable: false },
   { title: 'Status', key: 'status', align: 'start', sortable: false },
   { title: 'Priority', key: 'priority', align: 'start', sortable: false },
+  { title: 'Due Date', key: 'due_date', align: 'start', sortable: false },
   // { title: 'Actions', key: 'actions', align: 'end', sortable: false },
 ]
 
@@ -371,7 +376,8 @@ function loadItems() {
         // priority: item.priority,
         // assigned_to_email_address: item.assigned_to_email_address,
         description: item.text_content,
-        name: item.name
+        name: item.name,
+        due_date: item.due_date
       }
     })
     totalItems.value = response.data.data.tasks.length
@@ -467,6 +473,11 @@ function getColor (status) {
   if (status === 'in progress') return 'red'
   else if (status === 'done' || status === 'complete') return 'green'
   else return 'orange'
+}
+
+function convertToDate(rawDateTime) {
+  let convertedDateTime = Number(rawDateTime)
+  return new Date(convertedDateTime).toString()
 }
 
 </script>
