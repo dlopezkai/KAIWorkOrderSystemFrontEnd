@@ -96,8 +96,11 @@
                       :rules="[rules.select]"></v-select>
                   </v-col>
 
-                  <v-col cols="12" sm="6" md="6">
+                  <!-- <v-col cols="12" sm="6" md="6">
                     <v-text-field v-model="editedItem.estimate" label="Hours Allocated"></v-text-field>
+                  </v-col> -->
+                  <v-col cols="12" sm="6" md="6">
+                    <v-text-field :model-value=millisecondsToHours(editedItem.estimate) label="Hours Allocated"></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="6">
                     <v-select v-model="editedItem.priority" label="Priority" :items="priorities" item-title="priority" item-value="id"
@@ -493,6 +496,15 @@ function convertToDate(rawDateTime) {
   let convertedDateTime = new Date(convertedRawDateTime).toString()
 
   return convertedDateTime.substr(0, 16);
+}
+
+function millisecondsToHours(value) {
+  const milliseconds = value
+  const seconds = Math.floor(milliseconds / 1000)
+  const minutes = Math.floor(seconds / 60)
+  const hours = (Math.round(minutes) / 60).toFixed(2)
+
+  return hours
 }
 
 </script>
