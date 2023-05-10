@@ -155,6 +155,11 @@
       </v-chip>
     </template>
 
+    <template v-slot:item.tags="{ item }">
+      <!-- <v-chip>{{ item.raw.tags }}</v-chip> -->
+      <v-chip v-for="tag in item.raw.tags">{{ tag.name }}</v-chip>
+    </template>
+
     <template v-slot:item.description="{ item }">
       <td class="truncate">{{ item.raw.description }}</td>
     </template>
@@ -182,9 +187,10 @@ const form = ref(null)
 const tags = ref([])
 const members = ref([])
 
+// TODO: get appropriate key to use for assignee and type. hint: array of objects!
 const headers = [
   { title: 'Name', key: 'name', align: 'start', width: '35%' },
-  { title: 'Assignee', key: 'assigned_to', align: 'start', sortable: false },
+  // { title: 'Assignee', key: 'assigned_to', align: 'start', sortable: false },
   { title: 'Type', key: 'tags', align: 'start', sortable: false },
   { title: 'Status', key: 'status', align: 'start', sortable: false },
   { title: 'Priority', key: 'priority', align: 'start', sortable: false },
