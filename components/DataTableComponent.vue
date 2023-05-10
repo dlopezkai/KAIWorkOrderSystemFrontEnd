@@ -464,8 +464,8 @@ function filterByUserToggle (type) {
 
 // color method for v-chip component
 function getColor (status) {
-  if (status === 'In Progress') return 'red'
-  else if (status === 'Done' || status === 'Complete') return 'green'
+  if (status === 'in progress') return 'red'
+  else if (status === 'done' || status === 'complete') return 'green'
   else return 'orange'
 }
 
