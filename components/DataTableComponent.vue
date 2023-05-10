@@ -180,6 +180,7 @@ const filterByUser = ref(false)
 const drawer = ref(false)
 const form = ref(null)
 const tags = ref([])
+const members = ref([])
 
 const headers = [
   { title: 'Name', key: 'name', align: 'start', width: '35%' },
@@ -249,8 +250,6 @@ const statuses = [
   { title: 'Complete', value: 'Complete' },
 ]
 
-
-
 // check if API will provide these
 // if API provides integer-based values, we will need to map v-data-table to render properly
 const contracts = [
@@ -267,10 +266,6 @@ const priorities = [
   { title: 'High', value: 'High' },
   { title: 'Urgent', value: 'Urgent' },
 ]
-
-// check if API will provide these
-// if API provides integer-based values, we will need to map v-data-table to render properly
-const members = ref([])
 
 // computed value for form title
 const formTitle = computed(() => {
