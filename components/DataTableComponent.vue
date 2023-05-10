@@ -290,7 +290,12 @@ const formTitle = computed(() => {
 // checks work order's assignee's email address against logged-in user's AD email
 const filteredData = computed(() => {
   if(filterByUser.value){
-    return data.value.filter(item => item.assigned_to_email_address == authStore.currentUser.username)
+    let output = data.value.filter(item => {
+        let opt = item.assigned_to.some((
+            { email }) => email == authStore.currentUser.username)
+        return opt
+    })
+    return output
   }
   return data.value
 })
