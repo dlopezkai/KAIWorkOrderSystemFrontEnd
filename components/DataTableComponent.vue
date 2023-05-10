@@ -159,6 +159,10 @@
       </v-chip>
     </template>
 
+    <template v-slot:item.priority="{ item }">
+      {{ (item.raw.priority === null) ? null : item.raw.priority.priority }}
+    </template>
+
     <template v-slot:item.due_date="{ item }">
       {{ convertToDate(item.raw.due_date) }}
     </template>
@@ -378,7 +382,7 @@ function loadItems() {
         due_date: item.due_date,
         // notify_person: item.notify_person,
         estimate: item.time_estimate,
-        // priority: item.priority,
+        priority: item.priority,
         // assigned_to_email_address: item.assigned_to_email_address,
         description: item.text_content,
         name: item.name,
@@ -481,8 +485,10 @@ function getColor (status) {
 }
 
 function convertToDate(rawDateTime) {
-  let convertedDateTime = Number(rawDateTime)
-  return new Date(convertedDateTime).toString()
+  let convertedRawDateTime = Number(rawDateTime)
+  let convertedDateTime = new Date(convertedRawDateTime).toString()
+
+  return convertedDateTime.substr(0, 16);
 }
 
 </script>
