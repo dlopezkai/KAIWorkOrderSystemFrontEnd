@@ -66,7 +66,8 @@
               <v-form ref="form" @submit.prevent="submit">
                 <v-row>
                   <v-col cols="12" sm="12" md="12">
-                    <v-text-field v-model="editedItem.name" label="Name"></v-text-field>
+                    <v-text-field v-model="editedItem.name" label="Name" 
+                      :rules="[rules.required]"></v-text-field>
                   </v-col>
 
                   <v-col cols="12" sm="6" md="6">
@@ -74,17 +75,15 @@
                       :rules="[rules.select]"></v-select>
                   </v-col>
                   <v-col cols="12" sm="6" md="6">
-                    <v-select v-model="editedItem.tags" label="Type" :items="tags" item-title="name" item-value="name" multiple chips clearable
-                      :rules="[rules.select]"></v-select>
+                    <v-select v-model="editedItem.tags" label="Type" :items="tags" item-title="name" item-value="name" multiple chips clearable></v-select>
                   </v-col>
 
                   <v-col cols="12" sm="6" md="6">
                     <v-select v-model="editedItem.status" label="Status" :items="statuses" item-title="title"
-                      item-value="value" readonly :rules="[rules.select]"></v-select>
+                      item-value="value" readonly></v-select>
                   </v-col>
                   <v-col cols="12" sm="6" md="6">
-                    <v-select v-model="editedItem.assigned_to" label="Assignee(s)" :items="members" item-title="username" item-value="id" multiple chips clearable
-                      :rules="[rules.select]"></v-select>
+                    <v-select v-model="editedItem.assigned_to" label="Assignee(s)" :items="members" item-title="username" item-value="id" multiple chips clearable></v-select>
                   </v-col>
 
                   <v-col cols="12" sm="6" md="6">
@@ -92,16 +91,14 @@
                       :rules="[rules.due_date, rules.due_date_threshold]"></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="6">
-                    <v-select v-model="editedItem.notify_person" label="Notify Person" :items="members" item-title="username" item-value="id" multiple chips clearable
-                      :rules="[rules.select]"></v-select>
+                    <v-select v-model="editedItem.notify_person" label="Notify Person" :items="members" item-title="username" item-value="id" multiple chips clearable></v-select>
                   </v-col>
 
                   <v-col cols="12" sm="6" md="6">
                     <v-text-field v-model="editedItem.estimate" label="Hours Allocated"></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="6">
-                    <v-select v-model="editedItem.priority" label="Priority" :items="priorities" item-title="priority" item-value="id"
-                      :rules="[rules.select]"></v-select>
+                    <v-select v-model="editedItem.priority" label="Priority" :items="priorities" item-title="priority" item-value="id"></v-select>
                   </v-col>
 
                   <v-col cols="12" sm="12" md="12">
@@ -160,7 +157,12 @@
     </template>
 
     <template v-slot:item.priority="{ item }">
-      {{ (item.raw.priority === null) ? null : item.raw.priority.priority }}
+      {{ (!item.raw.priority) 
+            ? null 
+            : (item.raw.priority === null) 
+            ? null 
+            : item.raw.priority.priority
+      }}
     </template>
 
     <template v-slot:item.due_date="{ item }">
@@ -323,7 +325,6 @@ const rules =
   select: v => !!v || 'Select a valid option',
   due_date: v => !!v || 'Date must be selected',
   due_date_threshold: v => dateValidation(v) || 'Date must be 2 business days from today',
-  
 }
 
 // checks for the 2 business days rule
