@@ -447,6 +447,10 @@ function close() {
 function save() {
   // convert time estimate (hours) to milliseconds
   editedItem.value.estimate = hoursToMilliseconds(editedItem.value.estimate)
+
+  // convert due date to milliseconds
+  editedItem.value.due_date = dateToMilliseconds(editedItem.value.due_date)
+
   if (editedIndex.value > -1) {
     axios.post('test2.json', JSON.stringify(editedItem.value, null, 2))
     Object.assign(data.value[editedIndex.value], editedItem.value)
@@ -502,6 +506,12 @@ function convertToDate(rawDateTime) {
   const result = year + '-' + month + '-' + day
 
   return result
+}
+
+function dateToMilliseconds(value) {
+  const milliseconds = new Date(value).getTime()
+
+  return milliseconds
 }
 
 function millisecondsToHours(value) {
