@@ -499,12 +499,16 @@ function convertToDate(rawDateTime) {
 }
 
 function millisecondsToHours(value) {
-  const milliseconds = value
-  const seconds = Math.floor(milliseconds / 1000)
-  const minutes = Math.floor(seconds / 60)
-  const hours = (Math.round(minutes) / 60).toFixed(2)
+  if(value) {
+    const milliseconds = value
+    const seconds = Math.floor(milliseconds / 1000)
+    const minutes = Math.floor(seconds / 60)
+    const hours = (Math.round(minutes) / 60).toFixed(2)
 
-  return hours
+    return hours
+  } else {
+    return 0
+  }
 }
 
 </script>
