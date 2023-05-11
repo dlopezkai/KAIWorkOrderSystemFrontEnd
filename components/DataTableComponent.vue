@@ -512,8 +512,6 @@ function millisecondsToHours(value) {
     const hours = (Math.round(minutes) / 60).toFixed(2)
 
     return hours
-  } else {
-    return 0
   }
 }
 
@@ -522,8 +520,6 @@ function hoursToMilliseconds(value) {
     const milliseconds = value * 60 * 60 * 1000
 
     return milliseconds
-  } else {
-    return 0
   }
 }
 
