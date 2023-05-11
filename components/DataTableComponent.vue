@@ -166,7 +166,7 @@
     </template>
 
     <template v-slot:item.due_date="{ item }">
-      {{ convertToDate(item.raw.due_date) }}
+      {{ convertToDate(item.raw.due_date, "table") }}
     </template>
 
     <template v-slot:item.actions="{ item }">
@@ -427,7 +427,7 @@ function editItem(item) {
   // convert time estimate (milliseconds) to hours if not a new work order
   if (editedIndex.value > -1) {
     editedItem.value = Object.assign({}, item)
-    editedItem.value.due_date = convertToDate(item.due_date)
+    editedItem.value.due_date = convertToDate(item.due_date, "form")
     editedItem.value.estimate = millisecondsToHours(item.estimate)
   } else {
     editedItem.value = Object.assign({status: "Int Request"}, item)
@@ -497,7 +497,8 @@ function getColor (status) {
 
 // TODO: check to see why this fires multiple times when modal is opened
 // format must match format of what the form field outputs (i.e. YYYY-MM-DDTHH:MM)
-function convertToDate(rawDateTime) {
+function convertToDate(rawDateTime, origin) {
+  let result = ""
   const convertedRawDateTime = Number(rawDateTime)
 
   const date = new Date(convertedRawDateTime)
@@ -507,8 +508,12 @@ function convertToDate(rawDateTime) {
   const hours = ("0" + date.getHours()).slice(-2)
   const minutes = ("0" + date.getMinutes()).slice(-2)
 
-  const result = year + '-' + month + '-' + day + 'T' + hours + ':' + minutes
-
+  if (origin === "form") {
+    result = year + "-" + month + "-" + day + 'T' + hours + ":" + minutes
+  } else if (origin === "table") {
+    result = year + "-" + month + "-" + day
+  }
+  
   return result
 }
 
