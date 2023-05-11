@@ -434,8 +434,8 @@ function editItem(item) {
   // convert time estimate (milliseconds) to hours if not a new work order
   if (editedIndex.value > -1) {
     editedItem.value = Object.assign({}, item)
+    editedItem.value.due_date = convertToDate(item.due_date)
     editedItem.value.estimate = millisecondsToHours(item.estimate)
-  // }
   } else {
     editedItem.value = Object.assign({status: "Int Request"}, item)
   }
@@ -499,10 +499,16 @@ function getColor (status) {
 }
 
 function convertToDate(rawDateTime) {
-  let convertedRawDateTime = Number(rawDateTime)
-  let convertedDateTime = new Date(convertedRawDateTime).toString()
+  const convertedRawDateTime = Number(rawDateTime)
 
-  return convertedDateTime.substr(0, 16);
+  const date = new Date(convertedRawDateTime)
+  const year = date.getFullYear()
+  const month = ("0" + (date.getMonth() + 1)).slice(-2)
+  const day = ("0" + date.getDate()).slice(-2)
+
+  const result = year + '-' + month + '-' + day
+
+  return result
 }
 
 function millisecondsToHours(value) {
