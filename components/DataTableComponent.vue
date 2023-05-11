@@ -87,7 +87,7 @@
                   </v-col>
 
                   <v-col cols="12" sm="6" md="6">
-                    <v-text-field v-model="editedItem.due_date" label="Due Date" type="date"
+                    <v-text-field v-model="editedItem.due_date" label="Due Date" type="datetime-local"
                       :rules="[rules.due_date, rules.due_date_threshold]"></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="6">
@@ -330,27 +330,19 @@ const rules =
 // checks for the 2 business days rule
 function dateValidation(input) {
 
-  // parse raw input date string
-  let parsedInput = input.split('-')
-  let inputYear = parsedInput[0]
-  let inputMonth = parsedInput[1]
-  let inputDay = parsedInput[2]
-  let formattedDate = inputMonth + '-' + inputDay + '-' + inputYear
-
-  // initialize the parsed date
-  let selectedDate = new Date(formattedDate);
+  // convert input to milliseconds
+  let selectedDate = new Date(input).getTime()
 
   // get day of week
-  let selectedDateDay = selectedDate.getDay()
+  let selectedDateDay = new Date(input).getDay()
 
   // get the current date plus 2 days
-  let todaysDate = new Date();
-  let todaysDatePlusTwoDays = new Date(todaysDate.setDate(todaysDate.getDate() + 2))
-  let thresholdDate = new Date(todaysDatePlusTwoDays.getFullYear(),todaysDatePlusTwoDays.getMonth(),todaysDatePlusTwoDays.getDate())
+  let todaysDate = new Date().setHours(0,0,0,0);
+  let todaysDatePlusTwoDays = todaysDate + 172800000
 
   // logic to determine if selected date is valid
   if(selectedDateDay !== 0 && selectedDateDay !== 6) {
-    if(selectedDate >= thresholdDate) {
+    if(selectedDate >= todaysDatePlusTwoDays) {
       return true
     } else {
       return false
