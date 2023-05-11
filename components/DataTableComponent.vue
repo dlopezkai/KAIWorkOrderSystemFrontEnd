@@ -96,11 +96,8 @@
                       :rules="[rules.select]"></v-select>
                   </v-col>
 
-                  <!-- <v-col cols="12" sm="6" md="6">
-                    <v-text-field v-model="editedItem.estimate" label="Hours Allocated"></v-text-field>
-                  </v-col> -->
                   <v-col cols="12" sm="6" md="6">
-                    <v-text-field :model-value=millisecondsToHours(editedItem.estimate) label="Hours Allocated"></v-text-field>
+                    <v-text-field v-model="editedItem.estimate" label="Hours Allocated"></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="6">
                     <v-select v-model="editedItem.priority" label="Priority" :items="priorities" item-title="priority" item-value="id"
@@ -432,6 +429,9 @@ function loadMembers() {
 }
 
 function editItem(item) {
+  // convert time estimate (milliseconds) to hours
+  item.estimate = millisecondsToHours(item.estimate)
+
   editedIndex.value = data.value.indexOf(item)
   editedItem.value = Object.assign({status: "Int Request"}, item)
   dialog.value = true
@@ -445,7 +445,7 @@ function close() {
   })
 }
 
-// TODO: assuming API will provide ID
+// TODO: convert time-estimate back to milliseconds
 function save() {
   if (editedIndex.value > -1) {
     axios.post('test2.json', JSON.stringify(editedItem.value, null, 2))
