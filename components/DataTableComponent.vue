@@ -447,6 +447,10 @@ function close() {
 
 // TODO: convert time-estimate back to milliseconds
 function save() {
+  // convert time-estimate back to milliseconds
+  editedItem.value.estimate = hoursToMilliseconds(editedItem.value.estimate)
+  console.log(editedItem.value.estimate)
+
   if (editedIndex.value > -1) {
     axios.post('test2.json', JSON.stringify(editedItem.value, null, 2))
     Object.assign(data.value[editedIndex.value], editedItem.value)
@@ -506,6 +510,16 @@ function millisecondsToHours(value) {
     const hours = (Math.round(minutes) / 60).toFixed(2)
 
     return hours
+  } else {
+    return 0
+  }
+}
+
+function hoursToMilliseconds(value) {
+  if(value) {
+    const milliseconds = value * 60 * 60 * 1000
+
+    return milliseconds
   } else {
     return 0
   }
