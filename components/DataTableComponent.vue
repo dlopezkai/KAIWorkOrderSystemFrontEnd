@@ -429,10 +429,13 @@ function loadMembers() {
 }
 
 function editItem(item) {
-  // convert time estimate (milliseconds) to hours
-  item.estimate = millisecondsToHours(item.estimate)
-
   editedIndex.value = data.value.indexOf(item)
+
+  // convert time estimate (milliseconds) to hours if not a new work order
+  if (editedIndex.value > -1) {
+    item.estimate = millisecondsToHours(item.estimate)
+  }
+
   editedItem.value = Object.assign({status: "Int Request"}, item)
   dialog.value = true
 }
