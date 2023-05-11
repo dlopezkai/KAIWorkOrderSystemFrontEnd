@@ -454,8 +454,6 @@ function close() {
 function save() {
   // convert time estimate (hours) to milliseconds
   editedItem.value.estimate = hoursToMilliseconds(editedItem.value.estimate)
-  console.log(editedItem.value.estimate)
-
   if (editedIndex.value > -1) {
     axios.post('test2.json', JSON.stringify(editedItem.value, null, 2))
     Object.assign(data.value[editedIndex.value], editedItem.value)
