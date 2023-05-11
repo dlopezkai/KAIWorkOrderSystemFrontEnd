@@ -506,10 +506,7 @@ function convertToDate(rawDateTime) {
 
 function millisecondsToHours(value) {
   if(value) {
-    const milliseconds = value
-    const seconds = Math.floor(milliseconds / 1000)
-    const minutes = Math.floor(seconds / 60)
-    const hours = (Math.round(minutes) / 60).toFixed(2)
+    const hours = (value / 1000 / 60 / 60).toFixed(2)
 
     return hours
   }
