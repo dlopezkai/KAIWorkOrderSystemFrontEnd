@@ -445,9 +445,8 @@ function close() {
   })
 }
 
-// TODO: convert time-estimate back to milliseconds
 function save() {
-  // convert time-estimate back to milliseconds
+  // convert time estimate (hours) to milliseconds
   editedItem.value.estimate = hoursToMilliseconds(editedItem.value.estimate)
   console.log(editedItem.value.estimate)
 
