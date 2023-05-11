@@ -495,6 +495,8 @@ function getColor (status) {
   else return 'orange'
 }
 
+// TODO: check to see why this fires multiple times when modal is opened
+// format must match format of what the form field outputs (i.e. YYYY-MM-DDTHH:MM)
 function convertToDate(rawDateTime) {
   const convertedRawDateTime = Number(rawDateTime)
 
@@ -502,8 +504,10 @@ function convertToDate(rawDateTime) {
   const year = date.getFullYear()
   const month = ("0" + (date.getMonth() + 1)).slice(-2)
   const day = ("0" + date.getDate()).slice(-2)
+  const hours = ("0" + date.getHours()).slice(-2)
+  const minutes = ("0" + date.getMinutes()).slice(-2)
 
-  const result = year + '-' + month + '-' + day
+  const result = year + '-' + month + '-' + day + 'T' + hours + ':' + minutes
 
   return result
 }
