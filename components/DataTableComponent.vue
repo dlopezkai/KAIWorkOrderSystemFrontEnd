@@ -83,7 +83,7 @@
                       item-value="value" readonly></v-select>
                   </v-col>
                   <v-col cols="12" sm="6" md="6">
-                    <v-select v-model="editedItem.assigned_to" label="Assignee(s)" :items="members" item-title="username" item-value="id" multiple chips clearable></v-select>
+                    <v-select v-model="editedItem.assigned_to" label="Assignee(s)" :items="members" item-title="title" item-value="value" multiple chips clearable></v-select>
                   </v-col>
 
                   <v-col cols="12" sm="6" md="6">
@@ -412,8 +412,8 @@ function loadMembers() {
   .then((response) => {
     members.value = response.data.data.members.map((item) => {
       return {
-        id: item.id,
-        username: item.username
+        title: item.username,
+        value: {id: item.id, username: item.username}
       }
     })
     loading.value = false
