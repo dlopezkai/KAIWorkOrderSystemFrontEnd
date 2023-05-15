@@ -213,20 +213,34 @@ const headers = [
 
 const editedItem = ref([
   {
-    description: '',
     assigned_to: '',
-    type: '',
+    // assigned_to_email_address: item.assigned_to_email_address,
+    // contract: item.contract,
+    description: '',
+    due_date: '',
+    estimate: '',
+    name: '',
+    notify_person: '',
+    priority: '',
     status: '',
+    tags: ''
   },
 ])
 
 const defaultItem = ref([
   {
-    description: '',
     assigned_to: '',
-    type: '',
+    // assigned_to_email_address: item.assigned_to_email_address,
+    // contract: item.contract,
+    description: '',
+    due_date: '',
+    estimate: '',
+    name: '',
+    notify_person: '',
+    priority: '',
     status: '',
-  }
+    tags: ''
+  },
 ])
 
 // no longer used, but keep for reference just in case...
