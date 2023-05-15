@@ -372,18 +372,17 @@ function loadItems() {
   .then((response) => {
     data.value = response.data.data.tasks.map((item) => {
       return {
-        // contract: item.contract,
-        tags: item.tags,
-        status: item.status.status,
         assigned_to: item.assignees,
-        due_date: item.due_date,
-        notify_person: item.notify_person,
-        estimate: item.time_estimate,
-        priority: item.priority,
         // assigned_to_email_address: item.assigned_to_email_address,
+        // contract: item.contract,
         description: item.text_content,
+        due_date: item.due_date,
+        estimate: item.time_estimate,
         name: item.name,
-        due_date: item.due_date
+        notify_person: item.notify_person,
+        priority: item.priority,
+        status: item.status.status,
+        tags: item.tags
       }
     })
     totalItems.value = response.data.data.tasks.length
