@@ -91,7 +91,7 @@
                       :rules="[rules.due_date, rules.due_date_threshold]"></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="6">
-                    <v-select v-model="editedItem.notify_person" label="Notify Person" :items="members" item-title="username" item-value="id" multiple chips clearable></v-select>
+                    <v-select v-model="editedItem.notify_person" label="Notify Person" :items="members" item-title="title" item-value="value" multiple chips clearable></v-select>
                   </v-col>
 
                   <v-col cols="12" sm="6" md="6">
@@ -377,7 +377,7 @@ function loadItems() {
         status: item.status.status,
         assigned_to: item.assignees,
         due_date: item.due_date,
-        // notify_person: item.notify_person,
+        notify_person: item.notify_person,
         estimate: item.time_estimate,
         priority: item.priority,
         // assigned_to_email_address: item.assigned_to_email_address,
