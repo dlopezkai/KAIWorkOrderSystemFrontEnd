@@ -75,7 +75,7 @@
                       :rules="[rules.select]"></v-select>
                   </v-col>
                   <v-col cols="12" sm="6" md="6">
-                    <v-select v-model="editedItem.tags" label="Type" :items="tags" item-title="name" item-value="name" multiple chips clearable></v-select>
+                    <v-select v-model="editedItem.tags" label="Type" :items="tags" item-title="title" item-value="value" multiple chips clearable></v-select>
                   </v-col>
 
                   <v-col cols="12" sm="6" md="6">
@@ -147,7 +147,7 @@
 
     <template v-slot:item.tags="{ item }">
       <!-- <v-chip>{{ item.raw.tags }}</v-chip> -->
-      <v-chip v-for="tag in item.raw.tags">{{ tag.name }}</v-chip>
+      <v-chip v-for="tag in item.raw.tags">{{ tag }}</v-chip>
     </template>
 
     <template v-slot:item.status="{ item }">
@@ -398,7 +398,8 @@ function loadTags() {
   .then((response) => {
     tags.value = response.data.data.map((item) => {
       return {
-        name: item.name
+        title: item.name,
+        value: item.name
       }
     })
     loading.value = false
@@ -413,7 +414,7 @@ function loadMembers() {
     members.value = response.data.data.members.map((item) => {
       return {
         title: item.username,
-        value: {id: item.id, username: item.username}
+        value: {color: item.color, email: item.email, id: item.id, initials: item.initials, profile: item.profile, username: item.username}
       }
     })
     loading.value = false
