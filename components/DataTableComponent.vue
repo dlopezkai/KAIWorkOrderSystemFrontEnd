@@ -79,8 +79,8 @@
                   </v-col>
 
                   <v-col cols="12" sm="6" md="6">
-                    <v-select v-model="editedItem.status" label="Status" :items="statuses" item-title="title"
-                      item-value="value" readonly></v-select>
+                    <v-select v-model="editedItem.status" label="Status" items="" item-title="title"
+                      item-value="value" disabled></v-select>
                   </v-col>
                   <v-col cols="12" sm="6" md="6">
                     <v-select v-model="editedItem.assigned_to" label="Assignee(s)" :items="members" item-title="title" item-value="value" multiple chips clearable></v-select>
@@ -272,20 +272,6 @@ const defaultItem = ref([
 
 // check if API will provide these
 // if API provides integer-based values, we will need to map v-data-table to render properly
-const statuses = [
-  { title: 'Int Request', value: 'Int Request' },
-  { title: 'In Progress', value: 'In Progress' },
-  { title: 'Internal QC', value: 'Internal QC' },
-  { title: 'Post Production', value: 'Post Production' },
-  { title: 'Client Review', value: 'Client Review' },
-  { title: 'On-hold', value: 'On-hold' },
-  { title: 'Scheduled', value: 'Scheduled' },
-  { title: 'Done', value: 'Done' },
-  { title: 'Complete', value: 'Complete' },
-]
-
-// check if API will provide these
-// if API provides integer-based values, we will need to map v-data-table to render properly
 const contracts = [
   { title: 'Contract 1', value: 'contract1' },
   { title: 'Contract 2', value: 'contract2' },
@@ -444,7 +430,8 @@ function editItem(item) {
     editedItem.value.due_date = convertToDate(item.due_date, "form")
     editedItem.value.estimate = millisecondsToHours(item.estimate)
   } else {
-    editedItem.value = Object.assign({status: "Int Request"}, item)
+    // editedItem.value = Object.assign({status: "Int Request"}, item)
+    editedItem.value = Object.assign({}, item)
   }
 
   dialog.value = true
