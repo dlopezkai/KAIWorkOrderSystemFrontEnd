@@ -70,11 +70,20 @@
                       :rules="[rules.required]"></v-text-field>
                   </v-col>
 
-                  <v-col cols="12" sm="6" md="6">
-                    <v-select v-model="editedItem.contract" label="Contract" :items="contracts" item-title="title" item-value="value"
+                  <v-col cols="12" sm="4" md="4">
+                    <v-select v-model="editedItem.space" label="Space" :items="spaces" item-title="name" item-value="id" @update:modelValue="loadFolders()"
                       :rules="[rules.select]"></v-select>
                   </v-col>
-                  <v-col cols="12" sm="6" md="6">
+                  <v-col cols="12" sm="4" md="4">
+                    <v-select v-model="editedItem.folder" label="Folder" :items="folders" item-title="name" item-value="id" @update:modelValue="loadContracts()"
+                      :rules="[rules.select]" ></v-select>
+                  </v-col>
+                  <v-col cols="12" sm="4" md="4">
+                    <v-select v-model="editedItem.contract" label="Contract" :items="contracts" item-title="name" item-value="id"
+                      :rules="[rules.select]"></v-select>
+                  </v-col>
+
+                  <v-col cols="12" sm="12" md="12">
                     <v-select v-model="editedItem.tags" label="Type" :items="tags" item-title="title" item-value="value" multiple chips clearable></v-select>
                   </v-col>
 
@@ -203,6 +212,10 @@ const form = ref(null)
 const tags = ref([])
 const members = ref([])
 
+const spaces = ref([])
+const folders = ref([])
+const contracts = ref([])
+
 const headers = [
   { title: 'Name', key: 'name', align: 'start', width: '35%' },
   { title: 'Assignee(s)', key: 'assigned_to', align: 'start', sortable: false },
@@ -216,14 +229,15 @@ const headers = [
 const editedItem = ref([
   {
     assigned_to: '',
-    // assigned_to_email_address: item.assigned_to_email_address,
-    // contract: item.contract,
+    contract: '',
     description: '',
     due_date: '',
     estimate: '',
+    folder: '',
     name: '',
     notify_person: '',
     priority: '',
+    space: '',
     status: '',
     tags: ''
   },
@@ -232,14 +246,15 @@ const editedItem = ref([
 const defaultItem = ref([
   {
     assigned_to: '',
-    // assigned_to_email_address: item.assigned_to_email_address,
-    // contract: item.contract,
+    contract: '',
     description: '',
     due_date: '',
     estimate: '',
+    folder: '',
     name: '',
     notify_person: '',
     priority: '',
+    space: '',
     status: '',
     tags: ''
   },
@@ -271,14 +286,6 @@ const defaultItem = ref([
 //     })
 //   },
 // }
-
-// check if API will provide these
-// if API provides integer-based values, we will need to map v-data-table to render properly
-const contracts = [
-  { title: 'Contract 1', value: 'contract1' },
-  { title: 'Contract 2', value: 'contract2' },
-  { title: 'Contract 3', value: 'contract3' },
-]
 
 // check if API will provide these
 // if API provides integer-based values, we will need to map v-data-table to render properly
@@ -366,6 +373,7 @@ onMounted(() => {
   loadItems()
   loadTags()
   loadMembers()
+  loadSpaces()
 })
 
 function loadItems() {
@@ -422,6 +430,68 @@ function loadMembers() {
   })
   .catch(err => console.log(err))
 }
+
+
+
+
+
+function loadSpaces() {
+  loading.value = true
+  axios.get(`${runtimeConfigs.public.API_URL}/spaces`)
+  .then((response) => {
+    spaces.value = response.data.data.spaces.map((item) => {
+      return {
+        id: item.id,
+        name: item.name
+      }
+    })
+    loading.value = false
+  })
+  .catch(err => console.log(err))
+} 
+
+function loadFolders() {
+  // clear selected folder and contract
+  editedItem.value.folder = ''
+  editedItem.value.contract = ''
+
+  // clear folder and contract options
+  folders.value = ''
+  contracts.value = ''
+
+  // get selected space
+  let spaceId = editedItem.value.space
+
+  // load folder options
+  axios.get(`${runtimeConfigs.public.API_URL}/space/` + spaceId + `/folders`)
+  .then((response) => {
+    folders.value = response.data.data.folders.map((item) => {
+      return {
+        id: item.id,
+        name: item.name
+      }
+    })
+  })
+  .catch(err => console.log(err))
+}
+
+function loadContracts() {
+  // get selected folder
+  let folderId = editedItem.value.folder
+
+  // load folder options
+  axios.get(`${runtimeConfigs.public.API_URL}/folder/` + folderId + `/lists`)
+  .then((response) => {
+    contracts.value = response.data.data.lists.map((item) => {
+      return {
+        id: item.id,
+        name: item.name
+      }
+    })
+  })
+  .catch(err => console.log(err))
+}
+
 
 function editItem(item) {
   editedIndex.value = data.value.indexOf(item)
