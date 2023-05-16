@@ -383,14 +383,15 @@ function loadItems() {
     data.value = response.data.data.tasks.map((item) => {
       return {
         assigned_to: item.assignees,
-        // assigned_to_email_address: item.assigned_to_email_address,
-        // contract: item.contract,
+        contract: item.list.id,
         description: item.text_content,
         due_date: item.due_date,
         estimate: item.time_estimate,
+        folder: item.folder.id,
         name: item.name,
         notify_person: item.notify_person,
         priority: item.priority,
+        space: item.space.id,
         status: item.status.status,
         tags: item.tags
       }
@@ -450,7 +451,8 @@ function loadSpaces() {
   .catch(err => console.log(err))
 } 
 
-function loadFolders() {
+// argument represents an ID passed in from an existing work order
+function loadFolders(presetSpaceId) {
   // clear selected folder and contract
   editedItem.value.folder = ''
   editedItem.value.contract = ''
@@ -459,8 +461,8 @@ function loadFolders() {
   folders.value = ''
   contracts.value = ''
 
-  // get selected space
-  let spaceId = editedItem.value.space
+  // get selected space ID
+  let spaceId = (presetSpaceId) ? presetSpaceId : editedItem.value.space
 
   // load folder options
   axios.get(`${runtimeConfigs.public.API_URL}/space/` + spaceId + `/folders`)
@@ -475,11 +477,18 @@ function loadFolders() {
   .catch(err => console.log(err))
 }
 
-function loadContracts() {
-  // get selected folder
-  let folderId = editedItem.value.folder
+// argument represents an ID passed in from an existing work order
+function loadContracts(presentFolderId) {
+  // clear contract
+  editedItem.value.contract = ''
 
-  // load folder options
+  // clear contract options
+  contracts.value = ''
+
+  // get selected folder ID
+  let folderId = (presentFolderId) ? presentFolderId : editedItem.value.folder
+
+  // load list/contract options
   axios.get(`${runtimeConfigs.public.API_URL}/folder/` + folderId + `/lists`)
   .then((response) => {
     contracts.value = response.data.data.lists.map((item) => {
@@ -498,6 +507,8 @@ function editItem(item) {
 
   // convert time estimate (milliseconds) to hours if not a new work order
   if (editedIndex.value > -1) {
+    loadFolders(item.space)
+    loadContracts(item.folder)
     editedItem.value = Object.assign({}, item)
     editedItem.value.due_date = convertToDate(item.due_date, "form")
     editedItem.value.estimate = millisecondsToHours(item.estimate)
