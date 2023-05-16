@@ -185,6 +185,8 @@
 import { ref, nextTick } from 'vue'
 import axios from 'axios'
 import { useAuthStore } from '~/store/auth';
+
+const runtimeConfigs = useRuntimeConfig()
     
 const authStore = useAuthStore()
 const dialog = ref(false)
@@ -368,7 +370,7 @@ onMounted(() => {
 
 function loadItems() {
   loading.value = true
-  axios.get('https://kai.huberspace.net/tasks/')
+  axios.get(`${runtimeConfigs.public.API_URL}/tasks`)
   .then((response) => {
     data.value = response.data.data.tasks.map((item) => {
       return {
@@ -393,7 +395,7 @@ function loadItems() {
 
 function loadTags() {
   loading.value = true
-  axios.get('https://kai.huberspace.net/tags/')
+  axios.get(`${runtimeConfigs.public.API_URL}/tags`)
   .then((response) => {
     tags.value = response.data.data.map((item) => {
       return {
@@ -408,7 +410,7 @@ function loadTags() {
 
 function loadMembers() {
   loading.value = true
-  axios.get('https://kai.huberspace.net/members/')
+  axios.get(`${runtimeConfigs.public.API_URL}/members`)
   .then((response) => {
     members.value = response.data.data.members.map((item) => {
       return {
