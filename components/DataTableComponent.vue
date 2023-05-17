@@ -118,6 +118,11 @@
                     <v-text-field label="SharePoint File"></v-text-field>
                   </v-col>
 
+                  <!-- hide for production -->
+                  <v-col v-if="editedItem.url" cols="12" sm="12" md="12">
+                    <v-btn :href="editedItem.url" target="_blank" variant="text">ClickUp reference link</v-btn>
+                  </v-col>
+
                   <v-col class="text-right">
                     <v-btn color="blue-darken-1" variant="text" @click="close">
                       Cancel
@@ -393,7 +398,8 @@ function loadItems() {
         priority: item.priority,
         space: item.space.id,
         status: item.status.status,
-        tags: item.tags
+        tags: item.tags,
+        url: item.url
       }
     })
     totalItems.value = response.data.data.tasks.length
