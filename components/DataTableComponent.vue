@@ -128,7 +128,7 @@
                       </v-col>
 
                       <v-col cols="12" sm="12" md="12">
-                        <v-text-field label="SharePoint File"></v-text-field>
+                        <v-text-field v-model="editedItem.links" label="SharePoint File"></v-text-field>
                       </v-col>
 
                       <!-- hide for production -->
@@ -261,6 +261,7 @@ const editedItem = ref([
     due_date: '',
     estimate: '',
     folder: '',
+    links: '',
     name: '',
     notify_person: '',
     priority: '',
@@ -278,6 +279,7 @@ const defaultItem = ref([
     due_date: '',
     estimate: '',
     folder: '',
+    links: '',
     name: '',
     notify_person: '',
     priority: '',
@@ -415,6 +417,7 @@ function loadItems() {
         due_date: item.due_date,
         estimate: item.time_estimate,
         folder: item.folder.id,
+        links: item.links,
         name: item.name,
         notify_person: item.notify_person,
         priority: item.priority,
