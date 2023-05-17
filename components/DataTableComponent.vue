@@ -325,7 +325,7 @@ const priorities = [
   // { priority: 'normal', value: { color: '#6fddff', id: '3', 'orderindex': '3', priority: 'normal' } },
   // { priority: 'high', value: { color: '#ffcc00', id: '2', 'orderindex': '2', priority: 'high' } },
   // { priority: 'urgent', value: { color: '#f50000', id: '1', 'orderindex': '1', priority: 'urgent' } },
-  { priority: 'low', id: 4, color: '#f50000' },
+  { priority: 'low', id: 4, color: '#d8d8d8' },
   { priority: 'normal', id: 3, color: '#6fddff' },
   { priority: 'high', id: 2, color: '#ffcc00' },
   { priority: 'urgent', id: 1, color: '#f50000' },
