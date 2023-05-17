@@ -185,18 +185,20 @@
     </template>
 
     <template v-slot:item.status="{ item }">
-      <v-chip :color="getColor(item.raw.status)">
+      <v-chip :color="item.raw.status_color">
         {{ item.raw.status }}
       </v-chip>
     </template>
 
     <template v-slot:item.priority="{ item }">
-      {{ (!item.raw.priority) 
-            ? null 
-            : (item.raw.priority === null) 
-            ? null 
-            : item.raw.priority.priority
-      }}
+      <v-chip v-if="item.raw.priority" :color="getPriorityColor(item.raw.priority)">
+        {{ (!item.raw.priority) 
+              ? null 
+              : (item.raw.priority === null) 
+              ? null 
+              : item.raw.priority.priority
+        }}
+      </v-chip>
     </template>
 
     <template v-slot:item.due_date="{ item }">
@@ -323,10 +325,10 @@ const priorities = [
   // { priority: 'normal', value: { color: '#6fddff', id: '3', 'orderindex': '3', priority: 'normal' } },
   // { priority: 'high', value: { color: '#ffcc00', id: '2', 'orderindex': '2', priority: 'high' } },
   // { priority: 'urgent', value: { color: '#f50000', id: '1', 'orderindex': '1', priority: 'urgent' } },
-  { priority: 'low', id: 4 },
-  { priority: 'normal', id: 3 },
-  { priority: 'high', id: 2 },
-  { priority: 'urgent', id: 1 },
+  { priority: 'low', id: 4, color: '#f50000' },
+  { priority: 'normal', id: 3, color: '#6fddff' },
+  { priority: 'high', id: 2, color: '#ffcc00' },
+  { priority: 'urgent', id: 1, color: '#f50000' },
 ]
 
 // computed value for form title
@@ -423,6 +425,7 @@ function loadItems() {
         priority: item.priority,
         space: item.space.id,
         status: item.status.status,
+        status_color: item.status.color,
         tags: item.tags,
         url: item.url
       }
@@ -603,11 +606,20 @@ function filterByUserToggle (type) {
   } 
 }
 
-// color method for v-chip component
-function getColor (status) {
-  if (status === 'in progress') return 'red'
-  else if (status === 'done' || status === 'complete') return 'green'
-  else return 'orange'
+// priority color method for v-chip component
+function getPriorityColor (priority) {
+  switch(priority.priority) {
+    case 'urgent':
+      return '#f50000'
+    case 'high':
+      return '#ffcc00'
+    case 'normal':
+      return '#6fddff'
+    case 'low':
+      return '#d8d8d8'
+    default:
+      return ''
+  }
 }
 
 // TODO: check to see why this fires multiple times when modal is opened
