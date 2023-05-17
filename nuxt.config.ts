@@ -5,7 +5,18 @@ const { resolve } = createResolver(import.meta.url)
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-    modules: ['@pinia/nuxt'],
+    app: {
+      head: {
+        title: 'Work Order System'
+      }
+    },
+    runtimeConfig:{
+      API_URL: 'https://kai.huberspace.net',
+      public: {
+        API_URL: 'https://kai.huberspace.net',
+      }
+    },
+    modules: ['@pinia/nuxt', '@nuxt/image-edge'],
     css: ['vuetify/lib/styles/main.sass', '@mdi/font/css/materialdesignicons.min.css'],
     build: {
       transpile: ['vuetify'],
