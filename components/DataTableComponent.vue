@@ -100,7 +100,7 @@
                         <v-select v-model="editedItem.tags" label="Type" :items="tags" item-title="title" item-value="value" multiple chips clearable></v-select>
                       </v-col>
 
-                      <v-col cols="12" sm="6" md="6">
+                      <v-col v-if="editedIndex > -1" cols="12" sm="6" md="6">
                         <v-select v-model="editedItem.status" label="Status" items="" item-title="title"
                           item-value="value" disabled></v-select>
                       </v-col>
