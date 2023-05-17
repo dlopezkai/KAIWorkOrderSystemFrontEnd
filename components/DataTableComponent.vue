@@ -176,7 +176,7 @@
     </template>
 
     <template v-slot:item.assigned_to="{ item }">
-      <v-chip v-for="assignee in item.raw.assigned_to">{{ assignee.username }}</v-chip>
+      <v-chip v-for="assignee in item.raw.assigned_to">{{ (!assignee.username) ? assignee.email : assignee.username }}</v-chip>
     </template>
 
     <template v-slot:item.tags="{ item }">
@@ -451,7 +451,7 @@ function loadMembers() {
   .then((response) => {
     members.value = response.data.data.members.map((item) => {
       return {
-        title: item.username,
+        title: (!item.username) ? item.email : item.username,
         value: {color: item.color, email: item.email, id: item.id, initials: item.initials, profile: item.profile, username: item.username}
       }
     })
