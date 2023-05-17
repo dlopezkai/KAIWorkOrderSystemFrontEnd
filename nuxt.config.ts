@@ -11,7 +11,7 @@ export default defineNuxtConfig({
         API_URL: 'https://kai.huberspace.net',
       }
     },
-    modules: ['@pinia/nuxt'],
+    modules: ['@pinia/nuxt', '@nuxt/image-edge'],
     css: ['vuetify/lib/styles/main.sass', '@mdi/font/css/materialdesignicons.min.css'],
     build: {
       transpile: ['vuetify'],

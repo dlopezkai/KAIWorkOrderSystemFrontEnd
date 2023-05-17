@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="23.044px" height="14.765px" viewBox="0 0 23.044 14.765">
+	<style>
+		.primary1 { fill: #428086; }
+		.primary2 { fill: #92D5D5; }
+	</style>
+
+	<g id="mark">
+		<polygon class="primary2" points="6.719,4.799 9.319,8.68 15.098,0.054 23.044,11.914 23.044,0 9.935,0 "/>
+		<polygon class="primary2" points="0,0 0,11.978 8.025,0 "/>
+		<polygon class="primary1" points="5.765,6.224 0,14.828 11.529,14.828 "/>
+		<polygon class="primary1" points="15.098,2.905 10.274,10.105 13.438,14.828 23.044,14.828 23.044,14.765 "/>
+	</g>
+</svg>

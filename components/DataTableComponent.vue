@@ -14,9 +14,9 @@
     </v-list>
   </v-navigation-drawer>
 
-  <v-app-bar app clipped-left dark>
+  <v-app-bar app clipped-left dark color="#92D5D5">
     <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-    <v-toolbar-title>ClickUp Integration App</v-toolbar-title>
+    <v-toolbar-title>Work Order System</v-toolbar-title>
     <AuthN></AuthN>
   </v-app-bar>
 
@@ -25,6 +25,7 @@
     :items="filteredData" 
     :loading="loading" 
     class="elevation-1"
+    density="comfortable"
     :search="search"
     @click:row="(pointerEvent, {item}) => editItem(item.raw)"
   >
@@ -44,6 +45,7 @@
         append-icon="mdi-magnify"
         label="Search"
         single-line
+        density="comfortable"
         hide-details
       ></v-text-field>
 
@@ -75,11 +77,11 @@
                       :rules="[rules.select]"></v-select>
                   </v-col>
                   <v-col cols="12" sm="4" md="4">
-                    <v-select v-model="editedItem.folder" label="Folder" :items="folders" item-title="name" item-value="id" @update:modelValue="loadContracts()"
+                    <v-select v-model="editedItem.folder" label="Project" :items="folders" item-title="name" item-value="id" @update:modelValue="loadContracts()"
                       :rules="[rules.select]" ></v-select>
                   </v-col>
                   <v-col cols="12" sm="4" md="4">
-                    <v-select v-model="editedItem.contract" label="Contract" :items="contracts" item-title="name" item-value="id"
+                    <v-select v-model="editedItem.contract" label="Subtask" :items="contracts" item-title="name" item-value="id"
                       :rules="[rules.select]"></v-select>
                   </v-col>
 
