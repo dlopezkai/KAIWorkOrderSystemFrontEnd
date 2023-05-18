@@ -125,6 +125,7 @@
 
                       <v-col cols="12" sm="12" md="12">
                         <v-textarea v-model="editedItem.description" label="Description"></v-textarea>
+                        <QuillEditor></QuillEditor>
                       </v-col>
 
                       <v-col cols="12" sm="12" md="12">

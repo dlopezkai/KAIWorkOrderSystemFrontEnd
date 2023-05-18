@@ -17,6 +17,7 @@
     "@azure/msal-browser": "^2.36.0",
     "@mdi/font": "^7.2.96",
     "@pinia/nuxt": "^0.4.9",
+    "@vueup/vue-quill": "^1.2.0",
     "axios": "^1.4.0",
     "pinia": "^2.0.35",
     "sass": "^1.62.1",

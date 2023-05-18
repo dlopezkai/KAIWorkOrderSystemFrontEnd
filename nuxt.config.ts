@@ -19,7 +19,7 @@ export default defineNuxtConfig({
     modules: ['@pinia/nuxt', '@nuxt/image-edge'],
     css: ['vuetify/lib/styles/main.sass', '@mdi/font/css/materialdesignicons.min.css'],
     build: {
-      transpile: ['vuetify'],
+      transpile: ['vuetify', 'quill.client'],
     },
     vite: {
       define: {
