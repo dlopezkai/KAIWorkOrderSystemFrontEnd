@@ -124,7 +124,14 @@
                       </v-col>
 
                       <v-col cols="12" sm="12" md="12">
-                        <QuillEditor v-model:content="editedItem.description" contentType="html" theme="snow" placeholder="Description" style="height:200px; max-height:200px; overflow:auto;"></QuillEditor>
+                        <QuillEditor
+                          v-model:content="editedItem.description" 
+                          contentType="html" 
+                          theme="snow" 
+                          placeholder="Description"
+                          toolbar="essential" 
+                          style="height:200px; max-height:250px;"
+                        ></QuillEditor>
                       </v-col>
 
                       <v-col cols="12" sm="12" md="12" class="mt-5">
