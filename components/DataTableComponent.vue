@@ -411,7 +411,7 @@ function loadItems() {
   loading.value = true
   axios.get(`${runtimeConfigs.public.API_URL}/tasks`)
   .then((response) => {
-    data.value = response.data.data.tasks.map((item) => {
+    data.value = response.data.data.map((item) => {
       return {
         assigned_to: item.assignees,
         contract: item.list.id,
@@ -430,7 +430,7 @@ function loadItems() {
         url: item.url
       }
     })
-    totalItems.value = response.data.data.tasks.length
+    totalItems.value = response.data.data.length
     loading.value = false
   })
   .catch(err => console.log(err))
@@ -455,7 +455,7 @@ function loadMembers() {
   loading.value = true
   axios.get(`${runtimeConfigs.public.API_URL}/members`)
   .then((response) => {
-    members.value = response.data.data.members.map((item) => {
+    members.value = response.data.data.map((item) => {
       return {
         title: (!item.username) ? item.email : item.username,
         value: {color: item.color, email: item.email, id: item.id, initials: item.initials, profile: item.profile, username: item.username}
@@ -474,7 +474,7 @@ function loadSpaces() {
   loading.value = true
   axios.get(`${runtimeConfigs.public.API_URL}/spaces`)
   .then((response) => {
-    spaces.value = response.data.data.spaces.map((item) => {
+    spaces.value = response.data.data.map((item) => {
       return {
         id: item.id,
         name: item.name
@@ -501,7 +501,7 @@ function loadFolders(presetSpaceId) {
   // load folder options
   axios.get(`${runtimeConfigs.public.API_URL}/space/` + spaceId + `/folders`)
   .then((response) => {
-    folders.value = response.data.data.folders.map((item) => {
+    folders.value = response.data.data.map((item) => {
       return {
         id: item.id,
         name: item.name
@@ -525,7 +525,7 @@ function loadContracts(presentFolderId) {
   // load list/contract options
   axios.get(`${runtimeConfigs.public.API_URL}/folder/` + folderId + `/lists`)
   .then((response) => {
-    contracts.value = response.data.data.lists.map((item) => {
+    contracts.value = response.data.data.map((item) => {
       return {
         id: item.id,
         name: item.name
