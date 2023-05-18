@@ -124,10 +124,17 @@
                       </v-col>
 
                       <v-col cols="12" sm="12" md="12">
-                        <v-textarea v-model="editedItem.description" label="Description"></v-textarea>
+                        <QuillEditor
+                          v-model:content="editedItem.description" 
+                          contentType="html" 
+                          theme="snow" 
+                          placeholder="Description"
+                          toolbar="essential" 
+                          style="height:200px; max-height:250px;"
+                        ></QuillEditor>
                       </v-col>
 
-                      <v-col cols="12" sm="12" md="12">
+                      <v-col cols="12" sm="12" md="12" class="mt-5">
                         <v-text-field v-model="editedItem.links" label="SharePoint File"></v-text-field>
                       </v-col>
 
