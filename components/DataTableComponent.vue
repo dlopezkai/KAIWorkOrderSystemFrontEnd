@@ -64,18 +64,18 @@
               <span class="text-h5">{{ formTitle }}</span>
             </v-card-title>
 
-            <v-tabs
+            <!-- <v-tabs
               v-model="tab"
               color="#428086"
             >
               <v-tab value="one">Details</v-tab>
               <v-tab value="two">History</v-tab>
-            </v-tabs>
+            </v-tabs> -->
 
             <v-card-text>
-              <v-window v-model="tab">
+              <!-- <v-window v-model="tab"> -->
 
-                <v-window-item value="one">
+                <!-- <v-window-item value="one"> -->
                   <v-form ref="form" @submit.prevent="submit">
                     <v-row>
                       <v-col cols="12" sm="12" md="12">
@@ -100,7 +100,7 @@
                         <v-select v-model="editedItem.tags" label="Type" :items="tags" item-title="title" item-value="value" multiple chips clearable></v-select>
                       </v-col>
 
-                      <v-col cols="12" sm="6" md="6">
+                      <v-col v-if="editedIndex > -1" cols="12" sm="6" md="6">
                         <v-select v-model="editedItem.status" label="Status" items="" item-title="title"
                           item-value="value" disabled></v-select>
                       </v-col>
@@ -146,13 +146,13 @@
                       </v-col>
                     </v-row>
                   </v-form>
-                </v-window-item>
+                <!-- </v-window-item> -->
 
-                <v-window-item value="two">
+                <!-- <v-window-item value="two">
                   Work order history goes here...
-                </v-window-item>
+                </v-window-item> -->
 
-              </v-window>
+              <!-- </v-window> -->
             </v-card-text>
           </v-card>
         </v-dialog>
@@ -411,7 +411,7 @@ function loadItems() {
   loading.value = true
   axios.get(`${runtimeConfigs.public.API_URL}/tasks`)
   .then((response) => {
-    data.value = response.data.data.tasks.map((item) => {
+    data.value = response.data.data.map((item) => {
       return {
         assigned_to: item.assignees,
         contract: item.list.id,
@@ -430,7 +430,7 @@ function loadItems() {
         url: item.url
       }
     })
-    totalItems.value = response.data.data.tasks.length
+    totalItems.value = response.data.data.length
     loading.value = false
   })
   .catch(err => console.log(err))
@@ -455,7 +455,7 @@ function loadMembers() {
   loading.value = true
   axios.get(`${runtimeConfigs.public.API_URL}/members`)
   .then((response) => {
-    members.value = response.data.data.members.map((item) => {
+    members.value = response.data.data.map((item) => {
       return {
         title: (!item.username) ? item.email : item.username,
         value: {color: item.color, email: item.email, id: item.id, initials: item.initials, profile: item.profile, username: item.username}
@@ -474,7 +474,7 @@ function loadSpaces() {
   loading.value = true
   axios.get(`${runtimeConfigs.public.API_URL}/spaces`)
   .then((response) => {
-    spaces.value = response.data.data.spaces.map((item) => {
+    spaces.value = response.data.data.map((item) => {
       return {
         id: item.id,
         name: item.name
@@ -501,7 +501,7 @@ function loadFolders(presetSpaceId) {
   // load folder options
   axios.get(`${runtimeConfigs.public.API_URL}/space/` + spaceId + `/folders`)
   .then((response) => {
-    folders.value = response.data.data.folders.map((item) => {
+    folders.value = response.data.data.map((item) => {
       return {
         id: item.id,
         name: item.name
@@ -525,7 +525,7 @@ function loadContracts(presentFolderId) {
   // load list/contract options
   axios.get(`${runtimeConfigs.public.API_URL}/folder/` + folderId + `/lists`)
   .then((response) => {
-    contracts.value = response.data.data.lists.map((item) => {
+    contracts.value = response.data.data.map((item) => {
       return {
         id: item.id,
         name: item.name
