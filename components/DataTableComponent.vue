@@ -64,18 +64,18 @@
               <span class="text-h5">{{ formTitle }}</span>
             </v-card-title>
 
-            <v-tabs
+            <!-- <v-tabs
               v-model="tab"
               color="#428086"
             >
               <v-tab value="one">Details</v-tab>
               <v-tab value="two">History</v-tab>
-            </v-tabs>
+            </v-tabs> -->
 
             <v-card-text>
-              <v-window v-model="tab">
+              <!-- <v-window v-model="tab"> -->
 
-                <v-window-item value="one">
+                <!-- <v-window-item value="one"> -->
                   <v-form ref="form" @submit.prevent="submit">
                     <v-row>
                       <v-col cols="12" sm="12" md="12">
@@ -146,13 +146,13 @@
                       </v-col>
                     </v-row>
                   </v-form>
-                </v-window-item>
+                <!-- </v-window-item> -->
 
-                <v-window-item value="two">
+                <!-- <v-window-item value="two">
                   Work order history goes here...
-                </v-window-item>
+                </v-window-item> -->
 
-              </v-window>
+              <!-- </v-window> -->
             </v-card-text>
           </v-card>
         </v-dialog>
