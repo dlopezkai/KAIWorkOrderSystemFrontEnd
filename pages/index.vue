@@ -10,7 +10,7 @@
     </div>
   </div>
   <div v-else>
-    <data-table-component></data-table-component>
+    <work-order-system></work-order-system>
   </div>
 </template>
 
