@@ -64,102 +64,101 @@
               <span class="text-h5">{{ formTitle }}</span>
             </v-card-title>
 
-            <!-- <v-tabs
-              v-model="tab"
-              color="#428086"
-            >
+            <v-card-text>
+              
+            <v-tabs v-model="tab" color="#428086">
               <v-tab value="one">Details</v-tab>
               <v-tab value="two">History</v-tab>
-            </v-tabs> -->
+            </v-tabs>
 
-            <v-card-text>
-              <!-- <v-window v-model="tab"> -->
+            <v-window v-model="tab">
 
-                <!-- <v-window-item value="one"> -->
-                  <v-form ref="form" @submit.prevent="submit">
-                    <v-row>
-                      <v-col cols="12" sm="12" md="12">
-                        <v-text-field v-model="editedItem.name" label="Name" 
-                          :rules="[rules.required]"></v-text-field>
-                      </v-col>
+              <v-window-item value="one">
+                <v-form ref="form" @submit.prevent="submit">
+                  <v-row>
+                    <v-col cols="12" sm="12" md="12">
+                      <v-text-field v-model="editedItem.name" label="Name" 
+                        :rules="[rules.required]"></v-text-field>
+                    </v-col>
 
-                      <v-col cols="12" sm="4" md="4">
-                        <v-select v-model="editedItem.space" label="Space" :items="spaces" item-title="name" item-value="id" @update:modelValue="loadFolders()"
-                          :rules="[rules.select]"></v-select>
-                      </v-col>
-                      <v-col cols="12" sm="4" md="4">
-                        <v-select v-model="editedItem.folder" label="Project" :items="folders" item-title="name" item-value="id" @update:modelValue="loadContracts()"
-                          :rules="[rules.select]" ></v-select>
-                      </v-col>
-                      <v-col cols="12" sm="4" md="4">
-                        <v-select v-model="editedItem.contract" label="Subtask" :items="contracts" item-title="name" item-value="id"
-                          :rules="[rules.select]"></v-select>
-                      </v-col>
+                    <v-col cols="12" sm="4" md="4">
+                      <v-select v-model="editedItem.space" label="Space" :items="spaces" item-title="name" item-value="id" @update:modelValue="loadFolders()"
+                        :rules="[rules.select]"></v-select>
+                    </v-col>
+                    <v-col cols="12" sm="4" md="4">
+                      <v-select v-model="editedItem.folder" label="Project" :items="folders" item-title="name" item-value="id" @update:modelValue="loadContracts()"
+                        :rules="[rules.select]" ></v-select>
+                    </v-col>
+                    <v-col cols="12" sm="4" md="4">
+                      <v-select v-model="editedItem.contract" label="Subtask" :items="contracts" item-title="name" item-value="id"
+                        :rules="[rules.select]"></v-select>
+                    </v-col>
 
-                      <v-col cols="12" sm="12" md="12">
-                        <v-select v-model="editedItem.tags" label="Type" :items="tags" item-title="title" item-value="value" multiple chips clearable></v-select>
-                      </v-col>
+                    <v-col cols="12" sm="12" md="12">
+                      <v-select v-model="editedItem.tags" label="Type" :items="tags" item-title="title" item-value="value" multiple chips clearable></v-select>
+                    </v-col>
 
-                      <v-col v-if="editedIndex > -1" cols="12" sm="6" md="6">
-                        <v-select v-model="editedItem.status" label="Status" items="" item-title="title"
-                          item-value="value" disabled></v-select>
-                      </v-col>
-                      <v-col cols="12" sm="6" md="6">
-                        <v-select v-model="editedItem.assigned_to" label="Assignee(s)" :items="members" item-title="title" item-value="value" multiple chips clearable></v-select>
-                      </v-col>
+                    <v-col v-if="editedIndex > -1" cols="12" sm="6" md="6">
+                      <v-select v-model="editedItem.status" label="Status" items="" item-title="title"
+                        item-value="value" disabled></v-select>
+                    </v-col>
+                    <v-col cols="12" sm="6" md="6">
+                      <v-select v-model="editedItem.assigned_to" label="Assignee(s)" :items="members" item-title="title" item-value="value" multiple chips clearable></v-select>
+                    </v-col>
 
-                      <v-col cols="12" sm="6" md="6">
-                        <v-text-field v-model="editedItem.due_date" label="Due Date" type="datetime-local"
-                          :rules="[rules.due_date, rules.due_date_threshold]"></v-text-field>
-                      </v-col>
-                      <v-col cols="12" sm="6" md="6">
-                        <v-select v-model="editedItem.notify_person" label="Notify Person" :items="members" item-title="title" item-value="value" multiple chips clearable></v-select>
-                      </v-col>
+                    <v-col cols="12" sm="6" md="6">
+                      <v-text-field v-model="editedItem.due_date" label="Due Date" type="datetime-local"
+                        :rules="[rules.due_date, rules.due_date_threshold]"></v-text-field>
+                    </v-col>
+                    <v-col cols="12" sm="6" md="6">
+                      <v-select v-model="editedItem.notify_person" label="Notify Person" :items="members" item-title="title" item-value="value" multiple chips clearable></v-select>
+                    </v-col>
 
-                      <v-col cols="12" sm="6" md="6">
-                        <v-text-field v-model="editedItem.estimate" label="Hours Allocated"></v-text-field>
-                      </v-col>
-                      <v-col cols="12" sm="6" md="6">
-                        <v-select v-model="editedItem.priority" label="Priority" :items="priorities" item-title="priority" item-value="id"></v-select>
-                      </v-col>
+                    <v-col cols="12" sm="6" md="6">
+                      <v-text-field v-model="editedItem.estimate" label="Hours Allocated"></v-text-field>
+                    </v-col>
+                    <v-col cols="12" sm="6" md="6">
+                      <v-select v-model="editedItem.priority" label="Priority" :items="priorities" item-title="priority" item-value="id"></v-select>
+                    </v-col>
 
-                      <v-col cols="12" sm="12" md="12">
-                        <QuillEditor
-                          v-model:content="editedItem.description" 
-                          contentType="html" 
-                          theme="snow" 
-                          placeholder="Description"
-                          toolbar="essential" 
-                          style="height:200px; max-height:250px;"
-                        ></QuillEditor>
-                      </v-col>
+                    <v-col cols="12" sm="12" md="12">
+                      <QuillEditor
+                        v-model:content="editedItem.description" 
+                        contentType="html" 
+                        theme="snow" 
+                        placeholder="Description"
+                        toolbar="essential" 
+                        style="height:200px; max-height:250px;"
+                      ></QuillEditor>
+                    </v-col>
 
-                      <v-col cols="12" sm="12" md="12" class="mt-5">
-                        <v-text-field v-model="editedItem.links" label="SharePoint File"></v-text-field>
-                      </v-col>
+                    <v-col cols="12" sm="12" md="12" class="mt-5">
+                      <v-text-field v-model="editedItem.links" label="SharePoint File"></v-text-field>
+                    </v-col>
 
-                      <!-- hide for production -->
-                      <v-col v-if="editedItem.url" cols="12" sm="12" md="12">
-                        <v-btn :href="editedItem.url" target="_blank" variant="text">ClickUp reference link</v-btn>
-                      </v-col>
+                    <!-- hide for production -->
+                    <v-col v-if="editedItem.url" cols="12" sm="12" md="12">
+                      <v-btn :href="editedItem.url" target="_blank" variant="text">ClickUp reference link</v-btn>
+                    </v-col>
 
-                      <v-col class="text-right">
-                        <v-btn color="blue-darken-1" variant="text" @click="close">
-                          Cancel
-                        </v-btn>
-                        <v-btn color="blue-darken-1" variant="text" @click="submit">
-                          Submit
-                        </v-btn>
-                      </v-col>
-                    </v-row>
-                  </v-form>
-                <!-- </v-window-item> -->
+                    <v-col class="text-right">
+                      <v-btn color="blue-darken-1" variant="text" @click="close">
+                        Cancel
+                      </v-btn>
+                      <v-btn color="blue-darken-1" variant="text" @click="submit">
+                        Submit
+                      </v-btn>
+                    </v-col>
+                  </v-row>
+                </v-form>
+              </v-window-item>
 
-                <!-- <v-window-item value="two">
-                  Work order history goes here...
-                </v-window-item> -->
+              <v-window-item value="two">
+                <comments-comp :taskid="editedItem.id"></comments-comp>
+              </v-window-item>
 
-              <!-- </v-window> -->
+            </v-window>
+
             </v-card-text>
           </v-card>
         </v-dialog>
@@ -224,6 +223,7 @@
 import { ref, nextTick } from 'vue'
 import axios from 'axios'
 import { useAuthStore } from '~/store/auth';
+import CommentsComp from './CommentsComp.vue';
 
 const runtimeConfigs = useRuntimeConfig()
     
@@ -266,6 +266,7 @@ const editedItem = ref([
     due_date: '',
     estimate: '',
     folder: '',
+    id: '',
     links: '',
     name: '',
     notify_person: '',
@@ -284,6 +285,7 @@ const defaultItem = ref([
     due_date: '',
     estimate: '',
     folder: '',
+    id: '',
     links: '',
     name: '',
     notify_person: '',
@@ -422,6 +424,7 @@ function loadItems() {
         due_date: item.due_date,
         estimate: item.time_estimate,
         folder: item.folder.id,
+        id: item.id,
         links: item.links,
         name: item.name,
         notify_person: item.notify_person,
