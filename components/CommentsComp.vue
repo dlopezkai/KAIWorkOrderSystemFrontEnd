@@ -1,7 +1,16 @@
 <template>
     <div>
-        <p>Comment for {{ taskid }}</p>
         <p>{{ commentsData }}</p>
+
+        <v-list lines="two">
+            <v-list-item
+                v-for="comment in commentsData"
+                :key="comment.id"
+                :title="comment.user.username + ' - ' + comment.date"
+            >
+                <v-list-item-subtitle v-html="comment.comment_text" class="wrap-text"></v-list-item-subtitle>
+            </v-list-item>
+        </v-list>
     </div>
 </template>
 
@@ -28,7 +37,9 @@ function fetchComments() {
         commentsData.value = response.data.data.map((item) => {
             return {
                 comment_text: item.comment_text,
-                username: item.user.username
+                date: item.date,
+                id: item.id,
+                user: item.user,
             }
         })
     })
@@ -36,6 +47,8 @@ function fetchComments() {
 }
 </script>
 
-<style lang="scss" scoped>
-
+<style scoped>
+.wrap-text {
+    -webkit-line-clamp: unset !important;
+}
 </style>
