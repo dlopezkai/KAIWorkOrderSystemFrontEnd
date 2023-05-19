@@ -205,7 +205,7 @@
     </template>
 
     <template v-slot:item.due_date="{ item }">
-      {{ convertToDate(item.raw.due_date, "table") }}
+      <v-chip :color="getDueDateColor(item.raw.due_date, item.raw.status)">{{ convertToDate(item.raw.due_date, "table") }}</v-chip>
     </template>
 
     <template v-slot:item.actions="{ item }">
@@ -645,6 +645,28 @@ function convertToDate(rawDateTime, origin) {
   }
   
   return result
+}
+
+function getDueDateColor(rawDateTime, status) {
+  let color = ""
+  const convertedRawDateTime = Number(rawDateTime)
+  const date = new Date(convertedRawDateTime)
+
+  const todayInMS = new Date()
+  const todayPlusFiveDays = Number(todayInMS) + 432000000
+
+  // if task is not complete, then set color
+  // red for overdue, or due today
+  // yellow for due within 5 days
+  if(status != "complete") {
+    if (todayInMS >= date) {
+      color = "#f50000"
+    } else if (todayPlusFiveDays > date) {
+      color = "#ffcc00"
+    }
+  }
+
+  return color
 }
 
 function dateToMilliseconds(value) {
