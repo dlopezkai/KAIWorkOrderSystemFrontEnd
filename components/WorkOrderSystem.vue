@@ -68,7 +68,7 @@
               
             <v-tabs v-model="tab" color="#428086">
               <v-tab value="one">Details</v-tab>
-              <v-tab value="two">History</v-tab>
+              <v-tab value="two">Comments</v-tab>
             </v-tabs>
 
             <v-window v-model="tab">
