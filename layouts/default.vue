@@ -28,15 +28,13 @@
       </v-layout>
     </v-card> -->
 
-    <v-card>
       <v-layout>
         <v-main style="min-height: 300px;">
-            <div>
+            <div class="pa-5">
                 <slot />
             </div>
         </v-main>
       </v-layout>
-    </v-card>
 
   </template>
 
