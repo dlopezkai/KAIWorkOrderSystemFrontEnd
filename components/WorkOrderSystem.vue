@@ -178,10 +178,6 @@
       <!-- </v-toolbar> -->
     </template>
 
-    <template v-slot:item.description="{ item }">
-      <td class="truncate">{{ item.raw.description }}</td>
-    </template>
-
     <template v-slot:item.assigned_to="{ item }">
       <v-chip v-for="assignee in item.raw.assigned_to">{{ (!assignee.username) ? assignee.email : assignee.username }}</v-chip>
     </template>
@@ -209,7 +205,7 @@
     </template>
 
     <template v-slot:item.due_date="{ item }">
-      {{ convertToDate(item.raw.due_date, "table") }}
+      <v-chip :color="getDueDateColor(item.raw.due_date, item.raw.status)">{{ convertToDate(item.raw.due_date, "table") }}</v-chip>
     </template>
 
     <template v-slot:item.actions="{ item }">
@@ -651,6 +647,28 @@ function convertToDate(rawDateTime, origin) {
   return result
 }
 
+function getDueDateColor(rawDateTime, status) {
+  let color = ""
+  const convertedRawDateTime = Number(rawDateTime)
+  const date = new Date(convertedRawDateTime)
+
+  const todayInMS = new Date()
+  const todayPlusFiveDays = Number(todayInMS) + 432000000
+
+  // if task is not complete, then set color
+  // red for overdue, or due today
+  // yellow for due within 5 days
+  if(status != "complete") {
+    if (todayInMS >= date) {
+      color = "#f50000"
+    } else if (todayPlusFiveDays > date) {
+      color = "#ffcc00"
+    }
+  }
+
+  return color
+}
+
 function dateToMilliseconds(value) {
   const milliseconds = new Date(value).getTime()
 
@@ -676,12 +694,5 @@ function hoursToMilliseconds(value) {
 </script>
 
 <style scoped>
-.truncate {
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  white-space: normal;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
+
 </style>
