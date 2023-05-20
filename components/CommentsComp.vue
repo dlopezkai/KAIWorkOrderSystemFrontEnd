@@ -81,12 +81,11 @@ function fetchComments() {
 
 function sendComment() {
     // alert(JSON.stringify(commentForm.value, null, 2))
-    axios.post(`${runtimeConfigs.public.API_URL}/task/` + taskid.value + `/comment`, {
+    // axios.post(`${runtimeConfigs.public.API_URL}/task/` + taskid.value + `/comment`, {
+    axios.post(`${runtimeConfigs.public.API_URL}/task/866a8z35w/comment`, {
         comment_text: commentForm.value[0].comment, 
         assignee: 72138402, 
         notify_all: false
-
-    // JSON.stringify(commentForm.value, null, 2)
     })
     .then(function (response){
         console.log(response)
