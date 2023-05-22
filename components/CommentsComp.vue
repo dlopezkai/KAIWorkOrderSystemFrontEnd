@@ -1,10 +1,10 @@
 <template>
     <div>
-        <p>{{ commentsData }}</p>
+        <p>{{ comments.data.data }}</p>
 
         <v-list lines="two">
             <v-list-item
-                v-for="comment in commentsData"
+                v-for="comment in comments.data.data"
                 :key="comment.id"
                 :title="comment.user.username + ' - ' + comment.date"
             >
@@ -24,7 +24,7 @@
                 </v-col>
             </v-row>
         </v-form>
-    </div>
+    </div> 
 </template>
 
 <script setup>
@@ -37,9 +37,6 @@ const props = defineProps({
     taskid: String
 })
 const { taskid } = toRefs(props);
-
-// where get request sets data
-const commentsData = ref()
 
 // where form data gets set for post request
 // TODO: set assignee to logged-in user
@@ -60,24 +57,11 @@ const commentFormDefault = ref([
   },
 ])
 
-onMounted(() => {
-    fetchComments()
-})
-
-function fetchComments() {
-    axios.get(`${runtimeConfigs.public.API_URL}/task/` + taskid.value + `/comments`)
-    .then((response) => {
-        commentsData.value = response.data.data.map((item) => {
-            return {
-                comment_text: item.comment_text,
-                date: item.date,
-                id: item.id,
-                user: item.user,
-            }
-        })
+const { data: comments } = await useAsyncData('comments', () => {
+    return $fetch(`/api/comments?taskid=${taskid.value}`, {
+        method: 'get',
     })
-    .catch(err => console.log(err))
-}
+})
 
 function sendComment() {
     // alert(JSON.stringify(commentForm.value, null, 2))
