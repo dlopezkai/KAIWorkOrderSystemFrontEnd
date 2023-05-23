@@ -3,7 +3,7 @@ export default defineEventHandler(async(event) => {
 
   const runtimeConfig = useRuntimeConfig()
   const params = getQuery(event)
-  console.log('params', params)
+  // console.log('params', params)
 
   const response = await fetch(`${runtimeConfig.API_URL}/task/${params.taskid}/comments`)
 
