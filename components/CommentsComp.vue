@@ -64,12 +64,16 @@ const { data: comments } = await useAsyncData('comments', () => {
 })
 
 function sendComment() {
-    // alert(JSON.stringify(commentForm.value, null, 2))
-    // axios.post(`${runtimeConfigs.public.API_URL}/task/` + taskid.value + `/comment`, {
-    axios.post(`${runtimeConfigs.public.API_URL}/task/866a8z35w/comment`, {
+    const data = {
         comment_text: commentForm.value[0].comment, 
         assignee: 72138402, 
         notify_all: false
+    }
+
+    axios.post(`${runtimeConfigs.public.API_URL}/task/` + taskid.value + `/comment`, data, {
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        }
     })
     .then(function (response){
         console.log(response)
@@ -77,7 +81,9 @@ function sendComment() {
     .catch(function (error) {
         console.log(error)
     })
+
 }
+
 </script>
 
 <style scoped>
