@@ -153,8 +153,10 @@
                 </v-form>
               </v-window-item>
 
+              <!-- TODO: hard-coded for testing. switch back to dynamic when ready for deployment -->
               <v-window-item value="two">
-                <comments-comp :taskid="editedItem.id"></comments-comp>
+                <!-- <comments-comp :taskid="editedItem.id"></comments-comp> -->
+                <comments-comp taskid=866a8z405></comments-comp>
               </v-window-item>
 
             </v-window>
