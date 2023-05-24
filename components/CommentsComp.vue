@@ -17,7 +17,7 @@
         <v-form ref="form" @submit.prevent="sendComment">
             <v-row>
                 <v-col cols="12" sm="10" md="10">
-                    <v-text-field v-model="commentForm[0].comment_text" class="mr-3 pt-5" placeholder="Comment" outlined clearable></v-text-field>
+                    <v-text-field v-model="commentForm.comment_text" class="mr-3 pt-5" placeholder="Comment" outlined clearable></v-text-field>
                 </v-col>
                 <v-col cols="12" sm="2" md="2">
                     <v-btn dark x-large color="blue" class="mt-7" @click="sendComment">Submit</v-btn>
@@ -41,23 +41,12 @@ const props = defineProps({
 const { taskid } = toRefs(props);
 const { clickUpUserInfo } = toRefs(props)
 
-const commentForm = ref([
-  {
+const commentForm = ref({
     assignee: clickUpUserInfo.value[0].id,
     comment_text: '',
     notify_all: false,
     username: ''
-  },
-])
-
-const commentFormDefault = ref([
-  {
-    assignee: '',
-    comment_text: '',
-    notify_all: false,
-    username: ''
-  },
-])
+})
 
 onMounted(() => {
   loadComments()
@@ -80,9 +69,9 @@ function loadComments() {
 
 function sendComment() {
     const data = {
-        comment_text: commentForm.value[0].comment_text, 
-        assignee: commentForm.value[0].assignee, 
-        notify_all: commentForm.value[0].notify_all,
+        comment_text: commentForm.value.comment_text, 
+        assignee: commentForm.value.assignee, 
+        notify_all: commentForm.value.notify_all,
     }
 
     axios.post(`${runtimeConfig.public.API_URL}/task/` + taskid.value + `/comment`, data, {
@@ -94,15 +83,20 @@ function sendComment() {
         console.log(response)
         
         // add additional form fields
-        commentForm.value[0].username = clickUpUserInfo.value[0].username
-        commentForm.value[0].assignee = clickUpUserInfo.value[0].id
-        commentForm.value[0].date = response.data.data.date
+        commentForm.value.username = clickUpUserInfo.value[0].username
+        commentForm.value.assignee = clickUpUserInfo.value[0].id
+        commentForm.value.date = response.data.data.date
 
         // add new form data to commentsData object to be rendered in component
-        commentsData.value.push(commentForm.value[0])
+        commentsData.value.push(commentForm.value)
 
         // reset the form
-        commentForm.value[0] = commentFormDefault
+        commentForm.value = {
+            assignee: clickUpUserInfo.value[0].id,
+            comment_text: '',
+            notify_all: false,
+            username: ''
+        }
     })
     .catch(function (error) {
         console.log(error)
