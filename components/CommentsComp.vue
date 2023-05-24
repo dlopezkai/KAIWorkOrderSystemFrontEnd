@@ -41,10 +41,9 @@ const props = defineProps({
 const { taskid } = toRefs(props);
 const { clickUpUserInfo } = toRefs(props)
 
-// TODO: set assignee to logged-in user
 const commentForm = ref([
   {
-    assignee: '',
+    assignee: clickUpUserInfo.value[0].id,
     comment_text: '',
     notify_all: false,
     username: ''
@@ -82,8 +81,8 @@ function loadComments() {
 function sendComment() {
     const data = {
         comment_text: commentForm.value[0].comment_text, 
-        assignee: 72138402, 
-        notify_all: false
+        assignee: commentForm.value[0].assignee, 
+        notify_all: commentForm.value[0].notify_all,
     }
 
     axios.post(`${runtimeConfig.public.API_URL}/task/` + taskid.value + `/comment`, data, {
