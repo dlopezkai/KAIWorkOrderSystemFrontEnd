@@ -254,7 +254,7 @@ const contracts = ref([])
 
 const tab = ref(null)
 
-const clickUpUserInfo = ref([])
+const clickUpUserInfo = ref()
 
 const headers = [
   { title: 'Name', key: 'name', align: 'start', width: '35%' },
@@ -421,13 +421,7 @@ onBeforeMount(() => {
 function loadClickUpUserInfo() {
   axios.get(`${runtimeConfig.public.API_URL}/members/?email=` + authStore.currentUser.username)
   .then((response) => {
-    clickUpUserInfo.value = response.data.data.map((item) => {
-      return {
-        id: item.id,
-        username: item.username,
-        email: item.email
-      }
-    })
+    clickUpUserInfo.value = response.data.data[0]
   })
   .catch(err => console.log(err))
 }

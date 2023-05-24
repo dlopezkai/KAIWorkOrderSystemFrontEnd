@@ -36,13 +36,13 @@ const commentsData = ref([])
 
 const props = defineProps({
     taskid: String,
-    clickUpUserInfo: Array
+    clickUpUserInfo: Object
 })
 const { taskid } = toRefs(props);
 const { clickUpUserInfo } = toRefs(props)
 
 const commentForm = ref({
-    assignee: clickUpUserInfo.value[0].id,
+    assignee: clickUpUserInfo.value.id,
     comment_text: '',
     notify_all: false,
     username: ''
@@ -83,8 +83,8 @@ function sendComment() {
         console.log(response)
         
         // add additional form fields
-        commentForm.value.username = clickUpUserInfo.value[0].username
-        commentForm.value.assignee = clickUpUserInfo.value[0].id
+        commentForm.value.username = clickUpUserInfo.value.username
+        commentForm.value.assignee = clickUpUserInfo.value.id
         commentForm.value.date = response.data.data.date
 
         // add new form data to commentsData object to be rendered in component
@@ -92,7 +92,7 @@ function sendComment() {
 
         // reset the form
         commentForm.value = {
-            assignee: clickUpUserInfo.value[0].id,
+            assignee: clickUpUserInfo.value.id,
             comment_text: '',
             notify_all: false,
             username: ''
