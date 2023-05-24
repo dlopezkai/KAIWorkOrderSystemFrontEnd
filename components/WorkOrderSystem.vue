@@ -354,9 +354,11 @@ const formTitle = computed(() => {
 const filteredData = computed(() => {
   if(filterByUser.value){
     let output = data.value.filter(item => {
-      let opt = item.assigned_to.some((
-        { email }) => email == authStore.currentUser.username)
-      return opt
+      if(item.assigned_to) {
+        let opt = item.assigned_to.some((
+          { email }) => email == authStore.currentUser.username)
+        return opt
+      }
     })
     return output
   }
