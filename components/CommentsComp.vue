@@ -32,6 +32,7 @@ import { ref } from 'vue'
 import axios from 'axios'
 
 const runtimeConfigs = useRuntimeConfig()
+const commentsData = ref([])
 
 const props = defineProps({
     taskid: String,
@@ -58,9 +59,6 @@ const commentFormDefault = ref([
     username: ''
   },
 ])
-
-const commentsData = ref([])
-
 
 onMounted(() => {
   loadComments()
