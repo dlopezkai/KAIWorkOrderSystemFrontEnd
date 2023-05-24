@@ -2,7 +2,7 @@
     <div>
         <!-- <p>{{ comments.data.data }}</p> -->
 
-        <v-list lines="two">
+        <v-list lines="two" style="max-height: 500px" class="overflow-y-auto">
             <v-list-item
                 v-for="comment in commentsData"
                 :key="comment.id"
