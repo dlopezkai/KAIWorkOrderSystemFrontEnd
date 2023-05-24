@@ -40,7 +40,6 @@ const props = defineProps({
 const { taskid } = toRefs(props);
 const { clickUpUserInfo } = toRefs(props)
 
-// where form data gets set for post request
 // TODO: set assignee to logged-in user
 const commentForm = ref([
   {
@@ -51,7 +50,6 @@ const commentForm = ref([
   },
 ])
 
-// default data - wire up later
 const commentFormDefault = ref([
   {
     assignee: '',
@@ -60,12 +58,6 @@ const commentFormDefault = ref([
     username: ''
   },
 ])
-
-// const { data: comments } = await useAsyncData('comments', () => {
-//     return $fetch(`/api/comments?taskid=${taskid.value}`, {
-//         method: 'get',
-//     })
-// })
 
 const commentsData = ref([])
 
