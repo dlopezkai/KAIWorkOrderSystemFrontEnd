@@ -31,7 +31,7 @@
 import { ref } from 'vue'
 import axios from 'axios'
 
-const runtimeConfigs = useRuntimeConfig()
+const runtimeConfig = useRuntimeConfig()
 const commentsData = ref([])
 
 const props = defineProps({
@@ -65,7 +65,7 @@ onMounted(() => {
 })
 
 function loadComments() {
-    axios.get(`${runtimeConfigs.public.API_URL}/task/` + taskid.value + `/comments`)
+    axios.get(`${runtimeConfig.public.API_URL}/task/` + taskid.value + `/comments`)
     .then((response) => {
         commentsData.value = response.data.data.map((item) => {
             return {
@@ -86,7 +86,7 @@ function sendComment() {
         notify_all: false
     }
 
-    axios.post(`${runtimeConfigs.public.API_URL}/task/` + taskid.value + `/comment`, data, {
+    axios.post(`${runtimeConfig.public.API_URL}/task/` + taskid.value + `/comment`, data, {
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
         }

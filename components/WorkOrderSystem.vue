@@ -231,7 +231,7 @@ import axios from 'axios'
 import { useAuthStore } from '~/store/auth';
 import CommentsComp from './CommentsComp.vue';
 
-const runtimeConfigs = useRuntimeConfig()
+const runtimeConfig = useRuntimeConfig()
     
 const authStore = useAuthStore()
 const dialog = ref(false)
@@ -419,7 +419,7 @@ onBeforeMount(() => {
 })
 
 function loadClickUpUserInfo() {
-  axios.get(`${runtimeConfigs.public.API_URL}/members/?email=` + authStore.currentUser.username)
+  axios.get(`${runtimeConfig.public.API_URL}/members/?email=` + authStore.currentUser.username)
   .then((response) => {
     clickUpUserInfo.value = response.data.data.map((item) => {
       return {
@@ -443,7 +443,7 @@ onMounted(() => {
 
 function loadItems() {
   loading.value = true
-  axios.get(`${runtimeConfigs.public.API_URL}/tasks`)
+  axios.get(`${runtimeConfig.public.API_URL}/tasks`)
   .then((response) => {
     data.value = response.data.data.map((item) => {
       return {
@@ -473,7 +473,7 @@ function loadItems() {
 
 function loadTags() {
   loading.value = true
-  axios.get(`${runtimeConfigs.public.API_URL}/tags`)
+  axios.get(`${runtimeConfig.public.API_URL}/tags`)
   .then((response) => {
     tags.value = response.data.data.map((item) => {
       return {
@@ -488,7 +488,7 @@ function loadTags() {
 
 function loadMembers() {
   loading.value = true
-  axios.get(`${runtimeConfigs.public.API_URL}/members`)
+  axios.get(`${runtimeConfig.public.API_URL}/members`)
   .then((response) => {
     members.value = response.data.data.map((item) => {
       return {
@@ -507,7 +507,7 @@ function loadMembers() {
 
 function loadSpaces() {
   loading.value = true
-  axios.get(`${runtimeConfigs.public.API_URL}/spaces`)
+  axios.get(`${runtimeConfig.public.API_URL}/spaces`)
   .then((response) => {
     spaces.value = response.data.data.map((item) => {
       return {
@@ -534,7 +534,7 @@ function loadFolders(presetSpaceId) {
   let spaceId = (presetSpaceId) ? presetSpaceId : editedItem.value.space
 
   // load folder options
-  axios.get(`${runtimeConfigs.public.API_URL}/space/` + spaceId + `/folders`)
+  axios.get(`${runtimeConfig.public.API_URL}/space/` + spaceId + `/folders`)
   .then((response) => {
     folders.value = response.data.data.map((item) => {
       return {
@@ -558,7 +558,7 @@ function loadContracts(presentFolderId) {
   let folderId = (presentFolderId) ? presentFolderId : editedItem.value.folder
 
   // load list/contract options
-  axios.get(`${runtimeConfigs.public.API_URL}/folder/` + folderId + `/lists`)
+  axios.get(`${runtimeConfig.public.API_URL}/folder/` + folderId + `/lists`)
   .then((response) => {
     contracts.value = response.data.data.map((item) => {
       return {
