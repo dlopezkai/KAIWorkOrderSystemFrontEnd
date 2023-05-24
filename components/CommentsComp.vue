@@ -34,9 +34,11 @@ import axios from 'axios'
 const runtimeConfigs = useRuntimeConfig()
 
 const props = defineProps({
-    taskid: String
+    taskid: String,
+    clickUpUserInfo: Array
 })
 const { taskid } = toRefs(props);
+const { clickUpUserInfo } = toRefs(props)
 
 // where form data gets set for post request
 // TODO: set assignee to logged-in user
@@ -103,8 +105,8 @@ function sendComment() {
         console.log(response)
         
         // add additional form fields
-        // commentForm.value[0].username = 'John Doe'
-        commentForm.value[0].assignee = 72138402
+        commentForm.value[0].username = clickUpUserInfo.value[0].username
+        commentForm.value[0].assignee = clickUpUserInfo.value[0].id
         commentForm.value[0].date = response.data.data.date
 
         // add new form data to commentsData object to be rendered in component

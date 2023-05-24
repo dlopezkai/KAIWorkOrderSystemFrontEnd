@@ -20,205 +20,209 @@
     <AuthN></AuthN>
   </v-app-bar>
 
-  <v-data-table
-    :headers="headers" 
-    :items="filteredData" 
-    :loading="loading" 
-    class="elevation-1"
-    density="comfortable"
-    :search="search"
-    @click:row="(pointerEvent, {item}) => editItem(item.raw)"
-  >
-  <!-- <v-data-table
-    :headers="headers" 
-    :items="filteredData" 
-    :group-by="groupBy"
-    :loading="loading" 
-    class="elevation-1"
-    :search="search"
-    @click:row="(pointerEvent, {item}) => editItem(item.raw)"
-  > -->
-    <template v-slot:top>
+  <!-- <div v-if="!clickUpUserInfo.length">
+    <p>Please register for a KAI ClickUp account to use this application</p>
+  </div> -->
+  <!-- <div v-else>  -->
+    <v-data-table
+      :headers="headers" 
+      :items="filteredData" 
+      :loading="loading" 
+      class="elevation-1"
+      density="comfortable"
+      :search="search"
+      @click:row="(pointerEvent, {item}) => editItem(item.raw)"
+    >
+    <!-- <v-data-table
+      :headers="headers" 
+      :items="filteredData" 
+      :group-by="groupBy"
+      :loading="loading" 
+      class="elevation-1"
+      :search="search"
+      @click:row="(pointerEvent, {item}) => editItem(item.raw)"
+    > -->
+      <template v-slot:top>
 
-      <v-text-field
-        v-model="search"
-        append-icon="mdi-magnify"
-        label="Search"
-        single-line
-        density="comfortable"
-        hide-details
-      ></v-text-field>
+        <v-text-field
+          v-model="search"
+          append-icon="mdi-magnify"
+          label="Search"
+          single-line
+          density="comfortable"
+          hide-details
+        ></v-text-field>
 
-      <!-- <v-toolbar flat> -->
+        <!-- <v-toolbar flat> -->
 
-        <v-dialog v-model="dialog" max-width="800px">
-          <!-- <template v-slot:activator="{ props }">
-            <v-col class="text-center">
-              <v-btn color="primary" dark class="mb-2" v-bind="props">
-                Add New Work Order
-              </v-btn>
-            </v-col>
-          </template> -->
-          <v-card>
-            <v-card-title>
-              <span class="text-h5">{{ formTitle }}</span>
-            </v-card-title>
+          <v-dialog v-model="dialog" max-width="800px">
+            <!-- <template v-slot:activator="{ props }">
+              <v-col class="text-center">
+                <v-btn color="primary" dark class="mb-2" v-bind="props">
+                  Add New Work Order
+                </v-btn>
+              </v-col>
+            </template> -->
+            <v-card>
+              <v-card-title>
+                <span class="text-h5">{{ formTitle }}</span>
+              </v-card-title>
 
-            <v-card-text>
-              
-            <v-tabs v-model="tab" color="#428086">
-              <v-tab value="one">Details</v-tab>
-              <v-tab value="two">Comments</v-tab>
-            </v-tabs>
+              <v-card-text>
+                
+              <v-tabs v-model="tab" color="#428086">
+                <v-tab value="one">Details</v-tab>
+                <v-tab value="two">Comments</v-tab>
+              </v-tabs>
 
-            <v-window v-model="tab">
+              <v-window v-model="tab">
 
-              <v-window-item value="one">
-                <v-form ref="form" @submit.prevent="submit">
-                  <v-row>
-                    <v-col cols="12" sm="12" md="12">
-                      <v-text-field v-model="editedItem.name" label="Name" 
-                        :rules="[rules.required]"></v-text-field>
-                    </v-col>
+                <v-window-item value="one">
+                  <v-form ref="form" @submit.prevent="submit">
+                    <v-row>
+                      <v-col cols="12" sm="12" md="12">
+                        <v-text-field v-model="editedItem.name" label="Name" 
+                          :rules="[rules.required]"></v-text-field>
+                      </v-col>
 
-                    <v-col cols="12" sm="4" md="4">
-                      <v-select v-model="editedItem.space" label="Space" :items="spaces" item-title="name" item-value="id" @update:modelValue="loadFolders()"
-                        :rules="[rules.select]"></v-select>
-                    </v-col>
-                    <v-col cols="12" sm="4" md="4">
-                      <v-select v-model="editedItem.folder" label="Project" :items="folders" item-title="name" item-value="id" @update:modelValue="loadContracts()"
-                        :rules="[rules.select]" ></v-select>
-                    </v-col>
-                    <v-col cols="12" sm="4" md="4">
-                      <v-select v-model="editedItem.contract" label="Subtask" :items="contracts" item-title="name" item-value="id"
-                        :rules="[rules.select]"></v-select>
-                    </v-col>
+                      <v-col cols="12" sm="4" md="4">
+                        <v-select v-model="editedItem.space" label="Space" :items="spaces" item-title="name" item-value="id" @update:modelValue="loadFolders()"
+                          :rules="[rules.select]"></v-select>
+                      </v-col>
+                      <v-col cols="12" sm="4" md="4">
+                        <v-select v-model="editedItem.folder" label="Project" :items="folders" item-title="name" item-value="id" @update:modelValue="loadContracts()"
+                          :rules="[rules.select]" ></v-select>
+                      </v-col>
+                      <v-col cols="12" sm="4" md="4">
+                        <v-select v-model="editedItem.contract" label="Subtask" :items="contracts" item-title="name" item-value="id"
+                          :rules="[rules.select]"></v-select>
+                      </v-col>
 
-                    <v-col cols="12" sm="12" md="12">
-                      <v-select v-model="editedItem.tags" label="Type" :items="tags" item-title="title" item-value="value" multiple chips clearable></v-select>
-                    </v-col>
+                      <v-col cols="12" sm="12" md="12">
+                        <v-select v-model="editedItem.tags" label="Type" :items="tags" item-title="title" item-value="value" multiple chips clearable></v-select>
+                      </v-col>
 
-                    <v-col v-if="editedIndex > -1" cols="12" sm="6" md="6">
-                      <v-select v-model="editedItem.status" label="Status" items="" item-title="title"
-                        item-value="value" disabled></v-select>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="6">
-                      <v-select v-model="editedItem.assigned_to" label="Assignee(s)" :items="members" item-title="title" item-value="value" multiple chips clearable></v-select>
-                    </v-col>
+                      <v-col v-if="editedIndex > -1" cols="12" sm="6" md="6">
+                        <v-select v-model="editedItem.status" label="Status" items="" item-title="title"
+                          item-value="value" disabled></v-select>
+                      </v-col>
+                      <v-col cols="12" sm="6" md="6">
+                        <v-select v-model="editedItem.assigned_to" label="Assignee(s)" :items="members" item-title="title" item-value="value" multiple chips clearable></v-select>
+                      </v-col>
 
-                    <v-col cols="12" sm="6" md="6">
-                      <v-text-field v-model="editedItem.due_date" label="Due Date" type="datetime-local"
-                        :rules="[rules.due_date, rules.due_date_threshold]"></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="6">
-                      <v-select v-model="editedItem.notify_person" label="Notify Person" :items="members" item-title="title" item-value="value" multiple chips clearable></v-select>
-                    </v-col>
+                      <v-col cols="12" sm="6" md="6">
+                        <v-text-field v-model="editedItem.due_date" label="Due Date" type="datetime-local"
+                          :rules="[rules.due_date, rules.due_date_threshold]"></v-text-field>
+                      </v-col>
+                      <v-col cols="12" sm="6" md="6">
+                        <v-select v-model="editedItem.notify_person" label="Notify Person" :items="members" item-title="title" item-value="value" multiple chips clearable></v-select>
+                      </v-col>
 
-                    <v-col cols="12" sm="6" md="6">
-                      <v-text-field v-model="editedItem.estimate" label="Hours Allocated"></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="6">
-                      <v-select v-model="editedItem.priority" label="Priority" :items="priorities" item-title="priority" item-value="id"></v-select>
-                    </v-col>
+                      <v-col cols="12" sm="6" md="6">
+                        <v-text-field v-model="editedItem.estimate" label="Hours Allocated"></v-text-field>
+                      </v-col>
+                      <v-col cols="12" sm="6" md="6">
+                        <v-select v-model="editedItem.priority" label="Priority" :items="priorities" item-title="priority" item-value="id"></v-select>
+                      </v-col>
 
-                    <v-col cols="12" sm="12" md="12">
-                      <QuillEditor
-                        v-model:content="editedItem.description" 
-                        contentType="html" 
-                        theme="snow" 
-                        placeholder="Description"
-                        toolbar="essential" 
-                        style="height:200px; max-height:250px;"
-                      ></QuillEditor>
-                    </v-col>
+                      <v-col cols="12" sm="12" md="12">
+                        <QuillEditor
+                          v-model:content="editedItem.description" 
+                          contentType="html" 
+                          theme="snow" 
+                          placeholder="Description"
+                          toolbar="essential" 
+                          style="height:200px; max-height:250px;"
+                        ></QuillEditor>
+                      </v-col>
 
-                    <v-col cols="12" sm="12" md="12" class="mt-5">
-                      <v-text-field v-model="editedItem.links" label="SharePoint File"></v-text-field>
-                    </v-col>
+                      <v-col cols="12" sm="12" md="12" class="mt-5">
+                        <v-text-field v-model="editedItem.links" label="SharePoint File"></v-text-field>
+                      </v-col>
 
-                    <!-- hide for production -->
-                    <v-col v-if="editedItem.url" cols="12" sm="12" md="12">
-                      <v-btn :href="editedItem.url" target="_blank" variant="text">ClickUp reference link</v-btn>
-                    </v-col>
+                      <!-- hide for production -->
+                      <v-col v-if="editedItem.url" cols="12" sm="12" md="12">
+                        <v-btn :href="editedItem.url" target="_blank" variant="text">ClickUp reference link</v-btn>
+                      </v-col>
 
-                    <v-col class="text-right">
-                      <v-btn color="blue-darken-1" variant="text" @click="close">
-                        Cancel
-                      </v-btn>
-                      <v-btn color="blue-darken-1" variant="text" @click="submit">
-                        Submit
-                      </v-btn>
-                    </v-col>
-                  </v-row>
-                </v-form>
-              </v-window-item>
+                      <v-col class="text-right">
+                        <v-btn color="blue-darken-1" variant="text" @click="close">
+                          Cancel
+                        </v-btn>
+                        <v-btn color="blue-darken-1" variant="text" @click="submit">
+                          Submit
+                        </v-btn>
+                      </v-col>
+                    </v-row>
+                  </v-form>
+                </v-window-item>
 
-              <!-- TODO: hard-coded for testing. switch back to dynamic when ready for deployment -->
-              <v-window-item value="two">
-                <!-- <comments-comp :taskid="editedItem.id"></comments-comp> -->
-                <comments-comp taskid=866a8z405></comments-comp>
-              </v-window-item>
+                <v-window-item value="two">
+                  <!-- <comments-comp taskid=866a8z405 :clickUpUserInfo="clickUpUserInfo"></comments-comp> -->
+                  <comments-comp :taskid="editedItem.id" :clickUpUserInfo="clickUpUserInfo"></comments-comp>
+                </v-window-item>
 
-            </v-window>
+              </v-window>
 
-            </v-card-text>
-          </v-card>
-        </v-dialog>
+              </v-card-text>
+            </v-card>
+          </v-dialog>
 
-        <!-- <v-dialog v-model="dialogDelete" max-width="500px">
-          <v-card>
-            <v-card-title class="text-h5">Are you sure you want to delete this item?</v-card-title>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="blue-darken-1" variant="text" @click="closeDelete">Cancel</v-btn>
-              <v-btn color="blue-darken-1" variant="text" @click="deleteItemConfirm">OK</v-btn>
-              <v-spacer></v-spacer>
-            </v-card-actions>
-          </v-card>
-        </v-dialog> -->
-      <!-- </v-toolbar> -->
-    </template>
+          <!-- <v-dialog v-model="dialogDelete" max-width="500px">
+            <v-card>
+              <v-card-title class="text-h5">Are you sure you want to delete this item?</v-card-title>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="blue-darken-1" variant="text" @click="closeDelete">Cancel</v-btn>
+                <v-btn color="blue-darken-1" variant="text" @click="deleteItemConfirm">OK</v-btn>
+                <v-spacer></v-spacer>
+              </v-card-actions>
+            </v-card>
+          </v-dialog> -->
+        <!-- </v-toolbar> -->
+      </template>
 
-    <template v-slot:item.assigned_to="{ item }">
-      <v-chip v-for="assignee in item.raw.assigned_to">{{ (!assignee.username) ? assignee.email : assignee.username }}</v-chip>
-    </template>
+      <template v-slot:item.assigned_to="{ item }">
+        <v-chip v-for="assignee in item.raw.assigned_to">{{ (!assignee.username) ? assignee.email : assignee.username }}</v-chip>
+      </template>
 
-    <template v-slot:item.tags="{ item }">
-      <!-- <v-chip>{{ item.raw.tags }}</v-chip> -->
-      <v-chip v-for="tag in item.raw.tags">{{ tag }}</v-chip>
-    </template>
+      <template v-slot:item.tags="{ item }">
+        <!-- <v-chip>{{ item.raw.tags }}</v-chip> -->
+        <v-chip v-for="tag in item.raw.tags">{{ tag }}</v-chip>
+      </template>
 
-    <template v-slot:item.status="{ item }">
-      <v-chip :color="item.raw.status_color">
-        {{ item.raw.status }}
-      </v-chip>
-    </template>
+      <template v-slot:item.status="{ item }">
+        <v-chip :color="item.raw.status_color">
+          {{ item.raw.status }}
+        </v-chip>
+      </template>
 
-    <template v-slot:item.priority="{ item }">
-      <v-chip v-if="item.raw.priority" :color="getPriorityColor(item.raw.priority)">
-        {{ (!item.raw.priority) 
-              ? null 
-              : (item.raw.priority === null) 
-              ? null 
-              : item.raw.priority.priority
-        }}
-      </v-chip>
-    </template>
+      <template v-slot:item.priority="{ item }">
+        <v-chip v-if="item.raw.priority" :color="getPriorityColor(item.raw.priority)">
+          {{ (!item.raw.priority) 
+                ? null 
+                : (item.raw.priority === null) 
+                ? null 
+                : item.raw.priority.priority
+          }}
+        </v-chip>
+      </template>
 
-    <template v-slot:item.due_date="{ item }">
-      <v-chip :color="getDueDateColor(item.raw.due_date, item.raw.status)">{{ convertToDate(item.raw.due_date, "table") }}</v-chip>
-    </template>
+      <template v-slot:item.due_date="{ item }">
+        <v-chip :color="getDueDateColor(item.raw.due_date, item.raw.status)">{{ convertToDate(item.raw.due_date, "table") }}</v-chip>
+      </template>
 
-    <template v-slot:item.actions="{ item }">
-      <!-- <v-icon size="small" class="me-2" @click="editItem(item.raw)">
-        mdi-pencil
-      </v-icon> -->
-      <!-- <v-icon size="small" @click="deleteItem(item.raw)">
-          mdi-delete
+      <template v-slot:item.actions="{ item }">
+        <!-- <v-icon size="small" class="me-2" @click="editItem(item.raw)">
+          mdi-pencil
         </v-icon> -->
-    </template>
+        <!-- <v-icon size="small" @click="deleteItem(item.raw)">
+            mdi-delete
+          </v-icon> -->
+      </template>
 
-  </v-data-table>
+    </v-data-table>
+  <!-- </div> -->
 </template>
 
 <script setup>
@@ -249,6 +253,8 @@ const folders = ref([])
 const contracts = ref([])
 
 const tab = ref(null)
+
+const clickUpUserInfo = ref([])
 
 const headers = [
   { title: 'Name', key: 'name', align: 'start', width: '35%' },
@@ -405,6 +411,25 @@ async function submit() {
     save()
   }
 }
+
+onBeforeMount(() => {
+  loadClickUpUserInfo()
+})
+
+function loadClickUpUserInfo() {
+  axios.get(`${runtimeConfigs.public.API_URL}/members/?email=` + authStore.currentUser.username)
+  .then((response) => {
+    clickUpUserInfo.value = response.data.data.map((item) => {
+      return {
+        id: item.id,
+        username: item.username,
+        email: item.email
+      }
+    })
+  })
+  .catch(err => console.log(err))
+}
+
 
 // mounted life-cycle hook
 onMounted(() => {
