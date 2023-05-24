@@ -14,13 +14,13 @@
 
         <v-divider :thickness="3"></v-divider>
 
-        <v-form ref="form" @submit.prevent="sendComment">
+        <v-form ref="form" @submit.prevent="submitComment">
             <v-row>
                 <v-col cols="12" sm="10" md="10">
                     <v-text-field v-model="commentForm.comment_text" class="mr-3 pt-5" placeholder="Comment" outlined clearable></v-text-field>
                 </v-col>
                 <v-col cols="12" sm="2" md="2">
-                    <v-btn dark x-large color="blue" class="mt-7" @click="sendComment">Submit</v-btn>
+                    <v-btn dark x-large color="blue" class="mt-7" @click="submitComment">Submit</v-btn>
                 </v-col>
             </v-row>
         </v-form>
@@ -67,39 +67,40 @@ function loadComments() {
     .catch(err => console.log(err))
 }
 
-function sendComment() {
-    const data = {
-        comment_text: commentForm.value.comment_text, 
-        assignee: commentForm.value.assignee, 
-        notify_all: commentForm.value.notify_all,
+function submitComment() {
+    if(commentForm.value.comment_text != "") {
+        const data = {
+            comment_text: commentForm.value.comment_text, 
+            assignee: commentForm.value.assignee, 
+            notify_all: commentForm.value.notify_all,
+        }
+
+        axios.post(`${runtimeConfig.public.API_URL}/task/` + taskid.value + `/comment`, data, {
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        })
+        .then(function (response){
+            // the next 4 commands are here to simulate a "live-update", and avoid an additional API GET request
+            // actual data from clickup will be rendered in the list when user closes and reopens the modal
+            commentForm.value.username = clickUpUserInfo.value.username
+            commentForm.value.assignee = clickUpUserInfo.value.id
+            commentForm.value.date = response.data.data.date
+
+            commentsData.value.push(commentForm.value)
+
+            // reset the form
+            commentForm.value = {
+                assignee: clickUpUserInfo.value.id,
+                comment_text: '',
+                notify_all: false,
+                username: ''
+            }
+        })
+        .catch(function (error) {
+            console.log(error)
+        })
     }
-
-    axios.post(`${runtimeConfig.public.API_URL}/task/` + taskid.value + `/comment`, data, {
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-        }
-    })
-    .then(function (response){
-        // the next 4 commands are here to simulate a "live-update", and avoid an additional API GET request
-        // actual data from clickup will be rendered in the list when user closes and reopens the modal
-        commentForm.value.username = clickUpUserInfo.value.username
-        commentForm.value.assignee = clickUpUserInfo.value.id
-        commentForm.value.date = response.data.data.date
-
-        commentsData.value.push(commentForm.value)
-
-        // reset the form
-        commentForm.value = {
-            assignee: clickUpUserInfo.value.id,
-            comment_text: '',
-            notify_all: false,
-            username: ''
-        }
-    })
-    .catch(function (error) {
-        console.log(error)
-    })
-
 }
 
 </script>
