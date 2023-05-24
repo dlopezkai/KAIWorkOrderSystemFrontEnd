@@ -80,14 +80,12 @@ function sendComment() {
         }
     })
     .then(function (response){
-        console.log(response)
-        
-        // add additional form fields
+        // the next 4 commands are here to simulate a "live-update", and avoid an additional API GET request
+        // actual data from clickup will be rendered in the list when user closes and reopens the modal
         commentForm.value.username = clickUpUserInfo.value.username
         commentForm.value.assignee = clickUpUserInfo.value.id
         commentForm.value.date = response.data.data.date
 
-        // add new form data to commentsData object to be rendered in component
         commentsData.value.push(commentForm.value)
 
         // reset the form
