@@ -6,7 +6,7 @@
             <v-list-item
                 v-for="comment in commentsData"
                 :key="comment.id"
-                :title="comment.username + ' - ' + comment.date"
+                :title="comment.username + ' (' + convertToDate(comment.date, 'table') + ')'"
             >
                 <v-list-item-subtitle v-html="comment.comment_text" class="wrap-text"></v-list-item-subtitle>
             </v-list-item>
@@ -30,6 +30,7 @@
 <script setup>
 import { ref } from 'vue'
 import axios from 'axios'
+import { convertToDate } from '~/helpers/convertToDate.js'
 
 const runtimeConfig = useRuntimeConfig()
 const commentsData = ref([])
