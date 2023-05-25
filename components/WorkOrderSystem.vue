@@ -85,15 +85,11 @@
                           :rules="[rules.required]"></v-text-field>
                       </v-col>
 
-                      <v-col cols="12" sm="4" md="4">
-                        <v-select v-model="editedItem.space" label="Space" :items="spaces" item-title="name" item-value="id" @update:modelValue="loadFolders()"
-                          :rules="[rules.select]"></v-select>
-                      </v-col>
-                      <v-col cols="12" sm="4" md="4">
+                      <v-col cols="12" sm="6" md="6">
                         <v-select v-model="editedItem.folder" label="Project" :items="folders" item-title="name" item-value="id" @update:modelValue="loadContracts()"
                           :rules="[rules.select]" ></v-select>
                       </v-col>
-                      <v-col cols="12" sm="4" md="4">
+                      <v-col cols="12" sm="6" md="6">
                         <v-select v-model="editedItem.contract" label="Subtask" :items="contracts" item-title="name" item-value="id"
                           :rules="[rules.select]"></v-select>
                       </v-col>
@@ -249,7 +245,6 @@ const form = ref(null)
 const tags = ref([])
 const members = ref([])
 
-const spaces = ref([])
 const folders = ref([])
 const contracts = ref([])
 
@@ -280,7 +275,6 @@ const editedItem = ref([
     name: '',
     notify_person: '',
     priority: '',
-    space: '',
     status: '',
     tags: ''
   },
@@ -299,7 +293,6 @@ const defaultItem = ref([
     name: '',
     notify_person: '',
     priority: '',
-    space: '',
     status: '',
     tags: ''
   },
@@ -438,7 +431,7 @@ onMounted(() => {
   loadItems()
   loadTags()
   loadMembers()
-  loadSpaces()
+  loadFolders()
 })
 
 function loadItems() {
@@ -458,7 +451,6 @@ function loadItems() {
         name: item.name,
         notify_person: item.notify_person,
         priority: item.priority,
-        space: item.space.id,
         status: item.status.status,
         status_color: item.status.color,
         tags: item.tags,
@@ -501,40 +493,9 @@ function loadMembers() {
   .catch(err => console.log(err))
 }
 
-
-
-
-
-function loadSpaces() {
-  loading.value = true
-  axios.get(`${runtimeConfig.public.API_URL}/spaces`)
-  .then((response) => {
-    spaces.value = response.data.data.map((item) => {
-      return {
-        id: item.id,
-        name: item.name
-      }
-    })
-    loading.value = false
-  })
-  .catch(err => console.log(err))
-} 
-
-// argument represents an ID passed in from an existing work order
-function loadFolders(presetSpaceId) {
-  // clear selected folder and contract
-  editedItem.value.folder = ''
-  editedItem.value.contract = ''
-
-  // clear folder and contract options
-  folders.value = ''
-  contracts.value = ''
-
-  // get selected space ID
-  let spaceId = (presetSpaceId) ? presetSpaceId : editedItem.value.space
-
+function loadFolders() {
   // load folder options
-  axios.get(`${runtimeConfig.public.API_URL}/space/` + spaceId + `/folders`)
+  axios.get(`${runtimeConfig.public.API_URL}/folders`)
   .then((response) => {
     folders.value = response.data.data.map((item) => {
       return {
@@ -546,7 +507,6 @@ function loadFolders(presetSpaceId) {
   .catch(err => console.log(err))
 }
 
-// argument represents an ID passed in from an existing work order
 function loadContracts(presentFolderId) {
   // clear contract
   editedItem.value.contract = ''
@@ -576,7 +536,7 @@ function editItem(item) {
 
   // convert time estimate (milliseconds) to hours if not a new work order
   if (editedIndex.value > -1) {
-    loadFolders(item.space)
+    loadFolders()
     loadContracts(item.folder)
     editedItem.value = Object.assign({}, item)
     editedItem.value.due_date = convertToDate(item.due_date, "form")
