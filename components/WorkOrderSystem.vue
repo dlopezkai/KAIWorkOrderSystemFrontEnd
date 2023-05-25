@@ -70,7 +70,7 @@
 
               <v-card-text>
                 
-              <v-tabs v-model="tab" color="#428086">
+              <v-tabs v-if="editedIndex > -1" v-model="tab" color="#428086">
                 <v-tab value="one">Details</v-tab>
                 <v-tab value="two">Comments</v-tab>
               </v-tabs>
@@ -157,7 +157,7 @@
                   </v-form>
                 </v-window-item>
 
-                <v-window-item value="two">
+                <v-window-item v-if="editedIndex > -1" value="two">
                   <!-- <comments-comp taskid=866a8z405 :clickUpUserInfo="clickUpUserInfo"></comments-comp> -->
                   <comments-comp :taskid="editedItem.id" :clickUpUserInfo="clickUpUserInfo"></comments-comp>
                 </v-window-item>
