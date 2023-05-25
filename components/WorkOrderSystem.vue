@@ -226,7 +226,7 @@
 </template>
 
 <script setup>
-import { ref, nextTick } from 'vue'
+import { ref, nextTick, watch } from 'vue'
 import axios from 'axios'
 import { useAuthStore } from '~/store/auth';
 import CommentsComp from './CommentsComp.vue';
@@ -381,6 +381,11 @@ const rules =
   due_date: v => !!v || 'Date must be selected',
   due_date_threshold: v => dateValidation(v) || 'Date must be 2 business days from today',
 }
+
+// resets the tab when dialog is reopened
+watch(dialog, (currentValue, newValue) => {
+  tab.value = (currentValue) ? "one" : "two"
+})
 
 // checks for the 2 business days rule
 function dateValidation(input) {
