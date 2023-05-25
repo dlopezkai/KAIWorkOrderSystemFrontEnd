@@ -20,62 +20,64 @@
     <AuthN></AuthN>
   </v-app-bar>
 
-  <v-data-table
-    :headers="headers" 
-    :items="filteredData" 
-    :loading="loading" 
-    class="elevation-1"
-    density="comfortable"
-    :search="search"
-    @click:row="(pointerEvent, {item}) => editItem(item.raw)"
-  >
-  <!-- <v-data-table
-    :headers="headers" 
-    :items="filteredData" 
-    :group-by="groupBy"
-    :loading="loading" 
-    class="elevation-1"
-    :search="search"
-    @click:row="(pointerEvent, {item}) => editItem(item.raw)"
-  > -->
-    <template v-slot:top>
+  <!-- <div v-if="!clickUpUserInfo.length">
+    <p>Please register for a KAI ClickUp account to use this application</p>
+  </div> -->
+  <!-- <div v-else>  -->
+    <v-data-table
+      :headers="headers" 
+      :items="filteredData" 
+      :loading="loading" 
+      class="elevation-1"
+      density="comfortable"
+      :search="search"
+      @click:row="(pointerEvent, {item}) => editItem(item.raw)"
+    >
+    <!-- <v-data-table
+      :headers="headers" 
+      :items="filteredData" 
+      :group-by="groupBy"
+      :loading="loading" 
+      class="elevation-1"
+      :search="search"
+      @click:row="(pointerEvent, {item}) => editItem(item.raw)"
+    > -->
+      <template v-slot:top>
 
-      <v-text-field
-        v-model="search"
-        append-icon="mdi-magnify"
-        label="Search"
-        single-line
-        density="comfortable"
-        hide-details
-      ></v-text-field>
+        <v-text-field
+          v-model="search"
+          append-icon="mdi-magnify"
+          label="Search"
+          single-line
+          density="comfortable"
+          hide-details
+        ></v-text-field>
 
-      <!-- <v-toolbar flat> -->
+        <!-- <v-toolbar flat> -->
 
-        <v-dialog v-model="dialog" max-width="800px">
-          <!-- <template v-slot:activator="{ props }">
-            <v-col class="text-center">
-              <v-btn color="primary" dark class="mb-2" v-bind="props">
-                Add New Work Order
-              </v-btn>
-            </v-col>
-          </template> -->
-          <v-card>
-            <v-card-title>
-              <span class="text-h5">{{ formTitle }}</span>
-            </v-card-title>
+          <v-dialog v-model="dialog" max-width="800px">
+            <!-- <template v-slot:activator="{ props }">
+              <v-col class="text-center">
+                <v-btn color="primary" dark class="mb-2" v-bind="props">
+                  Add New Work Order
+                </v-btn>
+              </v-col>
+            </template> -->
+            <v-card>
+              <v-card-title>
+                <span class="text-h5">{{ formTitle }}</span>
+              </v-card-title>
 
-            <!-- <v-tabs
-              v-model="tab"
-              color="#428086"
-            >
-              <v-tab value="one">Details</v-tab>
-              <v-tab value="two">History</v-tab>
-            </v-tabs> -->
+              <v-card-text>
+                
+              <v-tabs v-if="editedIndex > -1" v-model="tab" color="#428086">
+                <v-tab value="one">Details</v-tab>
+                <v-tab value="two">Comments</v-tab>
+              </v-tabs>
 
-            <v-card-text>
-              <!-- <v-window v-model="tab"> -->
+              <v-window v-model="tab">
 
-                <!-- <v-window-item value="one"> -->
+                <v-window-item value="one">
                   <v-form ref="form" @submit.prevent="submit">
                     <v-row>
                       <v-col cols="12" sm="12" md="12">
@@ -153,79 +155,83 @@
                       </v-col>
                     </v-row>
                   </v-form>
-                <!-- </v-window-item> -->
+                </v-window-item>
 
-                <!-- <v-window-item value="two">
-                  Work order history goes here...
-                </v-window-item> -->
+                <v-window-item v-if="editedIndex > -1" value="two">
+                  <!-- <comments-comp taskid=866a8z405 :clickUpUserInfo="clickUpUserInfo"></comments-comp> -->
+                  <comments-comp :taskid="editedItem.id" :clickUpUserInfo="clickUpUserInfo"></comments-comp>
+                </v-window-item>
 
-              <!-- </v-window> -->
-            </v-card-text>
-          </v-card>
-        </v-dialog>
+              </v-window>
 
-        <!-- <v-dialog v-model="dialogDelete" max-width="500px">
-          <v-card>
-            <v-card-title class="text-h5">Are you sure you want to delete this item?</v-card-title>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="blue-darken-1" variant="text" @click="closeDelete">Cancel</v-btn>
-              <v-btn color="blue-darken-1" variant="text" @click="deleteItemConfirm">OK</v-btn>
-              <v-spacer></v-spacer>
-            </v-card-actions>
-          </v-card>
-        </v-dialog> -->
-      <!-- </v-toolbar> -->
-    </template>
+              </v-card-text>
+            </v-card>
+          </v-dialog>
 
-    <template v-slot:item.assigned_to="{ item }">
-      <v-chip v-for="assignee in item.raw.assigned_to">{{ (!assignee.username) ? assignee.email : assignee.username }}</v-chip>
-    </template>
+          <!-- <v-dialog v-model="dialogDelete" max-width="500px">
+            <v-card>
+              <v-card-title class="text-h5">Are you sure you want to delete this item?</v-card-title>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="blue-darken-1" variant="text" @click="closeDelete">Cancel</v-btn>
+                <v-btn color="blue-darken-1" variant="text" @click="deleteItemConfirm">OK</v-btn>
+                <v-spacer></v-spacer>
+              </v-card-actions>
+            </v-card>
+          </v-dialog> -->
+        <!-- </v-toolbar> -->
+      </template>
 
-    <template v-slot:item.tags="{ item }">
-      <!-- <v-chip>{{ item.raw.tags }}</v-chip> -->
-      <v-chip v-for="tag in item.raw.tags">{{ tag }}</v-chip>
-    </template>
+      <template v-slot:item.assigned_to="{ item }">
+        <v-chip v-for="assignee in item.raw.assigned_to">{{ (!assignee.username) ? assignee.email : assignee.username }}</v-chip>
+      </template>
 
-    <template v-slot:item.status="{ item }">
-      <v-chip :color="item.raw.status_color">
-        {{ item.raw.status }}
-      </v-chip>
-    </template>
+      <template v-slot:item.tags="{ item }">
+        <!-- <v-chip>{{ item.raw.tags }}</v-chip> -->
+        <v-chip v-for="tag in item.raw.tags">{{ tag }}</v-chip>
+      </template>
 
-    <template v-slot:item.priority="{ item }">
-      <v-chip v-if="item.raw.priority" :color="getPriorityColor(item.raw.priority)">
-        {{ (!item.raw.priority) 
-              ? null 
-              : (item.raw.priority === null) 
-              ? null 
-              : item.raw.priority.priority
-        }}
-      </v-chip>
-    </template>
+      <template v-slot:item.status="{ item }">
+        <v-chip :color="item.raw.status_color">
+          {{ item.raw.status }}
+        </v-chip>
+      </template>
 
-    <template v-slot:item.due_date="{ item }">
-      <v-chip :color="getDueDateColor(item.raw.due_date, item.raw.status)">{{ convertToDate(item.raw.due_date, "table") }}</v-chip>
-    </template>
+      <template v-slot:item.priority="{ item }">
+        <v-chip v-if="item.raw.priority" :color="getPriorityColor(item.raw.priority)">
+          {{ (!item.raw.priority) 
+                ? null 
+                : (item.raw.priority === null) 
+                ? null 
+                : item.raw.priority.priority
+          }}
+        </v-chip>
+      </template>
 
-    <template v-slot:item.actions="{ item }">
-      <!-- <v-icon size="small" class="me-2" @click="editItem(item.raw)">
-        mdi-pencil
-      </v-icon> -->
-      <!-- <v-icon size="small" @click="deleteItem(item.raw)">
-          mdi-delete
+      <template v-slot:item.due_date="{ item }">
+        <v-chip :color="getDueDateColor(item.raw.due_date, item.raw.status)">{{ convertToDate(item.raw.due_date, "table") }}</v-chip>
+      </template>
+
+      <template v-slot:item.actions="{ item }">
+        <!-- <v-icon size="small" class="me-2" @click="editItem(item.raw)">
+          mdi-pencil
         </v-icon> -->
-    </template>
+        <!-- <v-icon size="small" @click="deleteItem(item.raw)">
+            mdi-delete
+          </v-icon> -->
+      </template>
 
-  </v-data-table>
+    </v-data-table>
+  <!-- </div> -->
 </template>
 
 <script setup>
-import { ref, nextTick } from 'vue'
+import { ref, nextTick, watch } from 'vue'
 import axios from 'axios'
 import { useAuthStore } from '~/store/auth';
+import CommentsComp from './CommentsComp.vue';
 
-const runtimeConfigs = useRuntimeConfig()
+const runtimeConfig = useRuntimeConfig()
     
 const authStore = useAuthStore()
 const dialog = ref(false)
@@ -248,6 +254,8 @@ const contracts = ref([])
 
 const tab = ref(null)
 
+const clickUpUserInfo = ref()
+
 const headers = [
   { title: 'Name', key: 'name', align: 'start', width: '35%' },
   { title: 'Assignee(s)', key: 'assigned_to', align: 'start', sortable: false },
@@ -266,6 +274,7 @@ const editedItem = ref([
     due_date: '',
     estimate: '',
     folder: '',
+    id: '',
     links: '',
     name: '',
     notify_person: '',
@@ -284,6 +293,7 @@ const defaultItem = ref([
     due_date: '',
     estimate: '',
     folder: '',
+    id: '',
     links: '',
     name: '',
     notify_person: '',
@@ -344,9 +354,11 @@ const formTitle = computed(() => {
 const filteredData = computed(() => {
   if(filterByUser.value){
     let output = data.value.filter(item => {
-      let opt = item.assigned_to.some((
-        { email }) => email == authStore.currentUser.username)
-      return opt
+      if(item.assigned_to) {
+        let opt = item.assigned_to.some((
+          { email }) => email == authStore.currentUser.username)
+        return opt
+      }
     })
     return output
   }
@@ -369,6 +381,11 @@ const rules =
   due_date: v => !!v || 'Date must be selected',
   due_date_threshold: v => dateValidation(v) || 'Date must be 2 business days from today',
 }
+
+// resets the tab when dialog is reopened
+watch(dialog, (currentValue, newValue) => {
+  tab.value = (currentValue) ? "one" : "two"
+})
 
 // checks for the 2 business days rule
 function dateValidation(input) {
@@ -402,6 +419,19 @@ async function submit() {
   }
 }
 
+onBeforeMount(() => {
+  loadClickUpUserInfo()
+})
+
+function loadClickUpUserInfo() {
+  axios.get(`${runtimeConfig.public.API_URL}/members/?email=` + authStore.currentUser.username)
+  .then((response) => {
+    clickUpUserInfo.value = response.data.data[0]
+  })
+  .catch(err => console.log(err))
+}
+
+
 // mounted life-cycle hook
 onMounted(() => {
   loadItems()
@@ -412,7 +442,7 @@ onMounted(() => {
 
 function loadItems() {
   loading.value = true
-  axios.get(`${runtimeConfigs.public.API_URL}/tasks`)
+  axios.get(`${runtimeConfig.public.API_URL}/tasks`)
   .then((response) => {
     data.value = response.data.data.map((item) => {
       return {
@@ -422,6 +452,7 @@ function loadItems() {
         due_date: item.due_date,
         estimate: item.time_estimate,
         folder: item.folder.id,
+        id: item.id,
         links: item.links,
         name: item.name,
         notify_person: item.notify_person,
@@ -441,7 +472,7 @@ function loadItems() {
 
 function loadTags() {
   loading.value = true
-  axios.get(`${runtimeConfigs.public.API_URL}/tags`)
+  axios.get(`${runtimeConfig.public.API_URL}/tags`)
   .then((response) => {
     tags.value = response.data.data.map((item) => {
       return {
@@ -456,7 +487,7 @@ function loadTags() {
 
 function loadMembers() {
   loading.value = true
-  axios.get(`${runtimeConfigs.public.API_URL}/members`)
+  axios.get(`${runtimeConfig.public.API_URL}/members`)
   .then((response) => {
     members.value = response.data.data.map((item) => {
       return {
@@ -475,7 +506,7 @@ function loadMembers() {
 
 function loadSpaces() {
   loading.value = true
-  axios.get(`${runtimeConfigs.public.API_URL}/spaces`)
+  axios.get(`${runtimeConfig.public.API_URL}/spaces`)
   .then((response) => {
     spaces.value = response.data.data.map((item) => {
       return {
@@ -502,7 +533,7 @@ function loadFolders(presetSpaceId) {
   let spaceId = (presetSpaceId) ? presetSpaceId : editedItem.value.space
 
   // load folder options
-  axios.get(`${runtimeConfigs.public.API_URL}/space/` + spaceId + `/folders`)
+  axios.get(`${runtimeConfig.public.API_URL}/space/` + spaceId + `/folders`)
   .then((response) => {
     folders.value = response.data.data.map((item) => {
       return {
@@ -526,7 +557,7 @@ function loadContracts(presentFolderId) {
   let folderId = (presentFolderId) ? presentFolderId : editedItem.value.folder
 
   // load list/contract options
-  axios.get(`${runtimeConfigs.public.API_URL}/folder/` + folderId + `/lists`)
+  axios.get(`${runtimeConfig.public.API_URL}/folder/` + folderId + `/lists`)
   .then((response) => {
     contracts.value = response.data.data.map((item) => {
       return {
