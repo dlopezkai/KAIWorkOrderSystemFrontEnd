@@ -230,6 +230,7 @@ import { ref, nextTick, watch } from 'vue'
 import axios from 'axios'
 import { useAuthStore } from '~/store/auth';
 import CommentsComp from './CommentsComp.vue';
+import { convertToDate } from '~/helpers/convertToDate.js';
 
 const runtimeConfig = useRuntimeConfig()
     
@@ -654,28 +655,6 @@ function getPriorityColor (priority) {
     default:
       return ''
   }
-}
-
-// TODO: check to see why this fires multiple times when modal is opened
-// format must match format of what the form field outputs (i.e. YYYY-MM-DDTHH:MM)
-function convertToDate(rawDateTime, origin) {
-  let result = ""
-  const convertedRawDateTime = Number(rawDateTime)
-
-  const date = new Date(convertedRawDateTime)
-  const year = date.getFullYear()
-  const month = ("0" + (date.getMonth() + 1)).slice(-2)
-  const day = ("0" + date.getDate()).slice(-2)
-  const hours = ("0" + date.getHours()).slice(-2)
-  const minutes = ("0" + date.getMinutes()).slice(-2)
-
-  if (origin === "form") {
-    result = year + "-" + month + "-" + day + 'T' + hours + ":" + minutes
-  } else if (origin === "table") {
-    result = year + "-" + month + "-" + day
-  }
-  
-  return result
 }
 
 function getDueDateColor(rawDateTime, status) {
