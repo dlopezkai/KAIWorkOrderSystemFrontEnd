@@ -218,7 +218,6 @@ const runtimeConfig = useRuntimeConfig()
     
 const authStore = useAuthStore()
 const dialog = ref(false)
-// const dialogDelete = ref(false)
 const itemsPerPage = ref(10)
 const loading = ref(true)
 const totalItems = ref(0)
@@ -561,25 +560,6 @@ function save() {
   }
   close()
 }
-
-// function deleteItem(item) {
-//     editedIndex.value = data.value.indexOf(item)
-//     editedItem.value = Object.assign({}, item)
-//     dialogDelete.value = true
-// }
-
-// function deleteItemConfirm() {
-//     data.value.value.splice(editedIndex.value, 1)
-//     closeDelete()
-// }
-
-// function closeDelete() {
-//     dialogDelete.value = false
-//     nextTick(() => {
-//         editedItem.value = Object.assign({}, defaultItem.value)
-//         editedIndex.value = -1
-//     })
-// }
 
 function filterByUserToggle (type) {
   if(type === 'user') {
