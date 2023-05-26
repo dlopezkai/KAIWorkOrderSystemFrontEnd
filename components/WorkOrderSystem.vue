@@ -86,11 +86,11 @@
                       </v-col>
 
                       <v-col cols="12" sm="6" md="6">
-                        <v-select v-model="editedItem.folder" label="Project" :items="folders" item-title="name" item-value="id" @update:modelValue="loadContracts()"
+                        <v-select v-model="editedItem.folder" label="Project" :items="folders" item-title="name" item-value="id" @update:modelValue="loadLists()"
                           :rules="[rules.select]" ></v-select>
                       </v-col>
                       <v-col cols="12" sm="6" md="6">
-                        <v-select v-model="editedItem.contract" label="Subtask" :items="contracts" item-title="name" item-value="id"
+                        <v-select v-model="editedItem.list" label="Subtask" :items="lists" item-title="name" item-value="id"
                           :rules="[rules.select]"></v-select>
                       </v-col>
 
@@ -231,7 +231,7 @@ const tags = ref([])
 const members = ref([])
 
 const folders = ref([])
-const contracts = ref([])
+const lists = ref([])
 
 const tab = ref(null)
 
@@ -251,13 +251,13 @@ const headers = [
 const editedItem = ref([
   {
     assigned_to: '',
-    contract: '',
     description: '',
     due_date: '',
     estimate: '',
     folder: '',
     id: '',
     links: '',
+    list: '',
     name: '',
     notify_person: '',
     priority: '',
@@ -270,13 +270,13 @@ const editedItem = ref([
 const defaultItem = ref([
   {
     assigned_to: '',
-    contract: '',
     description: '',
     due_date: '',
     estimate: '',
     folder: '',
     id: '',
     links: '',
+    list: '',
     name: '',
     notify_person: '',
     priority: '',
@@ -425,7 +425,7 @@ function loadItems() {
     data.value = response.data.data.map((item) => {
       return {
         assigned_to: item.assignees,
-        contract: item.list.id,
+        list: item.list.id,
         description: item.text_content,
         due_date: item.due_date,
         estimate: item.time_estimate,
@@ -492,20 +492,20 @@ function loadFolders() {
   .catch(err => console.log(err))
 }
 
-function loadContracts(presentFolderId) {
-  // clear contract
-  editedItem.value.contract = ''
+function loadLists(presentFolderId) {
+  // clear list/subtask
+  editedItem.value.list = ''
 
-  // clear contract options
-  contracts.value = ''
+  // clear list/subtask options
+  lists.value = ''
 
   // get selected folder ID
   let folderId = (presentFolderId) ? presentFolderId : editedItem.value.folder
 
-  // load list/contract options
+  // load list/subtask options
   axios.get(`${runtimeConfig.public.API_URL}/folder/` + folderId + `/lists`)
   .then((response) => {
-    contracts.value = response.data.data.map((item) => {
+    lists.value = response.data.data.map((item) => {
       return {
         id: item.id,
         name: item.name
@@ -522,7 +522,7 @@ function editItem(item) {
   // convert time estimate (milliseconds) to hours if not a new work order
   if (editedIndex.value > -1) {
     loadFolders()
-    loadContracts(item.folder)
+    loadLists(item.folder)
     editedItem.value = Object.assign({}, item)
     editedItem.value.status = capitalizeFirstLetter(item.status)
     editedItem.value.priority = (item.priority != null) ? capitalizeFirstLetter(item.priority.priority) : null
