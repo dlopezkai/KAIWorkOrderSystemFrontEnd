@@ -199,7 +199,7 @@
                 ? null 
                 : (item.raw.priority === null) 
                 ? null 
-                : item.raw.priority.priority
+                : (item.raw.priority.priority).charAt(0).toUpperCase() + (item.raw.priority.priority).slice(1)
           }}
         </v-chip>
       </template>
