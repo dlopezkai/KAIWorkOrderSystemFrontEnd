@@ -254,7 +254,8 @@ const tab = ref(null)
 const clickUpUserInfo = ref()
 
 const headers = [
-  { title: 'Name', key: 'name', align: 'start', width: '35%' },
+  { title: 'Name', key: 'name', align: 'start', width: '25%' },
+  { title: 'Project', key: 'project', align: 'start', sortable: false },
   { title: 'Assignee(s)', key: 'assigned_to', align: 'start', sortable: false },
   { title: 'Type', key: 'tags', align: 'start', sortable: false },
   { title: 'Status', key: 'status', align: 'start', sortable: false },
@@ -276,6 +277,7 @@ const editedItem = ref([
     name: '',
     notify_person: '',
     priority: '',
+    project: '',
     status: '',
     tags: ''
   },
@@ -294,6 +296,7 @@ const defaultItem = ref([
     name: '',
     notify_person: '',
     priority: '',
+    project: '',
     status: '',
     tags: ''
   },
@@ -448,6 +451,7 @@ function loadItems() {
         name: item.name,
         notify_person: item.notify_person,
         priority: item.priority,
+        project: item.folder.name + ' | ' + item.list.name,
         status: item.status.status,
         status_color: item.status.color,
         tags: item.tags,
