@@ -199,7 +199,7 @@
                 ? null 
                 : (item.raw.priority === null) 
                 ? null 
-                : (item.raw.priority.priority).charAt(0).toUpperCase() + (item.raw.priority.priority).slice(1)
+                : capitalizeFirstLetter(item.raw.priority.priority)
           }}
         </v-chip>
       </template>
@@ -227,6 +227,7 @@ import axios from 'axios'
 import { useAuthStore } from '~/store/auth';
 import CommentsComp from './CommentsComp.vue';
 import { convertToDate } from '~/helpers/convertToDate.js';
+import { capitalizeFirstLetter } from '~/helpers/capitalizeFirstLetter.js';
 
 const runtimeConfig = useRuntimeConfig()
     
@@ -535,6 +536,7 @@ function editItem(item) {
     loadFolders()
     loadContracts(item.folder)
     editedItem.value = Object.assign({}, item)
+    editedItem.value.priority = capitalizeFirstLetter(item.priority.priority)
     editedItem.value.due_date = convertToDate(item.due_date, "form")
     editedItem.value.estimate = millisecondsToHours(item.estimate)
   } else {
