@@ -536,7 +536,7 @@ function editItem(item) {
     loadFolders()
     loadContracts(item.folder)
     editedItem.value = Object.assign({}, item)
-    editedItem.value.priority = capitalizeFirstLetter(item.priority.priority)
+    editedItem.value.priority = (item.priority != null) ? capitalizeFirstLetter(item.priority.priority) : null
     editedItem.value.due_date = convertToDate(item.due_date, "form")
     editedItem.value.estimate = millisecondsToHours(item.estimate)
   } else {
