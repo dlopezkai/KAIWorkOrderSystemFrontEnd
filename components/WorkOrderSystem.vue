@@ -189,7 +189,7 @@
 
       <template v-slot:item.status="{ item }">
         <v-chip :color="item.raw.status_color">
-          {{ item.raw.status }}
+          {{ capitalizeFirstLetter(item.raw.status) }}
         </v-chip>
       </template>
 
@@ -536,6 +536,7 @@ function editItem(item) {
     loadFolders()
     loadContracts(item.folder)
     editedItem.value = Object.assign({}, item)
+    editedItem.value.status = capitalizeFirstLetter(item.status)
     editedItem.value.priority = (item.priority != null) ? capitalizeFirstLetter(item.priority.priority) : null
     editedItem.value.due_date = convertToDate(item.due_date, "form")
     editedItem.value.estimate = millisecondsToHours(item.estimate)
