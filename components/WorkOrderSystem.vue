@@ -328,14 +328,10 @@ const defaultItem = ref([
 // check if API will provide these
 // if API provides integer-based values, we will need to map v-data-table to render properly
 const priorities = [
-  // { priority: 'low', value: { color: '#d8d8d8', id: '4', 'orderindex': '4', priority: 'low' } },
-  // { priority: 'normal', value: { color: '#6fddff', id: '3', 'orderindex': '3', priority: 'normal' } },
-  // { priority: 'high', value: { color: '#ffcc00', id: '2', 'orderindex': '2', priority: 'high' } },
-  // { priority: 'urgent', value: { color: '#f50000', id: '1', 'orderindex': '1', priority: 'urgent' } },
-  { priority: 'low', id: 4, color: '#d8d8d8' },
-  { priority: 'normal', id: 3, color: '#6fddff' },
-  { priority: 'high', id: 2, color: '#ffcc00' },
-  { priority: 'urgent', id: 1, color: '#f50000' },
+  { priority: 'Low', id: 4, color: '#d8d8d8' },
+  { priority: 'Normal', id: 3, color: '#6fddff' },
+  { priority: 'High', id: 2, color: '#ffcc00' },
+  { priority: 'Urgent', id: 1, color: '#f50000' },
 ]
 
 // computed value for form title
