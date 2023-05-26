@@ -86,11 +86,11 @@
                       </v-col>
 
                       <v-col cols="12" sm="6" md="6">
-                        <v-select v-model="editedItem.folder" label="Project" :items="folders" item-title="name" item-value="id" @update:modelValue="loadContracts()"
+                        <v-select v-model="editedItem.folder" label="Project" :items="folders" item-title="name" item-value="id" @update:modelValue="loadLists()"
                           :rules="[rules.select]" ></v-select>
                       </v-col>
                       <v-col cols="12" sm="6" md="6">
-                        <v-select v-model="editedItem.contract" label="Subtask" :items="contracts" item-title="name" item-value="id"
+                        <v-select v-model="editedItem.list" label="Subtask" :items="lists" item-title="name" item-value="id"
                           :rules="[rules.select]"></v-select>
                       </v-col>
 
@@ -163,18 +163,6 @@
               </v-card-text>
             </v-card>
           </v-dialog>
-
-          <!-- <v-dialog v-model="dialogDelete" max-width="500px">
-            <v-card>
-              <v-card-title class="text-h5">Are you sure you want to delete this item?</v-card-title>
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn color="blue-darken-1" variant="text" @click="closeDelete">Cancel</v-btn>
-                <v-btn color="blue-darken-1" variant="text" @click="deleteItemConfirm">OK</v-btn>
-                <v-spacer></v-spacer>
-              </v-card-actions>
-            </v-card>
-          </v-dialog> -->
         <!-- </v-toolbar> -->
       </template>
 
@@ -189,7 +177,7 @@
 
       <template v-slot:item.status="{ item }">
         <v-chip :color="item.raw.status_color">
-          {{ item.raw.status }}
+          {{ capitalizeFirstLetter(item.raw.status) }}
         </v-chip>
       </template>
 
@@ -199,7 +187,7 @@
                 ? null 
                 : (item.raw.priority === null) 
                 ? null 
-                : item.raw.priority.priority
+                : capitalizeFirstLetter(item.raw.priority.priority)
           }}
         </v-chip>
       </template>
@@ -212,9 +200,6 @@
         <!-- <v-icon size="small" class="me-2" @click="editItem(item.raw)">
           mdi-pencil
         </v-icon> -->
-        <!-- <v-icon size="small" @click="deleteItem(item.raw)">
-            mdi-delete
-          </v-icon> -->
       </template>
 
     </v-data-table>
@@ -227,12 +212,12 @@ import axios from 'axios'
 import { useAuthStore } from '~/store/auth';
 import CommentsComp from './CommentsComp.vue';
 import { convertToDate } from '~/helpers/convertToDate.js';
+import { capitalizeFirstLetter } from '~/helpers/capitalizeFirstLetter.js';
 
 const runtimeConfig = useRuntimeConfig()
     
 const authStore = useAuthStore()
 const dialog = ref(false)
-// const dialogDelete = ref(false)
 const itemsPerPage = ref(10)
 const loading = ref(true)
 const totalItems = ref(0)
@@ -246,14 +231,15 @@ const tags = ref([])
 const members = ref([])
 
 const folders = ref([])
-const contracts = ref([])
+const lists = ref([])
 
 const tab = ref(null)
 
 const clickUpUserInfo = ref()
 
 const headers = [
-  { title: 'Name', key: 'name', align: 'start', width: '35%' },
+  { title: 'Name', key: 'name', align: 'start', width: '25%' },
+  { title: 'Project', key: 'project', align: 'start', sortable: false },
   { title: 'Assignee(s)', key: 'assigned_to', align: 'start', sortable: false },
   { title: 'Type', key: 'tags', align: 'start', sortable: false },
   { title: 'Status', key: 'status', align: 'start', sortable: false },
@@ -265,16 +251,17 @@ const headers = [
 const editedItem = ref([
   {
     assigned_to: '',
-    contract: '',
     description: '',
     due_date: '',
     estimate: '',
     folder: '',
     id: '',
     links: '',
+    list: '',
     name: '',
     notify_person: '',
     priority: '',
+    project: '',
     status: '',
     tags: ''
   },
@@ -283,16 +270,17 @@ const editedItem = ref([
 const defaultItem = ref([
   {
     assigned_to: '',
-    contract: '',
     description: '',
     due_date: '',
     estimate: '',
     folder: '',
     id: '',
     links: '',
+    list: '',
     name: '',
     notify_person: '',
     priority: '',
+    project: '',
     status: '',
     tags: ''
   },
@@ -328,14 +316,10 @@ const defaultItem = ref([
 // check if API will provide these
 // if API provides integer-based values, we will need to map v-data-table to render properly
 const priorities = [
-  // { priority: 'low', value: { color: '#d8d8d8', id: '4', 'orderindex': '4', priority: 'low' } },
-  // { priority: 'normal', value: { color: '#6fddff', id: '3', 'orderindex': '3', priority: 'normal' } },
-  // { priority: 'high', value: { color: '#ffcc00', id: '2', 'orderindex': '2', priority: 'high' } },
-  // { priority: 'urgent', value: { color: '#f50000', id: '1', 'orderindex': '1', priority: 'urgent' } },
-  { priority: 'low', id: 4, color: '#d8d8d8' },
-  { priority: 'normal', id: 3, color: '#6fddff' },
-  { priority: 'high', id: 2, color: '#ffcc00' },
-  { priority: 'urgent', id: 1, color: '#f50000' },
+  { priority: 'Low', id: 4, color: '#d8d8d8' },
+  { priority: 'Normal', id: 3, color: '#6fddff' },
+  { priority: 'High', id: 2, color: '#ffcc00' },
+  { priority: 'Urgent', id: 1, color: '#f50000' },
 ]
 
 // computed value for form title
@@ -441,7 +425,7 @@ function loadItems() {
     data.value = response.data.data.map((item) => {
       return {
         assigned_to: item.assignees,
-        contract: item.list.id,
+        list: item.list.id,
         description: item.text_content,
         due_date: item.due_date,
         estimate: item.time_estimate,
@@ -451,6 +435,7 @@ function loadItems() {
         name: item.name,
         notify_person: item.notify_person,
         priority: item.priority,
+        project: item.folder.name + ' | ' + item.list.name,
         status: item.status.status,
         status_color: item.status.color,
         tags: item.tags,
@@ -507,20 +492,20 @@ function loadFolders() {
   .catch(err => console.log(err))
 }
 
-function loadContracts(presentFolderId) {
-  // clear contract
-  editedItem.value.contract = ''
+function loadLists(presentFolderId) {
+  // clear list/subtask
+  editedItem.value.list = ''
 
-  // clear contract options
-  contracts.value = ''
+  // clear list/subtask options
+  lists.value = ''
 
   // get selected folder ID
   let folderId = (presentFolderId) ? presentFolderId : editedItem.value.folder
 
-  // load list/contract options
+  // load list/subtask options
   axios.get(`${runtimeConfig.public.API_URL}/folder/` + folderId + `/lists`)
   .then((response) => {
-    contracts.value = response.data.data.map((item) => {
+    lists.value = response.data.data.map((item) => {
       return {
         id: item.id,
         name: item.name
@@ -537,8 +522,10 @@ function editItem(item) {
   // convert time estimate (milliseconds) to hours if not a new work order
   if (editedIndex.value > -1) {
     loadFolders()
-    loadContracts(item.folder)
+    loadLists(item.folder)
     editedItem.value = Object.assign({}, item)
+    editedItem.value.status = capitalizeFirstLetter(item.status)
+    editedItem.value.priority = (item.priority != null) ? capitalizeFirstLetter(item.priority.priority) : null
     editedItem.value.due_date = convertToDate(item.due_date, "form")
     editedItem.value.estimate = millisecondsToHours(item.estimate)
   } else {
@@ -573,25 +560,6 @@ function save() {
   }
   close()
 }
-
-// function deleteItem(item) {
-//     editedIndex.value = data.value.indexOf(item)
-//     editedItem.value = Object.assign({}, item)
-//     dialogDelete.value = true
-// }
-
-// function deleteItemConfirm() {
-//     data.value.value.splice(editedIndex.value, 1)
-//     closeDelete()
-// }
-
-// function closeDelete() {
-//     dialogDelete.value = false
-//     nextTick(() => {
-//         editedItem.value = Object.assign({}, defaultItem.value)
-//         editedIndex.value = -1
-//     })
-// }
 
 function filterByUserToggle (type) {
   if(type === 'user') {

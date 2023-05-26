@@ -1,4 +1,4 @@
-export function convertToDate(rawDateTime, origin){
+export function convertToDate(rawDateTime, origin) {
     let result = ""
     const convertedRawDateTime = Number(rawDateTime)
   

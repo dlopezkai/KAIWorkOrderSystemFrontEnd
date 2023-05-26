@@ -6,9 +6,9 @@
             <v-list-item
                 v-for="comment in commentsData"
                 :key="comment.id"
-                :title="comment.username + ' (' + convertToDate(comment.date, 'table') + ')'"
             >
-                <v-list-item-subtitle v-html="comment.comment_text" class="wrap-text"></v-list-item-subtitle>
+                <v-list-item-title><strong>{{  comment.username + ' (' + convertToDate(comment.date, 'table') + ')' }}</strong></v-list-item-title>
+                <v-list-item-subtitle v-html="comment.comment_text" class="comment-subtitle"></v-list-item-subtitle>
             </v-list-item>
         </v-list>
 
@@ -107,7 +107,9 @@ function submitComment() {
 </script>
 
 <style scoped>
-.wrap-text {
+.comment-subtitle {
     -webkit-line-clamp: unset !important;
+    font-size: 1rem;
+    opacity: 1;
 }
 </style>
