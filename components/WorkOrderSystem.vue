@@ -472,7 +472,8 @@ function loadMembers() {
     members.value = response.data.data.map((item) => {
       return {
         title: (!item.username) ? item.email : item.username,
-        value: {color: item.color, email: item.email, id: item.id, initials: item.initials, profile: item.profile, username: item.username}
+        // value: {color: item.color, email: item.email, id: item.id, initials: item.initials, profile: item.profile, username: item.username}
+        value: item.id
       }
     })
     loading.value = false
