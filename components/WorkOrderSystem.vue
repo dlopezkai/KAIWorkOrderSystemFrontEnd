@@ -207,7 +207,7 @@
 </template>
 
 <script setup>
-import { ref, nextTick, watch } from 'vue'
+import { ref, nextTick, watch, toRaw } from 'vue'
 import axios from 'axios'
 import { useAuthStore } from '~/store/auth';
 import CommentsComp from './CommentsComp.vue';
@@ -251,6 +251,7 @@ const headers = [
 const editedItem = ref([
   {
     assigned_to: '',
+    creator: '',
     description: '',
     due_date: '',
     estimate: '',
@@ -270,6 +271,7 @@ const editedItem = ref([
 const defaultItem = ref([
   {
     assigned_to: '',
+    creator: '',
     description: '',
     due_date: '',
     estimate: '',
@@ -551,14 +553,48 @@ function save() {
   // convert due date to milliseconds
   editedItem.value.due_date = dateToMilliseconds(editedItem.value.due_date)
 
+  // FOR TEST PURPOSES ONLY!! - REMOVE ME LATER
+  editedItem.value.list = 901001092394
+  // editedItem.value.assigned_to = 72138402
+
+  console.log(editedItem.value)
+
   if (editedIndex.value > -1) {
-    axios.post('test2.json', JSON.stringify(editedItem.value, null, 2))
-    Object.assign(data.value[editedIndex.value], editedItem.value)
+    // TODO: set to logged-in user's CU ID
+    editedItem.value.creator = 72138402 
+
+    // TODO: get list id
+    // axios.post(`${runtimeConfig.public.API_URL}/list/` + editedItem.value.list + `/task`, editedItem.value, {
+    axios.post(`${runtimeConfig.public.API_URL}/list/901001092394/task`, editedItem.value, {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    })
+    .then(function (response) {
+      if (response.status === 200) {
+        if (response.data.response_code === 200) {
+          alert('Work order submitted successfully.')
   } else {
-    axios.post('test2.json', JSON.stringify(editedItem.value, null, 2))
-    data.value.push(editedItem.value)
+          alert('There was an issue with the API. ' + JSON.stringify(toRaw(editedItem.value)))
+          return
   }
+      }
+      // add the new information to the data object and close the modal
+      // data.value.push(editedItem.value)
+
+      // reload data object with new data
   close()
+      loadItems()
+    })
+    .catch(function (error) {
+      alert('There was an issue submitting your form. Please try again.')
+      console.log(error)
+    })
+
+  } else {
+    // perform PUT request here
+  }
+
 }
 
 function filterByUserToggle (type) {
