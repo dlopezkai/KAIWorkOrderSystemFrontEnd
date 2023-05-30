@@ -115,7 +115,7 @@
                       </v-col>
 
                       <v-col cols="12" sm="6" md="6">
-                        <v-text-field v-model="editedItem.estimate" label="Hours Allocated"></v-text-field>
+                        <v-text-field v-model="editedItem.time_estimate" label="Hours Allocated"></v-text-field>
                       </v-col>
                       <v-col cols="12" sm="6" md="6">
                         <v-select v-model="editedItem.priority" label="Priority" :items="priorities" item-title="priority" item-value="id"></v-select>
@@ -256,7 +256,6 @@ const editedItem = ref([
     creator: '',
     description: '',
     due_date: '',
-    estimate: '',
     folder: '',
     id: '',
     links: '',
@@ -266,7 +265,8 @@ const editedItem = ref([
     priority: '',
     project: '',
     status: '',
-    tags: ''
+    tags: '',
+    time_estimate: ''
   },
 ])
 
@@ -276,7 +276,6 @@ const defaultItem = ref([
     creator: '',
     description: '',
     due_date: '',
-    estimate: '',
     folder: '',
     id: '',
     links: '',
@@ -286,7 +285,8 @@ const defaultItem = ref([
     priority: '',
     project: '',
     status: '',
-    tags: ''
+    tags: '',
+    time_estimate: ''
   },
 ])
 
@@ -432,7 +432,6 @@ function loadItems() {
         list: item.list.id,
         description: item.text_content,
         due_date: item.due_date,
-        estimate: item.time_estimate,
         folder: item.folder.id,
         id: item.id,
         links: item.links,
@@ -443,6 +442,7 @@ function loadItems() {
         status: item.status.status,
         status_color: item.status.color,
         tags: item.tags,
+        time_estimate: item.time_estimate,
         url: item.url
       }
     })
@@ -531,7 +531,7 @@ function editItem(item) {
     editedItem.value.status = capitalizeFirstLetter(item.status)
     editedItem.value.priority = (item.priority != null) ? capitalizeFirstLetter(item.priority.priority) : null
     editedItem.value.due_date = convertToDate(item.due_date, "form")
-    editedItem.value.estimate = millisecondsToHours(item.estimate)
+    editedItem.value.time_estimate = millisecondsToHours(item.time_estimate)
   } else {
     // editedItem.value = Object.assign({status: "Int Request"}, item)
     editedItem.value = Object.assign({}, item)
@@ -559,7 +559,7 @@ function save() {
   editedItem.value.assignees = assigneeids
 
   // convert time estimate (hours) to milliseconds
-  editedItem.value.estimate = hoursToMilliseconds(editedItem.value.estimate)
+  editedItem.value.time_estimate = hoursToMilliseconds(editedItem.value.time_estimate)
 
   // convert due date to milliseconds
   editedItem.value.due_date = dateToMilliseconds(editedItem.value.due_date)
