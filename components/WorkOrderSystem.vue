@@ -472,8 +472,7 @@ function loadMembers() {
     members.value = response.data.data.map((item) => {
       return {
         title: (!item.username) ? item.email : item.username,
-        // value: {color: item.color, email: item.email, id: item.id, initials: item.initials, profile: item.profile, username: item.username}
-        value: item.id
+        value: {color: item.color, email: item.email, id: item.id, initials: item.initials, profile: item.profile, username: item.username}
       }
     })
     loading.value = false
@@ -548,6 +547,13 @@ function close() {
 }
 
 function save() {
+  // since API needs IDs of assignees, pull the assignee(s) ID(s) and store in temp array
+  let assigneeids = []
+  editedItem.value.assignees.forEach(element => {
+    assigneeids.push(element.id)
+  });
+  editedItem.value.assignees = assigneeids
+
   // convert time estimate (hours) to milliseconds
   editedItem.value.estimate = hoursToMilliseconds(editedItem.value.estimate)
 
@@ -556,7 +562,6 @@ function save() {
 
   // FOR TEST PURPOSES ONLY!! - REMOVE ME LATER
   editedItem.value.list = 901001092394
-  // editedItem.value.assignees = 72138402
 
   console.log(editedItem.value)
 
