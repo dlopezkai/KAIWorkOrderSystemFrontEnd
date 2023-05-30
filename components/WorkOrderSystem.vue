@@ -559,7 +559,7 @@ function save() {
 
   console.log(editedItem.value)
 
-  if (editedIndex.value > -1) {
+  if (editedIndex.value === -1) {
     // TODO: set to logged-in user's CU ID
     editedItem.value.creator = 72138402 
 
