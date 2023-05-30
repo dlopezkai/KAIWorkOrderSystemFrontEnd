@@ -566,8 +566,7 @@ function save() {
   console.log(editedItem.value)
 
   if (editedIndex.value === -1) {
-    // TODO: set to logged-in user's CU ID
-    editedItem.value.creator = 72138402 
+    editedItem.value.creator = clickUpUserInfo.value.id 
 
     // TODO: get list id
     // axios.post(`${runtimeConfig.public.API_URL}/list/` + editedItem.value.list + `/task`, editedItem.value, {
