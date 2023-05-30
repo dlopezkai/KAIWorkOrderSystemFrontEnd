@@ -574,16 +574,16 @@ function save() {
       if (response.status === 200) {
         if (response.data.response_code === 200) {
           alert('Work order submitted successfully.')
-  } else {
+        } else {
           alert('There was an issue with the API. ' + JSON.stringify(toRaw(editedItem.value)))
           return
-  }
+        }
       }
       // add the new information to the data object and close the modal
       // data.value.push(editedItem.value)
 
       // reload data object with new data
-  close()
+      close()
       loadItems()
     })
     .catch(function (error) {
