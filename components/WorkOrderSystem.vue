@@ -103,7 +103,7 @@
                           item-value="value" disabled></v-select>
                       </v-col>
                       <v-col cols="12" sm="6" md="6">
-                        <v-select v-model="editedItem.assigned_to" label="Assignee(s)" :items="members" item-title="title" item-value="value" multiple chips clearable></v-select>
+                        <v-select v-model="editedItem.assignees" label="Assignee(s)" :items="members" item-title="title" item-value="value" multiple chips clearable></v-select>
                       </v-col>
 
                       <v-col cols="12" sm="6" md="6">
@@ -166,8 +166,8 @@
         <!-- </v-toolbar> -->
       </template>
 
-      <template v-slot:item.assigned_to="{ item }">
-        <v-chip v-for="assignee in item.raw.assigned_to">{{ (!assignee.username) ? assignee.email : assignee.username }}</v-chip>
+      <template v-slot:item.assignees="{ item }">
+        <v-chip v-for="assignee in item.raw.assignees">{{ (!assignee.username) ? assignee.email : assignee.username }}</v-chip>
       </template>
 
       <template v-slot:item.tags="{ item }">
@@ -240,7 +240,7 @@ const clickUpUserInfo = ref()
 const headers = [
   { title: 'Name', key: 'name', align: 'start', width: '25%' },
   { title: 'Project', key: 'project', align: 'start', sortable: false },
-  { title: 'Assignee(s)', key: 'assigned_to', align: 'start', sortable: false },
+  { title: 'Assignee(s)', key: 'assignees', align: 'start', sortable: false },
   { title: 'Type', key: 'tags', align: 'start', sortable: false },
   { title: 'Status', key: 'status', align: 'start', sortable: false },
   { title: 'Priority', key: 'priority', align: 'start', sortable: false },
@@ -250,7 +250,7 @@ const headers = [
 
 const editedItem = ref([
   {
-    assigned_to: '',
+    assignees: '',
     creator: '',
     description: '',
     due_date: '',
@@ -270,7 +270,7 @@ const editedItem = ref([
 
 const defaultItem = ref([
   {
-    assigned_to: '',
+    assignees: '',
     creator: '',
     description: '',
     due_date: '',
@@ -334,8 +334,8 @@ const formTitle = computed(() => {
 const filteredData = computed(() => {
   if(filterByUser.value){
     let output = data.value.filter(item => {
-      if(item.assigned_to) {
-        let opt = item.assigned_to.some((
+      if(item.assignees) {
+        let opt = item.assignees.some((
           { email }) => email == authStore.currentUser.username)
         return opt
       }
@@ -348,7 +348,7 @@ const filteredData = computed(() => {
 // computed value for toggling group-by behavior
 const groupBy = computed(() => {
   if(!filterByUser.value){
-    return [{key: 'assigned_to'}]
+    return [{key: 'assignees'}]
   }
 })
 
@@ -426,7 +426,7 @@ function loadItems() {
   .then((response) => {
     data.value = response.data.data.map((item) => {
       return {
-        assigned_to: item.assignees,
+        assignees: item.assignees,
         list: item.list.id,
         description: item.text_content,
         due_date: item.due_date,
@@ -556,7 +556,7 @@ function save() {
 
   // FOR TEST PURPOSES ONLY!! - REMOVE ME LATER
   editedItem.value.list = 901001092394
-  // editedItem.value.assigned_to = 72138402
+  // editedItem.value.assignees = 72138402
 
   console.log(editedItem.value)
 
