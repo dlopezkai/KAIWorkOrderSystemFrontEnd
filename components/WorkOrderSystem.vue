@@ -553,10 +553,14 @@ function save() {
   submitBtnDisabled.value = true
   // since API needs IDs of assignees, pull the assignee(s) ID(s) and store in temp array
   let assigneeids = []
-  editedItem.value.assignees.forEach(element => {
-    assigneeids.push(element.id)
-  });
-  editedItem.value.assignees = assigneeids
+
+  if(editedItem.value.assignees) {
+    editedItem.value.assignees.forEach(element => {
+      assigneeids.push(element.id)
+    })
+    editedItem.value.assignees = assigneeids
+  }
+
 
   // convert time estimate (hours) to milliseconds
   editedItem.value.time_estimate = hoursToMilliseconds(editedItem.value.time_estimate)
