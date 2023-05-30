@@ -145,7 +145,7 @@
                         <v-btn color="blue-darken-1" variant="text" @click="close">
                           Cancel
                         </v-btn>
-                        <v-btn color="blue-darken-1" variant="text" @click="submit">
+                        <v-btn :disabled="submitBtnDisabled" color="blue-darken-1" variant="text" @click="submit">
                           Submit
                         </v-btn>
                       </v-col>
@@ -236,6 +236,8 @@ const lists = ref([])
 const tab = ref(null)
 
 const clickUpUserInfo = ref()
+
+const submitBtnDisabled = ref(false)
 
 const headers = [
   { title: 'Name', key: 'name', align: 'start', width: '25%' },
@@ -422,7 +424,7 @@ onMounted(() => {
 
 function loadItems() {
   loading.value = true
-  axios.get(`${runtimeConfig.public.API_URL}/tasks`)
+  axios.get(`${runtimeConfig.public.API_URL}/tasks/?page=3`)
   .then((response) => {
     data.value = response.data.data.map((item) => {
       return {
@@ -544,9 +546,11 @@ function close() {
     editedItem.value = Object.assign({}, defaultItem.value)
     editedIndex.value = -1
   })
+  submitBtnDisabled.value = false
 }
 
 function save() {
+  submitBtnDisabled.value = true
   // since API needs IDs of assignees, pull the assignee(s) ID(s) and store in temp array
   let assigneeids = []
   editedItem.value.assignees.forEach(element => {
@@ -584,9 +588,6 @@ function save() {
           return
         }
       }
-      // add the new information to the data object and close the modal
-      // data.value.push(editedItem.value)
-
       // reload data object with new data
       close()
       loadItems()
