@@ -432,7 +432,7 @@ function loadItems() {
       return {
         assignees: item.assignees,
         list: item.list.id,
-        description: item.text_content,
+        description: item.description,
         due_date: item.due_date,
         folder: item.folder.id,
         id: item.id,
