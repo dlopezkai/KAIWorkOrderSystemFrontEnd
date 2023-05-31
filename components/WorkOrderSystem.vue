@@ -532,7 +532,7 @@ function editItem(item) {
     editedItem.value = Object.assign({}, item)
     editedItem.value.status = capitalizeFirstLetter(item.status)
     editedItem.value.priority = (item.priority != null) ? capitalizeFirstLetter(item.priority.priority) : null
-    editedItem.value.due_date = convertToDate(item.due_date, "form")
+    editedItem.value.due_date = convertToDate(item.due_date, "table")
     editedItem.value.time_estimate = millisecondsToHours(item.time_estimate)
   } else {
     // editedItem.value = Object.assign({status: "Int Request"}, item)
