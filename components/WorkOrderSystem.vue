@@ -553,34 +553,36 @@ function close() {
 
 function save() {
   submitBtnDisabled.value = true
+
+  // create a data object that will be passed to API to prevent user from seeing conversions
+  // reason: using editedItem.value will display conversion on to end user - we don't want that
+  let data = ''
+  data = toRaw(editedItem.value)
+
   // since API needs IDs of assignees, pull the assignee(s) ID(s) and store in temp array
   let assigneeids = []
 
-  if(editedItem.value.assignees) {
-    editedItem.value.assignees.forEach(element => {
+  if(data.assignees) {
+    data.assignees.forEach(element => {
       assigneeids.push(element.id)
     })
-    editedItem.value.assignees = assigneeids
+    data.assignees = assigneeids
   }
 
-
   // convert time estimate (hours) to milliseconds
-  editedItem.value.time_estimate = hoursToMilliseconds(editedItem.value.time_estimate)
+  data.time_estimate = hoursToMilliseconds(data.time_estimate)
 
   // convert due date to milliseconds
-  editedItem.value.due_date = dateToISOStr(editedItem.value.due_date)
+  data.due_date = dateToISOStr(data.due_date)
 
   // FOR TEST PURPOSES ONLY!! - REMOVE ME LATER
-  editedItem.value.list = 901001092394
-
-  console.log(editedItem.value)
+  data.list = 901001092394
 
   if (editedIndex.value === -1) {
     editedItem.value.creator = clickUpUserInfo.value.id 
 
-    // TODO: get list id
-    // axios.post(`${runtimeConfig.public.API_URL}/list/` + editedItem.value.list + `/task`, editedItem.value, {
-    axios.post(`${runtimeConfig.public.API_URL}/list/901001092394/task`, editedItem.value, {
+    // axios.post(`${runtimeConfig.public.API_URL}/list/` + data.list + `/task`, data, {
+    axios.post(`${runtimeConfig.public.API_URL}/list/901001092394/task`, data, {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
       }
@@ -590,7 +592,7 @@ function save() {
         if (response.data.response_code === 200) {
           alert('Work order submitted successfully.')
         } else {
-          alert('There was an issue with the API. ' + JSON.stringify(toRaw(editedItem.value)))
+          alert('There was an issue with the API. ' + JSON.stringify(data))
           return
         }
       }
