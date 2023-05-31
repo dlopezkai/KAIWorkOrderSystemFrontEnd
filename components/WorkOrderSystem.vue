@@ -107,8 +107,8 @@
                       </v-col>
 
                       <v-col cols="12" sm="6" md="6">
-                        <v-text-field v-model="editedItem.due_date" label="Due Date" type="datetime-local"
-                          :rules="[rules.due_date, rules.due_date_threshold]"></v-text-field>
+                        <!-- <v-text-field v-model="editedItem.due_date" label="Due Date" type="datetime-local" :rules="[rules.due_date, rules.due_date_threshold]"></v-text-field> -->
+                        <v-text-field v-model="editedItem.due_date" label="Due Date" type="date" :rules="[rules.due_date, rules.due_date_threshold]"></v-text-field>
                       </v-col>
                       <v-col cols="12" sm="6" md="6">
                         <v-select v-model="editedItem.notify_person" label="Notify Person" :items="members" item-title="title" item-value="value" multiple chips clearable></v-select>
@@ -566,7 +566,7 @@ function save() {
   editedItem.value.time_estimate = hoursToMilliseconds(editedItem.value.time_estimate)
 
   // convert due date to milliseconds
-  editedItem.value.due_date = dateToMilliseconds(editedItem.value.due_date)
+  editedItem.value.due_date = dateToISOStr(editedItem.value.due_date)
 
   // FOR TEST PURPOSES ONLY!! - REMOVE ME LATER
   editedItem.value.list = 901001092394
@@ -653,10 +653,10 @@ function getDueDateColor(rawDateTime, status) {
   return color
 }
 
-function dateToMilliseconds(value) {
-  const milliseconds = new Date(value).getTime()
+function dateToISOStr(value) {
+  const convertToIsoStr = new Date(value).toISOString().substring(0,10)
 
-  return milliseconds
+  return convertToIsoStr
 }
 
 function millisecondsToHours(value) {
