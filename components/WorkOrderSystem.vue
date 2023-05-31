@@ -86,12 +86,10 @@
                       </v-col>
 
                       <v-col cols="12" sm="6" md="6">
-                        <v-select v-model="editedItem.folder" label="Project" :items="folders" item-title="name" item-value="id" @update:modelValue="loadLists()"
-                          :rules="[rules.select]" ></v-select>
+                        <v-select v-model="editedItem.folder" label="Project" :items="folders" item-title="name" item-value="id" @update:modelValue="loadLists()" :rules="[rules.select]"></v-select>
                       </v-col>
                       <v-col cols="12" sm="6" md="6">
-                        <v-select v-model="editedItem.list" label="Subtask" :items="lists" item-title="name" item-value="id"
-                          :rules="[rules.select]"></v-select>
+                        <v-select v-model="editedItem.list" label="Subtask" :items="lists" item-title="name" item-value="id" :rules="[rules.select]"></v-select>
                       </v-col>
 
                       <v-col cols="12" sm="12" md="12">
