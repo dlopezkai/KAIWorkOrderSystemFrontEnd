@@ -108,7 +108,7 @@
                         <v-text-field v-model="editedItem.due_date" label="Due Date" type="date" :rules="[rules.due_date, rules.due_date_threshold]"></v-text-field>
                       </v-col>
                       <v-col cols="12" sm="6" md="6">
-                        <v-select v-model="editedItem.notify_person" label="Notify Person" :items="members" item-title="title" item-value="value" multiple chips clearable></v-select>
+                        <v-select v-model="editedItem.watchers" label="Notify Person" :items="members" item-title="title" item-value="value" multiple chips clearable></v-select>
                       </v-col>
 
                       <v-col cols="12" sm="6" md="6">
@@ -258,12 +258,12 @@ const editedItem = ref([
     links: '',
     list: '',
     name: '',
-    notify_person: '',
     priority: '',
     project: '',
     status: '',
     tags: '',
-    time_estimate: ''
+    time_estimate: '',
+    watchers: ''
   },
 ])
 
@@ -278,12 +278,12 @@ const defaultItem = ref([
     links: '',
     list: '',
     name: '',
-    notify_person: '',
     priority: '',
     project: '',
     status: '',
     tags: '',
-    time_estimate: ''
+    time_estimate: '',
+    watchers: '',
   },
 ])
 
@@ -438,14 +438,14 @@ function loadItems() {
         id: item.id,
         links: item.links,
         name: item.name,
-        notify_person: item.notify_person,
         priority: item.priority,
         project: item.folder.name + ' | ' + item.list.name,
         status: item.status.status,
         status_color: item.status.color,
         tags: item.tags,
         time_estimate: item.time_estimate,
-        url: item.url
+        url: item.url,
+        watchers: item.watchers
       }
     })
     totalItems.value = response.data.data.length
