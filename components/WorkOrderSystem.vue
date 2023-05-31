@@ -167,6 +167,10 @@
         <v-chip v-for="assignee in item.raw.assignees">{{ (!assignee.username) ? assignee.email : assignee.username }}</v-chip>
       </template>
 
+      <template v-slot:item.watchers="{ item }">
+        <v-chip v-for="watcher in item.raw.watchers">{{ (!watcher.username) ? watcher.email : watcher.username }}</v-chip>
+      </template>
+
       <template v-slot:item.tags="{ item }">
         <!-- <v-chip>{{ item.raw.tags }}</v-chip> -->
         <v-chip v-for="tag in item.raw.tags">{{ tag }}</v-chip>
