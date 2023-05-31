@@ -573,6 +573,16 @@ function save() {
     data.assignees = assigneeids
   }
 
+  // since API needs IDs of watchers, pull the watcher(s) ID(s) and store in temp array
+  // let watcherids = []
+
+  // if(data.watchers) {
+  //   data.watchers.forEach(element => {
+  //     watcherids.push(element.id)
+  //   })
+  //   data.watchers = watcherids
+  // }
+
   // convert time estimate (hours) to milliseconds
   data.time_estimate = hoursToMilliseconds(data.time_estimate)
 
