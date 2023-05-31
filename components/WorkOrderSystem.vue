@@ -105,7 +105,6 @@
                       </v-col>
 
                       <v-col cols="12" sm="6" md="6">
-                        <!-- <v-text-field v-model="editedItem.due_date" label="Due Date" type="datetime-local" :rules="[rules.due_date, rules.due_date_threshold]"></v-text-field> -->
                         <v-text-field v-model="editedItem.due_date" label="Due Date" type="date" :rules="[rules.due_date, rules.due_date_threshold]"></v-text-field>
                       </v-col>
                       <v-col cols="12" sm="6" md="6">
@@ -370,19 +369,24 @@ watch(dialog, (currentValue, newValue) => {
 // checks for the 2 business days rule
 function dateValidation(input) {
 
-  // convert input to milliseconds
-  let selectedDate = new Date(input).getTime()
-
   // get day of week
   let selectedDateDay = new Date(input).getDay()
 
-  // get the current date plus 2 days
-  let todaysDate = new Date().setHours(0,0,0,0);
-  let todaysDatePlusTwoDays = todaysDate + 172800000
+  // get the current date plus 2 days, the convert to ISO format
+  let date = new Date();
+  let twoDaysFromNow = date.setDate(date.getDate() + 2);
+  twoDaysFromNow = new Date(twoDaysFromNow).toISOString();
+
+  // convert to local time
+  let twoDaysFromNowLocaleString = new Date(twoDaysFromNow).toLocaleDateString()
+  let twoDaysFromNowDateObj = new Date(twoDaysFromNowLocaleString)
+
+  // convert to yyyy-mm-dd to match format of calendar input
+  let twoDaysFromNowFormatted = convertToYyyymmddFormat(twoDaysFromNowDateObj)
 
   // logic to determine if selected date is valid
-  if(selectedDateDay !== 0 && selectedDateDay !== 6) {
-    if(selectedDate >= todaysDatePlusTwoDays) {
+  if(selectedDateDay !== 5 && selectedDateDay !== 6) {
+    if(input >= twoDaysFromNowFormatted) {
       return true
     } else {
       return false
@@ -671,6 +675,14 @@ function hoursToMilliseconds(value) {
 
     return milliseconds
   }
+}
+
+function convertToYyyymmddFormat(value) {
+  return value.getFullYear() 
+    + "-" 
+    + ((value.getMonth()+1).length != 2 ? "0" + (value.getMonth() + 1) : (value.getMonth()+1)) 
+    + "-" 
+    + (value.getDate().length != 2 ? "0" + value.getDate() : value.getDate());
 }
 
 </script>
