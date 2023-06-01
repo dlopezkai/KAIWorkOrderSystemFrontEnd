@@ -610,9 +610,7 @@ function save() {
   submitBtnDisabled.value = true
 
   // create a data object that will be passed to API to prevent user from seeing conversions
-  // reason: using editedItem.value will display conversion on to end user - we don't want that
-  let data = ''
-  data = toRaw(editedItem.value)
+  let data = Object.assign({}, editedItem.value)
 
   // since API needs IDs of assignees, pull the assignee(s) ID(s) and store in temp array
   let assigneeids = []
