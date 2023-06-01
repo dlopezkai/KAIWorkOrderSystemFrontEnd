@@ -633,10 +633,10 @@ function save() {
   // }
 
   // convert time estimate (hours) to milliseconds
-  data.time_estimate = hoursToMilliseconds(data.time_estimate)
+  if(data.time_estimate) data.time_estimate = hoursToMilliseconds(data.time_estimate)
 
   // convert due date to milliseconds
-  data.due_date = dateToISOStr(data.due_date)
+  if(data.due_date) data.due_date = dateToISOStr(data.due_date)
 
   // FOR TEST PURPOSES ONLY!! - REMOVE ME LATER
   data.list = 901001092394
@@ -720,9 +720,7 @@ function getDueDateColor(rawDateTime, status) {
 }
 
 function dateToISOStr(value) {
-  const convertToIsoStr = new Date(value).toISOString().substring(0,10)
-
-  return convertToIsoStr
+  return new Date(value).toISOString().substring(0,10)
 }
 
 function millisecondsToHours(value) {
@@ -734,11 +732,7 @@ function millisecondsToHours(value) {
 }
 
 function hoursToMilliseconds(value) {
-  if(value) {
-    const milliseconds = value * 60 * 60 * 1000
-
-    return milliseconds
-  }
+    return value * 60 * 60 * 1000
 }
 
 function convertToYyyymmddFormat(value) {
