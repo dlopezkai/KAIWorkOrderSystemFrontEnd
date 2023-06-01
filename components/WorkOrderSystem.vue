@@ -64,14 +64,17 @@
               </v-col>
             </template> -->
 
-            <v-overlay v-model="submitStatusOverlay" class="align-center justify-center">
+            <v-overlay v-model="submitStatusOverlay" class="align-center justify-center" @click:outside="resetStatusModal()">
               <v-container style="height: 400px;">
                 <v-row class="fill-height" align-content="center" justify="center">
                   <v-col class="text-subtitle-1 text-center" cols="12">
                     <v-card style="max-height: 130px;">
                       <v-card-title>{{ onSubmitMsg }}</v-card-title>
                       <v-card-text v-if="submitErrorInfo">{{ submitErrorInfo }}</v-card-text>
-                      <v-progress-circular v-if="submitStatus ==='submitting'" color="#92D5D5" indeterminate size="64" class="mb-4"></v-progress-circular>
+                      <v-progress-circular v-if="submitStatus === 'submitting'" color="#92D5D5" indeterminate size="64" class="mb-4"></v-progress-circular>
+                      <v-btn v-if="submitStatus != 'submitting'" color="blue-darken-1" variant="text" class="mb-4" @click="resetStatusModal()">
+                          OK
+                      </v-btn>
                     </v-card>
                   </v-col>
                 </v-row>
@@ -587,8 +590,17 @@ function close() {
     editedItem.value = Object.assign({}, defaultItem.value)
     editedIndex.value = -1
   })
-  submitStatusOverlay.value = false
+}
+
+function resetStatusModal() {
+  if(submitStatus.value === 'success') {
+    close()
+    loadItems()
+  }
+
+  submitErrorInfo.value = ''
   submitStatus.value = ''
+  submitStatusOverlay.value = false
   submitBtnDisabled.value = false
 }
 
@@ -643,10 +655,6 @@ function save() {
       if (response.status === 200) {
         if (response.data.response_code === 200) {
           submitStatus.value = 'success'
-          setTimeout(() => {
-            close()
-            loadItems()
-          }, 5000)
         } else {
           submitStatus.value = 'internal_api_error'
           submitErrorInfo.value = data
