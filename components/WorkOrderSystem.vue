@@ -85,12 +85,12 @@
 
               <v-card-text>
                 
-              <v-tabs v-if="editedIndex > -1" v-model="tab" color="#428086">
+              <v-tabs v-if="editedIndex > -1" v-model="formTab" color="#428086">
                 <v-tab value="one">Details</v-tab>
                 <v-tab value="two">Comments</v-tab>
               </v-tabs>
 
-              <v-window v-model="tab">
+              <v-window v-model="formTab">
 
                 <v-window-item value="one">
                   <v-form ref="form" @submit.prevent="submit">
@@ -249,7 +249,7 @@ const members = ref([])
 const folders = ref([])
 const lists = ref([])
 
-const tab = ref(null)
+const formTab = ref(null)
 
 const clickUpUserInfo = ref()
 
@@ -400,9 +400,9 @@ const rules =
   due_date_threshold: v => dateValidation(v) || 'Date must be 2 business days from today',
 }
 
-// resets the tab when dialog is reopened
+// resets the form tab when dialog is reopened
 watch(dialog, (currentValue, newValue) => {
-  tab.value = (currentValue) ? "one" : "two"
+  formTab.value = (currentValue) ? "one" : "two"
 })
 
 // checks for the 2 business days rule
