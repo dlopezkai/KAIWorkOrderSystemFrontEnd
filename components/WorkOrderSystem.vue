@@ -63,6 +63,21 @@
                 </v-btn>
               </v-col>
             </template> -->
+
+            <v-overlay v-model="submitStatusOverlay" class="align-center justify-center">
+              <v-container style="height: 400px;">
+                <v-row class="fill-height" align-content="center" justify="center">
+                  <v-col class="text-subtitle-1 text-center" cols="12">
+                    <v-card style="max-height: 130px;">
+                      <v-card-title>{{ onSubmitMsg }}</v-card-title>
+                      <v-card-text v-if="submitErrorInfo">{{ submitErrorInfo }}</v-card-text>
+                      <v-progress-circular v-if="submitStatus ==='submitting'" color="#92D5D5" indeterminate size="64" class="mb-4"></v-progress-circular>
+                    </v-card>
+                  </v-col>
+                </v-row>
+              </v-container>
+            </v-overlay>
+
             <v-card>
               <v-card-title>
                 <span class="text-h5">{{ formTitle }}</span>
@@ -240,6 +255,10 @@ const clickUpUserInfo = ref()
 
 const submitBtnDisabled = ref(false)
 
+const submitStatusOverlay = ref(false)
+const submitStatus = ref('')
+const submitErrorInfo = ref('')
+
 const headers = [
   { title: 'Name', key: 'name', align: 'start', width: '25%' },
   { title: 'Project', key: 'project', align: 'start', sortable: false },
@@ -330,6 +349,22 @@ const priorities = [
 // computed value for form title
 const formTitle = computed(() => {
   return editedIndex.value === -1 ? 'New Work Order Form' : 'Edit Work Order Form'
+})
+
+// computed value for work order submit progress messages
+const onSubmitMsg = computed(() => {
+  switch(submitStatus.value) {
+    case 'submitting':
+      return 'Submitting new work order...'
+    case 'internal_api_error':
+      return 'There was an issue with the API.'
+    case 'connection_failure':
+      return 'There was an issue submitting your form. Please try again.'
+    case 'success':
+      return 'Work order submitted successfully.'
+    default:
+      return ''
+  }
 })
 
 // computed value for filtering data by logged-in user 
@@ -552,10 +587,14 @@ function close() {
     editedItem.value = Object.assign({}, defaultItem.value)
     editedIndex.value = -1
   })
+  submitStatusOverlay.value = false
+  submitStatus.value = ''
   submitBtnDisabled.value = false
 }
 
 function save() {
+  submitStatus.value = 'submitting'
+  submitStatusOverlay.value = true
   submitBtnDisabled.value = true
 
   // create a data object that will be passed to API to prevent user from seeing conversions
@@ -593,10 +632,9 @@ function save() {
   data.list = 901001092394
 
   if (editedIndex.value === -1) {
-    editedItem.value.creator = clickUpUserInfo.value.id 
+    editedItem.value.creator = clickUpUserInfo.value.id
 
-    // axios.post(`${runtimeConfig.public.API_URL}/list/` + data.list + `/task`, data, {
-    axios.post(`${runtimeConfig.public.API_URL}/list/901001092394/task`, data, {
+    axios.post(`${runtimeConfig.public.API_URL}/list/` + data.list + `/task`, data, {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
       }
@@ -604,18 +642,22 @@ function save() {
     .then(function (response) {
       if (response.status === 200) {
         if (response.data.response_code === 200) {
-          alert('Work order submitted successfully.')
+          submitStatus.value = 'success'
+          setTimeout(() => {
+            close()
+            loadItems()
+          }, 5000)
         } else {
-          alert('There was an issue with the API. ' + JSON.stringify(data))
+          submitStatus.value = 'internal_api_error'
+          submitErrorInfo.value = data
+          console.log(response)
           return
         }
       }
-      // reload data object with new data
-      close()
-      loadItems()
     })
     .catch(function (error) {
-      alert('There was an issue submitting your form. Please try again.')
+      submitStatus.value = 'connection_failure'
+      submitErrorInfo.value = error
       console.log(error)
     })
 
