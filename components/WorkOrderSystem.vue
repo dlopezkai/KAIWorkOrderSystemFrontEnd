@@ -642,7 +642,7 @@ function save() {
   data.list = 901001092394
 
   if (editedIndex.value === -1) {
-    editedItem.value.creator = clickUpUserInfo.value.id
+    data.creator = clickUpUserInfo.value.id
 
     axios.post(`${runtimeConfig.public.API_URL}/list/` + data.list + `/task`, data, {
       headers: {
