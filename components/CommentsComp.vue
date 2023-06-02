@@ -30,7 +30,7 @@
 <script setup>
 import { ref } from 'vue'
 import axios from 'axios'
-import { convertToDate } from '~/helpers/convertToDate.js'
+import { convertToDate } from '~/helpers/datetimeConversions.js'
 
 const runtimeConfig = useRuntimeConfig()
 const commentsData = ref([])

@@ -63,6 +63,24 @@
                 </v-btn>
               </v-col>
             </template> -->
+
+            <v-overlay v-model="submitStatusOverlay" class="align-center justify-center" @click:outside="resetSubmitStatus()">
+              <v-container style="height: 400px;">
+                <v-row class="fill-height" align-content="center" justify="center">
+                  <v-col class="text-subtitle-1 text-center" cols="12">
+                    <v-card style="max-height: 130px;">
+                      <v-card-title>{{ onSubmitMsg }}</v-card-title>
+                      <v-card-text v-if="submitErrorInfo">{{ submitErrorInfo }}</v-card-text>
+                      <v-progress-circular v-if="submitStatus === 'submitting'" color="#92D5D5" indeterminate size="64" class="mb-4"></v-progress-circular>
+                      <v-btn v-if="submitStatus != 'submitting'" color="blue-darken-1" variant="text" class="mb-4" @click="resetSubmitStatus()">
+                          OK
+                      </v-btn>
+                    </v-card>
+                  </v-col>
+                </v-row>
+              </v-container>
+            </v-overlay>
+
             <v-card>
               <v-card-title>
                 <span class="text-h5">{{ formTitle }}</span>
@@ -70,12 +88,12 @@
 
               <v-card-text>
                 
-              <v-tabs v-if="editedIndex > -1" v-model="tab" color="#428086">
+              <v-tabs v-if="editedIndex > -1" v-model="formTab" color="#428086">
                 <v-tab value="one">Details</v-tab>
                 <v-tab value="two">Comments</v-tab>
               </v-tabs>
 
-              <v-window v-model="tab">
+              <v-window v-model="formTab">
 
                 <v-window-item value="one">
                   <v-form ref="form" @submit.prevent="submit">
@@ -86,12 +104,10 @@
                       </v-col>
 
                       <v-col cols="12" sm="6" md="6">
-                        <v-select v-model="editedItem.folder" label="Project" :items="folders" item-title="name" item-value="id" @update:modelValue="loadLists()"
-                          :rules="[rules.select]" ></v-select>
+                        <v-select v-model="editedItem.folder" label="Project" :items="folders" item-title="name" item-value="id" @update:modelValue="loadLists()" :rules="[rules.select]"></v-select>
                       </v-col>
                       <v-col cols="12" sm="6" md="6">
-                        <v-select v-model="editedItem.list" label="Subtask" :items="lists" item-title="name" item-value="id"
-                          :rules="[rules.select]"></v-select>
+                        <v-select v-model="editedItem.list" label="Subtask" :items="lists" item-title="name" item-value="id" :rules="[rules.select]"></v-select>
                       </v-col>
 
                       <v-col cols="12" sm="12" md="12">
@@ -103,19 +119,18 @@
                           item-value="value" disabled></v-select>
                       </v-col>
                       <v-col cols="12" sm="6" md="6">
-                        <v-select v-model="editedItem.assigned_to" label="Assignee(s)" :items="members" item-title="title" item-value="value" multiple chips clearable></v-select>
+                        <v-select v-model="editedItem.assignees" label="Assignee(s)" :items="members" item-title="title" item-value="value" multiple chips clearable></v-select>
                       </v-col>
 
                       <v-col cols="12" sm="6" md="6">
-                        <v-text-field v-model="editedItem.due_date" label="Due Date" type="datetime-local"
-                          :rules="[rules.due_date, rules.due_date_threshold]"></v-text-field>
+                        <v-text-field v-model="editedItem.due_date" label="Due Date" type="date" :rules="[rules.due_date, rules.due_date_threshold]"></v-text-field>
                       </v-col>
                       <v-col cols="12" sm="6" md="6">
-                        <v-select v-model="editedItem.notify_person" label="Notify Person" :items="members" item-title="title" item-value="value" multiple chips clearable></v-select>
+                        <v-select v-model="editedItem.watchers" label="Notify Person" :items="members" item-title="title" item-value="value" multiple chips clearable></v-select>
                       </v-col>
 
                       <v-col cols="12" sm="6" md="6">
-                        <v-text-field v-model="editedItem.estimate" label="Hours Allocated"></v-text-field>
+                        <v-text-field v-model="editedItem.time_estimate" label="Hours Allocated"></v-text-field>
                       </v-col>
                       <v-col cols="12" sm="6" md="6">
                         <v-select v-model="editedItem.priority" label="Priority" :items="priorities" item-title="priority" item-value="id"></v-select>
@@ -145,7 +160,7 @@
                         <v-btn color="blue-darken-1" variant="text" @click="close">
                           Cancel
                         </v-btn>
-                        <v-btn color="blue-darken-1" variant="text" @click="submit">
+                        <v-btn :disabled="submitBtnDisabled" color="blue-darken-1" variant="text" @click="submit">
                           Submit
                         </v-btn>
                       </v-col>
@@ -166,8 +181,12 @@
         <!-- </v-toolbar> -->
       </template>
 
-      <template v-slot:item.assigned_to="{ item }">
-        <v-chip v-for="assignee in item.raw.assigned_to">{{ (!assignee.username) ? assignee.email : assignee.username }}</v-chip>
+      <template v-slot:item.assignees="{ item }">
+        <v-chip v-for="assignee in item.raw.assignees">{{ (!assignee.username) ? assignee.email : assignee.username }}</v-chip>
+      </template>
+
+      <template v-slot:item.watchers="{ item }">
+        <v-chip v-for="watcher in item.raw.watchers">{{ (!watcher.username) ? watcher.email : watcher.username }}</v-chip>
       </template>
 
       <template v-slot:item.tags="{ item }">
@@ -207,11 +226,11 @@
 </template>
 
 <script setup>
-import { ref, nextTick, watch } from 'vue'
+import { ref, nextTick, watch, toRaw } from 'vue'
 import axios from 'axios'
 import { useAuthStore } from '~/store/auth';
 import CommentsComp from './CommentsComp.vue';
-import { convertToDate } from '~/helpers/convertToDate.js';
+import { convertToDate, dateToISOStr, hoursToMilliseconds } from '~/helpers/datetimeConversions.js';
 import { capitalizeFirstLetter } from '~/helpers/capitalizeFirstLetter.js';
 
 const runtimeConfig = useRuntimeConfig()
@@ -233,14 +252,20 @@ const members = ref([])
 const folders = ref([])
 const lists = ref([])
 
-const tab = ref(null)
+const formTab = ref(null)
 
 const clickUpUserInfo = ref()
+
+const submitBtnDisabled = ref(false)
+
+const submitStatusOverlay = ref(false)
+const submitStatus = ref('')
+const submitErrorInfo = ref('')
 
 const headers = [
   { title: 'Name', key: 'name', align: 'start', width: '25%' },
   { title: 'Project', key: 'project', align: 'start', sortable: false },
-  { title: 'Assignee(s)', key: 'assigned_to', align: 'start', sortable: false },
+  { title: 'Assignee(s)', key: 'assignees', align: 'start', sortable: false },
   { title: 'Type', key: 'tags', align: 'start', sortable: false },
   { title: 'Status', key: 'status', align: 'start', sortable: false },
   { title: 'Priority', key: 'priority', align: 'start', sortable: false },
@@ -250,39 +275,41 @@ const headers = [
 
 const editedItem = ref([
   {
-    assigned_to: '',
+    assignees: '',
+    creator: '',
     description: '',
     due_date: '',
-    estimate: '',
     folder: '',
     id: '',
     links: '',
     list: '',
     name: '',
-    notify_person: '',
     priority: '',
     project: '',
     status: '',
-    tags: ''
+    tags: '',
+    time_estimate: '',
+    watchers: ''
   },
 ])
 
 const defaultItem = ref([
   {
-    assigned_to: '',
+    assignees: '',
+    creator: '',
     description: '',
     due_date: '',
-    estimate: '',
     folder: '',
     id: '',
     links: '',
     list: '',
     name: '',
-    notify_person: '',
     priority: '',
     project: '',
     status: '',
-    tags: ''
+    tags: '',
+    time_estimate: '',
+    watchers: '',
   },
 ])
 
@@ -327,13 +354,29 @@ const formTitle = computed(() => {
   return editedIndex.value === -1 ? 'New Work Order Form' : 'Edit Work Order Form'
 })
 
+// computed value for work order submit progress messages
+const onSubmitMsg = computed(() => {
+  switch(submitStatus.value) {
+    case 'submitting':
+      return 'Submitting new work order...'
+    case 'internal_api_error':
+      return 'There was an issue with the API.'
+    case 'connection_failure':
+      return 'There was an issue submitting your form. Please try again.'
+    case 'success':
+      return 'Work order submitted successfully.'
+    default:
+      return ''
+  }
+})
+
 // computed value for filtering data by logged-in user 
 // checks work order's assignee's email address against logged-in user's AD email
 const filteredData = computed(() => {
   if(filterByUser.value){
     let output = data.value.filter(item => {
-      if(item.assigned_to) {
-        let opt = item.assigned_to.some((
+      if(item.assignees) {
+        let opt = item.assignees.some((
           { email }) => email == authStore.currentUser.username)
         return opt
       }
@@ -346,7 +389,7 @@ const filteredData = computed(() => {
 // computed value for toggling group-by behavior
 const groupBy = computed(() => {
   if(!filterByUser.value){
-    return [{key: 'assigned_to'}]
+    return [{key: 'assignees'}]
   }
 })
 
@@ -360,27 +403,32 @@ const rules =
   due_date_threshold: v => dateValidation(v) || 'Date must be 2 business days from today',
 }
 
-// resets the tab when dialog is reopened
+// resets the form tab when dialog is reopened
 watch(dialog, (currentValue, newValue) => {
-  tab.value = (currentValue) ? "one" : "two"
+  formTab.value = (currentValue) ? "one" : "two"
 })
 
 // checks for the 2 business days rule
 function dateValidation(input) {
 
-  // convert input to milliseconds
-  let selectedDate = new Date(input).getTime()
-
   // get day of week
   let selectedDateDay = new Date(input).getDay()
 
-  // get the current date plus 2 days
-  let todaysDate = new Date().setHours(0,0,0,0);
-  let todaysDatePlusTwoDays = todaysDate + 172800000
+  // get the current date plus 2 days, the convert to ISO format
+  let date = new Date();
+  let twoDaysFromNow = date.setDate(date.getDate() + 2);
+  twoDaysFromNow = new Date(twoDaysFromNow).toISOString();
+
+  // convert to local time
+  let twoDaysFromNowLocaleString = new Date(twoDaysFromNow).toLocaleDateString()
+  let twoDaysFromNowDateObj = new Date(twoDaysFromNowLocaleString)
+
+  // convert to yyyy-mm-dd to match format of calendar input
+  let twoDaysFromNowFormatted = convertToYyyymmddFormat(twoDaysFromNowDateObj)
 
   // logic to determine if selected date is valid
-  if(selectedDateDay !== 0 && selectedDateDay !== 6) {
-    if(selectedDate >= todaysDatePlusTwoDays) {
+  if(selectedDateDay !== 5 && selectedDateDay !== 6) {
+    if(input >= twoDaysFromNowFormatted) {
       return true
     } else {
       return false
@@ -420,26 +468,26 @@ onMounted(() => {
 
 function loadItems() {
   loading.value = true
-  axios.get(`${runtimeConfig.public.API_URL}/tasks`)
+  axios.get(`${runtimeConfig.public.API_URL}/tasks/?page=3`)
   .then((response) => {
     data.value = response.data.data.map((item) => {
       return {
-        assigned_to: item.assignees,
+        assignees: item.assignees,
         list: item.list.id,
-        description: item.text_content,
+        description: item.description,
         due_date: item.due_date,
-        estimate: item.time_estimate,
         folder: item.folder.id,
         id: item.id,
         links: item.links,
         name: item.name,
-        notify_person: item.notify_person,
         priority: item.priority,
         project: item.folder.name + ' | ' + item.list.name,
         status: item.status.status,
         status_color: item.status.color,
         tags: item.tags,
-        url: item.url
+        time_estimate: item.time_estimate,
+        url: item.url,
+        watchers: item.watchers
       }
     })
     totalItems.value = response.data.data.length
@@ -526,8 +574,8 @@ function editItem(item) {
     editedItem.value = Object.assign({}, item)
     editedItem.value.status = capitalizeFirstLetter(item.status)
     editedItem.value.priority = (item.priority != null) ? capitalizeFirstLetter(item.priority.priority) : null
-    editedItem.value.due_date = convertToDate(item.due_date, "form")
-    editedItem.value.estimate = millisecondsToHours(item.estimate)
+    editedItem.value.due_date = convertToDate(item.due_date, "table")
+    editedItem.value.time_estimate = millisecondsToHours(item.time_estimate)
   } else {
     // editedItem.value = Object.assign({status: "Int Request"}, item)
     editedItem.value = Object.assign({}, item)
@@ -544,21 +592,86 @@ function close() {
   })
 }
 
-function save() {
-  // convert time estimate (hours) to milliseconds
-  editedItem.value.estimate = hoursToMilliseconds(editedItem.value.estimate)
-
-  // convert due date to milliseconds
-  editedItem.value.due_date = dateToMilliseconds(editedItem.value.due_date)
-
-  if (editedIndex.value > -1) {
-    axios.post('test2.json', JSON.stringify(editedItem.value, null, 2))
-    Object.assign(data.value[editedIndex.value], editedItem.value)
-  } else {
-    axios.post('test2.json', JSON.stringify(editedItem.value, null, 2))
-    data.value.push(editedItem.value)
+function resetSubmitStatus() {
+  if(submitStatus.value === 'submitting') {
+    close()
   }
-  close()
+
+  if(submitStatus.value === 'success') {
+    close()
+    loadItems()
+  }
+
+  submitStatus.value = ''
+  submitStatusOverlay.value = false
+  submitBtnDisabled.value = false
+}
+
+function save() {
+  submitErrorInfo.value = ''
+  submitStatus.value = 'submitting'
+  submitStatusOverlay.value = true
+  submitBtnDisabled.value = true
+
+  // create a data object that will be passed to API to prevent user from seeing conversions
+  let data = Object.assign({}, editedItem.value)
+
+  // since API needs IDs of assignees, pull the assignee(s) ID(s) and store in temp array
+  let assigneeids = []
+
+  if(data.assignees) {
+    data.assignees.forEach(element => {
+      assigneeids.push(element.id)
+    })
+    data.assignees = assigneeids
+  }
+
+  // since API needs IDs of watchers, pull the watcher(s) ID(s) and store in temp array
+  // let watcherids = []
+
+  // if(data.watchers) {
+  //   data.watchers.forEach(element => {
+  //     watcherids.push(element.id)
+  //   })
+  //   data.watchers = watcherids
+  // }
+
+  // convert time estimate (hours) to milliseconds
+  if(data.time_estimate) data.time_estimate = hoursToMilliseconds(data.time_estimate)
+
+  // FOR TEST PURPOSES ONLY!! - REMOVE ME LATER
+  data.list = 901001092394
+
+  if (editedIndex.value === -1) {
+    data.creator = clickUpUserInfo.value.id
+
+    axios.post(`${runtimeConfig.public.API_URL}/list/` + data.list + `/task`, data, {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    })
+    .then(function (response) {
+      if (response.status === 200) {
+        if (response.data.response_code === 200) {
+          submitStatus.value = 'success'
+        } else {
+          submitStatus.value = 'internal_api_error'
+          submitErrorInfo.value = data
+          console.log(response)
+          return
+        }
+      }
+    })
+    .catch(function (error) {
+      submitStatus.value = 'connection_failure'
+      submitErrorInfo.value = error
+      console.log(error)
+    })
+
+  } else {
+    // perform PUT request here
+  }
+
 }
 
 function filterByUserToggle (type) {
@@ -607,12 +720,6 @@ function getDueDateColor(rawDateTime, status) {
   return color
 }
 
-function dateToMilliseconds(value) {
-  const milliseconds = new Date(value).getTime()
-
-  return milliseconds
-}
-
 function millisecondsToHours(value) {
   if(value) {
     const hours = (value / 1000 / 60 / 60).toFixed(2)
@@ -621,12 +728,12 @@ function millisecondsToHours(value) {
   }
 }
 
-function hoursToMilliseconds(value) {
-  if(value) {
-    const milliseconds = value * 60 * 60 * 1000
-
-    return milliseconds
-  }
+function convertToYyyymmddFormat(value) {
+  return value.getFullYear() 
+    + "-" 
+    + ((value.getMonth()+1).length != 2 ? "0" + (value.getMonth() + 1) : (value.getMonth()+1)) 
+    + "-" 
+    + (value.getDate().length != 2 ? "0" + value.getDate() : value.getDate());
 }
 
 </script>
