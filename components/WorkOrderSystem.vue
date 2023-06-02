@@ -593,18 +593,21 @@ function close() {
 }
 
 function resetSubmitStatus() {
+  if(submitStatus.value === 'submitting') {
+    close()
+  }
+
   if(submitStatus.value === 'success') {
     close()
     loadItems()
   }
 
-  submitErrorInfo.value = ''
-  submitStatus.value = ''
   submitStatusOverlay.value = false
   submitBtnDisabled.value = false
 }
 
 function save() {
+  submitErrorInfo.value = ''
   submitStatus.value = 'submitting'
   submitStatusOverlay.value = true
   submitBtnDisabled.value = true
