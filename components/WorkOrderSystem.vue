@@ -36,7 +36,6 @@
       @click:row="(pointerEvent, {item}) => editItem(item.raw)"
       @update:options="loadItems"
     >
-    <template #bottom v-if="!showFooter"></template>
     <!-- <v-data-table
       :headers="headers" 
       :items="filteredData" 
@@ -225,6 +224,7 @@
         </v-icon> -->
       </template>
 
+      <template v-slot:bottom v-if="!showFooter"></template>
     </v-data-table-server>
 
     <v-pagination 
