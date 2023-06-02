@@ -24,15 +24,19 @@
     <p>Please register for a KAI ClickUp account to use this application</p>
   </div> -->
   <!-- <div v-else>  -->
-    <v-data-table
+    <v-data-table-server
+      v-model:page="page"
       :headers="headers" 
-      :items="filteredData" 
+      :items-length="totalItems"
+      :items="data" 
       :loading="loading" 
       class="elevation-1"
       density="comfortable"
       :search="search"
       @click:row="(pointerEvent, {item}) => editItem(item.raw)"
+      @update:options="loadItems"
     >
+    <template #bottom v-if="!showFooter"></template>
     <!-- <v-data-table
       :headers="headers" 
       :items="filteredData" 
@@ -221,7 +225,13 @@
         </v-icon> -->
       </template>
 
-    </v-data-table>
+    </v-data-table-server>
+
+    <v-pagination 
+      v-model="page" 
+      :length="paginationLength"
+    >
+  </v-pagination>
   <!-- </div> -->
 </template>
 
@@ -237,9 +247,18 @@ const runtimeConfig = useRuntimeConfig()
     
 const authStore = useAuthStore()
 const dialog = ref(false)
-const itemsPerPage = ref(10)
+
+
+// server table data
+const itemsPerPage = ref(100)
 const loading = ref(true)
 const totalItems = ref(0)
+const showFooter = ref(false)
+const page = ref(1)
+const paginationLength = ref(8) // TODO: need to figure out how to retrieve length prop dynamically
+//
+
+
 const editedIndex = ref(-1)
 const data = ref([])
 const search = ref('')
@@ -460,16 +479,17 @@ function loadClickUpUserInfo() {
 
 // mounted life-cycle hook
 onMounted(() => {
-  loadItems()
   loadTags()
   loadMembers()
   loadFolders()
 })
 
+// function loadItems({ page }) {
 function loadItems() {
   loading.value = true
-  axios.get(`${runtimeConfig.public.API_URL}/tasks/?page=3`)
+  axios.get(`${runtimeConfig.public.API_URL}/tasks/?page=` + (page.value - 1))
   .then((response) => {
+    // data.value = response.data.data.slice(0, 10).map((item) => {
     data.value = response.data.data.map((item) => {
       return {
         assignees: item.assignees,
