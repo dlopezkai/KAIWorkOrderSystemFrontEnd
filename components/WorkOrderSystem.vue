@@ -230,7 +230,7 @@ import { ref, nextTick, watch, toRaw } from 'vue'
 import axios from 'axios'
 import { useAuthStore } from '~/store/auth';
 import CommentsComp from './CommentsComp.vue';
-import { convertToDate, dateToISOStr, hoursToMilliseconds } from '~/helpers/convertToDate.js';
+import { convertToDate, dateToISOStr, hoursToMilliseconds } from '~/helpers/datetimeConversions.js';
 import { capitalizeFirstLetter } from '~/helpers/capitalizeFirstLetter.js';
 
 const runtimeConfig = useRuntimeConfig()
