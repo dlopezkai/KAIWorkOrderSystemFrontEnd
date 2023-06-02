@@ -230,7 +230,7 @@ import { ref, nextTick, watch, toRaw } from 'vue'
 import axios from 'axios'
 import { useAuthStore } from '~/store/auth';
 import CommentsComp from './CommentsComp.vue';
-import { convertToDate } from '~/helpers/convertToDate.js';
+import { convertToDate, dateToISOStr } from '~/helpers/convertToDate.js';
 import { capitalizeFirstLetter } from '~/helpers/capitalizeFirstLetter.js';
 
 const runtimeConfig = useRuntimeConfig()
@@ -635,9 +635,6 @@ function save() {
   // convert time estimate (hours) to milliseconds
   if(data.time_estimate) data.time_estimate = hoursToMilliseconds(data.time_estimate)
 
-  // convert due date to milliseconds
-  if(data.due_date) data.due_date = dateToISOStr(data.due_date)
-
   // FOR TEST PURPOSES ONLY!! - REMOVE ME LATER
   data.list = 901001092394
 
@@ -717,10 +714,6 @@ function getDueDateColor(rawDateTime, status) {
   }
 
   return color
-}
-
-function dateToISOStr(value) {
-  return new Date(value).toISOString().substring(0,10)
 }
 
 function millisecondsToHours(value) {

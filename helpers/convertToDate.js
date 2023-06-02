@@ -17,3 +17,7 @@ export function convertToDate(rawDateTime, origin) {
     
     return result
 }
+
+export function dateToISOStr(value) {
+  return new Date(value).toISOString().substring(0,10)
+}
