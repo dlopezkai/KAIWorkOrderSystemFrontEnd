@@ -602,6 +602,7 @@ function resetSubmitStatus() {
     loadItems()
   }
 
+  submitStatus.value = ''
   submitStatusOverlay.value = false
   submitBtnDisabled.value = false
 }
