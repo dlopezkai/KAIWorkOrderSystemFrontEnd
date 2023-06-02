@@ -21,3 +21,7 @@ export function convertToDate(rawDateTime, origin) {
 export function dateToISOStr(value) {
   return new Date(value).toISOString().substring(0,10)
 }
+
+export function hoursToMilliseconds(value) {
+  return value * 60 * 60 * 1000
+}

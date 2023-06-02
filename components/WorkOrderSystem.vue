@@ -230,7 +230,7 @@ import { ref, nextTick, watch, toRaw } from 'vue'
 import axios from 'axios'
 import { useAuthStore } from '~/store/auth';
 import CommentsComp from './CommentsComp.vue';
-import { convertToDate, dateToISOStr } from '~/helpers/convertToDate.js';
+import { convertToDate, dateToISOStr, hoursToMilliseconds } from '~/helpers/convertToDate.js';
 import { capitalizeFirstLetter } from '~/helpers/capitalizeFirstLetter.js';
 
 const runtimeConfig = useRuntimeConfig()
@@ -722,10 +722,6 @@ function millisecondsToHours(value) {
 
     return hours
   }
-}
-
-function hoursToMilliseconds(value) {
-    return value * 60 * 60 * 1000
 }
 
 function convertToYyyymmddFormat(value) {
