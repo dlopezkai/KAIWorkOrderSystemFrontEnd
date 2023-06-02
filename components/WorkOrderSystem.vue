@@ -260,7 +260,7 @@ const submitBtnDisabled = ref(false)
 
 const submitStatusOverlay = ref(false)
 const submitStatus = ref('')
-const submitErrorInfo = ref({})
+const submitErrorInfo = ref('')
 
 const headers = [
   { title: 'Name', key: 'name', align: 'start', width: '25%' },
@@ -598,7 +598,7 @@ function resetSubmitStatus() {
     loadItems()
   }
 
-  submitErrorInfo.value = {}
+  submitErrorInfo.value = ''
   submitStatus.value = ''
   submitStatusOverlay.value = false
   submitBtnDisabled.value = false
