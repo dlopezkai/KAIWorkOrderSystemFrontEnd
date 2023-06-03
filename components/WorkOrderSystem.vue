@@ -20,6 +20,15 @@
     <AuthN></AuthN>
   </v-app-bar>
 
+  <v-text-field
+    v-model="search"
+    append-icon="mdi-magnify"
+    label="Search"
+    single-line
+    density="comfortable"
+    hide-details
+  ></v-text-field>
+
   <!-- <div v-if="!clickUpUserInfo.length">
     <p>Please register for a KAI ClickUp account to use this application</p>
   </div> -->
@@ -30,7 +39,8 @@
       :items-length="totalItems"
       :items="data" 
       :loading="loading" 
-      class="elevation-1"
+      class="elevation-1 overflow-y-auto"
+      style="max-height: 80vh"
       density="comfortable"
       :search="search"
       @click:row="(pointerEvent, {item}) => editItem(item.raw)"
@@ -46,16 +56,6 @@
       @click:row="(pointerEvent, {item}) => editItem(item.raw)"
     > -->
       <template v-slot:top>
-
-        <v-text-field
-          v-model="search"
-          append-icon="mdi-magnify"
-          label="Search"
-          single-line
-          density="comfortable"
-          hide-details
-        ></v-text-field>
-
         <!-- <v-toolbar flat> -->
 
           <v-dialog v-model="dialog" max-width="800px">
