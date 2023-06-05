@@ -489,7 +489,12 @@ onMounted(() => {
 // function loadItems({ page }) {
 function loadItems() {
   loading.value = true
-  axios.get(`${runtimeConfig.public.API_URL}/tasks/?page=` + (page.value - 1))
+  let axiosGetRequestURL = `${runtimeConfig.public.API_URL}/tasks/?page=` + (page.value - 1)
+
+  // set filters
+  if(filterByUser.value) axiosGetRequestURL = axiosGetRequestURL + `&assignees[]=` + clickUpUserInfo.value.id
+
+  axios.get(axiosGetRequestURL)
   .then((response) => {
     // data.value = response.data.data.slice(0, 10).map((item) => {
     data.value = response.data.data.map((item) => {
@@ -702,6 +707,8 @@ function filterByUserToggle (type) {
   } else {
     filterByUser.value = false
   } 
+
+  loadItems()
 }
 
 // priority color method for v-chip component
