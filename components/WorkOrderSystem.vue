@@ -20,19 +20,20 @@
     <AuthN></AuthN>
   </v-app-bar>
 
-  <v-text-field
-    v-model="search"
-    append-icon="mdi-magnify"
-    label="Search"
-    single-line
-    density="comfortable"
-    hide-details
-  ></v-text-field>
+  <v-container v-if="clickUpUserInfo" fluid>
+    <v-text-field
+      v-model="search"
+      append-icon="mdi-magnify"
+      label="Search"
+      single-line
+      density="comfortable"
+      hide-details
+    ></v-text-field>
 
-  <!-- <div v-if="!clickUpUserInfo.length">
-    <p>Please register for a KAI ClickUp account to use this application</p>
-  </div> -->
-  <!-- <div v-else>  -->
+    <!-- <div v-if="!clickUpUserInfo.length">
+      <p>Please register for a KAI ClickUp account to use this application</p>
+    </div> -->
+    <!-- <div v-else>  -->
     <v-data-table-server
       v-model:page="page"
       :headers="headers" 
@@ -45,7 +46,6 @@
       :search="search"
       @click:row="(pointerEvent, {item}) => editItem(item.raw)"
       @update:options="loadItems"
-      v-if="clickUpUserInfo"
     >
     <!-- <v-data-table
       :headers="headers" 
@@ -232,7 +232,8 @@
       v-model="page" 
       :length="paginationLength"
     >
-  </v-pagination>
+    </v-pagination>
+  </v-container>
   <!-- </div> -->
 </template>
 
