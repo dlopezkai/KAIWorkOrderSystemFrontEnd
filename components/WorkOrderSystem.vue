@@ -45,6 +45,7 @@
       :search="search"
       @click:row="(pointerEvent, {item}) => editItem(item.raw)"
       @update:options="loadItems"
+      v-if="clickUpUserInfo"
     >
     <!-- <v-data-table
       :headers="headers" 
