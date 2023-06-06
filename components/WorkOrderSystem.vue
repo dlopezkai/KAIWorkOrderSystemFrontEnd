@@ -218,12 +218,13 @@
 
       <template v-slot:bottom v-if="!showFooter"></template>
     </v-data-table-server>
-
-    <v-pagination 
-      v-model="page" 
-      :length="paginationLength"
-    >
-    </v-pagination>
+  </v-container>
+  
+  <v-container>
+    <v-row justify="center" align="center">
+      <v-btn class="rounded-0" flat :disabled="previousPageBtnDisabled" @click="decrementPage">Previous page</v-btn>
+      <v-btn class="rounded-0" flat :disabled="nextPageBtnDisabled" @click="incrementPage">Next page</v-btn>
+    </v-row>
   </v-container>
   <!-- </div> -->
 </template>
@@ -247,8 +248,8 @@ const itemsPerPage = ref(100)
 const loading = ref(true)
 const totalItems = ref(0)
 const showFooter = ref(false)
-const page = ref(1)
-const paginationLength = ref(8) // TODO: need to figure out how to retrieve length prop dynamically
+const page = ref(0)
+const lastPage = ref(false)
 //
 
 
@@ -366,6 +367,16 @@ const formTitle = computed(() => {
   return editedIndex.value === -1 ? 'New Work Order Form' : 'Edit Work Order Form'
 })
 
+// computed value to disable / enable the "Previous page" button
+const previousPageBtnDisabled = computed(() => {
+  return (page.value === 0) ? true : false
+})
+
+// computed value to disable / enable the "Next page" button
+const nextPageBtnDisabled = computed(() => {
+  return (lastPage.value) ? true : false
+})
+
 // computed value for work order submit progress messages
 const onSubmitMsg = computed(() => {
   switch(submitStatus.value) {
@@ -464,7 +475,7 @@ onMounted(() => {
 // function loadItems({ page }) {
 function loadItems() {
   loading.value = true
-  let axiosGetRequestURL = `${runtimeConfig.public.API_URL}/tasks/?page=` + (page.value - 1)
+  let axiosGetRequestURL = `${runtimeConfig.public.API_URL}/tasks/?page=` + page.value
 
   // set filters
   if(filterByUser.value) axiosGetRequestURL = axiosGetRequestURL + `&assignees[]=` + clickUpUserInfo.value.id
@@ -492,6 +503,9 @@ function loadItems() {
         watchers: item.watchers
       }
     })
+    // TODO: assign below to response.data.last_page once API provides it
+    lastPage.value = false
+
     totalItems.value = response.data.data.length
     loading.value = false
   })
@@ -564,7 +578,6 @@ function loadLists(presentFolderId) {
   })
   .catch(err => console.log(err))
 }
-
 
 function editItem(item) {
   editedIndex.value = data.value.indexOf(item)
@@ -684,6 +697,14 @@ function filterByUserToggle (type) {
   } 
 
   loadItems()
+}
+
+function incrementPage() {
+  page.value = (page.value + 1)
+}
+
+function decrementPage() {
+  page.value = (page.value - 1)
 }
 
 // priority color method for v-chip component
