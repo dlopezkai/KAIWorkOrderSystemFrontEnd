@@ -394,6 +394,7 @@ const onSubmitMsg = computed(() => {
 })
 
 // computed value for toggling group-by behavior
+// if we are using this, will need to pass :group-by="groupBy" prop in <v-data-table-server> component
 const groupBy = computed(() => {
   if(!filterByUser.value){
     return [{key: 'assignees'}]
