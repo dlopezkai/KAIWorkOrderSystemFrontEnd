@@ -47,15 +47,6 @@
       @click:row="(pointerEvent, {item}) => editItem(item.raw)"
       @update:options="loadItems"
     >
-    <!-- <v-data-table
-      :headers="headers" 
-      :items="filteredData" 
-      :group-by="groupBy"
-      :loading="loading" 
-      class="elevation-1"
-      :search="search"
-      @click:row="(pointerEvent, {item}) => editItem(item.raw)"
-    > -->
       <template v-slot:top>
         <!-- <v-toolbar flat> -->
 
@@ -389,22 +380,6 @@ const onSubmitMsg = computed(() => {
     default:
       return ''
   }
-})
-
-// computed value for filtering data by logged-in user 
-// checks work order's assignee's email address against logged-in user's AD email
-const filteredData = computed(() => {
-  if(filterByUser.value){
-    let output = data.value.filter(item => {
-      if(item.assignees) {
-        let opt = item.assignees.some((
-          { email }) => email == authStore.currentUser.username)
-        return opt
-      }
-    })
-    return output
-  }
-  return data.value
 })
 
 // computed value for toggling group-by behavior
