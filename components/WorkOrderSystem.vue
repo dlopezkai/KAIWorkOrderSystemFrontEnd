@@ -504,9 +504,7 @@ function loadItems() {
         watchers: item.watchers
       }
     })
-    // TODO: assign below to response.data.last_page once API provides it
-    lastPage.value = false
-
+    lastPage.value = response.data.last_page
     totalItems.value = response.data.data.length
     loading.value = false
   })
