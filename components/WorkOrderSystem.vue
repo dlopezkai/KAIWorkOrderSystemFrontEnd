@@ -24,10 +24,11 @@
     <v-text-field
       v-model="search"
       append-icon="mdi-magnify"
-      label="Search"
+      label="Search (TBD)"
       single-line
       density="comfortable"
       hide-details
+      disabled
     ></v-text-field>
 
     <!-- <div v-if="!clickUpUserInfo.length">
