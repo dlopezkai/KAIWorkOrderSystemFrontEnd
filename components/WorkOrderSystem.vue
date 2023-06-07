@@ -239,21 +239,14 @@ import { convertToDate, dateToISOStr, hoursToMilliseconds } from '~/helpers/date
 import { capitalizeFirstLetter } from '~/helpers/capitalizeFirstLetter.js';
 
 const runtimeConfig = useRuntimeConfig()
-    
 const authStore = useAuthStore()
 const dialog = ref(false)
-
-
-// server table data
 const itemsPerPage = ref(100)
 const loading = ref(true)
 const totalItems = ref(0)
 const showFooter = ref(false)
 const page = ref(0)
 const lastPage = ref(false)
-//
-
-
 const editedIndex = ref(-1)
 const data = ref([])
 const search = ref('')
@@ -262,16 +255,11 @@ const drawer = ref(false)
 const form = ref(null)
 const tags = ref([])
 const members = ref([])
-
 const folders = ref([])
 const lists = ref([])
-
 const formTab = ref(null)
-
 const clickUpUserInfo = ref()
-
 const submitBtnDisabled = ref(false)
-
 const submitStatusOverlay = ref(false)
 const submitStatus = ref('')
 const submitErrorInfo = ref('')
@@ -732,8 +720,7 @@ function getDueDateColor(rawDateTime, status) {
   const todayPlusFiveDays = Number(todayInMS) + 432000000
 
   // if task is not complete, then set color
-  // red for overdue, or due today
-  // yellow for due within 5 days
+  // red for overdue (or due today), yellow for due within 5 days
   if(status != "complete") {
     if (todayInMS >= date) {
       color = "#f50000"
