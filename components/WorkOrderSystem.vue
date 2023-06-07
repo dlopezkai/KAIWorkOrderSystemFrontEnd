@@ -20,39 +20,35 @@
     <AuthN></AuthN>
   </v-app-bar>
 
-  <!-- <div v-if="!clickUpUserInfo.length">
-    <p>Please register for a KAI ClickUp account to use this application</p>
-  </div> -->
-  <!-- <div v-else>  -->
-    <v-data-table
+  <v-container v-if="clickUpUserInfo" fluid>
+    <v-text-field
+      v-model="search"
+      append-icon="mdi-magnify"
+      label="Search (TBD)"
+      single-line
+      density="comfortable"
+      hide-details
+      disabled
+    ></v-text-field>
+
+    <!-- <div v-if="!clickUpUserInfo.length">
+      <p>Please register for a KAI ClickUp account to use this application</p>
+    </div> -->
+    <!-- <div v-else>  -->
+    <v-data-table-server
+      v-model:page="page"
       :headers="headers" 
-      :items="filteredData" 
+      :items-length="totalItems"
+      :items="data" 
       :loading="loading" 
-      class="elevation-1"
+      class="elevation-1 overflow-y-auto"
+      style="max-height: 80vh"
       density="comfortable"
       :search="search"
       @click:row="(pointerEvent, {item}) => editItem(item.raw)"
+      @update:options="loadItems"
     >
-    <!-- <v-data-table
-      :headers="headers" 
-      :items="filteredData" 
-      :group-by="groupBy"
-      :loading="loading" 
-      class="elevation-1"
-      :search="search"
-      @click:row="(pointerEvent, {item}) => editItem(item.raw)"
-    > -->
       <template v-slot:top>
-
-        <v-text-field
-          v-model="search"
-          append-icon="mdi-magnify"
-          label="Search"
-          single-line
-          density="comfortable"
-          hide-details
-        ></v-text-field>
-
         <!-- <v-toolbar flat> -->
 
           <v-dialog v-model="dialog" max-width="800px">
@@ -221,7 +217,16 @@
         </v-icon> -->
       </template>
 
-    </v-data-table>
+      <template v-slot:bottom v-if="!showFooter"></template>
+    </v-data-table-server>
+  </v-container>
+  
+  <v-container>
+    <v-row justify="center" align="center">
+      <v-btn class="rounded-0" flat :disabled="previousPageBtnDisabled" @click="decrementPage">Previous page</v-btn>
+      <v-btn class="rounded-0" flat :disabled="nextPageBtnDisabled" @click="incrementPage">Next page</v-btn>
+    </v-row>
+  </v-container>
   <!-- </div> -->
 </template>
 
@@ -234,12 +239,14 @@ import { convertToDate, dateToISOStr, hoursToMilliseconds } from '~/helpers/date
 import { capitalizeFirstLetter } from '~/helpers/capitalizeFirstLetter.js';
 
 const runtimeConfig = useRuntimeConfig()
-    
 const authStore = useAuthStore()
 const dialog = ref(false)
-const itemsPerPage = ref(10)
+const itemsPerPage = ref(100)
 const loading = ref(true)
 const totalItems = ref(0)
+const showFooter = ref(false)
+const page = ref(0)
+const lastPage = ref(false)
 const editedIndex = ref(-1)
 const data = ref([])
 const search = ref('')
@@ -248,16 +255,11 @@ const drawer = ref(false)
 const form = ref(null)
 const tags = ref([])
 const members = ref([])
-
 const folders = ref([])
 const lists = ref([])
-
 const formTab = ref(null)
-
 const clickUpUserInfo = ref()
-
 const submitBtnDisabled = ref(false)
-
 const submitStatusOverlay = ref(false)
 const submitStatus = ref('')
 const submitErrorInfo = ref('')
@@ -354,6 +356,16 @@ const formTitle = computed(() => {
   return editedIndex.value === -1 ? 'New Work Order Form' : 'Edit Work Order Form'
 })
 
+// computed value to disable / enable the "Previous page" button
+const previousPageBtnDisabled = computed(() => {
+  return (loading.value) ? true : (page.value === 0) ? true : false
+})
+
+// computed value to disable / enable the "Next page" button
+const nextPageBtnDisabled = computed(() => {
+  return (loading.value) ? true : (lastPage.value) ? true : false
+})
+
 // computed value for work order submit progress messages
 const onSubmitMsg = computed(() => {
   switch(submitStatus.value) {
@@ -370,23 +382,8 @@ const onSubmitMsg = computed(() => {
   }
 })
 
-// computed value for filtering data by logged-in user 
-// checks work order's assignee's email address against logged-in user's AD email
-const filteredData = computed(() => {
-  if(filterByUser.value){
-    let output = data.value.filter(item => {
-      if(item.assignees) {
-        let opt = item.assignees.some((
-          { email }) => email == authStore.currentUser.username)
-        return opt
-      }
-    })
-    return output
-  }
-  return data.value
-})
-
 // computed value for toggling group-by behavior
+// if we still plan to incorporate grouping, then we will need to pass a :group-by="groupBy" prop in the <v-data-table-server> component
 const groupBy = computed(() => {
   if(!filterByUser.value){
     return [{key: 'assignees'}]
@@ -460,16 +457,22 @@ function loadClickUpUserInfo() {
 
 // mounted life-cycle hook
 onMounted(() => {
-  loadItems()
   loadTags()
   loadMembers()
   loadFolders()
 })
 
+// function loadItems({ page }) {
 function loadItems() {
   loading.value = true
-  axios.get(`${runtimeConfig.public.API_URL}/tasks/?page=3`)
+  let axiosGetRequestURL = `${runtimeConfig.public.API_URL}/tasks/?page=` + page.value
+
+  // set filters
+  if(filterByUser.value) axiosGetRequestURL = axiosGetRequestURL + `&assignees[]=` + clickUpUserInfo.value.id
+
+  axios.get(axiosGetRequestURL)
   .then((response) => {
+    // data.value = response.data.data.slice(0, 10).map((item) => {
     data.value = response.data.data.map((item) => {
       return {
         assignees: item.assignees,
@@ -490,6 +493,7 @@ function loadItems() {
         watchers: item.watchers
       }
     })
+    lastPage.value = response.data.last_page
     totalItems.value = response.data.data.length
     loading.value = false
   })
@@ -562,7 +566,6 @@ function loadLists(presentFolderId) {
   })
   .catch(err => console.log(err))
 }
-
 
 function editItem(item) {
   editedIndex.value = data.value.indexOf(item)
@@ -680,6 +683,16 @@ function filterByUserToggle (type) {
   } else {
     filterByUser.value = false
   } 
+
+  loadItems()
+}
+
+function incrementPage() {
+  page.value = (page.value + 1)
+}
+
+function decrementPage() {
+  page.value = (page.value - 1)
 }
 
 // priority color method for v-chip component
@@ -707,8 +720,7 @@ function getDueDateColor(rawDateTime, status) {
   const todayPlusFiveDays = Number(todayInMS) + 432000000
 
   // if task is not complete, then set color
-  // red for overdue, or due today
-  // yellow for due within 5 days
+  // red for overdue (or due today), yellow for due within 5 days
   if(status != "complete") {
     if (todayInMS >= date) {
       color = "#f50000"
