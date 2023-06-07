@@ -369,12 +369,12 @@ const formTitle = computed(() => {
 
 // computed value to disable / enable the "Previous page" button
 const previousPageBtnDisabled = computed(() => {
-  return (page.value === 0) ? true : false
+  return (loading.value) ? true : (page.value === 0) ? true : false
 })
 
 // computed value to disable / enable the "Next page" button
 const nextPageBtnDisabled = computed(() => {
-  return (lastPage.value) ? true : false
+  return (loading.value) ? true : (lastPage.value) ? true : false
 })
 
 // computed value for work order submit progress messages
