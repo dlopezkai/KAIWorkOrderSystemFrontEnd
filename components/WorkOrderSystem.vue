@@ -111,8 +111,7 @@
                       </v-col>
 
                       <v-col v-if="editedIndex > -1" cols="12" sm="6" md="6">
-                        <v-select v-model="editedItem.status" label="Status" items="" item-title="title"
-                          item-value="value" disabled></v-select>
+                        <v-select v-model="editedItem.status" label="Status" :items="statuses" item-title="status" item-value="status"></v-select>
                       </v-col>
                       <v-col cols="12" sm="6" md="6">
                         <v-select v-model="editedItem.assignees" label="Assignee(s)" :items="members" item-title="title" item-value="value" multiple chips clearable></v-select>
@@ -349,6 +348,18 @@ const priorities = [
   { priority: 'Normal', id: 3, color: '#6fddff' },
   { priority: 'High', id: 2, color: '#ffcc00' },
   { priority: 'Urgent', id: 1, color: '#f50000' },
+]
+
+const statuses = [
+  { status: 'Init request' },
+  { status: 'In progress' },
+  { status: 'Internal QC' },
+  { status: 'Post production' },
+  { status: 'Client review' },
+  { status: 'On-Hold' },
+  { status: 'Scheduled' },
+  { status: 'Done' },
+  { status: 'Complete' },
 ]
 
 // computed value for form title
