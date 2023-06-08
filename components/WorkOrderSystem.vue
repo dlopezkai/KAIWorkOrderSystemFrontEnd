@@ -111,8 +111,7 @@
                       </v-col>
 
                       <v-col v-if="editedIndex > -1" cols="12" sm="6" md="6">
-                        <v-select v-model="editedItem.status" label="Status" items="" item-title="title"
-                          item-value="value" disabled></v-select>
+                        <v-select v-model="editedItem.status" label="Status" :items="statuses" item-title="title" item-value="value"></v-select>
                       </v-col>
                       <v-col cols="12" sm="6" md="6">
                         <v-select v-model="editedItem.assignees" label="Assignee(s)" :items="members" item-title="title" item-value="value" multiple chips clearable></v-select>
@@ -263,6 +262,7 @@ const submitBtnDisabled = ref(false)
 const submitStatusOverlay = ref(false)
 const submitStatus = ref('')
 const submitErrorInfo = ref('')
+const statuses = ref([])
 
 const headers = [
   { title: 'Name', key: 'name', align: 'start', width: '25%' },
@@ -460,6 +460,7 @@ onMounted(() => {
   loadTags()
   loadMembers()
   loadFolders()
+  loadStatuses()
 })
 
 // function loadItems({ page }) {
@@ -572,6 +573,30 @@ function loadLists(presentFolderId) {
   .catch(err => console.log(err))
 }
 
+function loadStatuses() {
+  // some endpoint will go here
+
+  // simulate axios response
+  let response = [
+    { "status": "init request", "color": "#d3d3d3", "type": "open", "orderindex": 0 },
+    { "status": "in progress", "color": "#7C4DFF", "type": "custom", "orderindex": 1 },
+    { "status": "internal qc", "color": "#02BCD4", "type": "custom", "orderindex": 2 },
+    { "status": "post production", "color": "#AABC1E", "type": "custom", "orderindex": 3 },
+    { "status": "client review", "color": "#EE70C7", "type": "custom","orderindex": 4 },
+    { "status": "on-hold", "color": "#e50000", "type": "custom", "orderindex": 5 },
+    { "status": "scheduled", "color": "#2BAA76", "type": "done", "orderindex": 6 },
+    { "status": "done", "color": "#2ecd6f", "type": "done", "orderindex": 7 },
+    { "status": "complete", "color": "#6bc950", "type": "closed", "orderindex": 8 }
+  ]
+
+  statuses.value = response.map((item) => {
+    return {
+      title: capitalizeFirstLetter(item.status),
+      value: item.status,
+    }
+  })
+}
+
 function editItem(item) {
   editedIndex.value = data.value.indexOf(item)
 
@@ -580,7 +605,6 @@ function editItem(item) {
     loadFolders()
     loadLists(item.folder)
     editedItem.value = Object.assign({}, item)
-    editedItem.value.status = capitalizeFirstLetter(item.status)
     editedItem.value.priority = (item.priority != null) ? capitalizeFirstLetter(item.priority.priority) : null
     editedItem.value.due_date = convertToDate(item.due_date, "table")
     editedItem.value.time_estimate = millisecondsToHours(item.time_estimate)
@@ -611,7 +635,6 @@ function editItem(item) {
     })
     .catch(err => console.log(err))
   } else {
-    // editedItem.value = Object.assign({status: "Int Request"}, item)
     editedItem.value = Object.assign({}, item)
   }
 
