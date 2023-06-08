@@ -591,7 +591,6 @@ function editItem(item) {
     editedItem.value.due_date = convertToDate(item.due_date, "table")
     editedItem.value.time_estimate = millisecondsToHours(item.time_estimate)
   } else {
-    // editedItem.value = Object.assign({status: "Int Request"}, item)
     editedItem.value = Object.assign({}, item)
   }
 
