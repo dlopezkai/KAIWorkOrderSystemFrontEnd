@@ -501,6 +501,11 @@ function loadTags() {
         value: item.name
       }
     })
+
+    // sort tags list
+    tags.value = tags.value.sort((a, b) => 
+      a.title.localeCompare(b.title))
+
     loading.value = false
   })
   .catch(err => console.log(err))
