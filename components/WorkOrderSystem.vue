@@ -197,17 +197,14 @@
 
       <template v-slot:item.priority="{ item }">
         <v-chip v-if="item.raw.priority" :color="getPriorityColor(item.raw.priority)">
-          {{ (!item.raw.priority) 
-                ? null 
-                : (item.raw.priority === null) 
-                ? null 
-                : capitalizeFirstLetter(item.raw.priority.priority)
-          }}
+          {{ capitalizeFirstLetter(item.raw.priority.priority) }}
         </v-chip>
       </template>
 
       <template v-slot:item.due_date="{ item }">
-        <v-chip :color="getDueDateColor(item.raw.due_date, item.raw.status)">{{ convertToDate(item.raw.due_date, "table") }}</v-chip>
+        <v-chip v-if="item.raw.due_date" :color="getDueDateColor(item.raw.due_date, item.raw.status)">
+          {{ convertToDate(item.raw.due_date, "table") }}
+          </v-chip>
       </template>
 
       <template v-slot:item.actions="{ item }">
