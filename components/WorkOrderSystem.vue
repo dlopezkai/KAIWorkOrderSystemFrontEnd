@@ -128,7 +128,7 @@
                         <v-text-field v-model="editedItem.time_estimate" label="Hours Allocated"></v-text-field>
                       </v-col>
                       <v-col cols="12" sm="6" md="6">
-                        <v-select v-model="editedItem.priority" label="Priority" :items="priorities" item-title="priority" item-value="id"></v-select>
+                        <v-select v-model="editedItem.priority" label="Priority" :items="priorities" item-title="title" item-value="value"></v-select>
                       </v-col>
 
                       <v-col cols="12" sm="12" md="12">
@@ -263,6 +263,7 @@ const submitStatusOverlay = ref(false)
 const submitStatus = ref('')
 const submitErrorInfo = ref('')
 const statuses = ref([])
+const priorities = ref([])
 
 const headers = [
   { title: 'Name', key: 'name', align: 'start', width: '25%' },
@@ -341,15 +342,6 @@ const defaultItem = ref([
 //     })
 //   },
 // }
-
-// check if API will provide these
-// if API provides integer-based values, we will need to map v-data-table to render properly
-const priorities = [
-  { priority: 'Low', id: 4, color: '#d8d8d8' },
-  { priority: 'Normal', id: 3, color: '#6fddff' },
-  { priority: 'High', id: 2, color: '#ffcc00' },
-  { priority: 'Urgent', id: 1, color: '#f50000' },
-]
 
 // computed value for form title
 const formTitle = computed(() => {
@@ -461,6 +453,7 @@ onMounted(() => {
   loadMembers()
   loadFolders()
   loadStatuses()
+  loadPriorities()
 })
 
 // function loadItems({ page }) {
@@ -574,27 +567,29 @@ function loadLists(presentFolderId) {
 }
 
 function loadStatuses() {
-  // some endpoint will go here
-
-  // simulate axios response
-  let response = [
-    { "status": "init request", "color": "#d3d3d3", "type": "open", "orderindex": 0 },
-    { "status": "in progress", "color": "#7C4DFF", "type": "custom", "orderindex": 1 },
-    { "status": "internal qc", "color": "#02BCD4", "type": "custom", "orderindex": 2 },
-    { "status": "post production", "color": "#AABC1E", "type": "custom", "orderindex": 3 },
-    { "status": "client review", "color": "#EE70C7", "type": "custom","orderindex": 4 },
-    { "status": "on-hold", "color": "#e50000", "type": "custom", "orderindex": 5 },
-    { "status": "scheduled", "color": "#2BAA76", "type": "done", "orderindex": 6 },
-    { "status": "done", "color": "#2ecd6f", "type": "done", "orderindex": 7 },
-    { "status": "complete", "color": "#6bc950", "type": "closed", "orderindex": 8 }
-  ]
-
-  statuses.value = response.map((item) => {
-    return {
-      title: capitalizeFirstLetter(item.status),
-      value: item.status,
-    }
+  axios.get(`${runtimeConfig.public.API_URL}/statuses`)
+  .then((response) => {
+    statuses.value = response.data.data.map((item) => {
+      return {
+        title: capitalizeFirstLetter(item.name),
+        value: item.name,
+      }
+    })
   })
+  .catch(err => console.log(err))
+}
+
+function loadPriorities() {
+  axios.get(`${runtimeConfig.public.API_URL}/priorities`)
+  .then((response) => {
+    priorities.value = response.data.data.map((item) => {
+      return {
+        title: capitalizeFirstLetter(item.name),
+        value: item.id,
+      }
+    })
+  })
+  .catch(err => console.log(err))
 }
 
 function editItem(item) {
