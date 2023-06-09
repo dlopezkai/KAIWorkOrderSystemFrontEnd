@@ -574,27 +574,16 @@ function loadLists(presentFolderId) {
 }
 
 function loadStatuses() {
-  // some endpoint will go here
-
-  // simulate axios response
-  let response = [
-    { "status": "init request", "color": "#d3d3d3", "type": "open", "orderindex": 0 },
-    { "status": "in progress", "color": "#7C4DFF", "type": "custom", "orderindex": 1 },
-    { "status": "internal qc", "color": "#02BCD4", "type": "custom", "orderindex": 2 },
-    { "status": "post production", "color": "#AABC1E", "type": "custom", "orderindex": 3 },
-    { "status": "client review", "color": "#EE70C7", "type": "custom","orderindex": 4 },
-    { "status": "on-hold", "color": "#e50000", "type": "custom", "orderindex": 5 },
-    { "status": "scheduled", "color": "#2BAA76", "type": "done", "orderindex": 6 },
-    { "status": "done", "color": "#2ecd6f", "type": "done", "orderindex": 7 },
-    { "status": "complete", "color": "#6bc950", "type": "closed", "orderindex": 8 }
-  ]
-
-  statuses.value = response.map((item) => {
-    return {
-      title: capitalizeFirstLetter(item.status),
-      value: item.status,
-    }
+  axios.get(`${runtimeConfig.public.API_URL}/statuses`)
+  .then((response) => {
+    statuses.value = response.data.data.map((item) => {
+      return {
+        title: capitalizeFirstLetter(item.name),
+        value: item.name,
+      }
+    })
   })
+  .catch(err => console.log(err))
 }
 
 function editItem(item) {
