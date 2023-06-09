@@ -492,7 +492,6 @@ function loadItems() {
 }
 
 function loadTags() {
-  loading.value = true
   axios.get(`${runtimeConfig.public.API_URL}/tags`)
   .then((response) => {
     tags.value = response.data.data.map((item) => {
@@ -505,14 +504,11 @@ function loadTags() {
     // sort tags list
     tags.value = tags.value.sort((a, b) => 
       a.title.localeCompare(b.title))
-
-    loading.value = false
   })
   .catch(err => console.log(err))
 }
 
 function loadMembers() {
-  loading.value = true
   axios.get(`${runtimeConfig.public.API_URL}/members`)
   .then((response) => {
     members.value = response.data.data.map((item) => {
@@ -525,8 +521,6 @@ function loadMembers() {
     // sort members list
     members.value = members.value.sort((a, b) => 
       a.title.localeCompare(b.title))
-
-    loading.value = false
   })
   .catch(err => console.log(err))
 }
