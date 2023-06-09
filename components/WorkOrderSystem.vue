@@ -612,26 +612,7 @@ function editItem(item) {
     // get list of watchers and assign it to the editedItem object
     axios.get(`${runtimeConfig.public.API_URL}/task/` + item.id)
     .then((response) => {
-      // TODO: replace static array with commented out array once Jim's API fix is available
-      // editedItem.value.watchers = response.data.data.assignees
-      editedItem.value.watchers = [
-        {
-          "id": 72138402,
-          "username": "David Lopez",
-          "color": "#5d4037",
-          "initials": "DL",
-          "email": "david.lopez@kauffmaninc.com",
-          "profilePicture": null
-        },
-        {
-          "id": 66042505,
-          "username": "Jim Huber",
-          "email": "jim.huber@kauffmaninc.com",
-          "color": "#304ffe",
-          "initials": "JH",
-          "profilePicture": null
-        }
-      ]
+      editedItem.value.watchers = response.data.data.watchers
     })
     .catch(err => console.log(err))
   } else {
