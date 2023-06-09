@@ -526,6 +526,11 @@ function loadMembers() {
         value: {color: item.color, email: item.email, id: item.id, initials: item.initials, profile: item.profile, username: item.username}
       }
     })
+
+    // sort members list
+    members.value = members.value.sort((a, b) => 
+      a.title.localeCompare(b.title))
+
     loading.value = false
   })
   .catch(err => console.log(err))
@@ -603,6 +608,13 @@ function editItem(item) {
     editedItem.value.priority = (item.priority != null) ? capitalizeFirstLetter(item.priority.priority) : null
     editedItem.value.due_date = convertToDate(item.due_date, "table")
     editedItem.value.time_estimate = millisecondsToHours(item.time_estimate)
+
+    // get list of watchers and assign it to the editedItem object
+    axios.get(`${runtimeConfig.public.API_URL}/task/` + item.id)
+    .then((response) => {
+      editedItem.value.watchers = response.data.data.watchers
+    })
+    .catch(err => console.log(err))
   } else {
     editedItem.value = Object.assign({}, item)
   }
