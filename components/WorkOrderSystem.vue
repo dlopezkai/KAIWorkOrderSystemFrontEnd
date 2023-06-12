@@ -436,7 +436,7 @@ onBeforeMount(() => {
 })
 
 function loadClickUpUserInfo() {
-  axios.get(`${runtimeConfig.public.API_URL}/members/?email=` + authStore.currentUser.username)
+  axios.get(`${runtimeConfig.public.API_URL}/members/?email=` + authStore.currentUser.username.toLowerCase())
   .then((response) => {
     clickUpUserInfo.value = response.data.data[0]
   })
