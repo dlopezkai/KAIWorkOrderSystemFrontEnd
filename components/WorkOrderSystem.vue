@@ -125,7 +125,7 @@
                       </v-col>
 
                       <v-col cols="12" sm="6" md="6">
-                        <v-text-field v-model="editedItem.time_estimate" label="Hours Allocated"></v-text-field>
+                        <v-text-field v-model="editedItem.time_estimate" label="Budgeted Hours"></v-text-field>
                       </v-col>
                       <v-col cols="12" sm="6" md="6">
                         <v-select v-model="editedItem.priority" label="Priority" :items="priorities" item-title="title" item-value="value"></v-select>
