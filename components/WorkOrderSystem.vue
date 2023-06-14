@@ -144,7 +144,7 @@
 
                       <v-col cols="12" sm="12" md="12" class="mt-5">
                         <v-text-field v-model="editedItem.links" label="SharePoint File"></v-text-field>
-                        <v-btn href="https://kauffmaninc.sharepoint.com/" target="_blank" variant="tonal" class="rounded-0" color="#428086">Open SharePoint site</v-btn>
+                        <v-btn href="https://kauffmaninc.sharepoint.com/" target="_blank" variant="tonal" class="rounded" color="#428086">Open SharePoint site</v-btn>
                       </v-col>
 
                       <!-- hide for production -->
@@ -153,12 +153,8 @@
                       </v-col>
 
                       <v-col class="text-right">
-                        <v-btn color="blue-darken-1" variant="text" @click="close">
-                          Cancel
-                        </v-btn>
-                        <v-btn :disabled="submitBtnDisabled" color="blue-darken-1" variant="text" @click="submit">
-                          Submit
-                        </v-btn>
+                        <v-btn variant="plain" @click="close">Cancel</v-btn>
+                        <v-btn :disabled="submitBtnDisabled" variant="tonal" class="rounded" color="#428086" @click="submit">Submit</v-btn>
                       </v-col>
                     </v-row>
                   </v-form>
