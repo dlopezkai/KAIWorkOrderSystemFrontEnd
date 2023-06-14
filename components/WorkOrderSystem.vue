@@ -144,6 +144,7 @@
 
                       <v-col cols="12" sm="12" md="12" class="mt-5">
                         <v-text-field v-model="editedItem.links" label="SharePoint File"></v-text-field>
+                        <v-btn href="https://kauffmaninc.sharepoint.com/" target="_blank" variant="tonal" class="rounded-0" color="#428086">Open SharePoint site</v-btn>
                       </v-col>
 
                       <!-- hide for production -->
