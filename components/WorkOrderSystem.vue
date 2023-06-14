@@ -154,7 +154,7 @@
 
                       <v-col class="text-right">
                         <v-btn variant="plain" @click="close">Cancel</v-btn>
-                        <v-btn :disabled="submitBtnDisabled" variant="tonal" class="rounded" color="#428086" @click="submit">{{ submitBtnText }}</v-btn>
+                        <v-btn :disabled="submitBtnDisabled" class="rounded" color="blue" @click="submit">{{ submitBtnText }}</v-btn>
                       </v-col>
                     </v-row>
                   </v-form>

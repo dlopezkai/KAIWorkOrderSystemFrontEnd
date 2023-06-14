@@ -20,7 +20,7 @@
                     <v-text-field v-model="commentForm.comment_text" class="mr-3 pt-5" placeholder="Comment" outlined clearable></v-text-field>
                 </v-col>
                 <v-col cols="12" sm="2" md="2">
-                    <v-btn dark x-large color="blue" class="mt-7" @click="submitComment">Submit</v-btn>
+                    <v-btn color="blue" class="mt-7 rounded" @click="submitComment">Submit</v-btn>
                 </v-col>
             </v-row>
         </v-form>
