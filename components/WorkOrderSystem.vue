@@ -128,7 +128,7 @@
                         <v-text-field v-model="editedItem.time_estimate" label="Budgeted Hours"></v-text-field>
                       </v-col>
                       <v-col cols="12" sm="6" md="6">
-                        <v-select v-model="editedItem.priority" label="Priority" :items="priorities" item-title="title" item-value="value"></v-select>
+                        <v-select v-model="editedItem.priority" label="Priority" :items="priorities" item-title="title" item-value="value" :hint="priorityMessages" persistent-hint></v-select>
                       </v-col>
 
                       <v-col cols="12" sm="12" md="12">
@@ -366,6 +366,22 @@ const onSubmitMsg = computed(() => {
       return 'There was an issue submitting your form. Please try again.'
     case 'success':
       return 'Work order submitted successfully.'
+    default:
+      return ''
+  }
+})
+
+// computed value for priority SLA messages
+const priorityMessages = computed(() => {
+  switch(editedItem.value.priority) {
+    case 1:
+      return 'SLA: 4 Business hours'
+    case 2:
+      return 'SLA: 1 Business Days for contact'
+    case 3:
+      return 'SLA: 3 Business Days for contact'
+    case 4:
+      return 'SLA: 5 Business Days for contact'
     default:
       return ''
   }
