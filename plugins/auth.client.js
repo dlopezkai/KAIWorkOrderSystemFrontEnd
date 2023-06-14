@@ -5,7 +5,7 @@ export default defineNuxtPlugin(nuxtApp => {
     const authStore = useAuthStore()
     const msalConfig = {
         auth: {
-            clientId: '2a5f2c0d-f6ce-407d-96f3-2a1537e8a289',
+            clientId: 'd5b221ff-ff8c-4e0e-8e4a-896c22726147',
             authority: 'https://login.microsoftonline.com/301cd190-dea8-43b2-be10-137e0bf35332',
             redirectUrl: '/'
         }

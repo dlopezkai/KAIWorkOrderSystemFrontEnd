@@ -1,3 +1,10 @@
+# R&D CODE - DO NOT COMMIT
+This is all test code to try and integrate OneDrive filepicker into the app. 
+
+File picker documentation: https://learn.microsoft.com/en-us/onedrive/developer/controls/file-pickers/?view=odsp-graph-online
+
+Note that Client ID in this branch is NOT the one we are using for production!
+
 # Nuxt 3 Minimal Starter
 
 Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
