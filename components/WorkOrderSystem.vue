@@ -154,7 +154,7 @@
 
                       <v-col class="text-right">
                         <v-btn variant="plain" @click="close">Cancel</v-btn>
-                        <v-btn :disabled="submitBtnDisabled" variant="tonal" class="rounded" color="#428086" @click="submit">Submit</v-btn>
+                        <v-btn :disabled="submitBtnDisabled" variant="tonal" class="rounded" color="#428086" @click="submit">{{ submitBtnText }}</v-btn>
                       </v-col>
                     </v-row>
                   </v-form>
@@ -340,6 +340,11 @@ const defaultItem = ref([
 // computed value for form title
 const formTitle = computed(() => {
   return editedIndex.value === -1 ? 'New Work Order Form' : 'Edit Work Order Form'
+})
+
+// computed value for save/submit button text
+const submitBtnText = computed(() => {
+  return editedIndex.value === -1 ? 'Submit' : 'Save'
 })
 
 // computed value to disable / enable the "Previous page" button
