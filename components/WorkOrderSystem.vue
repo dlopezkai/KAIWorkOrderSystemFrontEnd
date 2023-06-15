@@ -8,8 +8,8 @@
     hide-overlay
   >
     <v-list color="transparent">
-      <v-list-item prepend-icon="mdi-account-box" title="My work orders" @click="filterByUserToggle('user')"></v-list-item>
-      <v-list-item prepend-icon="mdi-account-box-multiple" title=" All work orders" @click="filterByUserToggle('all')"></v-list-item>
+      <v-list-item prepend-icon="mdi-account-box" title="My work orders" @click="toggleShowUsersWorkOrders(true)"></v-list-item>
+      <v-list-item prepend-icon="mdi-account-box-multiple" title=" All work orders" @click="toggleShowUsersWorkOrders(false)"></v-list-item>
       <v-list-item prepend-icon="mdi-format-list-bulleted" title="Not completed" @click="toggleShowCompleted(false)"></v-list-item>
       <v-list-item prepend-icon="mdi-playlist-check" title="Completed" @click="toggleShowCompleted(true)"></v-list-item>
       <v-list-item prepend-icon="mdi-form-select" title="Add New Work Order" @click="editItem(item)"></v-list-item>
@@ -743,14 +743,13 @@ function save() {
 
 }
 
-function filterByUserToggle (type) {
-  if(type === 'user') {
-    filterByUser.value = true
+function toggleShowUsersWorkOrders (value) {
+  if(value != filterByUser.value) {
+    filterByUser.value = (value) ? true : false
+    loadItems()
   } else {
-    filterByUser.value = false
-  } 
-
-  loadItems()
+    return
+  }
 }
 
 function toggleShowCompleted (value) {
