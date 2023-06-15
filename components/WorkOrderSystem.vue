@@ -479,22 +479,18 @@ function loadItems() {
   loading.value = true
   let axiosGetRequestURL = `${runtimeConfig.public.API_URL}/tasks/?page=` + page.value
 
-  // set filters
+  // set assignee filter
   if(filterByUser.value) axiosGetRequestURL = axiosGetRequestURL + `&assignees[]=` + clickUpUserInfo.value.id
 
   // set display completed work order filter
   if(showCompleted.value) {
     axiosGetRequestURL = axiosGetRequestURL + `&statuses[]=complete`
   } else {
-    let statusesArray = []
-    statuses.value.forEach(status => 
-      statusesArray.push(status.value)
-    )
-    statusesArray = statusesArray.filter(e => e !== 'complete')
+    const statusesArray = statuses.value.filter(e => e.value !== 'complete')
 
     let statusQueryStr = ''
     statusesArray.forEach(element => 
-      statusQueryStr += '&statuses[]=' + encodeURIComponent(element)
+      statusQueryStr += '&statuses[]=' + encodeURIComponent(toRaw(element).value)
     )
 
     axiosGetRequestURL = axiosGetRequestURL + statusQueryStr
