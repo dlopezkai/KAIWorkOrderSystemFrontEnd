@@ -128,7 +128,7 @@
                         <v-text-field v-model="editedItem.time_estimate" label="Budgeted Hours"></v-text-field>
                       </v-col>
                       <v-col cols="12" sm="6" md="6">
-                        <v-select v-model="editedItem.priority" label="Priority" :items="priorities" item-title="title" item-value="value"></v-select>
+                        <v-select v-model="editedItem.priority" label="Priority" :items="priorities" item-title="title" item-value="value" :hint="priorityMessages" persistent-hint></v-select>
                       </v-col>
 
                       <v-col cols="12" sm="12" md="12">
@@ -144,6 +144,7 @@
 
                       <v-col cols="12" sm="12" md="12" class="mt-5">
                         <v-text-field v-model="editedItem.links" label="SharePoint File"></v-text-field>
+                        <v-btn href="https://kauffmaninc.sharepoint.com/" target="_blank" variant="tonal" class="rounded" color="#428086">Open SharePoint site</v-btn>
                       </v-col>
 
                       <!-- hide for production -->
@@ -152,12 +153,8 @@
                       </v-col>
 
                       <v-col class="text-right">
-                        <v-btn color="blue-darken-1" variant="text" @click="close">
-                          Cancel
-                        </v-btn>
-                        <v-btn :disabled="submitBtnDisabled" color="blue-darken-1" variant="text" @click="submit">
-                          Submit
-                        </v-btn>
+                        <v-btn variant="plain" @click="close">Cancel</v-btn>
+                        <v-btn :disabled="submitBtnDisabled" class="rounded" color="blue" @click="submit">{{ submitBtnText }}</v-btn>
                       </v-col>
                     </v-row>
                   </v-form>
@@ -345,6 +342,11 @@ const formTitle = computed(() => {
   return editedIndex.value === -1 ? 'New Work Order Form' : 'Edit Work Order Form'
 })
 
+// computed value for save/submit button text
+const submitBtnText = computed(() => {
+  return editedIndex.value === -1 ? 'Submit' : 'Save'
+})
+
 // computed value to disable / enable the "Previous page" button
 const previousPageBtnDisabled = computed(() => {
   return (loading.value) ? true : (page.value === 0) ? true : false
@@ -366,6 +368,22 @@ const onSubmitMsg = computed(() => {
       return 'There was an issue submitting your form. Please try again.'
     case 'success':
       return 'Work order submitted successfully.'
+    default:
+      return ''
+  }
+})
+
+// computed value for priority SLA messages
+const priorityMessages = computed(() => {
+  switch(editedItem.value.priority) {
+    case 1:
+      return 'SLA: 4 Business hours'
+    case 2:
+      return 'SLA: 1 Business Days for contact'
+    case 3:
+      return 'SLA: 3 Business Days for contact'
+    case 4:
+      return 'SLA: 5 Business Days for contact'
     default:
       return ''
   }
