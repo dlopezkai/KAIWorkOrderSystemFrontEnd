@@ -175,6 +175,10 @@
         <!-- </v-toolbar> -->
       </template>
 
+      <template v-slot:item.creator="{ item }">
+        {{ item.raw.creator.username }}
+      </template>
+
       <template v-slot:item.assignees="{ item }">
         <v-chip v-for="assignee in item.raw.assignees">{{ (!assignee.username) ? assignee.email : assignee.username }}</v-chip>
       </template>
@@ -508,7 +512,7 @@ function loadItems() {
     data.value = response.data.data.map((item) => {
       return {
         assignees: item.assignees,
-        creator: item.creator.username,
+        creator: item.creator,
         list: item.list.id,
         description: item.description,
         due_date: item.due_date,
