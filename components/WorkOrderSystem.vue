@@ -486,6 +486,11 @@ function loadItems() {
   if(showCompleted.value) {
     axiosGetRequestURL = axiosGetRequestURL + `&statuses[]=complete`
   } else {
+    /* 
+      since the API doesn't have the capability to accept a NOT operator in the query string,
+      we will need to filter out status of "complete" here.
+      if/when it does, then mimic assignee filter logic.
+    */
     const statusesArray = statuses.value.filter(e => e.value !== 'complete')
 
     let statusQueryStr = ''
