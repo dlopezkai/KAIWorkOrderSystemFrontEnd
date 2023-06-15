@@ -482,8 +482,23 @@ function loadItems() {
   // set filters
   if(filterByUser.value) axiosGetRequestURL = axiosGetRequestURL + `&assignees[]=` + clickUpUserInfo.value.id
 
-  // TODO: construct an array of all available statuses except complete
-  // if(showCompleted.value) axiosGetRequestURL = axiosGetRequestURL + `&statuses[]=complete`
+  // set display completed work order filter
+  if(showCompleted.value) {
+    axiosGetRequestURL = axiosGetRequestURL + `&statuses[]=complete`
+  } else {
+    let statusesArray = []
+    statuses.value.forEach(status => 
+      statusesArray.push(status.value)
+    )
+    statusesArray = statusesArray.filter(e => e !== 'complete')
+
+    let statusQueryStr = ''
+    statusesArray.forEach(element => 
+      statusQueryStr += '&statuses[]=' + encodeURIComponent(element)
+    )
+
+    axiosGetRequestURL = axiosGetRequestURL + statusQueryStr
+  }
 
   axios.get(axiosGetRequestURL)
   .then((response) => {
@@ -740,7 +755,7 @@ function filterByUserToggle (type) {
 function toggleShowCompleted (value) {
   if(value != showCompleted.value) {
     showCompleted.value = (value) ? true : false
-    // loadItems()
+    loadItems()
   } else {
     return
   }
