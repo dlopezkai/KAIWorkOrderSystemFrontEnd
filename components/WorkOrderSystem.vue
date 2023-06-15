@@ -175,6 +175,10 @@
         <!-- </v-toolbar> -->
       </template>
 
+      <template v-slot:item.creator="{ item }">
+        {{ item.raw.creator.username }}
+      </template>
+
       <template v-slot:item.assignees="{ item }">
         <v-chip v-for="assignee in item.raw.assignees">{{ (!assignee.username) ? assignee.email : assignee.username }}</v-chip>
       </template>
@@ -265,6 +269,7 @@ const priorities = ref([])
 const headers = [
   { title: 'Name', key: 'name', align: 'start', width: '25%' },
   { title: 'Project', key: 'project', align: 'start', sortable: false },
+  { title: 'Created By', key: 'creator', align: 'start', sortable: false },
   { title: 'Assignee(s)', key: 'assignees', align: 'start', sortable: false },
   { title: 'Type', key: 'tags', align: 'start', sortable: false },
   { title: 'Status', key: 'status', align: 'start', sortable: false },
@@ -507,6 +512,7 @@ function loadItems() {
     data.value = response.data.data.map((item) => {
       return {
         assignees: item.assignees,
+        creator: item.creator,
         list: item.list.id,
         description: item.description,
         due_date: item.due_date,
@@ -637,7 +643,7 @@ function editItem(item) {
     loadLists(item.folder)
     editedItem.value = Object.assign({}, item)
     editedItem.value.priority = (item.priority != null) ? capitalizeFirstLetter(item.priority.priority) : null
-    editedItem.value.due_date = convertToDate(item.due_date, "table")
+    editedItem.value.due_date = (item.due_date != null) ? convertToDate(item.due_date, "table") : null
     editedItem.value.time_estimate = millisecondsToHours(item.time_estimate)
 
     // get list of watchers and assign it to the editedItem object
