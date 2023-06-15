@@ -10,6 +10,8 @@
     <v-list color="transparent">
       <v-list-item prepend-icon="mdi-account-box" title="My work orders" @click="filterByUserToggle('user')"></v-list-item>
       <v-list-item prepend-icon="mdi-account-box-multiple" title=" All work orders" @click="filterByUserToggle('all')"></v-list-item>
+      <v-list-item prepend-icon="mdi-format-list-bulleted" title="Not completed" @click="toggleShowCompleted(false)"></v-list-item>
+      <v-list-item prepend-icon="mdi-playlist-check" title="Completed" @click="toggleShowCompleted(true)"></v-list-item>
       <v-list-item prepend-icon="mdi-form-select" title="Add New Work Order" @click="editItem(item)"></v-list-item>
     </v-list>
   </v-navigation-drawer>
@@ -244,6 +246,7 @@ const editedIndex = ref(-1)
 const data = ref([])
 const search = ref('')
 const filterByUser = ref(true)
+const showCompleted = ref(false)
 const drawer = ref(false)
 const form = ref(null)
 const tags = ref([])
@@ -478,6 +481,9 @@ function loadItems() {
 
   // set filters
   if(filterByUser.value) axiosGetRequestURL = axiosGetRequestURL + `&assignees[]=` + clickUpUserInfo.value.id
+
+  // TODO: construct an array of all available statuses except complete
+  // if(showCompleted.value) axiosGetRequestURL = axiosGetRequestURL + `&statuses[]=complete`
 
   axios.get(axiosGetRequestURL)
   .then((response) => {
@@ -729,6 +735,15 @@ function filterByUserToggle (type) {
   } 
 
   loadItems()
+}
+
+function toggleShowCompleted (value) {
+  if(value != showCompleted.value) {
+    showCompleted.value = (value) ? true : false
+    // loadItems()
+  } else {
+    return
+  }
 }
 
 function incrementPage() {
