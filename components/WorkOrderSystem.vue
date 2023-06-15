@@ -643,7 +643,7 @@ function editItem(item) {
     loadLists(item.folder)
     editedItem.value = Object.assign({}, item)
     editedItem.value.priority = (item.priority != null) ? capitalizeFirstLetter(item.priority.priority) : null
-    editedItem.value.due_date = convertToDate(item.due_date, "table")
+    editedItem.value.due_date = (item.due_date != null) ? convertToDate(item.due_date, "table") : null
     editedItem.value.time_estimate = millisecondsToHours(item.time_estimate)
 
     // get list of watchers and assign it to the editedItem object
