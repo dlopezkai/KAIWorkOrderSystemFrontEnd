@@ -265,6 +265,7 @@ const priorities = ref([])
 const headers = [
   { title: 'Name', key: 'name', align: 'start', width: '25%' },
   { title: 'Project', key: 'project', align: 'start', sortable: false },
+  { title: 'Created By', key: 'creator', align: 'start', sortable: false },
   { title: 'Assignee(s)', key: 'assignees', align: 'start', sortable: false },
   { title: 'Type', key: 'tags', align: 'start', sortable: false },
   { title: 'Status', key: 'status', align: 'start', sortable: false },
@@ -507,6 +508,7 @@ function loadItems() {
     data.value = response.data.data.map((item) => {
       return {
         assignees: item.assignees,
+        creator: item.creator.username,
         list: item.list.id,
         description: item.description,
         due_date: item.due_date,
