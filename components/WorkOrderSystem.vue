@@ -8,8 +8,10 @@
     hide-overlay
   >
     <v-list color="transparent">
-      <v-list-item prepend-icon="mdi-account-box" title="My work orders" @click="filterByUserToggle('user')"></v-list-item>
-      <v-list-item prepend-icon="mdi-account-box-multiple" title=" All work orders" @click="filterByUserToggle('all')"></v-list-item>
+      <v-list-item prepend-icon="mdi-account-box" title="My work orders" @click="toggleShowUsersWorkOrders(true)"></v-list-item>
+      <v-list-item prepend-icon="mdi-account-box-multiple" title=" All work orders" @click="toggleShowUsersWorkOrders(false)"></v-list-item>
+      <v-list-item prepend-icon="mdi-format-list-bulleted" title="Not completed" @click="toggleShowCompleted(false)"></v-list-item>
+      <v-list-item prepend-icon="mdi-playlist-check" title="Completed" @click="toggleShowCompleted(true)"></v-list-item>
       <v-list-item prepend-icon="mdi-form-select" title="Add New Work Order" @click="editItem(item)"></v-list-item>
     </v-list>
   </v-navigation-drawer>
@@ -244,6 +246,7 @@ const editedIndex = ref(-1)
 const data = ref([])
 const search = ref('')
 const filterByUser = ref(true)
+const showCompleted = ref(false)
 const drawer = ref(false)
 const form = ref(null)
 const tags = ref([])
@@ -476,8 +479,27 @@ function loadItems() {
   loading.value = true
   let axiosGetRequestURL = `${runtimeConfig.public.API_URL}/tasks/?page=` + page.value
 
-  // set filters
+  // set assignee filter
   if(filterByUser.value) axiosGetRequestURL = axiosGetRequestURL + `&assignees[]=` + clickUpUserInfo.value.id
+
+  // set display completed work order filter
+  if(showCompleted.value) {
+    axiosGetRequestURL = axiosGetRequestURL + `&statuses[]=complete`
+  } else {
+    /* 
+      since the API doesn't have the capability to accept a NOT operator in the query string,
+      we will need to filter out status of "complete" here.
+      if/when it does, then mimic assignee filter logic.
+    */
+    const statusesArray = statuses.value.filter(e => e.value !== 'complete')
+
+    let statusQueryStr = ''
+    statusesArray.forEach(element => 
+      statusQueryStr += '&statuses[]=' + encodeURIComponent(toRaw(element).value)
+    )
+
+    axiosGetRequestURL = axiosGetRequestURL + statusQueryStr
+  }
 
   axios.get(axiosGetRequestURL)
   .then((response) => {
@@ -721,14 +743,22 @@ function save() {
 
 }
 
-function filterByUserToggle (type) {
-  if(type === 'user') {
-    filterByUser.value = true
+function toggleShowUsersWorkOrders (value) {
+  if(value != filterByUser.value) {
+    filterByUser.value = (value) ? true : false
+    loadItems()
   } else {
-    filterByUser.value = false
-  } 
+    return
+  }
+}
 
-  loadItems()
+function toggleShowCompleted (value) {
+  if(value != showCompleted.value) {
+    showCompleted.value = (value) ? true : false
+    loadItems()
+  } else {
+    return
+  }
 }
 
 function incrementPage() {
