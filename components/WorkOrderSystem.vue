@@ -529,7 +529,9 @@ function loadItems() {
           case 'status':
             return sortOrder === 'desc' ? b.status.status.localeCompare(a.status.status) : a.status.status.localeCompare(b.status.status)
           case 'priority':
-            return sortOrder === 'desc' ? b.priority.localeCompare(a.priority) : a.priority.localeCompare(b.priority)
+            a = (a.priority) ? a.priority.priority : ''
+            b = (b.priority) ? b.priority.priority : ''
+            return sortOrder === 'desc' ? b.localeCompare(a) : a.localeCompare(b)
           case 'due_date':
             return sortOrder === 'desc' ? b.due_date - a.due_date : a.due_date - b.due_date
           default:
