@@ -245,7 +245,7 @@ const itemsPerPage = ref(100)
 const loading = ref(true)
 const totalItems = ref(0)
 const showFooter = ref(false)
-const page = ref(0)
+const page = ref(1)
 const lastPage = ref(false)
 const editedIndex = ref(-1)
 const data = ref([])
@@ -267,7 +267,7 @@ const submitErrorInfo = ref('')
 const statuses = ref([])
 const priorities = ref([])
 
-const sortBy = ref([{key: 'name', order: 'asc'}])
+const sortBy = ref([])
 const headers = [
   { title: 'Name', key: 'name', align: 'start', width: '25%' },
   { title: 'Project', key: 'project', align: 'start', sortable: false },
@@ -359,7 +359,7 @@ const submitBtnText = computed(() => {
 
 // computed value to disable / enable the "Previous page" button
 const previousPageBtnDisabled = computed(() => {
-  return (loading.value) ? true : (page.value === 0) ? true : false
+  return (loading.value) ? true : (page.value === 1) ? true : false
 })
 
 // computed value to disable / enable the "Next page" button
@@ -484,7 +484,7 @@ onMounted(() => {
 // function loadItems({ page }) {
 function loadItems() {
   loading.value = true
-  let axiosGetRequestURL = `${runtimeConfig.public.API_URL}/tasks/?page=` + page.value
+  let axiosGetRequestURL = `${runtimeConfig.public.API_URL}/tasks/?page=` + (page.value - 1)
 
   // set assignee filter
   if(filterByUser.value) axiosGetRequestURL = axiosGetRequestURL + `&assignees[]=` + clickUpUserInfo.value.id
