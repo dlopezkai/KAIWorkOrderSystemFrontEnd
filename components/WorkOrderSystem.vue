@@ -271,11 +271,11 @@ const sortBy = ref([])
 const headers = [
   { title: 'Name', key: 'name', align: 'start', width: '25%' },
   { title: 'Project', key: 'project', align: 'start', sortable: false },
-  { title: 'Created By', key: 'creator', align: 'start', sortable: false },
+  { title: 'Created By', key: 'creator', align: 'start' },
   { title: 'Assignee(s)', key: 'assignees', align: 'start', sortable: false },
   { title: 'Type', key: 'tags', align: 'start', sortable: false },
-  { title: 'Status', key: 'status', align: 'start', sortable: false },
-  { title: 'Priority', key: 'priority', align: 'start', sortable: false },
+  { title: 'Status', key: 'status', align: 'start' },
+  { title: 'Priority', key: 'priority', align: 'start' },
   { title: 'Due Date', key: 'due_date', align: 'start' },
   // { title: 'Actions', key: 'actions', align: 'end', sortable: false },
 ]
@@ -517,8 +517,24 @@ function loadItems() {
       if(sortBy.value.length) {
         const sortKey = sortBy.value[0].key
         const sortOrder = sortBy.value[0].order
-        if(sortKey === 'name') return sortOrder === 'desc' ? b.name.localeCompare(a.name) : a.name.localeCompare(b.name)
-        if(sortKey === 'due_date') return sortOrder === 'desc' ? b.due_date - a.due_date : a.due_date - b.due_date
+        // if(sortKey === 'name') return sortOrder === 'desc' ? b.name.localeCompare(a.name) : a.name.localeCompare(b.name)
+        // if(sortKey === 'due_date') return sortOrder === 'desc' ? b.due_date - a.due_date : a.due_date - b.due_date
+
+        // TODO: check for nulls in localeCompare method (creator and priority)
+        switch (sortKey) {
+          case 'name':
+            return sortOrder === 'desc' ? b.name.localeCompare(a.name) : a.name.localeCompare(b.name)
+          case 'creator':
+            return sortOrder === 'desc' ? b.creator.localeCompare(a.creator) : a.creator.localeCompare(b.creator)
+          case 'status':
+            return sortOrder === 'desc' ? b.status.status.localeCompare(a.status.status) : a.status.status.localeCompare(b.status.status)
+          case 'priority':
+            return sortOrder === 'desc' ? b.priority.localeCompare(a.priority) : a.priority.localeCompare(b.priority)
+          case 'due_date':
+            return sortOrder === 'desc' ? b.due_date - a.due_date : a.due_date - b.due_date
+          default:
+            break
+        }
       }
     })
     .map((item) => {
