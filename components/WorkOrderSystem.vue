@@ -39,6 +39,7 @@
     <!-- <div v-else>  -->
     <v-data-table-server
       v-model:page="page"
+      v-model:sort-by="sortBy"
       :headers="headers" 
       :items-length="totalItems"
       :items="data" 
@@ -266,6 +267,7 @@ const submitErrorInfo = ref('')
 const statuses = ref([])
 const priorities = ref([])
 
+const sortBy = ref([{key: 'name', order: 'asc'}])
 const headers = [
   { title: 'Name', key: 'name', align: 'start', width: '25%' },
   { title: 'Project', key: 'project', align: 'start', sortable: false },
@@ -274,7 +276,7 @@ const headers = [
   { title: 'Type', key: 'tags', align: 'start', sortable: false },
   { title: 'Status', key: 'status', align: 'start', sortable: false },
   { title: 'Priority', key: 'priority', align: 'start', sortable: false },
-  { title: 'Due Date', key: 'due_date', align: 'start', sortable: false },
+  { title: 'Due Date', key: 'due_date', align: 'start' },
   // { title: 'Actions', key: 'actions', align: 'end', sortable: false },
 ]
 
@@ -509,7 +511,17 @@ function loadItems() {
   axios.get(axiosGetRequestURL)
   .then((response) => {
     // data.value = response.data.data.slice(0, 10).map((item) => {
-    data.value = response.data.data.map((item) => {
+    data.value = response.data.data
+    .sort((a, b) => {
+      // return b.name.localeCompare(a.name) // DON'T DELETE THIS
+      if(sortBy.value.length) {
+        const sortKey = sortBy.value[0].key
+        const sortOrder = sortBy.value[0].order
+        if(sortKey === 'name') return sortOrder === 'desc' ? b.name.localeCompare(a.name) : a.name.localeCompare(b.name)
+        if(sortKey === 'due_date') return sortOrder === 'desc' ? b.due_date - a.due_date : a.due_date - b.due_date
+      }
+    })
+    .map((item) => {
       return {
         assignees: item.assignees,
         creator: item.creator,
