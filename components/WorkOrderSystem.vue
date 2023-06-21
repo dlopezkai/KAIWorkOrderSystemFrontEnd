@@ -47,7 +47,6 @@
       style="max-height: 80vh"
       density="comfortable"
       :search="search"
-      @click:row="(pointerEvent, {item}) => editItem(item.raw)"
       @update:options="loadItems"
     >
       <template v-slot:top>
@@ -79,7 +78,8 @@
               </v-container>
             </v-overlay>
 
-            <v-card>
+            <form-component :clickUpUserInfo="clickUpUserInfo"></form-component>
+            <!-- <v-card>
               <v-card-title>
                 <span class="text-h5">{{ formTitle }}</span>
               </v-card-title>
@@ -149,7 +149,6 @@
                         <v-btn href="https://kauffmaninc.sharepoint.com/" target="_blank" variant="tonal" class="rounded" color="#428086">Open SharePoint site</v-btn>
                       </v-col>
 
-                      <!-- hide for production -->
                       <v-col v-if="editedItem.url" cols="12" sm="12" md="12">
                         <v-btn :href="editedItem.url" target="_blank" variant="text">ClickUp reference link</v-btn>
                       </v-col>
@@ -163,14 +162,13 @@
                 </v-window-item>
 
                 <v-window-item v-if="editedIndex > -1" value="two">
-                  <!-- <comments-comp taskid=866a8z405 :clickUpUserInfo="clickUpUserInfo"></comments-comp> -->
                   <comments-comp :taskid="editedItem.id" :clickUpUserInfo="clickUpUserInfo"></comments-comp>
                 </v-window-item>
 
               </v-window>
 
               </v-card-text>
-            </v-card>
+            </v-card> -->
           </v-dialog>
         <!-- </v-toolbar> -->
       </template>
@@ -214,6 +212,7 @@
         <!-- <v-icon size="small" class="me-2" @click="editItem(item.raw)">
           mdi-pencil
         </v-icon> -->
+        <NuxtLink :to="{ path: '/workorders/' + item.raw.id }" target="_blank">Edit work order</NuxtLink>
       </template>
 
       <template v-slot:bottom v-if="!showFooter"></template>
@@ -275,7 +274,7 @@ const headers = [
   { title: 'Status', key: 'status', align: 'start', sortable: false },
   { title: 'Priority', key: 'priority', align: 'start', sortable: false },
   { title: 'Due Date', key: 'due_date', align: 'start', sortable: false },
-  // { title: 'Actions', key: 'actions', align: 'end', sortable: false },
+  { title: 'Actions', key: 'actions', align: 'end', sortable: false },
 ]
 
 const editedItem = ref([
