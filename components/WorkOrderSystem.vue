@@ -267,7 +267,7 @@ const statuses = ref([])
 const priorities = ref([])
 
 const headers = [
-  { title: 'Name', key: 'name', align: 'start', width: '25%' },
+  { title: 'Name', key: 'name', align: 'start', sortable: false, width: '25%' },
   { title: 'Project', key: 'project', align: 'start', sortable: false },
   { title: 'Created By', key: 'creator', align: 'start', sortable: false },
   { title: 'Assignee(s)', key: 'assignees', align: 'start', sortable: false },
