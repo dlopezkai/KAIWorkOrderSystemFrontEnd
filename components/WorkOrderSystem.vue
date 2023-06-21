@@ -525,7 +525,7 @@ function loadItems() {
           case 'name':
             return sortOrder === 'desc' ? b.name.localeCompare(a.name) : a.name.localeCompare(b.name)
           case 'creator':
-            return sortOrder === 'desc' ? b.creator.localeCompare(a.creator) : a.creator.localeCompare(b.creator)
+            return sortOrder === 'desc' ? new Intl.Collator('en').compare(b.creator, a.creator) : new Intl.Collator('en').compare(a.creator, b.creator)
           case 'status':
             return sortOrder === 'desc' ? b.status.status.localeCompare(a.status.status) : a.status.status.localeCompare(b.status.status)
           case 'priority':
