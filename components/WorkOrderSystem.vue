@@ -385,7 +385,7 @@ const onSubmitMsg = computed(() => {
 const priorityMessages = computed(() => {
   switch(editedItem.value.priority) {
     case 1:
-      return 'SLA: 4 Business hours test23'
+      return 'SLA: 4 Business hours'
     case 2:
       return 'SLA: 1 Business Days for contact'
     case 3:
