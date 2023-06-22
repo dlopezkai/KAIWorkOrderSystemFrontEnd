@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="!loading">
     <v-overlay v-model="submitStatusOverlay" class="align-center justify-center" persistent>
       <v-container style="height: 400px;">
         <v-row class="fill-height" align-content="center" justify="center">
@@ -119,6 +119,7 @@ import CommentsComp from './CommentsComp.vue';
 import { convertToDate, dateToISOStr, hoursToMilliseconds } from '~/helpers/datetimeConversions.js';
 import { capitalizeFirstLetter } from '~/helpers/capitalizeFirstLetter.js';
 
+const loading = ref(false)
 const runtimeConfig = useRuntimeConfig()
 const tags = ref([])
 const members = ref([])
@@ -267,6 +268,7 @@ onMounted(() => {
 async function loadItem() {
   // convert time estimate (milliseconds) to hours if not a new work order
   if (props.recordId) {
+    loading.value = true
     await axios.get(`${runtimeConfig.public.API_URL}/task/` + props.recordId)
     .then((response) => {
       editedItem.value = Object.assign({}, response.data.data)
@@ -290,6 +292,8 @@ async function loadItem() {
       folderIDTemp.value = editedItem.value.folder.id
 
       loadLists(editedItem.value.folder.id)
+
+      loading.value = false
     })
     .catch(err => console.log(err))
 
