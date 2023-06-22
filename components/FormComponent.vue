@@ -478,6 +478,7 @@ function save() {
       if (response.status === 200) {
         if (response.data.response_code === 200) {
           submitStatus.value = 'success'
+          submitErrorInfo.value = 'Work order URL: ' + window.location.origin + '/workorders?id=' + response.data.data.id
         } else {
           submitStatus.value = 'internal_api_error'
           submitErrorInfo.value = data
