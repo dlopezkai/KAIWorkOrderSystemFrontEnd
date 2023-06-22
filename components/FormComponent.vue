@@ -1,6 +1,5 @@
 <template>
   <div>
-
     <v-overlay v-model="submitStatusOverlay" class="align-center justify-center" persistent>
       <v-container style="height: 400px;">
         <v-row class="fill-height" align-content="center" justify="center">

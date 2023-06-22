@@ -61,7 +61,7 @@
               </v-col>
             </template> -->
 
-            <v-overlay v-model="submitStatusOverlay" class="align-center justify-center" persistent>
+            <!-- <v-overlay v-model="submitStatusOverlay" class="align-center justify-center" persistent>
               <v-container style="height: 400px;">
                 <v-row class="fill-height" align-content="center" justify="center">
                   <v-col class="text-subtitle-1 text-center" cols="12">
@@ -76,7 +76,7 @@
                   </v-col>
                 </v-row>
               </v-container>
-            </v-overlay>
+            </v-overlay> -->
 
             <form-component :clickUpUserInfo="clickUpUserInfo" @close="close()"></form-component>
             <!-- <v-card>
@@ -245,23 +245,23 @@ const totalItems = ref(0)
 const showFooter = ref(false)
 const page = ref(0)
 const lastPage = ref(false)
-const editedIndex = ref(-1)
+// const editedIndex = ref(-1)
 const data = ref([])
 const search = ref('')
 const filterByUser = ref(true)
 const showCompleted = ref(false)
 const drawer = ref(false)
-const form = ref(null)
+// const form = ref(null)
 // const tags = ref([])
 // const members = ref([])
 // const folders = ref([])
 // const lists = ref([])
 // const formTab = ref(null)
 const clickUpUserInfo = ref()
-const submitBtnDisabled = ref(false)
-const submitStatusOverlay = ref(false)
-const submitStatus = ref('')
-const submitErrorInfo = ref('')
+// const submitBtnDisabled = ref(false)
+// const submitStatusOverlay = ref(false)
+// const submitStatus = ref('')
+// const submitErrorInfo = ref('')
 const statuses = ref([])
 // const priorities = ref([])
 
@@ -277,45 +277,45 @@ const headers = [
   { title: 'Actions', key: 'actions', align: 'end', sortable: false },
 ]
 
-const editedItem = ref([
-  {
-    assignees: '',
-    creator: '',
-    description: '',
-    due_date: '',
-    folder: '',
-    id: '',
-    links: '',
-    list: '',
-    name: '',
-    priority: '',
-    project: '',
-    status: '',
-    tags: '',
-    time_estimate: '',
-    watchers: ''
-  },
-])
+// const editedItem = ref([
+//   {
+//     assignees: '',
+//     creator: '',
+//     description: '',
+//     due_date: '',
+//     folder: '',
+//     id: '',
+//     links: '',
+//     list: '',
+//     name: '',
+//     priority: '',
+//     project: '',
+//     status: '',
+//     tags: '',
+//     time_estimate: '',
+//     watchers: ''
+//   },
+// ])
 
-const defaultItem = ref([
-  {
-    assignees: '',
-    creator: '',
-    description: '',
-    due_date: '',
-    folder: '',
-    id: '',
-    links: '',
-    list: '',
-    name: '',
-    priority: '',
-    project: '',
-    status: '',
-    tags: '',
-    time_estimate: '',
-    watchers: '',
-  },
-])
+// const defaultItem = ref([
+//   {
+//     assignees: '',
+//     creator: '',
+//     description: '',
+//     due_date: '',
+//     folder: '',
+//     id: '',
+//     links: '',
+//     list: '',
+//     name: '',
+//     priority: '',
+//     project: '',
+//     status: '',
+//     tags: '',
+//     time_estimate: '',
+//     watchers: '',
+//   },
+// ])
 
 // no longer used, but keep for reference just in case...
 // const FakeAPI = {
@@ -449,12 +449,12 @@ const rules =
 // }
 
 // form submit process
-async function submit() {
-  const { valid } = await form.value.validate()
-  if (valid) {
-    save()
-  }
-}
+// async function submit() {
+//   const { valid } = await form.value.validate()
+//   if (valid) {
+//     save()
+//   }
+// }
 
 onBeforeMount(() => {
   loadClickUpUserInfo()
@@ -660,93 +660,93 @@ function editItem(item) {
 
 function close() {
   dialog.value = false
-  nextTick(() => {
-    editedItem.value = Object.assign({}, defaultItem.value)
-    editedIndex.value = -1
-  })
+  // nextTick(() => {
+  //   editedItem.value = Object.assign({}, defaultItem.value)
+  //   editedIndex.value = -1
+  // })
 }
 
-function resetSubmitStatus() {
-  if(submitStatus.value === 'submitting') {
-    close()
-  }
+// function resetSubmitStatus() {
+//   if(submitStatus.value === 'submitting') {
+//     close()
+//   }
 
-  if(submitStatus.value === 'success') {
-    close()
-    loadItems()
-  }
+//   if(submitStatus.value === 'success') {
+//     close()
+//     loadItems()
+//   }
 
-  submitStatus.value = ''
-  submitStatusOverlay.value = false
-  submitBtnDisabled.value = false
-}
+//   submitStatus.value = ''
+//   submitStatusOverlay.value = false
+//   submitBtnDisabled.value = false
+// }
 
-function save() {
-  submitErrorInfo.value = ''
-  submitStatus.value = 'submitting'
-  submitStatusOverlay.value = true
-  submitBtnDisabled.value = true
+// function save() {
+//   submitErrorInfo.value = ''
+//   submitStatus.value = 'submitting'
+//   submitStatusOverlay.value = true
+//   submitBtnDisabled.value = true
 
-  // create a data object that will be passed to API to prevent user from seeing conversions
-  let data = Object.assign({}, editedItem.value)
+//   // create a data object that will be passed to API to prevent user from seeing conversions
+//   let data = Object.assign({}, editedItem.value)
 
-  // since API needs IDs of assignees, pull the assignee(s) ID(s) and store in temp array
-  let assigneeids = []
+//   // since API needs IDs of assignees, pull the assignee(s) ID(s) and store in temp array
+//   let assigneeids = []
 
-  if(data.assignees) {
-    data.assignees.forEach(element => {
-      assigneeids.push(element.id)
-    })
-    data.assignees = assigneeids
-  }
+//   if(data.assignees) {
+//     data.assignees.forEach(element => {
+//       assigneeids.push(element.id)
+//     })
+//     data.assignees = assigneeids
+//   }
 
-  // since API needs IDs of watchers, pull the watcher(s) ID(s) and store in temp array
-  // let watcherids = []
+//   // since API needs IDs of watchers, pull the watcher(s) ID(s) and store in temp array
+//   // let watcherids = []
 
-  // if(data.watchers) {
-  //   data.watchers.forEach(element => {
-  //     watcherids.push(element.id)
-  //   })
-  //   data.watchers = watcherids
-  // }
+//   // if(data.watchers) {
+//   //   data.watchers.forEach(element => {
+//   //     watcherids.push(element.id)
+//   //   })
+//   //   data.watchers = watcherids
+//   // }
 
-  // convert time estimate (hours) to milliseconds
-  if(data.time_estimate) data.time_estimate = hoursToMilliseconds(data.time_estimate)
+//   // convert time estimate (hours) to milliseconds
+//   if(data.time_estimate) data.time_estimate = hoursToMilliseconds(data.time_estimate)
 
-  // FOR TEST PURPOSES ONLY!! - REMOVE ME LATER
-  data.list = 901001092394
+//   // FOR TEST PURPOSES ONLY!! - REMOVE ME LATER
+//   data.list = 901001092394
 
-  if (editedIndex.value === -1) {
-    data.creator = clickUpUserInfo.value.id
+//   if (editedIndex.value === -1) {
+//     data.creator = clickUpUserInfo.value.id
 
-    axios.post(`${runtimeConfig.public.API_URL}/list/` + data.list + `/task`, data, {
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      }
-    })
-    .then(function (response) {
-      if (response.status === 200) {
-        if (response.data.response_code === 200) {
-          submitStatus.value = 'success'
-        } else {
-          submitStatus.value = 'internal_api_error'
-          submitErrorInfo.value = data
-          console.log(response)
-          return
-        }
-      }
-    })
-    .catch(function (error) {
-      submitStatus.value = 'connection_failure'
-      submitErrorInfo.value = error
-      console.log(error)
-    })
+//     axios.post(`${runtimeConfig.public.API_URL}/list/` + data.list + `/task`, data, {
+//       headers: {
+//         'Content-Type': 'application/x-www-form-urlencoded'
+//       }
+//     })
+//     .then(function (response) {
+//       if (response.status === 200) {
+//         if (response.data.response_code === 200) {
+//           submitStatus.value = 'success'
+//         } else {
+//           submitStatus.value = 'internal_api_error'
+//           submitErrorInfo.value = data
+//           console.log(response)
+//           return
+//         }
+//       }
+//     })
+//     .catch(function (error) {
+//       submitStatus.value = 'connection_failure'
+//       submitErrorInfo.value = error
+//       console.log(error)
+//     })
 
-  } else {
-    // perform PUT request here
-  }
+//   } else {
+//     // perform PUT request here
+//   }
 
-}
+// }
 
 function toggleShowUsersWorkOrders (value) {
   if(value != filterByUser.value) {
@@ -811,21 +811,21 @@ function getDueDateColor(rawDateTime, status) {
   return color
 }
 
-function millisecondsToHours(value) {
-  if(value) {
-    const hours = (value / 1000 / 60 / 60).toFixed(2)
+// function millisecondsToHours(value) {
+//   if(value) {
+//     const hours = (value / 1000 / 60 / 60).toFixed(2)
 
-    return hours
-  }
-}
+//     return hours
+//   }
+// }
 
-function convertToYyyymmddFormat(value) {
-  return value.getFullYear() 
-    + "-" 
-    + ((value.getMonth()+1).length != 2 ? "0" + (value.getMonth() + 1) : (value.getMonth()+1)) 
-    + "-" 
-    + (value.getDate().length != 2 ? "0" + value.getDate() : value.getDate());
-}
+// function convertToYyyymmddFormat(value) {
+//   return value.getFullYear() 
+//     + "-" 
+//     + ((value.getMonth()+1).length != 2 ? "0" + (value.getMonth() + 1) : (value.getMonth()+1)) 
+//     + "-" 
+//     + (value.getDate().length != 2 ? "0" + value.getDate() : value.getDate());
+// }
 
 </script>
 
