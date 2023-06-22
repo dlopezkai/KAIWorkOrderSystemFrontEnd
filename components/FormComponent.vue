@@ -1,5 +1,8 @@
 <template>
-  <div v-if="!loading">
+  <div v-if="loading">
+    Retrieving data ...
+  </div>
+  <div v-else>
     <v-overlay v-model="submitStatusOverlay" class="align-center justify-center" persistent>
       <v-container style="height: 400px;">
         <v-row class="fill-height" align-content="center" justify="center">
@@ -119,7 +122,7 @@ import CommentsComp from './CommentsComp.vue';
 import { convertToDate, dateToISOStr, hoursToMilliseconds } from '~/helpers/datetimeConversions.js';
 import { capitalizeFirstLetter } from '~/helpers/capitalizeFirstLetter.js';
 
-const loading = ref(false)
+const loading = ref(true)
 const runtimeConfig = useRuntimeConfig()
 const tags = ref([])
 const members = ref([])
