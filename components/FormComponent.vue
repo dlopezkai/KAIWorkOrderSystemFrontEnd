@@ -135,8 +135,14 @@ const editedItem = ref([
   },
 ])
 
+// computed value for form title
 const formTitle = computed(() => {
   return (!props.recordId) ? 'New Work Order Form' : 'Edit Work Order Form'
+})
+
+// computed value for save/submit button text
+const submitBtnText = computed(() => {
+  return (!props.recordId) ? 'Submit' : 'Save'
 })
 
 // form field validation rules
