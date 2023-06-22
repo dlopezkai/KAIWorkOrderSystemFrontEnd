@@ -247,8 +247,10 @@ async function loadItem() {
       editedItem.value.status =  editedItem.value.status.status
     })
     .then(() => {
+      // next 2 lines are needed by the list/subtask drop down as its selections are depended on the folder ID
       loadFolders()
       folderIDTemp.value = editedItem.value.folder.id
+
       loadLists(editedItem.value.folder.id)
     })
     .catch(err => console.log(err))
