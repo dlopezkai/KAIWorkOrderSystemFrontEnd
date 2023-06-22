@@ -190,13 +190,13 @@ const onSubmitMsg = computed(() => {
 const priorityMessages = computed(() => {
   switch(editedItem.value.priority) {
     case 1:
-      return 'SLA: 4 Business hours'
+      return 'To be assigned within 4 Business hours'
     case 2:
-      return 'SLA: 1 Business Days for contact'
+      return 'To be assigned within 1 business day'
     case 3:
-      return 'SLA: 3 Business Days for contact'
+      return 'To be assigned within 2 business days'
     case 4:
-      return 'SLA: 5 Business Days for contact'
+      return 'To be assigned within 5 business days'
     default:
       return ''
   }
