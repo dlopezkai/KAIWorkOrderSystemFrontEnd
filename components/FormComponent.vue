@@ -292,6 +292,9 @@ async function loadItem() {
       loadLists(editedItem.value.folder.id)
     })
     .catch(err => console.log(err))
+
+    // TODO: remove when PUT endpoint is ready
+    submitBtnDisabled.value = true
   } else {
     editedItem.value = Object.assign({}, '')
   }
