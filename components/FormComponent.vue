@@ -54,14 +54,14 @@
                 <v-select v-model="editedItem.status" label="Status" :items="statuses" item-title="title" item-value="value"></v-select>
               </v-col>
               <v-col cols="12" sm="6" md="6">
-                <v-select v-model="editedItem.assignees" label="Assignee(s)" :items="members" item-title="title" item-value="value" multiple chips clearable></v-select>
+                <v-autocomplete v-model="editedItem.assignees" label="Assignee(s)" :items="members" item-title="title" item-value="value" multiple chips clearable></v-autocomplete>
               </v-col>
 
               <v-col cols="12" sm="6" md="6">
                 <v-text-field v-model="editedItem.due_date" label="Due Date" type="date" :rules="[rules.due_date, rules.due_date_threshold]"></v-text-field>
               </v-col>
               <v-col cols="12" sm="6" md="6">
-                <v-select v-model="editedItem.watchers" label="Notify Person" :items="members" item-title="title" item-value="value" multiple chips clearable></v-select>
+                <v-autocomplete v-model="editedItem.watchers" label="Notify Person" :items="members" item-title="title" item-value="value" multiple chips clearable></v-autocomplete>
               </v-col>
 
               <v-col cols="12" sm="6" md="6">
