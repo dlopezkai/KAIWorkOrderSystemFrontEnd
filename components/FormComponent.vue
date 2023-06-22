@@ -108,6 +108,7 @@ const members = ref([])
 const folders = ref([])
 const lists = ref([])
 const statuses = ref([])
+const priorities = ref([])
 const folderIDTemp = ref()
 const formTab = ref(null)
 const props = defineProps({
@@ -206,6 +207,7 @@ onMounted(() => {
   loadMembers()
   loadFolders()
   loadStatuses()
+  loadPriorities()
 })
 
 async function loadItem() {
@@ -347,6 +349,19 @@ function loadStatuses() {
       return {
         title: capitalizeFirstLetter(item.name),
         value: item.name,
+      }
+    })
+  })
+  .catch(err => console.log(err))
+}
+
+function loadPriorities() {
+  axios.get(`${runtimeConfig.public.API_URL}/priorities`)
+  .then((response) => {
+    priorities.value = response.data.data.map((item) => {
+      return {
+        title: capitalizeFirstLetter(item.name),
+        value: item.id,
       }
     })
   })
