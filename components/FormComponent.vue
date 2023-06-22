@@ -102,6 +102,7 @@ import CommentsComp from './CommentsComp.vue';
 import { convertToDate, dateToISOStr, hoursToMilliseconds } from '~/helpers/datetimeConversions.js';
 
 const runtimeConfig = useRuntimeConfig()
+const tags = ref([])
 const folders = ref([])
 const lists = ref([])
 const folderIDTemp = ref()
@@ -192,6 +193,7 @@ function millisecondsToHours(value) {
 
 onMounted(() => {
   loadItem()
+  loadTags()
   loadFolders()
 })
 
@@ -212,6 +214,12 @@ async function loadItem() {
       editedItem.value.due_date = (response.data.data.due_date != null) ? convertToDate(response.data.data.due_date, "table") : null
       editedItem.value.time_estimate = millisecondsToHours(response.data.data.time_estimate)
       
+      // only pull data we need
+      let tagsTemp = []
+      editedItem.value.tags.forEach((tag) => {
+        tagsTemp.push(tag.name)
+      })
+      editedItem.value.tags = tagsTemp
     })
     .then(() => {
       loadLists(editedItem.value.folder.id)
@@ -239,6 +247,23 @@ async function loadItem() {
   }
 
   // dialog.value = true
+}
+
+function loadTags() {
+  axios.get(`${runtimeConfig.public.API_URL}/tags`)
+  .then((response) => {
+    tags.value = response.data.data.map((item) => {
+      return {
+        title: item.name,
+        value: item.name
+      }
+    })
+
+    // sort tags list
+    tags.value = tags.value.sort((a, b) => 
+      a.title.localeCompare(b.title))
+  })
+  .catch(err => console.log(err))
 }
 
 function loadFolders() {
