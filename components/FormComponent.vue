@@ -282,6 +282,10 @@ function loadLists(presentFolderId) {
   .catch(err => console.log(err))
 }
 
+function close() {
+  window.close()
+}
+
 </script>
 
 <style scoped>
