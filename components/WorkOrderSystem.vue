@@ -151,10 +151,10 @@ const headers = [
   { title: 'Created By', key: 'creator', align: 'start', sortable: false },
   { title: 'Assignee(s)', key: 'assignees', align: 'start', sortable: false },
   { title: 'Type', key: 'tags', align: 'start', sortable: false },
-  { title: 'Status', key: 'status', align: 'start', sortable: false },
-  { title: 'Priority', key: 'priority', align: 'start', sortable: false },
-  { title: 'Due Date', key: 'due_date', align: 'start', sortable: false },
-  { title: 'Actions', key: 'actions', align: 'end', sortable: false },
+  { title: 'Status', key: 'status', align: 'center', sortable: false },
+  { title: 'Priority', key: 'priority', align: 'center', sortable: false },
+  { title: 'Due Date', key: 'due_date', align: 'center', sortable: false },
+  { title: 'Actions', key: 'actions', align: 'center', sortable: false },
 ]
 
 // no longer used, but keep for reference just in case...
