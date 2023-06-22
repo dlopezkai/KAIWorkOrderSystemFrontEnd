@@ -148,6 +148,22 @@ const submitBtnText = computed(() => {
   return (!props.recordId) ? 'Submit' : 'Save'
 })
 
+// computed value for priority SLA messages
+const priorityMessages = computed(() => {
+  switch(editedItem.value.priority) {
+    case 1:
+      return 'SLA: 4 Business hours'
+    case 2:
+      return 'SLA: 1 Business Days for contact'
+    case 3:
+      return 'SLA: 3 Business Days for contact'
+    case 4:
+      return 'SLA: 5 Business Days for contact'
+    default:
+      return ''
+  }
+})
+
 // form field validation rules
 const rules =
 {
