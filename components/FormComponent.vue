@@ -1,5 +1,23 @@
 <template>
   <div>
+
+    <v-overlay v-model="submitStatusOverlay" class="align-center justify-center" persistent>
+      <v-container style="height: 400px;">
+        <v-row class="fill-height" align-content="center" justify="center">
+          <v-col class="text-subtitle-1 text-center" cols="12">
+            <v-card>
+              <v-card-title>{{ onSubmitMsg }}</v-card-title>
+              <v-card-text v-if="submitErrorInfo">{{ submitErrorInfo }}</v-card-text>
+              <v-progress-circular v-if="submitStatus === 'submitting'" color="#92D5D5" indeterminate size="64" class="mb-4"></v-progress-circular>
+              <v-btn v-if="submitStatus != 'submitting'" color="blue-darken-1" variant="text" class="mb-4" @click="resetSubmitStatus()">
+                  OK
+              </v-btn>
+            </v-card>
+          </v-col>
+        </v-row>
+      </v-container>
+    </v-overlay>
+
     <v-card>
       <v-card-title>
         <span class="text-h5">{{ formTitle }}</span>
@@ -110,7 +128,12 @@ const lists = ref([])
 const statuses = ref([])
 const priorities = ref([])
 const folderIDTemp = ref()
+const form = ref(null)
 const formTab = ref(null)
+const submitBtnDisabled = ref(false)
+const submitStatusOverlay = ref(false)
+const submitStatus = ref('')
+const submitErrorInfo = ref('')
 const props = defineProps({
     recordId: String,
     clickUpUserInfo: Object,
@@ -146,6 +169,22 @@ const formTitle = computed(() => {
 // computed value for save/submit button text
 const submitBtnText = computed(() => {
   return (!props.recordId) ? 'Submit' : 'Save'
+})
+
+// computed value for work order submit progress messages
+const onSubmitMsg = computed(() => {
+  switch(submitStatus.value) {
+    case 'submitting':
+      return 'Submitting new work order...'
+    case 'internal_api_error':
+      return 'There was an issue with the API.'
+    case 'connection_failure':
+      return 'There was an issue submitting your form. Please try again.'
+    case 'success':
+      return 'Work order submitted successfully.'
+    default:
+      return ''
+  }
 })
 
 // computed value for priority SLA messages
@@ -369,6 +408,95 @@ function close() {
   } else {
     window.close()
   }
+}
+
+function resetSubmitStatus() {
+  if(submitStatus.value === 'submitting') {
+    close()
+  }
+
+  if(submitStatus.value === 'success') {
+    close()
+  }
+
+  submitStatus.value = ''
+  submitStatusOverlay.value = false
+  submitBtnDisabled.value = false
+}
+
+// form submit process
+async function submit() {
+  const { valid } = await form.value.validate()
+  if (valid) {
+    save()
+  }
+}
+
+function save() {
+  submitErrorInfo.value = ''
+  submitStatus.value = 'submitting'
+  submitStatusOverlay.value = true
+  submitBtnDisabled.value = true
+
+  // create a data object that will be passed to API to prevent user from seeing conversions
+  let data = Object.assign({}, editedItem.value)
+
+  // since API needs IDs of assignees, pull the assignee(s) ID(s) and store in temp array
+  let assigneeids = []
+
+  if(data.assignees) {
+    data.assignees.forEach(element => {
+      assigneeids.push(element.id)
+    })
+    data.assignees = assigneeids
+  }
+
+  // since API needs IDs of watchers, pull the watcher(s) ID(s) and store in temp array
+  // let watcherids = []
+
+  // if(data.watchers) {
+  //   data.watchers.forEach(element => {
+  //     watcherids.push(element.id)
+  //   })
+  //   data.watchers = watcherids
+  // }
+
+  // convert time estimate (hours) to milliseconds
+  if(data.time_estimate) data.time_estimate = hoursToMilliseconds(data.time_estimate)
+
+  // FOR TEST PURPOSES ONLY!! - REMOVE ME LATER
+  data.list = 901001092394
+
+  if (!props.recordId) {
+    data.creator = props.clickUpUserInfo.id
+
+    axios.post(`${runtimeConfig.public.API_URL}/list/` + data.list + `/task`, data, {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    })
+    .then(function (response) {
+      if (response.status === 200) {
+        if (response.data.response_code === 200) {
+          submitStatus.value = 'success'
+        } else {
+          submitStatus.value = 'internal_api_error'
+          submitErrorInfo.value = data
+          console.log(response)
+          return
+        }
+      }
+    })
+    .catch(function (error) {
+      submitStatus.value = 'connection_failure'
+      submitErrorInfo.value = error
+      console.log(error)
+    })
+
+  } else {
+    // perform PUT request here
+  }
+
 }
 
 </script>
