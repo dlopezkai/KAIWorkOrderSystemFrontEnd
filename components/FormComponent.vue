@@ -211,13 +211,6 @@ onMounted(() => {
 })
 
 async function loadItem() {
-  // axios.get(`${runtimeConfig.public.API_URL}/task/` + props.recordId)
-  //   .then((response) => {
-  //     editedItem.value = Object.assign({}, response.data.data)
-  //     loadLists(editedItem.value.folder.id)
-  //   })
-  //   .catch(err => console.log(err))
-
   // convert time estimate (milliseconds) to hours if not a new work order
   if (props.recordId) {
     await axios.get(`${runtimeConfig.public.API_URL}/task/` + props.recordId)
@@ -242,26 +235,11 @@ async function loadItem() {
     })
     .catch(err => console.log(err))
 
-
     loadFolders()
     folderIDTemp.value = editedItem.value.folder.id
-    
-    // loadLists(item.folder)
-    // editedItem.value = Object.assign({}, item)
-    // editedItem.value.priority = (item.priority != null) ? capitalizeFirstLetter(item.priority.priority) : null
-    // editedItem.value.due_date = (item.due_date != null) ? convertToDate(item.due_date, "table") : null
-    // editedItem.value.time_estimate = millisecondsToHours(item.time_estimate)
-
-    // get list of watchers and assign it to the editedItem object
-    // axios.get(`${runtimeConfig.public.API_URL}/task/` + item.id)
-    // .then((response) => {
-    //   editedItem.value.watchers = response.data.data.watchers
-    // })
-    // .catch(err => console.log(err))
   } else {
     editedItem.value = Object.assign({}, '')
   }
-
   // dialog.value = true
 }
 
