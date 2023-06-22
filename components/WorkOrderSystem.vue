@@ -37,6 +37,7 @@
       <p>Please register for a KAI ClickUp account to use this application</p>
     </div> -->
     <!-- <div v-else>  -->
+    <!-- to make row clickable again, add @click:row="(pointerEvent, {item}) => editItem(item.raw)" -->
     <v-data-table-server
       v-model:page="page"
       :headers="headers" 
