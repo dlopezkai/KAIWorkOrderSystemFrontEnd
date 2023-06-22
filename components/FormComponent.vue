@@ -111,6 +111,8 @@ const props = defineProps({
     clickUpUserInfo: Object,
 })
 
+const emit = defineEmits(["close"])
+
 const editedItem = ref([
   {
     assignees: '',
@@ -283,7 +285,11 @@ function loadLists(presentFolderId) {
 }
 
 function close() {
-  window.close()
+  if (!props.recordId) {
+    emit('close')
+  } else {
+    window.close()
+  }
 }
 
 </script>

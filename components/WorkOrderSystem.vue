@@ -78,7 +78,7 @@
               </v-container>
             </v-overlay>
 
-            <form-component :clickUpUserInfo="clickUpUserInfo"></form-component>
+            <form-component :clickUpUserInfo="clickUpUserInfo" @close="close()"></form-component>
             <!-- <v-card>
               <v-card-title>
                 <span class="text-h5">{{ formTitle }}</span>
