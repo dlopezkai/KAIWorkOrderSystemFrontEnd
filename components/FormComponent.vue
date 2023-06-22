@@ -204,9 +204,9 @@ function dateValidation(input) {
 function convertToYyyymmddFormat(value) {
   return value.getFullYear() 
     + "-" 
-    + ((value.getMonth()+1).length != 2 ? "0" + (value.getMonth() + 1) : (value.getMonth()+1)) 
+    + ((value.getMonth()+1).toString().length != 2 ? "0" + (value.getMonth() + 1) : (value.getMonth()+1)) 
     + "-" 
-    + (value.getDate().length != 2 ? "0" + value.getDate() : value.getDate());
+    + (value.getDate().toString().length != 2 ? "0" + value.getDate() : value.getDate());
 }
 
 function millisecondsToHours(value) {
