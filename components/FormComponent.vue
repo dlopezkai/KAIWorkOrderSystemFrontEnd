@@ -247,12 +247,11 @@ async function loadItem() {
       editedItem.value.status =  editedItem.value.status.status
     })
     .then(() => {
+      loadFolders()
+      folderIDTemp.value = editedItem.value.folder.id
       loadLists(editedItem.value.folder.id)
     })
     .catch(err => console.log(err))
-
-    loadFolders()
-    folderIDTemp.value = editedItem.value.folder.id
   } else {
     editedItem.value = Object.assign({}, '')
   }
