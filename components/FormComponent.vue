@@ -103,6 +103,7 @@ import { convertToDate, dateToISOStr, hoursToMilliseconds } from '~/helpers/date
 
 const runtimeConfig = useRuntimeConfig()
 const tags = ref([])
+const members = ref([])
 const folders = ref([])
 const lists = ref([])
 const folderIDTemp = ref()
@@ -194,6 +195,7 @@ function millisecondsToHours(value) {
 onMounted(() => {
   loadItem()
   loadTags()
+  loadMembers()
   loadFolders()
 })
 
@@ -261,6 +263,23 @@ function loadTags() {
 
     // sort tags list
     tags.value = tags.value.sort((a, b) => 
+      a.title.localeCompare(b.title))
+  })
+  .catch(err => console.log(err))
+}
+
+function loadMembers() {
+  axios.get(`${runtimeConfig.public.API_URL}/members`)
+  .then((response) => {
+    members.value = response.data.data.map((item) => {
+      return {
+        title: (!item.username) ? item.email : item.username,
+        value: {color: item.color, email: item.email, id: item.id, initials: item.initials, profile: item.profile, username: item.username}
+      }
+    })
+
+    // sort members list
+    members.value = members.value.sort((a, b) => 
       a.title.localeCompare(b.title))
   })
   .catch(err => console.log(err))
