@@ -6,7 +6,7 @@
           <v-col class="text-subtitle-1 text-center" cols="12">
             <v-card>
               <v-card-title>{{ onSubmitMsg }}</v-card-title>
-              <v-card-text v-if="submitErrorInfo">{{ submitErrorInfo }}</v-card-text>
+              <v-card-text v-if="submitInfo">{{ submitInfo }}</v-card-text>
               <v-progress-circular v-if="submitStatus === 'submitting'" color="#92D5D5" indeterminate size="64" class="mb-4"></v-progress-circular>
               <v-btn v-if="submitStatus != 'submitting'" color="blue-darken-1" variant="text" class="mb-4" @click="resetSubmitStatus()">
                   OK
@@ -132,7 +132,7 @@ const formTab = ref(null)
 const submitBtnDisabled = ref(false)
 const submitStatusOverlay = ref(false)
 const submitStatus = ref('')
-const submitErrorInfo = ref('')
+const submitInfo = ref('')
 const props = defineProps({
     recordId: String,
     clickUpUserInfo: Object,
@@ -432,7 +432,7 @@ async function submit() {
 }
 
 function save() {
-  submitErrorInfo.value = ''
+  submitInfo.value = ''
   submitStatus.value = 'submitting'
   submitStatusOverlay.value = true
   submitBtnDisabled.value = true
@@ -478,10 +478,10 @@ function save() {
       if (response.status === 200) {
         if (response.data.response_code === 200) {
           submitStatus.value = 'success'
-          submitErrorInfo.value = 'Work order URL: ' + window.location.origin + '/workorders?id=' + response.data.data.id
+          submitInfo.value = 'Work order URL: ' + window.location.origin + '/workorders?id=' + response.data.data.id
         } else {
           submitStatus.value = 'internal_api_error'
-          submitErrorInfo.value = data
+          submitInfo.value = data
           console.log(response)
           return
         }
@@ -489,7 +489,7 @@ function save() {
     })
     .catch(function (error) {
       submitStatus.value = 'connection_failure'
-      submitErrorInfo.value = error
+      submitInfo.value = error
       console.log(error)
     })
 
