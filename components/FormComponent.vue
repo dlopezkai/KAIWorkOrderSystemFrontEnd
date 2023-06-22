@@ -100,12 +100,14 @@
 import axios from 'axios'
 import CommentsComp from './CommentsComp.vue';
 import { convertToDate, dateToISOStr, hoursToMilliseconds } from '~/helpers/datetimeConversions.js';
+import { capitalizeFirstLetter } from '~/helpers/capitalizeFirstLetter.js';
 
 const runtimeConfig = useRuntimeConfig()
 const tags = ref([])
 const members = ref([])
 const folders = ref([])
 const lists = ref([])
+const statuses = ref([])
 const folderIDTemp = ref()
 const formTab = ref(null)
 const props = defineProps({
@@ -203,6 +205,7 @@ onMounted(() => {
   loadTags()
   loadMembers()
   loadFolders()
+  loadStatuses()
 })
 
 async function loadItem() {
@@ -222,12 +225,15 @@ async function loadItem() {
       editedItem.value.due_date = (response.data.data.due_date != null) ? convertToDate(response.data.data.due_date, "table") : null
       editedItem.value.time_estimate = millisecondsToHours(response.data.data.time_estimate)
       
-      // only pull data we need
+      // for arrays
       let tagsTemp = []
       editedItem.value.tags.forEach((tag) => {
         tagsTemp.push(tag.name)
       })
       editedItem.value.tags = tagsTemp
+
+      // for objects
+      editedItem.value.status =  editedItem.value.status.status
     })
     .then(() => {
       loadLists(editedItem.value.folder.id)
@@ -328,6 +334,19 @@ function loadLists(presentFolderId) {
       return {
         id: item.id,
         name: item.name
+      }
+    })
+  })
+  .catch(err => console.log(err))
+}
+
+function loadStatuses() {
+  axios.get(`${runtimeConfig.public.API_URL}/statuses`)
+  .then((response) => {
+    statuses.value = response.data.data.map((item) => {
+      return {
+        title: capitalizeFirstLetter(item.name),
+        value: item.name,
       }
     })
   })
