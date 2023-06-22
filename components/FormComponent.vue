@@ -24,92 +24,90 @@
       <v-card-title>
         <span class="text-h5">{{ formTitle }}</span>
       </v-card-title>
-
-      <v-card-text>
-        
+     
       <v-tabs v-if="props.recordId" v-model="formTab" color="#428086">
         <v-tab value="one">Details</v-tab>
         <v-tab value="two">Comments</v-tab>
       </v-tabs>
 
-      <v-window v-model="formTab">
+      <v-card-text>
+        <v-window v-model="formTab">
 
-        <v-window-item value="one">
-          <v-form ref="form" @submit.prevent="submit">
-            <v-row>
-              <v-col cols="12" sm="12" md="12">
-                <v-text-field v-model="editedItem.name" label="Name" 
-                  :rules="[rules.required]"></v-text-field>
-              </v-col>
+          <v-window-item value="one">
+            <v-form ref="form" @submit.prevent="submit">
+              <v-row>
+                <v-col cols="12" sm="12" md="12">
+                  <v-text-field v-model="editedItem.name" label="Name" 
+                    :rules="[rules.required]"></v-text-field>
+                </v-col>
 
-              <v-col cols="12" sm="6" md="6">
-                <v-select v-model="editedItem.folder" label="Project" :items="folders" item-title="name" item-value="id" @update:modelValue="loadLists()" :rules="[rules.select]"></v-select>
-              </v-col>
-              <v-col cols="12" sm="6" md="6">
-                <v-select v-model="editedItem.list" label="Subtask" :items="lists" item-title="name" item-value="id" :rules="[rules.select]"></v-select>
-              </v-col>
+                <v-col cols="12" sm="6" md="6">
+                  <v-select v-model="editedItem.folder" label="Project" :items="folders" item-title="name" item-value="id" @update:modelValue="loadLists()" :rules="[rules.select]"></v-select>
+                </v-col>
+                <v-col cols="12" sm="6" md="6">
+                  <v-select v-model="editedItem.list" label="Subtask" :items="lists" item-title="name" item-value="id" :rules="[rules.select]"></v-select>
+                </v-col>
 
-              <v-col cols="12" sm="12" md="12">
-                <v-select v-model="editedItem.tags" label="Type" :items="tags" item-title="title" item-value="value" multiple chips clearable></v-select>
-              </v-col>
+                <v-col cols="12" sm="12" md="12">
+                  <v-select v-model="editedItem.tags" label="Type" :items="tags" item-title="title" item-value="value" multiple chips clearable></v-select>
+                </v-col>
 
-              <v-col v-if="props.recordId" cols="12" sm="6" md="6">
-                <v-select v-model="editedItem.status" label="Status" :items="statuses" item-title="title" item-value="value"></v-select>
-              </v-col>
-              <v-col cols="12" sm="6" md="6">
-                <v-autocomplete v-model="editedItem.assignees" label="Assignee(s)" :items="members" item-title="title" item-value="value" multiple chips clearable></v-autocomplete>
-              </v-col>
+                <v-col v-if="props.recordId" cols="12" sm="6" md="6">
+                  <v-select v-model="editedItem.status" label="Status" :items="statuses" item-title="title" item-value="value"></v-select>
+                </v-col>
+                <v-col cols="12" sm="6" md="6">
+                  <v-autocomplete v-model="editedItem.assignees" label="Assignee(s)" :items="members" item-title="title" item-value="value" multiple chips clearable></v-autocomplete>
+                </v-col>
 
-              <v-col cols="12" sm="6" md="6">
-                <v-text-field v-model="editedItem.due_date" label="Due Date" type="date" :rules="[rules.due_date, rules.due_date_threshold]"></v-text-field>
-              </v-col>
-              <v-col cols="12" sm="6" md="6">
-                <v-autocomplete v-model="editedItem.watchers" label="Notify Person" :items="members" item-title="title" item-value="value" multiple chips clearable></v-autocomplete>
-              </v-col>
+                <v-col cols="12" sm="6" md="6">
+                  <v-text-field v-model="editedItem.due_date" label="Due Date" type="date" :rules="[rules.due_date, rules.due_date_threshold]"></v-text-field>
+                </v-col>
+                <v-col cols="12" sm="6" md="6">
+                  <v-autocomplete v-model="editedItem.watchers" label="Notify Person" :items="members" item-title="title" item-value="value" multiple chips clearable></v-autocomplete>
+                </v-col>
 
-              <v-col cols="12" sm="6" md="6">
-                <v-text-field v-model="editedItem.time_estimate" label="Budgeted Hours"></v-text-field>
-              </v-col>
-              <v-col cols="12" sm="6" md="6">
-                <v-select v-model="editedItem.priority" label="Priority" :items="priorities" item-title="title" item-value="value" :hint="priorityMessages" persistent-hint></v-select>
-              </v-col>
+                <v-col cols="12" sm="6" md="6">
+                  <v-text-field v-model="editedItem.time_estimate" label="Budgeted Hours"></v-text-field>
+                </v-col>
+                <v-col cols="12" sm="6" md="6">
+                  <v-select v-model="editedItem.priority" label="Priority" :items="priorities" item-title="title" item-value="value" :hint="priorityMessages" persistent-hint></v-select>
+                </v-col>
 
-              <v-col cols="12" sm="12" md="12">
-                <QuillEditor
-                  v-model:content="editedItem.description" 
-                  contentType="html" 
-                  theme="snow" 
-                  placeholder="Description"
-                  toolbar="essential" 
-                  style="height:200px; max-height:250px;"
-                ></QuillEditor>
-              </v-col>
+                <v-col cols="12" sm="12" md="12">
+                  <QuillEditor
+                    v-model:content="editedItem.description" 
+                    contentType="html" 
+                    theme="snow" 
+                    placeholder="Description"
+                    toolbar="essential" 
+                    style="height:200px; max-height:250px;"
+                  ></QuillEditor>
+                </v-col>
 
-              <v-col cols="12" sm="12" md="12" class="mt-5">
-                <v-text-field v-model="editedItem.links" label="SharePoint File"></v-text-field>
-                <v-btn href="https://kauffmaninc.sharepoint.com/" target="_blank" variant="tonal" class="rounded" color="#428086">Open SharePoint site</v-btn>
-              </v-col>
+                <v-col cols="12" sm="12" md="12" class="mt-5">
+                  <v-text-field v-model="editedItem.links" label="SharePoint File"></v-text-field>
+                  <v-btn href="https://kauffmaninc.sharepoint.com/" target="_blank" variant="tonal" class="rounded" color="#428086">Open SharePoint site</v-btn>
+                </v-col>
 
-              <!-- hide for production -->
-              <v-col v-if="editedItem.url" cols="12" sm="12" md="12">
-                <v-btn :href="editedItem.url" target="_blank" variant="text">ClickUp reference link</v-btn>
-              </v-col>
+                <!-- hide for production -->
+                <v-col v-if="editedItem.url" cols="12" sm="12" md="12">
+                  <v-btn :href="editedItem.url" target="_blank" variant="text">ClickUp reference link</v-btn>
+                </v-col>
 
-              <v-col class="text-right">
-                <v-btn variant="plain" @click="close">Cancel</v-btn>
-                <v-btn :disabled="submitBtnDisabled" class="rounded" color="blue" @click="submit">{{ submitBtnText }}</v-btn>
-              </v-col>
-            </v-row>
-          </v-form>
-        </v-window-item>
+                <v-col class="text-right">
+                  <v-btn variant="plain" @click="close">Cancel</v-btn>
+                  <v-btn :disabled="submitBtnDisabled" class="rounded" color="blue" @click="submit">{{ submitBtnText }}</v-btn>
+                </v-col>
+              </v-row>
+            </v-form>
+          </v-window-item>
 
-        <v-window-item v-if="props.recordId" value="two">
-          <!-- <comments-comp taskid=866a8z405 :clickUpUserInfo="clickUpUserInfo"></comments-comp> -->
-          <comments-comp :taskid="props.recordId" :clickUpUserInfo="props.clickUpUserInfo"></comments-comp>
-        </v-window-item>
+          <v-window-item v-if="props.recordId" value="two">
+            <!-- <comments-comp taskid=866a8z405 :clickUpUserInfo="clickUpUserInfo"></comments-comp> -->
+            <comments-comp :taskid="props.recordId" :clickUpUserInfo="props.clickUpUserInfo"></comments-comp>
+          </v-window-item>
 
-      </v-window>
-
+        </v-window>
       </v-card-text>
     </v-card>
 
