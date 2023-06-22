@@ -232,7 +232,7 @@
 import { ref, nextTick, watch, toRaw } from 'vue'
 import axios from 'axios'
 import { useAuthStore } from '~/store/auth';
-import CommentsComp from './CommentsComp.vue';
+// import CommentsComp from './CommentsComp.vue';
 import { convertToDate, dateToISOStr, hoursToMilliseconds } from '~/helpers/datetimeConversions.js';
 import { capitalizeFirstLetter } from '~/helpers/capitalizeFirstLetter.js';
 
@@ -252,18 +252,18 @@ const filterByUser = ref(true)
 const showCompleted = ref(false)
 const drawer = ref(false)
 const form = ref(null)
-const tags = ref([])
-const members = ref([])
-const folders = ref([])
-const lists = ref([])
-const formTab = ref(null)
+// const tags = ref([])
+// const members = ref([])
+// const folders = ref([])
+// const lists = ref([])
+// const formTab = ref(null)
 const clickUpUserInfo = ref()
 const submitBtnDisabled = ref(false)
 const submitStatusOverlay = ref(false)
 const submitStatus = ref('')
 const submitErrorInfo = ref('')
 const statuses = ref([])
-const priorities = ref([])
+// const priorities = ref([])
 
 const headers = [
   { title: 'Name', key: 'name', align: 'start', sortable: false, width: '25%' },
@@ -345,14 +345,14 @@ const defaultItem = ref([
 // }
 
 // computed value for form title
-const formTitle = computed(() => {
-  return editedIndex.value === -1 ? 'New Work Order Form' : 'Edit Work Order Form'
-})
+// const formTitle = computed(() => {
+//   return editedIndex.value === -1 ? 'New Work Order Form' : 'Edit Work Order Form'
+// })
 
 // computed value for save/submit button text
-const submitBtnText = computed(() => {
-  return editedIndex.value === -1 ? 'Submit' : 'Save'
-})
+// const submitBtnText = computed(() => {
+//   return editedIndex.value === -1 ? 'Submit' : 'Save'
+// })
 
 // computed value to disable / enable the "Previous page" button
 const previousPageBtnDisabled = computed(() => {
@@ -381,20 +381,20 @@ const onSubmitMsg = computed(() => {
 })
 
 // computed value for priority SLA messages
-const priorityMessages = computed(() => {
-  switch(editedItem.value.priority) {
-    case 1:
-      return 'SLA: 4 Business hours'
-    case 2:
-      return 'SLA: 1 Business Days for contact'
-    case 3:
-      return 'SLA: 3 Business Days for contact'
-    case 4:
-      return 'SLA: 5 Business Days for contact'
-    default:
-      return ''
-  }
-})
+// const priorityMessages = computed(() => {
+//   switch(editedItem.value.priority) {
+//     case 1:
+//       return 'SLA: 4 Business hours'
+//     case 2:
+//       return 'SLA: 1 Business Days for contact'
+//     case 3:
+//       return 'SLA: 3 Business Days for contact'
+//     case 4:
+//       return 'SLA: 5 Business Days for contact'
+//     default:
+//       return ''
+//   }
+// })
 
 // computed value for toggling group-by behavior
 // if we still plan to incorporate grouping, then we will need to pass a :group-by="groupBy" prop in the <v-data-table-server> component
@@ -415,38 +415,38 @@ const rules =
 }
 
 // resets the form tab when dialog is reopened
-watch(dialog, (currentValue, newValue) => {
-  formTab.value = (currentValue) ? "one" : "two"
-})
+// watch(dialog, (currentValue, newValue) => {
+//   formTab.value = (currentValue) ? "one" : "two"
+// })
 
 // checks for the 2 business days rule
-function dateValidation(input) {
+// function dateValidation(input) {
 
-  // get day of week
-  let selectedDateDay = new Date(input).getDay()
+//   // get day of week
+//   let selectedDateDay = new Date(input).getDay()
 
-  // get the current date plus 2 days, the convert to ISO format
-  let date = new Date();
-  let twoDaysFromNow = date.setDate(date.getDate() + 2);
-  twoDaysFromNow = new Date(twoDaysFromNow).toISOString();
+//   // get the current date plus 2 days, the convert to ISO format
+//   let date = new Date();
+//   let twoDaysFromNow = date.setDate(date.getDate() + 2);
+//   twoDaysFromNow = new Date(twoDaysFromNow).toISOString();
 
-  // convert to local time
-  let twoDaysFromNowLocaleString = new Date(twoDaysFromNow).toLocaleDateString()
-  let twoDaysFromNowDateObj = new Date(twoDaysFromNowLocaleString)
+//   // convert to local time
+//   let twoDaysFromNowLocaleString = new Date(twoDaysFromNow).toLocaleDateString()
+//   let twoDaysFromNowDateObj = new Date(twoDaysFromNowLocaleString)
 
-  // convert to yyyy-mm-dd to match format of calendar input
-  let twoDaysFromNowFormatted = convertToYyyymmddFormat(twoDaysFromNowDateObj)
+//   // convert to yyyy-mm-dd to match format of calendar input
+//   let twoDaysFromNowFormatted = convertToYyyymmddFormat(twoDaysFromNowDateObj)
 
-  // logic to determine if selected date is valid
-  if(selectedDateDay !== 5 && selectedDateDay !== 6) {
-    if(input >= twoDaysFromNowFormatted) {
-      return true
-    } else {
-      return false
-    }
-  }
+//   // logic to determine if selected date is valid
+//   if(selectedDateDay !== 5 && selectedDateDay !== 6) {
+//     if(input >= twoDaysFromNowFormatted) {
+//       return true
+//     } else {
+//       return false
+//     }
+//   }
 
-}
+// }
 
 // form submit process
 async function submit() {
@@ -471,11 +471,11 @@ function loadClickUpUserInfo() {
 
 // mounted life-cycle hook
 onMounted(() => {
-  loadTags()
-  loadMembers()
-  loadFolders()
+  // loadTags()
+  // loadMembers()
+  // loadFolders()
   loadStatuses()
-  loadPriorities()
+  // loadPriorities()
 })
 
 // function loadItems({ page }) {
@@ -536,76 +536,76 @@ function loadItems() {
   .catch(err => console.log(err))
 }
 
-function loadTags() {
-  axios.get(`${runtimeConfig.public.API_URL}/tags`)
-  .then((response) => {
-    tags.value = response.data.data.map((item) => {
-      return {
-        title: item.name,
-        value: item.name
-      }
-    })
+// function loadTags() {
+//   axios.get(`${runtimeConfig.public.API_URL}/tags`)
+//   .then((response) => {
+//     tags.value = response.data.data.map((item) => {
+//       return {
+//         title: item.name,
+//         value: item.name
+//       }
+//     })
 
-    // sort tags list
-    tags.value = tags.value.sort((a, b) => 
-      a.title.localeCompare(b.title))
-  })
-  .catch(err => console.log(err))
-}
+//     // sort tags list
+//     tags.value = tags.value.sort((a, b) => 
+//       a.title.localeCompare(b.title))
+//   })
+//   .catch(err => console.log(err))
+// }
 
-function loadMembers() {
-  axios.get(`${runtimeConfig.public.API_URL}/members`)
-  .then((response) => {
-    members.value = response.data.data.map((item) => {
-      return {
-        title: (!item.username) ? item.email : item.username,
-        value: {color: item.color, email: item.email, id: item.id, initials: item.initials, profile: item.profile, username: item.username}
-      }
-    })
+// function loadMembers() {
+//   axios.get(`${runtimeConfig.public.API_URL}/members`)
+//   .then((response) => {
+//     members.value = response.data.data.map((item) => {
+//       return {
+//         title: (!item.username) ? item.email : item.username,
+//         value: {color: item.color, email: item.email, id: item.id, initials: item.initials, profile: item.profile, username: item.username}
+//       }
+//     })
 
-    // sort members list
-    members.value = members.value.sort((a, b) => 
-      a.title.localeCompare(b.title))
-  })
-  .catch(err => console.log(err))
-}
+//     // sort members list
+//     members.value = members.value.sort((a, b) => 
+//       a.title.localeCompare(b.title))
+//   })
+//   .catch(err => console.log(err))
+// }
 
-function loadFolders() {
-  // load folder options
-  axios.get(`${runtimeConfig.public.API_URL}/folders`)
-  .then((response) => {
-    folders.value = response.data.data.map((item) => {
-      return {
-        id: item.id,
-        name: item.name
-      }
-    })
-  })
-  .catch(err => console.log(err))
-}
+// function loadFolders() {
+//   // load folder options
+//   axios.get(`${runtimeConfig.public.API_URL}/folders`)
+//   .then((response) => {
+//     folders.value = response.data.data.map((item) => {
+//       return {
+//         id: item.id,
+//         name: item.name
+//       }
+//     })
+//   })
+//   .catch(err => console.log(err))
+// }
 
-function loadLists(presentFolderId) {
-  // clear list/subtask
-  editedItem.value.list = ''
+// function loadLists(presentFolderId) {
+//   // clear list/subtask
+//   editedItem.value.list = ''
 
-  // clear list/subtask options
-  lists.value = ''
+//   // clear list/subtask options
+//   lists.value = ''
 
-  // get selected folder ID
-  let folderId = (presentFolderId) ? presentFolderId : editedItem.value.folder
+//   // get selected folder ID
+//   let folderId = (presentFolderId) ? presentFolderId : editedItem.value.folder
 
-  // load list/subtask options
-  axios.get(`${runtimeConfig.public.API_URL}/folder/` + folderId + `/lists`)
-  .then((response) => {
-    lists.value = response.data.data.map((item) => {
-      return {
-        id: item.id,
-        name: item.name
-      }
-    })
-  })
-  .catch(err => console.log(err))
-}
+//   // load list/subtask options
+//   axios.get(`${runtimeConfig.public.API_URL}/folder/` + folderId + `/lists`)
+//   .then((response) => {
+//     lists.value = response.data.data.map((item) => {
+//       return {
+//         id: item.id,
+//         name: item.name
+//       }
+//     })
+//   })
+//   .catch(err => console.log(err))
+// }
 
 function loadStatuses() {
   axios.get(`${runtimeConfig.public.API_URL}/statuses`)
@@ -620,40 +620,40 @@ function loadStatuses() {
   .catch(err => console.log(err))
 }
 
-function loadPriorities() {
-  axios.get(`${runtimeConfig.public.API_URL}/priorities`)
-  .then((response) => {
-    priorities.value = response.data.data.map((item) => {
-      return {
-        title: capitalizeFirstLetter(item.name),
-        value: item.id,
-      }
-    })
-  })
-  .catch(err => console.log(err))
-}
+// function loadPriorities() {
+//   axios.get(`${runtimeConfig.public.API_URL}/priorities`)
+//   .then((response) => {
+//     priorities.value = response.data.data.map((item) => {
+//       return {
+//         title: capitalizeFirstLetter(item.name),
+//         value: item.id,
+//       }
+//     })
+//   })
+//   .catch(err => console.log(err))
+// }
 
 function editItem(item) {
-  editedIndex.value = data.value.indexOf(item)
+  // editedIndex.value = data.value.indexOf(item)
 
-  // convert time estimate (milliseconds) to hours if not a new work order
-  if (editedIndex.value > -1) {
-    loadFolders()
-    loadLists(item.folder)
-    editedItem.value = Object.assign({}, item)
-    editedItem.value.priority = (item.priority != null) ? capitalizeFirstLetter(item.priority.priority) : null
-    editedItem.value.due_date = (item.due_date != null) ? convertToDate(item.due_date, "table") : null
-    editedItem.value.time_estimate = millisecondsToHours(item.time_estimate)
+  // // convert time estimate (milliseconds) to hours if not a new work order
+  // if (editedIndex.value > -1) {
+  //   loadFolders()
+  //   loadLists(item.folder)
+  //   editedItem.value = Object.assign({}, item)
+  //   editedItem.value.priority = (item.priority != null) ? capitalizeFirstLetter(item.priority.priority) : null
+  //   editedItem.value.due_date = (item.due_date != null) ? convertToDate(item.due_date, "table") : null
+  //   editedItem.value.time_estimate = millisecondsToHours(item.time_estimate)
 
-    // get list of watchers and assign it to the editedItem object
-    axios.get(`${runtimeConfig.public.API_URL}/task/` + item.id)
-    .then((response) => {
-      editedItem.value.watchers = response.data.data.watchers
-    })
-    .catch(err => console.log(err))
-  } else {
-    editedItem.value = Object.assign({}, item)
-  }
+  //   // get list of watchers and assign it to the editedItem object
+  //   axios.get(`${runtimeConfig.public.API_URL}/task/` + item.id)
+  //   .then((response) => {
+  //     editedItem.value.watchers = response.data.data.watchers
+  //   })
+  //   .catch(err => console.log(err))
+  // } else {
+  //   editedItem.value = Object.assign({}, item)
+  // }
 
   dialog.value = true
 }
