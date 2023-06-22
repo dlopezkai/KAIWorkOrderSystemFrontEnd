@@ -103,10 +103,9 @@
       </template>
 
       <template v-slot:item.actions="{ item }">
-        <!-- <v-icon size="small" class="me-2" @click="editItem(item.raw)">
-          mdi-pencil
-        </v-icon> -->
-        <NuxtLink :to="'/workorders?id=' + item.raw.id" target="_blank">Edit work order</NuxtLink>
+        <NuxtLink :to="'/workorders?id=' + item.raw.id" target="_blank" title="Edit work order">
+          <v-icon size="small" class="me-2">mdi-pencil</v-icon>
+        </NuxtLink>
       </template>
 
       <template v-slot:bottom v-if="!showFooter"></template>
