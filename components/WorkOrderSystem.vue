@@ -62,7 +62,7 @@
               </v-col>
             </template> -->
 
-            <form-component form-action="new" :clickUpUserInfo="clickUpUserInfo" @close="close()"></form-component>
+            <form-component form-action="new" :clickUpUserInfo="clickUpUserInfo" @close="close()" @closeAndReload="closeAndReload()"></form-component>
           </v-dialog>
         <!-- </v-toolbar> -->
       </template>
@@ -307,6 +307,11 @@ function editItem(item) {
 
 function close() {
   dialog.value = false
+}
+
+function closeAndReload() {
+  dialog.value = false
+  loadItems()
 }
 
 function toggleShowUsersWorkOrders (value) {

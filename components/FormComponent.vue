@@ -141,7 +141,7 @@ const props = defineProps({
     clickUpUserInfo: Object,
 })
 
-const emit = defineEmits(["close"])
+const emit = defineEmits(['close', 'closeAndReload'])
 
 const editedItem = ref([
   {
@@ -406,7 +406,11 @@ function loadPriorities() {
 
 function close() {
   if (!props.recordId) {
-    emit('close')
+    if(submitStatus.value === 'success') {
+      emit('closeAndReload')
+    } else {
+      emit('close')
+    }
   } else {
     window.close()
   }
