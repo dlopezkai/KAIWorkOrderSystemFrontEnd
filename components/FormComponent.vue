@@ -90,9 +90,9 @@
                 </v-col>
 
                 <!-- hide for production -->
-                <v-col v-if="editedItem.url" cols="12" sm="12" md="12">
+                <!-- <v-col v-if="editedItem.url" cols="12" sm="12" md="12">
                   <v-btn :href="editedItem.url" target="_blank" variant="text">ClickUp reference link</v-btn>
-                </v-col>
+                </v-col> -->
 
                 <v-col class="text-right">
                   <v-btn variant="plain" @click="close">Cancel</v-btn>
@@ -103,7 +103,6 @@
           </v-window-item>
 
           <v-window-item v-if="props.recordId" value="two">
-            <!-- <comments-comp taskid=866a8z405 :clickUpUserInfo="clickUpUserInfo"></comments-comp> -->
             <comments-comp :taskid="props.recordId" :clickUpUserInfo="props.clickUpUserInfo"></comments-comp>
           </v-window-item>
 
@@ -467,8 +466,8 @@ function save() {
   // convert time estimate (hours) to milliseconds
   if(data.time_estimate) data.time_estimate = hoursToMilliseconds(data.time_estimate)
 
-  // FOR TEST PURPOSES ONLY!! - REMOVE ME LATER
-  data.list = 901001092394
+  // test list - will put WO in "Other KAI Clients" project
+  // data.list = 901001092394
 
   if (!props.recordId) {
     data.creator = props.clickUpUserInfo.id
