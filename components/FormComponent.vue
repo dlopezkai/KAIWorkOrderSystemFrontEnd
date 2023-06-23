@@ -184,6 +184,8 @@ const onSubmitMsg = computed(() => {
       return 'There was an issue submitting your form. Please try again.'
     case 'success':
       return 'Work order submitted successfully.'
+    case 'updated':
+      return 'Work order updated successfully.'
     default:
       return ''
   }
@@ -437,7 +439,6 @@ async function submit() {
   - can't update tags
   - can't update watchers
 */
-
 function save() {
   submitInfo.value = ''
   submitStatus.value = 'submitting'
@@ -458,16 +459,6 @@ function save() {
     })
     data.assignees = assigneeids
   }
-
-  // since API needs IDs of watchers, pull the watcher(s) ID(s) and store in temp array
-  // let watcherids = []
-
-  // if(data.watchers) {
-  //   data.watchers.forEach(element => {
-  //     watcherids.push(element.id)
-  //   })
-  //   data.watchers = watcherids
-  // }
 
   // convert time estimate (hours) to milliseconds
   if(data.time_estimate) data.time_estimate = hoursToMilliseconds(data.time_estimate)
@@ -496,8 +487,8 @@ function save() {
     .then(function (response) {
       if (response.status === 200) {
         if (response.data.response_code === 200) {
-          submitStatus.value = 'success'
-          submitInfo.value = (!props.recordId) ? 'Work order URL: ' + window.location.origin + '/workorders?id=' + response.data.data.id : 'Work order updated'
+          submitStatus.value = (!props.recordId) ? 'success' : 'updated'
+          submitInfo.value = (!props.recordId) ? 'Work order URL: ' + window.location.origin + '/workorders?id=' + response.data.data.id : ''
         } else {
           submitStatus.value = 'internal_api_error'
           submitInfo.value = data
