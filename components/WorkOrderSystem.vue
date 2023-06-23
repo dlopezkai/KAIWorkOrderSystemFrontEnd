@@ -62,7 +62,7 @@
               </v-col>
             </template> -->
 
-            <form-component :clickUpUserInfo="clickUpUserInfo" @close="close()"></form-component>
+            <form-component form-action="new" :clickUpUserInfo="clickUpUserInfo" @close="close()"></form-component>
           </v-dialog>
         <!-- </v-toolbar> -->
       </template>

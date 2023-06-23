@@ -1,6 +1,5 @@
 <template>
-  <!-- TODO: need to fix flickering issue -->
-  <div v-if="loading && props.recordId">
+  <div v-if="loading && props.formAction === 'edit'">
     Retrieving data ...
   </div>
   <div v-else>
@@ -138,6 +137,7 @@ const submitStatus = ref('')
 const submitInfo = ref('')
 const props = defineProps({
     recordId: String,
+    formAction: String,
     clickUpUserInfo: Object,
 })
 
@@ -270,9 +270,9 @@ onMounted(() => {
 async function loadItem() {
   // convert time estimate (milliseconds) to hours if not a new work order
   if (props.recordId) {
-    loading.value = true
     await axios.get(`${runtimeConfig.public.API_URL}/task/` + props.recordId)
     .then((response) => {
+      loading.value = true
       editedItem.value = Object.assign({}, response.data.data)
       editedItem.value.priority = (response.data.data.priority != null) ? capitalizeFirstLetter(response.data.data.priority.priority) : null
       editedItem.value.due_date = (response.data.data.due_date != null) ? convertToDate(response.data.data.due_date, "table") : null
@@ -294,8 +294,6 @@ async function loadItem() {
       folderIDTemp.value = editedItem.value.folder.id
 
       loadLists(editedItem.value.folder.id)
-
-      loading.value = false
     })
     .catch(err => console.log(err))
 
@@ -304,7 +302,9 @@ async function loadItem() {
   } else {
     editedItem.value = Object.assign({}, '')
   }
-  // dialog.value = true
+  setTimeout(() => {
+    loading.value = false
+  }, 500)
 }
 
 function loadTags() {
