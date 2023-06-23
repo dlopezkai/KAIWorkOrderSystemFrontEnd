@@ -466,8 +466,8 @@ function save() {
   // convert time estimate (hours) to milliseconds
   if(data.time_estimate) data.time_estimate = hoursToMilliseconds(data.time_estimate)
 
-  // FOR TEST PURPOSES ONLY!! - REMOVE ME LATER
-  data.list = 901001092394
+  // test list - will put WO in "Other KAI Clients" project
+  // data.list = 901001092394
 
   if (!props.recordId) {
     data.creator = props.clickUpUserInfo.id
