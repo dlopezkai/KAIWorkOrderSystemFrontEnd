@@ -191,17 +191,11 @@ const onSubmitMsg = computed(() => {
 
 // computed value for priority SLA messages
 const priorityMessages = computed(() => {
-  switch(editedItem.value.priority) {
-    case 1:
-      return 'To be assigned within 4 Business hours'
-    case 2:
-      return 'To be assigned within 1 business day'
-    case 3:
-      return 'To be assigned within 2 business days'
-    case 4:
-      return 'To be assigned within 5 business days'
-    default:
-      return ''
+  if (editedItem.value.priority === null || editedItem.value.priority === undefined) {
+    return ''
+  } else {
+    const index = editedItem.value.priority - 1
+    return priorities.value[index].description
   }
 })
 
@@ -274,7 +268,7 @@ async function loadItem() {
     .then((response) => {
       loading.value = true
       editedItem.value = Object.assign({}, response.data.data)
-      editedItem.value.priority = (response.data.data.priority != null) ? capitalizeFirstLetter(response.data.data.priority.priority) : null
+      editedItem.value.priority = (response.data.data.priority != null) ? Number(response.data.data.priority.id) : null
       editedItem.value.due_date = (response.data.data.due_date != null) ? convertToDate(response.data.data.due_date, "table") : null
       editedItem.value.time_estimate = millisecondsToHours(response.data.data.time_estimate)
       
@@ -404,6 +398,7 @@ function loadPriorities() {
       return {
         title: capitalizeFirstLetter(item.name),
         value: item.id,
+        description: item.description,
       }
     })
   })
