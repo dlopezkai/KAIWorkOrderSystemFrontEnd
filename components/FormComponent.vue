@@ -290,9 +290,6 @@ async function loadItem() {
       loadLists(editedItem.value.folder.id)
     })
     .catch(err => console.log(err))
-
-    // TODO: remove when PUT endpoint is ready
-    submitBtnDisabled.value = true
   } else {
     editedItem.value = Object.assign({}, '')
   }
@@ -499,6 +496,32 @@ function save() {
 
   } else {
     // perform PUT request here
+    console.log(data)
+
+    axios.put(`${runtimeConfig.public.API_URL}/task/` + data.id, data, {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    })
+    .then(function (response) {
+      if (response.status === 200) {
+        if (response.data.response_code === 200) {
+          submitStatus.value = 'success'
+          submitInfo.value = 'Work order updated'
+        } else {
+          submitStatus.value = 'internal_api_error'
+          submitInfo.value = data
+          console.log(response)
+          return
+        }
+      }
+    })
+    .catch(function (error) {
+      submitStatus.value = 'connection_failure'
+      submitInfo.value = error
+      console.log(error)
+    })
+
   }
 
 }
