@@ -16,11 +16,13 @@
 
         <v-form ref="form" @submit.prevent="submitComment">
             <v-row>
-                <v-col cols="12" sm="10" md="10">
+                <v-col cols="12" sm="12" md="12">
                     <v-text-field v-model="commentForm.comment_text" class="mr-3 pt-5" placeholder="Comment" outlined clearable></v-text-field>
                 </v-col>
-                <v-col cols="12" sm="2" md="2">
-                    <v-btn color="blue" class="mt-7 rounded" @click="submitComment">Submit</v-btn>
+            </v-row>
+            <v-row>
+                <v-col cols="12" sm="12" md="12" class="text-center">
+                    <v-btn color="blue" class="rounded" @click="submitComment">Submit</v-btn>
                 </v-col>
             </v-row>
         </v-form>
