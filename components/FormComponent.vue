@@ -141,7 +141,7 @@ const props = defineProps({
     clickUpUserInfo: Object,
 })
 
-const emit = defineEmits(["close"])
+const emit = defineEmits(['close', 'closeAndReload'])
 
 const editedItem = ref([
   {
@@ -184,6 +184,8 @@ const onSubmitMsg = computed(() => {
       return 'There was an issue submitting your form. Please try again.'
     case 'success':
       return 'Work order submitted successfully.'
+    case 'updated':
+      return 'Work order updated successfully.'
     default:
       return ''
   }
@@ -290,9 +292,6 @@ async function loadItem() {
       loadLists(editedItem.value.folder.id)
     })
     .catch(err => console.log(err))
-
-    // TODO: remove when PUT endpoint is ready
-    submitBtnDisabled.value = true
   } else {
     editedItem.value = Object.assign({}, '')
   }
@@ -407,7 +406,11 @@ function loadPriorities() {
 
 function close() {
   if (!props.recordId) {
-    emit('close')
+    if(submitStatus.value === 'success') {
+      emit('closeAndReload')
+    } else {
+      emit('close')
+    }
   } else {
     window.close()
   }
@@ -435,11 +438,18 @@ async function submit() {
   }
 }
 
+/* 
+  known CU update limitations:
+  - can't update tags
+  - can't update watchers
+*/
 function save() {
   submitInfo.value = ''
   submitStatus.value = 'submitting'
   submitStatusOverlay.value = true
   submitBtnDisabled.value = true
+  let method = ''
+  let url = ''
 
   // create a data object that will be passed to API to prevent user from seeing conversions
   let data = Object.assign({}, editedItem.value)
@@ -454,16 +464,6 @@ function save() {
     data.assignees = assigneeids
   }
 
-  // since API needs IDs of watchers, pull the watcher(s) ID(s) and store in temp array
-  // let watcherids = []
-
-  // if(data.watchers) {
-  //   data.watchers.forEach(element => {
-  //     watcherids.push(element.id)
-  //   })
-  //   data.watchers = watcherids
-  // }
-
   // convert time estimate (hours) to milliseconds
   if(data.time_estimate) data.time_estimate = hoursToMilliseconds(data.time_estimate)
 
@@ -472,8 +472,18 @@ function save() {
 
   if (!props.recordId) {
     data.creator = props.clickUpUserInfo.id
+    method = 'post'
+    url = `${runtimeConfig.public.API_URL}/list/` + data.list + `/task`
+  } else {
+    console.log(data)
+    method = 'put'
+    url = `${runtimeConfig.public.API_URL}/task/` + data.id
+  }
 
-    axios.post(`${runtimeConfig.public.API_URL}/list/` + data.list + `/task`, data, {
+  axios({
+      method: method,
+      url: url,
+      data: data,
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
       }
@@ -481,8 +491,8 @@ function save() {
     .then(function (response) {
       if (response.status === 200) {
         if (response.data.response_code === 200) {
-          submitStatus.value = 'success'
-          submitInfo.value = 'Work order URL: ' + window.location.origin + '/workorders?id=' + response.data.data.id
+          submitStatus.value = (!props.recordId) ? 'success' : 'updated'
+          submitInfo.value = (!props.recordId) ? 'Work order URL: ' + window.location.origin + '/workorders?id=' + response.data.data.id : ''
         } else {
           submitStatus.value = 'internal_api_error'
           submitInfo.value = data
@@ -496,11 +506,6 @@ function save() {
       submitInfo.value = error
       console.log(error)
     })
-
-  } else {
-    // perform PUT request here
-  }
-
 }
 
 </script>

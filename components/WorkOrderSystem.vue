@@ -62,7 +62,7 @@
               </v-col>
             </template> -->
 
-            <form-component form-action="new" :clickUpUserInfo="clickUpUserInfo" @close="close()"></form-component>
+            <form-component form-action="new" :clickUpUserInfo="clickUpUserInfo" @close="close()" @closeAndReload="closeAndReload()"></form-component>
           </v-dialog>
         <!-- </v-toolbar> -->
       </template>
@@ -194,22 +194,6 @@ const nextPageBtnDisabled = computed(() => {
   return (loading.value) ? true : (lastPage.value) ? true : false
 })
 
-// computed value for work order submit progress messages
-const onSubmitMsg = computed(() => {
-  switch(submitStatus.value) {
-    case 'submitting':
-      return 'Submitting new work order...'
-    case 'internal_api_error':
-      return 'There was an issue with the API.'
-    case 'connection_failure':
-      return 'There was an issue submitting your form. Please try again.'
-    case 'success':
-      return 'Work order submitted successfully.'
-    default:
-      return ''
-  }
-})
-
 // computed value for toggling group-by behavior
 // if we still plan to incorporate grouping, then we will need to pass a :group-by="groupBy" prop in the <v-data-table-server> component
 const groupBy = computed(() => {
@@ -323,6 +307,11 @@ function editItem(item) {
 
 function close() {
   dialog.value = false
+}
+
+function closeAndReload() {
+  dialog.value = false
+  loadItems()
 }
 
 function toggleShowUsersWorkOrders (value) {
