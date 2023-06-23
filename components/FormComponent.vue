@@ -1,5 +1,6 @@
 <template>
-  <div v-if="loading">
+  <!-- TODO: need to fix flickering issue -->
+  <div v-if="loading && props.recordId">
     Retrieving data ...
   </div>
   <div v-else>
