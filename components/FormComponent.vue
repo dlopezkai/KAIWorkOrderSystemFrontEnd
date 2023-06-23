@@ -432,11 +432,19 @@ async function submit() {
   }
 }
 
+/* 
+  known CU update limitations:
+  - can't update tags
+  - can't update watchers
+*/
+
 function save() {
   submitInfo.value = ''
   submitStatus.value = 'submitting'
   submitStatusOverlay.value = true
   submitBtnDisabled.value = true
+  let method = ''
+  let url = ''
 
   // create a data object that will be passed to API to prevent user from seeing conversions
   let data = Object.assign({}, editedItem.value)
@@ -469,61 +477,40 @@ function save() {
 
   if (!props.recordId) {
     data.creator = props.clickUpUserInfo.id
-
-    axios.post(`${runtimeConfig.public.API_URL}/list/` + data.list + `/task`, data, {
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      }
-    })
-    .then(function (response) {
-      if (response.status === 200) {
-        if (response.data.response_code === 200) {
-          submitStatus.value = 'success'
-          submitInfo.value = 'Work order URL: ' + window.location.origin + '/workorders?id=' + response.data.data.id
-        } else {
-          submitStatus.value = 'internal_api_error'
-          submitInfo.value = data
-          console.log(response)
-          return
-        }
-      }
-    })
-    .catch(function (error) {
-      submitStatus.value = 'connection_failure'
-      submitInfo.value = error
-      console.log(error)
-    })
-
+    method = 'post'
+    url = `${runtimeConfig.public.API_URL}/list/` + data.list + `/task`
   } else {
-    // perform PUT request here
     console.log(data)
-
-    axios.put(`${runtimeConfig.public.API_URL}/task/` + data.id, data, {
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      }
-    })
-    .then(function (response) {
-      if (response.status === 200) {
-        if (response.data.response_code === 200) {
-          submitStatus.value = 'success'
-          submitInfo.value = 'Work order updated'
-        } else {
-          submitStatus.value = 'internal_api_error'
-          submitInfo.value = data
-          console.log(response)
-          return
-        }
-      }
-    })
-    .catch(function (error) {
-      submitStatus.value = 'connection_failure'
-      submitInfo.value = error
-      console.log(error)
-    })
-
+    method = 'put'
+    url = `${runtimeConfig.public.API_URL}/task/` + data.id
   }
 
+  axios({
+      method: method,
+      url: url,
+      data: data,
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    })
+    .then(function (response) {
+      if (response.status === 200) {
+        if (response.data.response_code === 200) {
+          submitStatus.value = 'success'
+          submitInfo.value = (!props.recordId) ? 'Work order URL: ' + window.location.origin + '/workorders?id=' + response.data.data.id : 'Work order updated'
+        } else {
+          submitStatus.value = 'internal_api_error'
+          submitInfo.value = data
+          console.log(response)
+          return
+        }
+      }
+    })
+    .catch(function (error) {
+      submitStatus.value = 'connection_failure'
+      submitInfo.value = error
+      console.log(error)
+    })
 }
 
 </script>
