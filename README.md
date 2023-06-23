@@ -43,7 +43,7 @@ Check out the [deployment documentation](https://nuxt.com/docs/getting-started/d
 
 ## Current issues
 
-This app is using Vuetify with Nuxt3. Currently, there is a known issue where VS Code and browser dev tools console will spit out errors similar to: 
+This app is using Vuetify with Nuxt3. Currently, there is a known [issue](https://github.com/nuxt/nuxt/issues/15412) where VS Code and browser dev tools console will spit out errors similar to: 
 
 VSCode:
 ```bash
