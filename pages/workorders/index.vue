@@ -4,7 +4,7 @@
 -->
 <template>
   <div>
-    <form-component :record-id="route.query.id" :clickUpUserInfo="clickUpUserInfo"></form-component>
+    <form-component form-action="edit" :record-id="route.query.id" :clickUpUserInfo="clickUpUserInfo"></form-component>
   </div>
 </template>
 

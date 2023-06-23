@@ -1,6 +1,5 @@
 <template>
-  <!-- TODO: need to fix flickering issue -->
-  <div v-if="loading">
+  <div v-if="loading && props.formAction === 'edit'">
     Retrieving data ...
   </div>
   <div v-else>
@@ -138,6 +137,7 @@ const submitStatus = ref('')
 const submitInfo = ref('')
 const props = defineProps({
     recordId: String,
+    formAction: String,
     clickUpUserInfo: Object,
 })
 
