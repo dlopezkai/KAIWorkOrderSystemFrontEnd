@@ -145,7 +145,7 @@ const data = ref([])
 const search = ref('')
 const filterByUser = ref(true)
 const showCompleted = ref(false)
-const drawer = ref(false)
+const drawer = ref(true)
 const clickUpUserInfo = ref()
 const statuses = ref([])
 
