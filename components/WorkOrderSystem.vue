@@ -20,7 +20,7 @@
     </v-list>
   </v-navigation-drawer>
 
-  <v-app-bar app clipped-left dark color="#92D5D5">
+  <v-app-bar flat app clipped-left dark color="#92D5D5">
     <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
     <v-toolbar-title>Work Order System</v-toolbar-title>
     <AuthN></AuthN>
