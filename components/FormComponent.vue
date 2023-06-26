@@ -30,10 +30,9 @@
         <v-tab value="two">Comments</v-tab>
       </v-tabs>
 
-      <v-card-text>
-        <v-window v-model="formTab">
-
-          <v-window-item value="one">
+      <v-window v-model="formTab">
+        <v-window-item value="one">
+          <v-card-text class="overflow-y-auto" style="height: 80vh">
             <v-form ref="form" @submit.prevent="submit">
               <v-row>
                 <v-col cols="12" sm="12" md="12">
@@ -93,23 +92,25 @@
                 <!-- <v-col v-if="editedItem.url" cols="12" sm="12" md="12">
                   <v-btn :href="editedItem.url" target="_blank" variant="text">ClickUp reference link</v-btn>
                 </v-col> -->
-
-                <v-col class="text-right">
-                  <v-btn variant="plain" @click="close">Cancel</v-btn>
-                  <v-btn :disabled="submitBtnDisabled" class="rounded" color="blue" @click="submit">{{ submitBtnText }}</v-btn>
-                </v-col>
               </v-row>
             </v-form>
-          </v-window-item>
+          </v-card-text>
 
-          <v-window-item v-if="props.recordId" value="two">
-            <comments-comp :taskid="props.recordId" :clickUpUserInfo="props.clickUpUserInfo"></comments-comp>
-          </v-window-item>
+          <v-card-actions>
+            <v-row>
+              <v-col class="text-right">
+                <v-btn variant="plain" @click="close">Cancel</v-btn>
+                <v-btn :disabled="submitBtnDisabled" class="rounded" color="blue" @click="submit">{{ submitBtnText }}</v-btn>
+              </v-col>
+            </v-row>
+          </v-card-actions>
+        </v-window-item>
 
-        </v-window>
-      </v-card-text>
+        <v-window-item v-if="props.recordId" value="two">
+          <comments-comp :taskid="props.recordId" :clickUpUserInfo="props.clickUpUserInfo"></comments-comp>
+        </v-window-item>
+      </v-window>
     </v-card>
-
   </div>
 </template>
 
