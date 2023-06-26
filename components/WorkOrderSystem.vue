@@ -7,6 +7,10 @@
     clipped 
     hide-overlay
   >
+    <div class="text-center">
+      <nuxt-img src="/images/kai-logo.svg" sizes="sm:100vw md:50vw lg:400px" width="200px" class="mt-3 mb-1 pa-1" style="background:white;"/>
+    </div>
+    
     <v-list color="transparent">
       <v-list-item prepend-icon="mdi-account-box" title="My work orders" @click="toggleShowUsersWorkOrders(true)"></v-list-item>
       <v-list-item prepend-icon="mdi-account-box-multiple" title=" All work orders" @click="toggleShowUsersWorkOrders(false)"></v-list-item>
