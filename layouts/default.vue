@@ -30,8 +30,8 @@
 
       <v-layout>
         <v-main style="min-height: 300px;">
-            <div class="pa-5">
-                <slot />
+            <div>
+              <slot />
             </div>
         </v-main>
       </v-layout>
