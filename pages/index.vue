@@ -1,6 +1,7 @@
 <template>
   <!-- use conditional rendering for logged in experience -->
-  <div v-if="!authStore.loggedIn" class="container d-flex align-center flex-column">
+  <div v-if="!authStore.loggedIn">
+    <div class="container d-flex align-center flex-column">
       <div class="centered-element">
         <v-card flat class="text-center">
           <v-card-text>
@@ -13,6 +14,7 @@
           </v-card-text>
         </v-card>
       </div>
+    </div>
   </div>
   <div v-else>
     <work-order-system></work-order-system>
