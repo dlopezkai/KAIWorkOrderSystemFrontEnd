@@ -100,7 +100,7 @@
             <v-row>
               <v-col class="text-right">
                 <v-btn variant="plain" @click="close" title="Cancel">Cancel</v-btn>
-                <v-btn :disabled="submitBtnDisabled" class="rounded" color="blue" @click="submit" title="Save work order">{{ submitBtnText }}</v-btn>
+                <v-btn :disabled="submitBtnDisabled" class="rounded" color="blue" @click="submit" :title="`${ submitBtnText } work order`">{{ submitBtnText }}</v-btn>
               </v-col>
             </v-row>
           </v-card-actions>
