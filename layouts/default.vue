@@ -29,7 +29,7 @@
     </v-card> -->
 
       <v-layout>
-        <v-main style="min-height: 300px;" class="font-display">
+        <v-main style="min-height: 300px;">
             <div>
               <slot />
             </div>
@@ -40,7 +40,6 @@
 
 <script setup lang="ts">
   import { useAuthStore } from '~/store/auth';
-  import '~/assets/css/main.css'
   // import { storeToRefs } from 'pinia'
 
   const authStore = useAuthStore()

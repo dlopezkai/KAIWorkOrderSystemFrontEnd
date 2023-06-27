@@ -113,5 +113,6 @@ function submitComment() {
     -webkit-line-clamp: unset !important;
     font-size: 1rem;
     opacity: 1;
+    line-height: 1.2;
 }
 </style>

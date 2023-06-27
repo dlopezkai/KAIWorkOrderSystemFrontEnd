@@ -2,12 +2,12 @@
   <div v-if="loading && props.formAction === 'edit'" class="pa-5">
     Retrieving data ...
   </div>
-  <div v-else class="pa-5 font-display">
+  <div v-else class="pa-5">
     <v-overlay v-model="submitStatusOverlay" class="align-center justify-center" persistent>
       <v-container style="height: 400px;">
         <v-row class="fill-height" align-content="center" justify="center">
           <v-col class="text-subtitle-1 text-center" cols="12">
-            <v-card class="font-display">
+            <v-card>
               <v-card-title>{{ onSubmitMsg }}</v-card-title>
               <v-card-text v-if="submitInfo">{{ submitInfo }}</v-card-text>
               <v-progress-circular v-if="submitStatus === 'submitting'" color="#92D5D5" indeterminate size="64" class="mb-4"></v-progress-circular>
@@ -22,7 +22,7 @@
 
     <v-card :class="scrollingClasses">
       <v-card-title>
-        <span class="text-h5 font-display">{{ formTitle }}</span>
+        <h4>{{ formTitle }}</h4>
       </v-card-title>
      
       <v-tabs v-if="props.recordId" v-model="formTab" color="#428086">
