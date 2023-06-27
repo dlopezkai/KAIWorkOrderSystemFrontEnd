@@ -15,12 +15,12 @@
         <v-divider :thickness="3"></v-divider>
 
         <v-form ref="form" @submit.prevent="submitComment">
-            <v-row>
+            <v-row class="pl-3 pr-3">
                 <v-col cols="12" sm="12" md="12">
-                    <v-text-field v-model="commentForm.comment_text" class="mr-3 pt-5" placeholder="Comment" outlined clearable></v-text-field>
+                    <v-text-field v-model="commentForm.comment_text" class="pt-5" placeholder="Comment" outlined clearable></v-text-field>
                 </v-col>
             </v-row>
-            <v-row>
+            <v-row class="pb-5">
                 <v-col cols="12" sm="12" md="12" class="text-center">
                     <v-btn color="blue" class="rounded" @click="submitComment">Submit</v-btn>
                 </v-col>
@@ -113,5 +113,6 @@ function submitComment() {
     -webkit-line-clamp: unset !important;
     font-size: 1rem;
     opacity: 1;
+    line-height: 1.2;
 }
 </style>

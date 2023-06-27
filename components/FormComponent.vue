@@ -1,8 +1,8 @@
 <template>
-  <div v-if="loading && props.formAction === 'edit'">
+  <div v-if="loading && props.formAction === 'edit'" class="pa-5">
     Retrieving data ...
   </div>
-  <div v-else>
+  <div v-else class="pa-5">
     <v-overlay v-model="submitStatusOverlay" class="align-center justify-center" persistent>
       <v-container style="height: 400px;">
         <v-row class="fill-height" align-content="center" justify="center">
@@ -20,9 +20,9 @@
       </v-container>
     </v-overlay>
 
-    <v-card>
+    <v-card :class="scrollingClasses">
       <v-card-title>
-        <span class="text-h5">{{ formTitle }}</span>
+        <h4>{{ formTitle }}</h4>
       </v-card-title>
      
       <v-tabs v-if="props.recordId" v-model="formTab" color="#428086">
@@ -30,10 +30,9 @@
         <v-tab value="two">Comments</v-tab>
       </v-tabs>
 
-      <v-card-text>
-        <v-window v-model="formTab">
-
-          <v-window-item value="one">
+      <v-window v-model="formTab">
+        <v-window-item value="one">
+          <v-card-text>
             <v-form ref="form" @submit.prevent="submit">
               <v-row>
                 <v-col cols="12" sm="12" md="12">
@@ -93,23 +92,25 @@
                 <!-- <v-col v-if="editedItem.url" cols="12" sm="12" md="12">
                   <v-btn :href="editedItem.url" target="_blank" variant="text">ClickUp reference link</v-btn>
                 </v-col> -->
-
-                <v-col class="text-right">
-                  <v-btn variant="plain" @click="close">Cancel</v-btn>
-                  <v-btn :disabled="submitBtnDisabled" class="rounded" color="blue" @click="submit">{{ submitBtnText }}</v-btn>
-                </v-col>
               </v-row>
             </v-form>
-          </v-window-item>
+          </v-card-text>
 
-          <v-window-item v-if="props.recordId" value="two">
-            <comments-comp :taskid="props.recordId" :clickUpUserInfo="props.clickUpUserInfo"></comments-comp>
-          </v-window-item>
+          <v-card-actions>
+            <v-row>
+              <v-col class="text-right">
+                <v-btn variant="plain" @click="close">Cancel</v-btn>
+                <v-btn :disabled="submitBtnDisabled" class="rounded" color="blue" @click="submit">{{ submitBtnText }}</v-btn>
+              </v-col>
+            </v-row>
+          </v-card-actions>
+        </v-window-item>
 
-        </v-window>
-      </v-card-text>
+        <v-window-item v-if="props.recordId" value="two">
+          <comments-comp :taskid="props.recordId" :clickUpUserInfo="props.clickUpUserInfo"></comments-comp>
+        </v-window-item>
+      </v-window>
     </v-card>
-
   </div>
 </template>
 
@@ -118,6 +119,7 @@ import axios from 'axios'
 import CommentsComp from './CommentsComp.vue';
 import { convertToDate, dateToISOStr, hoursToMilliseconds } from '~/helpers/datetimeConversions.js';
 import { capitalizeFirstLetter } from '~/helpers/capitalizeFirstLetter.js';
+import '~/assets/css/main.css'
 
 const loading = ref(true)
 const runtimeConfig = useRuntimeConfig()
@@ -197,6 +199,13 @@ const priorityMessages = computed(() => {
   } else {
     const index = editedItem.value.priority - 1
     return priorities.value[index].description
+  }
+})
+
+// computed CSS class to control scrolling of the form
+const scrollingClasses = computed(() => {
+  if (props.formAction === 'new') {
+    return 'overflow-y-auto modal-form'
   }
 })
 
@@ -439,8 +448,9 @@ async function submit() {
 
 /* 
   known CU update limitations:
+  - can't update OR save watchers
   - can't update tags
-  - can't update watchers
+  - can't update folder (project) or list (subtask)
 */
 function save() {
   submitInfo.value = ''
@@ -510,5 +520,7 @@ function save() {
 </script>
 
 <style scoped>
-
+  .modal-form {
+    height: 80vh;
+  }
 </style>
