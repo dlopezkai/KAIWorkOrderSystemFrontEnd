@@ -12,16 +12,30 @@
     </div>
     
     <v-list color="transparent">
-      <v-list-item prepend-icon="mdi-account-box" title="My work orders" @click="toggleShowUsersWorkOrders(true)"></v-list-item>
-      <v-list-item prepend-icon="mdi-account-box-multiple" title=" All work orders" @click="toggleShowUsersWorkOrders(false)"></v-list-item>
-      <v-list-item prepend-icon="mdi-format-list-bulleted" title="Not completed" @click="toggleShowCompleted(false)"></v-list-item>
-      <v-list-item prepend-icon="mdi-playlist-check" title="Completed" @click="toggleShowCompleted(true)"></v-list-item>
-      <v-list-item prepend-icon="mdi-form-select" title="Add New Work Order" @click="editItem(item)"></v-list-item>
+      <v-list-item prepend-icon="mdi-account-box" @click="toggleShowUsersWorkOrders(true)">
+        <v-list-item-title title="Show my work orders">My work orders</v-list-item-title>
+      </v-list-item>
+
+      <v-list-item prepend-icon="mdi-account-box-multiple" @click="toggleShowUsersWorkOrders(false)">
+        <v-list-item-title title="Show all work orders">All work orders</v-list-item-title>
+      </v-list-item>
+
+      <v-list-item prepend-icon="mdi-format-list-bulleted" @click="toggleShowCompleted(false)">
+        <v-list-item-title title="Show non-completed work orders">Not completed</v-list-item-title>
+      </v-list-item>
+
+      <v-list-item prepend-icon="mdi-playlist-check" @click="toggleShowCompleted(true)">
+        <v-list-item-title title="Show completed orders">Completed</v-list-item-title>
+      </v-list-item>
+
+      <v-list-item prepend-icon="mdi-form-select" @click="editItem(item)">
+        <v-list-item-title title="Add a new work order">Add New Work Order</v-list-item-title>
+      </v-list-item>
     </v-list>
   </v-navigation-drawer>
 
   <v-app-bar flat app clipped-left dark color="#92D5D5">
-    <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+    <v-app-bar-nav-icon @click.stop="drawer = !drawer" title="Toggle menu display"></v-app-bar-nav-icon>
     <v-toolbar-title>Work Order System</v-toolbar-title>
     <AuthN></AuthN>
   </v-app-bar>
@@ -118,8 +132,8 @@
   
   <v-container>
     <v-row justify="center" align="center">
-      <v-btn class="rounded-0" flat :disabled="previousPageBtnDisabled" @click="decrementPage">Previous page</v-btn>
-      <v-btn class="rounded-0" flat :disabled="nextPageBtnDisabled" @click="incrementPage">Next page</v-btn>
+      <v-btn class="rounded-0" flat :disabled="previousPageBtnDisabled" @click="decrementPage" title="Go to previous page">Previous page</v-btn>
+      <v-btn class="rounded-0" flat :disabled="nextPageBtnDisabled" @click="incrementPage" title="Go to next page">Next page</v-btn>
     </v-row>
   </v-container>
   <!-- </div> -->

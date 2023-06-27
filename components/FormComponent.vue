@@ -26,8 +26,8 @@
       </v-card-title>
      
       <v-tabs v-if="props.recordId" v-model="formTab" color="#428086">
-        <v-tab value="one">Details</v-tab>
-        <v-tab value="two">Comments</v-tab>
+        <v-tab value="one" title="Switch to details tab">Details</v-tab>
+        <v-tab value="two" title="Switch to comments tab">Comments</v-tab>
       </v-tabs>
 
       <v-window v-model="formTab">
@@ -85,7 +85,7 @@
 
                 <v-col cols="12" sm="12" md="12" class="mt-5">
                   <v-text-field v-model="editedItem.links" label="SharePoint File"></v-text-field>
-                  <v-btn href="https://kauffmaninc.sharepoint.com/" target="_blank" variant="tonal" class="rounded" color="#428086">Open SharePoint site</v-btn>
+                  <v-btn href="https://kauffmaninc.sharepoint.com/" target="_blank" variant="tonal" class="rounded" color="#428086" title="Open SharePoint">Open SharePoint site</v-btn>
                 </v-col>
 
                 <!-- hide for production -->
@@ -99,8 +99,8 @@
           <v-card-actions>
             <v-row>
               <v-col class="text-right">
-                <v-btn variant="plain" @click="close">Cancel</v-btn>
-                <v-btn :disabled="submitBtnDisabled" class="rounded" color="blue" @click="submit">{{ submitBtnText }}</v-btn>
+                <v-btn variant="plain" @click="close" title="Cancel">Cancel</v-btn>
+                <v-btn :disabled="submitBtnDisabled" class="rounded" color="blue" @click="submit" title="Save work order">{{ submitBtnText }}</v-btn>
               </v-col>
             </v-row>
           </v-card-actions>
