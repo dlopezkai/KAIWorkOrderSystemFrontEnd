@@ -22,7 +22,7 @@
 
     <v-card :class="scrollingClasses">
       <v-card-title>
-        <span class="text-h5">{{ formTitle }}</span>
+        <span class="text-h5 font-display">{{ formTitle }}</span>
       </v-card-title>
      
       <v-tabs v-if="props.recordId" v-model="formTab" color="#428086">
