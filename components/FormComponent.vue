@@ -20,7 +20,7 @@
       </v-container>
     </v-overlay>
 
-    <v-card>
+    <v-card :class="scrollingClasses">
       <v-card-title>
         <span class="text-h5">{{ formTitle }}</span>
       </v-card-title>
@@ -32,7 +32,7 @@
 
       <v-window v-model="formTab">
         <v-window-item value="one">
-          <v-card-text class="overflow-y-auto" style="height: 80vh">
+          <v-card-text>
             <v-form ref="form" @submit.prevent="submit">
               <v-row>
                 <v-col cols="12" sm="12" md="12">
@@ -198,6 +198,13 @@ const priorityMessages = computed(() => {
   } else {
     const index = editedItem.value.priority - 1
     return priorities.value[index].description
+  }
+})
+
+// computed CSS class to control scrolling of the form
+const scrollingClasses = computed(() => {
+  if (props.formAction === 'new') {
+    return 'overflow-y-auto modal-form'
   }
 })
 
@@ -512,5 +519,7 @@ function save() {
 </script>
 
 <style scoped>
-
+  .modal-form {
+    height: 80vh;
+  }
 </style>
