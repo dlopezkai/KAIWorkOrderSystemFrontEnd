@@ -75,8 +75,16 @@
 
   const drawer = ref(true)
 
+  // use provide/inject pattern to send data to child component
+  const dialog = ref(false)
+  provide('dialog', dialog)
+
   async function signInAction() {
     await signIn()
+  }
+
+  function editItem() {
+    dialog.value = true
   }
 </script>
 

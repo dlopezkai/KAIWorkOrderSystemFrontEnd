@@ -148,7 +148,6 @@ import { capitalizeFirstLetter } from '~/helpers/capitalizeFirstLetter.js';
 
 const runtimeConfig = useRuntimeConfig()
 const authStore = useAuthStore()
-const dialog = ref(false)
 const itemsPerPage = ref(100)
 const loading = ref(true)
 const totalItems = ref(0)
@@ -162,6 +161,10 @@ const showCompleted = ref(false)
 // const drawer = ref(true)
 const clickUpUserInfo = ref()
 const statuses = ref([])
+
+// use provide/inject pattern to receive data from layout
+// const dialog = ref(false)
+const dialog = inject('dialog')
 
 const headers = [
   { title: 'Name', key: 'name', align: 'start', sortable: false, width: '25%' },
