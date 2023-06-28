@@ -33,17 +33,11 @@
             
             <v-list color="transparent">
               <v-list-item prepend-icon="mdi-account-box" @click="toggleShowUsersWorkOrders(true)">
-                <!-- <v-list-item-title title="Show my work orders">My work orders</v-list-item-title> -->
-                <v-list-item-title title="Show my work orders">
-                  <NuxtLink to="/">My work orders</NuxtLink>
-                </v-list-item-title>
+                <v-list-item-title title="Show my work orders">My work orders</v-list-item-title>
               </v-list-item>
 
               <v-list-item prepend-icon="mdi-account-box-multiple" @click="toggleShowUsersWorkOrders(false)">
-                <!-- <v-list-item-title title="Show all work orders">All work orders</v-list-item-title> -->
-                <v-list-item-title title="Show all work orders">
-                  <NuxtLink to="/">All work orders</NuxtLink>
-                </v-list-item-title>
+                <v-list-item-title title="Show all work orders">All work orders</v-list-item-title>
               </v-list-item>
 
               <v-list-item prepend-icon="mdi-format-list-bulleted" @click="toggleShowCompleted(false)">
@@ -100,6 +94,8 @@
   }
 
   function toggleShowUsersWorkOrders(value) {
+    navigateTo('/')
+
     if(value != filterByUser.value) {
       filterByUser.value = (value) ? true : false
     } else {
@@ -108,11 +104,13 @@
   }
 
   function toggleShowCompleted(value) {
-  if(value != showCompleted.value) {
-    showCompleted.value = (value) ? true : false
-  } else {
-    return
-  }
+    navigateTo('/')
+
+    if(value != showCompleted.value) {
+      showCompleted.value = (value) ? true : false
+    } else {
+      return
+    }
 }
 </script>
 
