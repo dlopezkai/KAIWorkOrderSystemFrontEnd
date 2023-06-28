@@ -156,7 +156,6 @@ const page = ref(0)
 const lastPage = ref(false)
 const data = ref([])
 const search = ref('')
-const showCompleted = ref(false)
 // const drawer = ref(true)
 const clickUpUserInfo = ref()
 const statuses = ref([])
@@ -170,6 +169,16 @@ const filterByUser = inject('filterByUser')
 
 // reload table when filterByUser data is changed
 watch(filterByUser, (currentValue, newValue) => {
+  if(currentValue !== newValue) {
+    loadItems()
+  }
+})
+
+// const showCompleted = ref(false)
+const showCompleted = inject('showCompleted')
+
+// reload table when showCompleted data is changed
+watch(showCompleted, (currentValue, newValue) => {
   if(currentValue !== newValue) {
     loadItems()
   }
@@ -353,14 +362,14 @@ function closeAndReload() {
 //   }
 // }
 
-function toggleShowCompleted (value) {
-  if(value != showCompleted.value) {
-    showCompleted.value = (value) ? true : false
-    loadItems()
-  } else {
-    return
-  }
-}
+// function toggleShowCompleted (value) {
+//   if(value != showCompleted.value) {
+//     showCompleted.value = (value) ? true : false
+//     loadItems()
+//   } else {
+//     return
+//   }
+// }
 
 function incrementPage() {
   page.value = (page.value + 1)

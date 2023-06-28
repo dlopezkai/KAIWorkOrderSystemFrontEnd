@@ -66,7 +66,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
   import { useAuthStore } from '~/store/auth';
   // import { storeToRefs } from 'pinia'
 
@@ -82,6 +82,9 @@
   const filterByUser = ref(true)
   provide('filterByUser', filterByUser)
 
+  const showCompleted = ref(false)
+  provide('showCompleted', showCompleted)
+
   async function signInAction() {
     await signIn()
   }
@@ -90,13 +93,21 @@
     dialog.value = true
   }
 
-  function toggleShowUsersWorkOrders (value) {
+  function toggleShowUsersWorkOrders(value) {
     if(value != filterByUser.value) {
       filterByUser.value = (value) ? true : false
     } else {
       return
     }
   }
+
+  function toggleShowCompleted(value) {
+  if(value != showCompleted.value) {
+    showCompleted.value = (value) ? true : false
+  } else {
+    return
+  }
+}
 </script>
 
 <style scoped>
