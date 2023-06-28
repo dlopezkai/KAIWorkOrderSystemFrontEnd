@@ -1,6 +1,6 @@
 <template>
   <!-- TODO:find where 'class="bg-deep-purple"' is defined -->
-  <v-navigation-drawer
+  <!-- <v-navigation-drawer
     color="#428086"
     theme="dark"
     v-model="drawer"
@@ -32,13 +32,13 @@
         <v-list-item-title title="Add a new work order">Add New Work Order</v-list-item-title>
       </v-list-item>
     </v-list>
-  </v-navigation-drawer>
+  </v-navigation-drawer> -->
 
-  <v-app-bar flat app clipped-left dark color="#92D5D5">
+  <!-- <v-app-bar flat app clipped-left dark color="#92D5D5">
     <v-app-bar-nav-icon @click.stop="drawer = !drawer" title="Toggle menu display"></v-app-bar-nav-icon>
     <v-toolbar-title>Work Order System</v-toolbar-title>
     <AuthN></AuthN>
-  </v-app-bar>
+  </v-app-bar> -->
 
   <v-container v-if="clickUpUserInfo" fluid>
     <v-text-field
@@ -121,7 +121,7 @@
       </template>
 
       <template v-slot:item.actions="{ item }">
-        <NuxtLink :to="'/workorders?id=' + item.raw.id" target="_blank" title="Edit work order">
+        <NuxtLink :to="'/workorders?id=' + item.raw.id" title="Edit work order">
           <v-icon size="small" class="me-2">mdi-pencil</v-icon>
         </NuxtLink>
       </template>
