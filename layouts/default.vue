@@ -79,12 +79,23 @@
   const dialog = ref(false)
   provide('dialog', dialog)
 
+  const filterByUser = ref(true)
+  provide('filterByUser', filterByUser)
+
   async function signInAction() {
     await signIn()
   }
 
   function editItem() {
     dialog.value = true
+  }
+
+  function toggleShowUsersWorkOrders (value) {
+    if(value != filterByUser.value) {
+      filterByUser.value = (value) ? true : false
+    } else {
+      return
+    }
   }
 </script>
 

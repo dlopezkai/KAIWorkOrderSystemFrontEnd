@@ -156,7 +156,6 @@ const page = ref(0)
 const lastPage = ref(false)
 const data = ref([])
 const search = ref('')
-const filterByUser = ref(true)
 const showCompleted = ref(false)
 // const drawer = ref(true)
 const clickUpUserInfo = ref()
@@ -165,6 +164,16 @@ const statuses = ref([])
 // use provide/inject pattern to receive data from layout
 // const dialog = ref(false)
 const dialog = inject('dialog')
+
+// const filterByUser = ref(true)
+const filterByUser = inject('filterByUser')
+
+// reload table when filterByUser data is changed
+watch(filterByUser, (currentValue, newValue) => {
+  if(currentValue !== newValue) {
+    loadItems()
+  }
+})
 
 const headers = [
   { title: 'Name', key: 'name', align: 'start', sortable: false, width: '25%' },
@@ -322,9 +331,9 @@ function loadStatuses() {
   .catch(err => console.log(err))
 }
 
-function editItem(item) {
-  dialog.value = true
-}
+// function editItem(item) {
+//   dialog.value = true
+// }
 
 function close() {
   dialog.value = false
@@ -335,14 +344,14 @@ function closeAndReload() {
   loadItems()
 }
 
-function toggleShowUsersWorkOrders (value) {
-  if(value != filterByUser.value) {
-    filterByUser.value = (value) ? true : false
-    loadItems()
-  } else {
-    return
-  }
-}
+// function toggleShowUsersWorkOrders (value) {
+//   if(value != filterByUser.value) {
+//     filterByUser.value = (value) ? true : false
+//     loadItems()
+//   } else {
+//     return
+//   }
+// }
 
 function toggleShowCompleted (value) {
   if(value != showCompleted.value) {
