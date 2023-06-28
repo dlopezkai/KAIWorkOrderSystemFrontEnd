@@ -73,6 +73,8 @@
   const authStore = useAuthStore()
   // const { currentUser } = storeToRefs(authStore)
 
+  const drawer = ref(true)
+
   async function signInAction() {
     await signIn()
   }
