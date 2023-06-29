@@ -420,19 +420,12 @@ function close() {
       emit('close')
     }
   } else {
-    window.close()
+    emit('close')
   }
 }
 
 function resetSubmitStatus() {
-  if(submitStatus.value === 'submitting') {
-    close()
-  }
-
-  if(submitStatus.value === 'success') {
-    close()
-  }
-
+  close()
   submitStatus.value = ''
   submitStatusOverlay.value = false
   submitBtnDisabled.value = false
@@ -484,7 +477,6 @@ function save() {
     method = 'post'
     url = `${runtimeConfig.public.API_URL}/list/` + data.list + `/task`
   } else {
-    console.log(data)
     method = 'put'
     url = `${runtimeConfig.public.API_URL}/task/` + data.id
   }
