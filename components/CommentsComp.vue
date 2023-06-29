@@ -1,15 +1,15 @@
 <template>
     <div>
-        <!-- <p>{{ comments.data.data }}</p> -->
-
         <v-list lines="two" style="max-height: 500px" class="overflow-y-auto">
             <v-list-item
+                v-if="commentsData.length > 0"
                 v-for="comment in commentsData"
                 :key="comment.id"
             >
                 <v-list-item-title><strong>{{  comment.username + ' (' + convertToDate(comment.date, 'table') + ')' }}</strong></v-list-item-title>
                 <v-list-item-subtitle v-html="comment.comment_text" class="comment-subtitle"></v-list-item-subtitle>
             </v-list-item>
+            <v-list-item v-else>No comments</v-list-item>
         </v-list>
 
         <v-divider :thickness="3"></v-divider>
