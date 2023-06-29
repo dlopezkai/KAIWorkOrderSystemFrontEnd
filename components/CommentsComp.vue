@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-list lines="two" style="max-height: 500px" class="overflow-y-auto">
+        <v-list lines="two" style="max-height:500px; width:100vw;" class="overflow-y-auto">
             <v-list-item
                 v-if="commentsData.length > 0"
                 v-for="comment in commentsData"
@@ -114,5 +114,17 @@ function submitComment() {
     font-size: 1rem;
     opacity: 1;
     line-height: 1.2;
+}
+
+@media (max-width: 1279px) {
+    .comment-subtitle {
+        width: 90%;
+    }
+}
+
+@media (min-width: 1280px) {
+    .comment-subtitle {
+        width: 75%;
+    }
 }
 </style>
