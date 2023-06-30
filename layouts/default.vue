@@ -59,6 +59,10 @@
             <v-toolbar-title>Work Order System</v-toolbar-title>
             <AuthN></AuthN>
           </v-app-bar>
+
+          <v-dialog v-model="dialog" max-width="800px">
+            <form-component form-action="new" :clickUpUserInfo="clickUpUserInfo" @close="close()" @closeAndReload="closeAndReload()"></form-component>
+          </v-dialog>
           <slot />
         </div>
       </v-main>
@@ -77,7 +81,7 @@
 
   // use provide/inject pattern to send data to child component
   const dialog = ref(false)
-  provide('dialog', dialog)
+  // provide('dialog', dialog)
 
   const filterByUser = ref(true)
   provide('filterByUser', filterByUser)
@@ -91,6 +95,16 @@
 
   function editItem() {
     dialog.value = true
+  }
+
+  function close() {
+    dialog.value = false
+  }
+
+  // not sure if we'll need this yet
+  function closeAndReload() {
+    dialog.value = false
+    loadItems()
   }
 
   function toggleShowUsersWorkOrders(value) {
