@@ -369,7 +369,7 @@ function loadFolders() {
 
 function loadLists(presentFolderId) {
   // if the folder ID changes, then clear the selected list / subtask
-  if ((folderIDTemp.value) && folderIDTemp.value !== presentFolderId) {
+  if ( ( (folderIDTemp.value) && folderIDTemp.value !== presentFolderId ) || !folderIDTemp.value ) {
     // clear list/subtask
     editedItem.value.list = ''
 
@@ -377,8 +377,10 @@ function loadLists(presentFolderId) {
     lists.value = ''
 
     // reset temp ID
-    folderIDTemp.value = editedItem.value.folder
-  }
+    if(folderIDTemp.value) {
+      folderIDTemp.value = editedItem.value.folder
+    }
+  } 
 
   // get selected folder ID
   let folderId = (presentFolderId) ? presentFolderId : editedItem.value.folder
