@@ -112,7 +112,7 @@
       <v-window-item v-if="props.recordId" value="two">
         <v-card>
           <v-card-text>
-            <comments-comp :taskid="props.recordId" :clickUpUserInfo="props.clickUpUserInfo"></comments-comp>
+            <comments-comp :taskid="props.recordId" :clickUpUserInfo="clickUpUserInfo"></comments-comp>
           </v-card-text>
         </v-card>
         
@@ -124,6 +124,7 @@
 
 <script setup>
 import axios from 'axios'
+import { useAuthStore } from '~/store/auth';
 import CommentsComp from './CommentsComp.vue';
 import { convertToDate, dateToISOStr, hoursToMilliseconds } from '~/helpers/datetimeConversions.js';
 import { capitalizeFirstLetter } from '~/helpers/capitalizeFirstLetter.js';
@@ -131,6 +132,8 @@ import '~/assets/css/main.css'
 
 const loading = ref(true)
 const runtimeConfig = useRuntimeConfig()
+const authStore = useAuthStore()
+const clickUpUserInfo = ref()
 const tags = ref([])
 const members = ref([])
 const folders = ref([])
@@ -147,7 +150,6 @@ const submitInfo = ref('')
 const props = defineProps({
     recordId: String,
     formAction: String,
-    clickUpUserInfo: Object,
 })
 
 const emit = defineEmits(['close', 'closeAndReload'])
@@ -277,6 +279,7 @@ onMounted(() => {
   loadFolders()
   loadStatuses()
   loadPriorities()
+  loadClickUpUserInfo()
 })
 
 async function loadItem() {
@@ -420,6 +423,14 @@ function loadPriorities() {
   .catch(err => console.log(err))
 }
 
+function loadClickUpUserInfo() {
+  axios.get(`${runtimeConfig.public.API_URL}/members/?email=` + authStore.currentUser.username.toLowerCase())
+  .then((response) => {
+    clickUpUserInfo.value = response.data.data[0]
+  })
+  .catch(err => console.log(err))
+}
+
 function close() {
   if (!props.recordId) {
     if(submitStatus.value === 'success') {
@@ -481,7 +492,7 @@ function save() {
   // data.list = 901001092394
 
   if (!props.recordId) {
-    data.creator = props.clickUpUserInfo.id
+    data.creator = clickUpUserInfo.value.id
     method = 'post'
     url = `${runtimeConfig.public.API_URL}/list/` + data.list + `/task`
   } else {

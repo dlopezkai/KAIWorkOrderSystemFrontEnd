@@ -20,7 +20,6 @@ const authStore = useAuthStore()
 const { $msal } = useNuxtApp()
 
 function close() {
-  console.log('close')
   navigateTo('/')
 }
 

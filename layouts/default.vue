@@ -61,7 +61,7 @@
           </v-app-bar>
 
           <v-dialog v-model="dialog" max-width="800px">
-            <form-component form-action="new" :clickUpUserInfo="clickUpUserInfo" @close="close()" @closeAndReload="closeAndReload()"></form-component>
+            <form-component form-action="new" @close="close()" @closeAndReload="closeAndReload()"></form-component>
           </v-dialog>
           <slot />
         </div>
@@ -104,7 +104,7 @@
   // not sure if we'll need this yet
   function closeAndReload() {
     dialog.value = false
-    loadItems()
+    // loadItems()
   }
 
   function toggleShowUsersWorkOrders(value) {
