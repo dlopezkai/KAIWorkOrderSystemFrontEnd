@@ -242,14 +242,14 @@ const groupBy = computed(() => {
 })
 
 // form field validation rules
-const rules =
-{
-  required: v => !!v || 'Field is required',
-  length: v => v.length >= 3 || 'Minimum length is 3 characters',
-  select: v => !!v || 'Select a valid option',
-  due_date: v => !!v || 'Date must be selected',
-  due_date_threshold: v => dateValidation(v) || 'Date must be 2 business days from today',
-}
+// const rules =
+// {
+//   required: v => !!v || 'Field is required',
+//   length: v => v.length >= 3 || 'Minimum length is 3 characters',
+//   select: v => !!v || 'Select a valid option',
+//   due_date: v => !!v || 'Date must be selected',
+//   due_date_threshold: v => dateValidation(v) || 'Date must be 2 business days from today',
+// }
 
 onBeforeMount(() => {
   loadClickUpUserInfo()
