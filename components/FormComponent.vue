@@ -363,10 +363,7 @@ function loadFolders() {
   .catch(err => console.log(err))
 }
 
-function loadLists(presentFolderId) {
-  // get selected folder ID
-  let folderId = (presentFolderId) ? presentFolderId : editedItem.value.folder
-
+function loadLists(folderId) {
   // load list/subtask options
   axios.get(`${runtimeConfig.public.API_URL}/folder/` + folderId + `/lists`)
   .then((response) => {
