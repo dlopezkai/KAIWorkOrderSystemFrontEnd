@@ -43,7 +43,7 @@
                 </v-col>
 
                 <v-col cols="12" sm="6" md="6">
-                  <v-select v-model="editedItem.folder" label="Project" :items="folders" item-title="name" item-value="id" @update:modelValue="loadLists()" :rules="[rules.select]"></v-select>
+                  <v-select v-model="editedItem.folder" label="Project" :items="folders" item-title="name" item-value="id" @update:modelValue="resetAndReloadLists()" :rules="[rules.select]"></v-select>
                 </v-col>
                 <v-col cols="12" sm="6" md="6">
                   <v-select v-model="editedItem.list" label="Subtask" :items="lists" item-title="name" item-value="id" :rules="[rules.select]"></v-select>
@@ -140,7 +140,6 @@ const folders = ref([])
 const lists = ref([])
 const statuses = ref([])
 const priorities = ref([])
-const folderIDTemp = ref()
 const form = ref(null)
 const formTab = ref(null)
 const submitBtnDisabled = ref(false)
@@ -304,10 +303,7 @@ async function loadItem() {
       editedItem.value.status =  editedItem.value.status.status
     })
     .then(() => {
-      // next 2 lines are needed by the list/subtask drop down as its selections are depended on the folder ID
       loadFolders()
-      folderIDTemp.value = editedItem.value.folder.id
-
       loadLists(editedItem.value.folder.id)
     })
     .catch(err => console.log(err))
@@ -368,20 +364,6 @@ function loadFolders() {
 }
 
 function loadLists(presentFolderId) {
-  // if the folder ID changes, then clear the selected list / subtask
-  if ( ( (folderIDTemp.value) && folderIDTemp.value !== presentFolderId ) || !folderIDTemp.value ) {
-    // clear list/subtask
-    editedItem.value.list = ''
-
-    // clear list/subtask options
-    lists.value = ''
-
-    // reset temp ID
-    if(folderIDTemp.value) {
-      folderIDTemp.value = editedItem.value.folder
-    }
-  } 
-
   // get selected folder ID
   let folderId = (presentFolderId) ? presentFolderId : editedItem.value.folder
 
@@ -396,6 +378,12 @@ function loadLists(presentFolderId) {
     })
   })
   .catch(err => console.log(err))
+}
+
+function resetAndReloadLists() {
+  editedItem.value.list = ''
+  lists.value = ''
+  loadLists(editedItem.value.folder)
 }
 
 function loadStatuses() {
