@@ -20,18 +20,20 @@
       </v-container>
     </v-overlay>
 
-    <v-card :class="scrollingClasses">
-      <v-card-title>
-        <h4>{{ formTitle }}</h4>
-      </v-card-title>
-     
-      <v-tabs v-if="props.recordId" v-model="formTab" color="#428086">
-        <v-tab value="one" title="Switch to details tab">Details</v-tab>
-        <v-tab value="two" title="Switch to comments tab">Comments</v-tab>
-      </v-tabs>
+    <h3 v-if="props.formAction === 'edit'">{{ formTitle }}</h3>
 
-      <v-window v-model="formTab">
-        <v-window-item value="one">
+    <v-tabs v-if="props.recordId" v-model="formTab" color="#428086">
+      <v-tab value="one" title="Switch to details tab">Details</v-tab>
+      <v-tab value="two" title="Switch to comments tab">Comments</v-tab>
+    </v-tabs>
+
+    <v-window v-model="formTab">
+      <v-window-item value="one">
+        <v-card :class="scrollingClasses">
+          <v-card-title v-if="props.formAction === 'new'">
+            <h4>{{ formTitle }}</h4>
+          </v-card-title>
+
           <v-card-text>
             <v-form ref="form" @submit.prevent="submit">
               <v-row>
@@ -104,13 +106,19 @@
               </v-col>
             </v-row>
           </v-card-actions>
-        </v-window-item>
+        </v-card>
+      </v-window-item>
 
-        <v-window-item v-if="props.recordId" value="two">
-          <comments-comp :taskid="props.recordId" :clickUpUserInfo="props.clickUpUserInfo"></comments-comp>
-        </v-window-item>
-      </v-window>
-    </v-card>
+      <v-window-item v-if="props.recordId" value="two">
+        <v-card>
+          <v-card-text>
+            <comments-comp :taskid="props.recordId" :clickUpUserInfo="props.clickUpUserInfo"></comments-comp>
+          </v-card-text>
+        </v-card>
+        
+      </v-window-item>
+    </v-window>
+    
   </div>
 </template>
 
