@@ -71,7 +71,7 @@
       <template v-slot:top>
         <!-- <v-toolbar flat> -->
 
-          <!-- <v-dialog v-model="dialog" max-width="800px"> -->
+          <v-dialog v-model="dialog" max-width="800px">
             <!-- <template v-slot:activator="{ props }">
               <v-col class="text-center">
                 <v-btn color="primary" dark class="mb-2" v-bind="props">
@@ -80,8 +80,8 @@
               </v-col>
             </template> -->
 
-            <!-- <form-component form-action="new" :clickUpUserInfo="clickUpUserInfo" @close="close()" @closeAndReload="closeAndReload()"></form-component>
-          </v-dialog> -->
+            <form-component form-action="new" :clickUpUserInfo="clickUpUserInfo" @close="close()" @closeAndReload="closeAndReload()"></form-component>
+          </v-dialog>
         <!-- </v-toolbar> -->
       </template>
 
@@ -162,7 +162,7 @@ const statuses = ref([])
 
 // use provide/inject pattern to receive data from layout
 // const dialog = ref(false)
-// const dialog = inject('dialog')
+const dialog = inject('dialog')
 
 // const filterByUser = ref(true)
 const filterByUser = inject('filterByUser')
@@ -344,14 +344,14 @@ function loadStatuses() {
 //   dialog.value = true
 // }
 
-// function close() {
-//   dialog.value = false
-// }
+function close() {
+  dialog.value = false
+}
 
-// function closeAndReload() {
-//   dialog.value = false
-//   loadItems()
-// }
+function closeAndReload() {
+  dialog.value = false
+  loadItems()
+}
 
 // function toggleShowUsersWorkOrders (value) {
 //   if(value != filterByUser.value) {

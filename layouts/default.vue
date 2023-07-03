@@ -48,7 +48,7 @@
                 <v-list-item-title title="Show completed orders">Completed</v-list-item-title>
               </v-list-item>
 
-              <v-list-item prepend-icon="mdi-form-select" @click="editItem(item)">
+              <v-list-item prepend-icon="mdi-form-select" @click="openModal(item)">
                 <v-list-item-title title="Add a new work order">Add New Work Order</v-list-item-title>
               </v-list-item>
             </v-list>
@@ -60,9 +60,6 @@
             <AuthN></AuthN>
           </v-app-bar>
 
-          <v-dialog v-model="dialog" max-width="800px">
-            <form-component form-action="new" @close="close()" @closeAndReload="closeAndReload()"></form-component>
-          </v-dialog>
           <slot />
         </div>
       </v-main>
@@ -80,8 +77,8 @@
   const drawer = ref(true)
 
   // use provide/inject pattern to send data to child component
-  const dialog = ref(false)
-  // provide('dialog', dialog)
+  const showModal = ref(false)
+  provide('dialog', showModal)
 
   const filterByUser = ref(true)
   provide('filterByUser', filterByUser)
@@ -93,18 +90,8 @@
     await signIn()
   }
 
-  function editItem() {
-    dialog.value = true
-  }
-
-  function close() {
-    dialog.value = false
-  }
-
-  // not sure if we'll need this yet
-  function closeAndReload() {
-    dialog.value = false
-    // loadItems()
+  function openModal() {
+    showModal.value = true
   }
 
   function toggleShowUsersWorkOrders(value) {
