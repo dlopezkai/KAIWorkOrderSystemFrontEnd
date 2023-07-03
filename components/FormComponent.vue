@@ -187,7 +187,7 @@ const submitBtnText = computed(() => {
 const onSubmitMsg = computed(() => {
   switch(submitStatus.value) {
     case 'submitting':
-      return 'Submitting new work order...'
+      return 'Submitting. Please wait...'
     case 'internal_api_error':
       return 'There was an issue with the API.'
     case 'connection_failure':
