@@ -31,7 +31,13 @@
               <nuxt-img src="/images/kai-logo.svg" sizes="sm:100vw md:50vw lg:400px" width="200px" class="mt-3 mb-1 pa-1" style="background:white;"/>
             </div>
             
-            <v-list color="transparent">
+            <v-list v-if="urlStore.url.href.indexOf('workorders') > -1" color="transparent">
+              <v-list-item prepend-icon="mdi-keyboard-backspace" @click="navigateTo('/')">
+                <v-list-item-title title="Show all work orders">Show all work orders</v-list-item-title>
+              </v-list-item>
+            </v-list>
+
+            <v-list v-else>              
               <v-list-item prepend-icon="mdi-account-box" @click="filterByUser = true">
                 <v-list-item-title title="Show my work orders">My work orders</v-list-item-title>
               </v-list-item>
@@ -70,9 +76,11 @@
 <script setup>
   import { useAuthStore } from '~/store/auth';
   // import { storeToRefs } from 'pinia'
+  import { useCurrentUrlStore } from '~/store/currenturl'
 
   const authStore = useAuthStore()
   // const { currentUser } = storeToRefs(authStore)
+  const urlStore = useCurrentUrlStore()
 
   const drawer = ref(true)
 

@@ -90,11 +90,13 @@
 import { ref, nextTick, watch, toRaw } from 'vue'
 import axios from 'axios'
 import { useAuthStore } from '~/store/auth';
+import { useCurrentUrlStore } from '~/store/currenturl'
 import { convertToDate, dateToISOStr, hoursToMilliseconds } from '~/helpers/datetimeConversions.js';
 import { capitalizeFirstLetter } from '~/helpers/capitalizeFirstLetter.js';
 
 const runtimeConfig = useRuntimeConfig()
 const authStore = useAuthStore()
+const urlStore = useCurrentUrlStore()
 const itemsPerPage = ref(100)
 const loading = ref(true)
 const totalItems = ref(0)
@@ -198,6 +200,9 @@ function loadClickUpUserInfo() {
 
 // mounted life-cycle hook
 onMounted(() => {
+  // needed for menu bar logic
+  urlStore.changeUrl(window.location.href)
+
   loadStatuses()
 })
 
