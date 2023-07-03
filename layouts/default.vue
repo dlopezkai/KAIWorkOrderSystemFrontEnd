@@ -32,19 +32,19 @@
             </div>
             
             <v-list color="transparent">
-              <v-list-item prepend-icon="mdi-account-box" @click="toggleShowUsersWorkOrders(true)">
+              <v-list-item prepend-icon="mdi-account-box" @click="filterByUser = true">
                 <v-list-item-title title="Show my work orders">My work orders</v-list-item-title>
               </v-list-item>
 
-              <v-list-item prepend-icon="mdi-account-box-multiple" @click="toggleShowUsersWorkOrders(false)">
+              <v-list-item prepend-icon="mdi-account-box-multiple" @click="filterByUser = false">
                 <v-list-item-title title="Show all work orders">All work orders</v-list-item-title>
               </v-list-item>
 
-              <v-list-item prepend-icon="mdi-format-list-bulleted" @click="toggleShowCompleted(false)">
+              <v-list-item prepend-icon="mdi-format-list-bulleted" @click="showCompleted = false">
                 <v-list-item-title title="Show non-completed work orders">Not completed</v-list-item-title>
               </v-list-item>
 
-              <v-list-item prepend-icon="mdi-playlist-check" @click="toggleShowCompleted(true)">
+              <v-list-item prepend-icon="mdi-playlist-check" @click="showCompleted = true">
                 <v-list-item-title title="Show completed orders">Completed</v-list-item-title>
               </v-list-item>
 
@@ -93,26 +93,6 @@
   function openModal() {
     showModal.value = true
   }
-
-  function toggleShowUsersWorkOrders(value) {
-    navigateTo('/')
-
-    if(value != filterByUser.value) {
-      filterByUser.value = (value) ? true : false
-    } else {
-      return
-    }
-  }
-
-  function toggleShowCompleted(value) {
-    navigateTo('/')
-
-    if(value != showCompleted.value) {
-      showCompleted.value = (value) ? true : false
-    } else {
-      return
-    }
-}
 </script>
 
 <style scoped>
