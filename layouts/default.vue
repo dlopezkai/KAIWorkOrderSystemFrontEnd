@@ -33,7 +33,7 @@
             
             <v-list v-if="urlStore.url.href.indexOf('workorders') > -1" color="transparent">
               <v-list-item prepend-icon="mdi-keyboard-backspace" @click="navigateTo('/')">
-                <v-list-item-title title="Show all work orders">Show all work orders</v-list-item-title>
+                <v-list-item-title title="Show work orders">Show work orders</v-list-item-title>
               </v-list-item>
             </v-list>
 
