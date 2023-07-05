@@ -7,7 +7,7 @@
       <v-container style="height: 400px;">
         <v-row class="fill-height" align-content="center" justify="center">
           <v-col class="text-subtitle-1 text-center" cols="12">
-            <v-card>
+            <v-card style="font-family:'Open Sans;">
               <v-card-title>{{ onSubmitMsg }}</v-card-title>
               <v-card-text v-if="submitInfo">{{ submitInfo }}</v-card-text>
               <v-progress-circular v-if="submitStatus === 'submitting'" color="#92D5D5" indeterminate size="64" class="mb-4"></v-progress-circular>
@@ -20,18 +20,20 @@
       </v-container>
     </v-overlay>
 
-    <v-card :class="scrollingClasses">
-      <v-card-title>
-        <h4>{{ formTitle }}</h4>
-      </v-card-title>
-     
-      <v-tabs v-if="props.recordId" v-model="formTab" color="#428086">
-        <v-tab value="one" title="Switch to details tab">Details</v-tab>
-        <v-tab value="two" title="Switch to comments tab">Comments</v-tab>
-      </v-tabs>
+    <h3 v-if="props.formAction === 'edit'">{{ formTitle }}</h3>
 
-      <v-window v-model="formTab">
-        <v-window-item value="one">
+    <v-tabs v-if="props.recordId" v-model="formTab" color="#428086">
+      <v-tab value="one" title="Switch to details tab">Details</v-tab>
+      <v-tab value="two" title="Switch to comments tab">Comments</v-tab>
+    </v-tabs>
+
+    <v-window v-model="formTab">
+      <v-window-item value="one">
+        <v-card :class="scrollingClasses">
+          <v-card-title v-if="props.formAction === 'new'">
+            <h4>{{ formTitle }}</h4>
+          </v-card-title>
+
           <v-card-text>
             <v-form ref="form" @submit.prevent="submit">
               <v-row>
@@ -41,7 +43,7 @@
                 </v-col>
 
                 <v-col cols="12" sm="6" md="6">
-                  <v-select v-model="editedItem.folder" label="Project" :items="folders" item-title="name" item-value="id" @update:modelValue="loadLists()" :rules="[rules.select]"></v-select>
+                  <v-select v-model="editedItem.folder" label="Project" :items="folders" item-title="name" item-value="id" @update:modelValue="resetAndReloadLists()" :rules="[rules.select]"></v-select>
                 </v-col>
                 <v-col cols="12" sm="6" md="6">
                   <v-select v-model="editedItem.list" label="Subtask" :items="lists" item-title="name" item-value="id" :rules="[rules.select]"></v-select>
@@ -104,18 +106,26 @@
               </v-col>
             </v-row>
           </v-card-actions>
-        </v-window-item>
+        </v-card>
+      </v-window-item>
 
-        <v-window-item v-if="props.recordId" value="two">
-          <comments-comp :taskid="props.recordId" :clickUpUserInfo="props.clickUpUserInfo"></comments-comp>
-        </v-window-item>
-      </v-window>
-    </v-card>
+      <v-window-item v-if="props.recordId" value="two">
+        <v-card>
+          <v-card-text>
+            <comments-comp :taskid="props.recordId" :clickUpUserInfo="clickUpUserInfo"></comments-comp>
+          </v-card-text>
+        </v-card>
+        
+      </v-window-item>
+    </v-window>
+    
   </div>
 </template>
 
 <script setup>
 import axios from 'axios'
+import { useAuthStore } from '~/store/auth';
+import { useCurrentUrlStore } from '~/store/currenturl'
 import CommentsComp from './CommentsComp.vue';
 import { convertToDate, dateToISOStr, hoursToMilliseconds } from '~/helpers/datetimeConversions.js';
 import { capitalizeFirstLetter } from '~/helpers/capitalizeFirstLetter.js';
@@ -123,13 +133,15 @@ import '~/assets/css/main.css'
 
 const loading = ref(true)
 const runtimeConfig = useRuntimeConfig()
+const authStore = useAuthStore()
+const urlStore = useCurrentUrlStore()
+const clickUpUserInfo = ref()
 const tags = ref([])
 const members = ref([])
 const folders = ref([])
 const lists = ref([])
 const statuses = ref([])
 const priorities = ref([])
-const folderIDTemp = ref()
 const form = ref(null)
 const formTab = ref(null)
 const submitBtnDisabled = ref(false)
@@ -139,7 +151,6 @@ const submitInfo = ref('')
 const props = defineProps({
     recordId: String,
     formAction: String,
-    clickUpUserInfo: Object,
 })
 
 const emit = defineEmits(['close', 'closeAndReload'])
@@ -178,7 +189,7 @@ const submitBtnText = computed(() => {
 const onSubmitMsg = computed(() => {
   switch(submitStatus.value) {
     case 'submitting':
-      return 'Submitting new work order...'
+      return 'Submitting. Please wait...'
     case 'internal_api_error':
       return 'There was an issue with the API.'
     case 'connection_failure':
@@ -263,12 +274,16 @@ function millisecondsToHours(value) {
 }
 
 onMounted(() => {
+  // needed for menu bar logic
+  urlStore.changeUrl(window.location.href)
+
   loadItem()
   loadTags()
   loadMembers()
   loadFolders()
   loadStatuses()
   loadPriorities()
+  loadClickUpUserInfo()
 })
 
 async function loadItem() {
@@ -293,10 +308,7 @@ async function loadItem() {
       editedItem.value.status =  editedItem.value.status.status
     })
     .then(() => {
-      // next 2 lines are needed by the list/subtask drop down as its selections are depended on the folder ID
       loadFolders()
-      folderIDTemp.value = editedItem.value.folder.id
-
       loadLists(editedItem.value.folder.id)
     })
     .catch(err => console.log(err))
@@ -356,22 +368,7 @@ function loadFolders() {
   .catch(err => console.log(err))
 }
 
-function loadLists(presentFolderId) {
-  // if the folder ID changes, then clear the selected list / subtask
-  if ((folderIDTemp.value) && folderIDTemp.value !== presentFolderId) {
-    // clear list/subtask
-    editedItem.value.list = ''
-
-    // clear list/subtask options
-    lists.value = ''
-
-    // reset temp ID
-    folderIDTemp.value = editedItem.value.folder
-  }
-
-  // get selected folder ID
-  let folderId = (presentFolderId) ? presentFolderId : editedItem.value.folder
-
+function loadLists(folderId) {
   // load list/subtask options
   axios.get(`${runtimeConfig.public.API_URL}/folder/` + folderId + `/lists`)
   .then((response) => {
@@ -383,6 +380,12 @@ function loadLists(presentFolderId) {
     })
   })
   .catch(err => console.log(err))
+}
+
+function resetAndReloadLists() {
+  editedItem.value.list = ''
+  lists.value = ''
+  loadLists(editedItem.value.folder)
 }
 
 function loadStatuses() {
@@ -412,6 +415,14 @@ function loadPriorities() {
   .catch(err => console.log(err))
 }
 
+function loadClickUpUserInfo() {
+  axios.get(`${runtimeConfig.public.API_URL}/members/?email=` + authStore.currentUser.username.toLowerCase())
+  .then((response) => {
+    clickUpUserInfo.value = response.data.data[0]
+  })
+  .catch(err => console.log(err))
+}
+
 function close() {
   if (!props.recordId) {
     if(submitStatus.value === 'success') {
@@ -420,19 +431,12 @@ function close() {
       emit('close')
     }
   } else {
-    window.close()
+    emit('close')
   }
 }
 
 function resetSubmitStatus() {
-  if(submitStatus.value === 'submitting') {
-    close()
-  }
-
-  if(submitStatus.value === 'success') {
-    close()
-  }
-
+  close()
   submitStatus.value = ''
   submitStatusOverlay.value = false
   submitBtnDisabled.value = false
@@ -480,11 +484,10 @@ function save() {
   // data.list = 901001092394
 
   if (!props.recordId) {
-    data.creator = props.clickUpUserInfo.id
+    data.creator = clickUpUserInfo.value.id
     method = 'post'
     url = `${runtimeConfig.public.API_URL}/list/` + data.list + `/task`
   } else {
-    console.log(data)
     method = 'put'
     url = `${runtimeConfig.public.API_URL}/task/` + data.id
   }

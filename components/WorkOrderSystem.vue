@@ -1,45 +1,4 @@
 <template>
-  <!-- TODO:find where 'class="bg-deep-purple"' is defined -->
-  <v-navigation-drawer
-    color="#428086"
-    theme="dark"
-    v-model="drawer"
-    clipped 
-    hide-overlay
-  >
-    <div class="text-center">
-      <nuxt-img src="/images/kai-logo.svg" sizes="sm:100vw md:50vw lg:400px" width="200px" class="mt-3 mb-1 pa-1" style="background:white;"/>
-    </div>
-    
-    <v-list color="transparent">
-      <v-list-item prepend-icon="mdi-account-box" @click="toggleShowUsersWorkOrders(true)">
-        <v-list-item-title title="Show my work orders">My work orders</v-list-item-title>
-      </v-list-item>
-
-      <v-list-item prepend-icon="mdi-account-box-multiple" @click="toggleShowUsersWorkOrders(false)">
-        <v-list-item-title title="Show all work orders">All work orders</v-list-item-title>
-      </v-list-item>
-
-      <v-list-item prepend-icon="mdi-format-list-bulleted" @click="toggleShowCompleted(false)">
-        <v-list-item-title title="Show non-completed work orders">Not completed</v-list-item-title>
-      </v-list-item>
-
-      <v-list-item prepend-icon="mdi-playlist-check" @click="toggleShowCompleted(true)">
-        <v-list-item-title title="Show completed orders">Completed</v-list-item-title>
-      </v-list-item>
-
-      <v-list-item prepend-icon="mdi-form-select" @click="editItem(item)">
-        <v-list-item-title title="Add a new work order">Add New Work Order</v-list-item-title>
-      </v-list-item>
-    </v-list>
-  </v-navigation-drawer>
-
-  <v-app-bar flat app clipped-left dark color="#92D5D5">
-    <v-app-bar-nav-icon @click.stop="drawer = !drawer" title="Toggle menu display"></v-app-bar-nav-icon>
-    <v-toolbar-title>Work Order System</v-toolbar-title>
-    <AuthN></AuthN>
-  </v-app-bar>
-
   <v-container v-if="clickUpUserInfo" fluid>
     <v-text-field
       v-model="search"
@@ -69,20 +28,9 @@
       @update:options="loadItems"
     >
       <template v-slot:top>
-        <!-- <v-toolbar flat> -->
-
-          <v-dialog v-model="dialog" max-width="800px">
-            <!-- <template v-slot:activator="{ props }">
-              <v-col class="text-center">
-                <v-btn color="primary" dark class="mb-2" v-bind="props">
-                  Add New Work Order
-                </v-btn>
-              </v-col>
-            </template> -->
-
-            <form-component form-action="new" :clickUpUserInfo="clickUpUserInfo" @close="close()" @closeAndReload="closeAndReload()"></form-component>
-          </v-dialog>
-        <!-- </v-toolbar> -->
+        <v-dialog v-model="dialog" max-width="800px">
+          <form-component form-action="new" :clickUpUserInfo="clickUpUserInfo" @close="close()" @closeAndReload="closeAndReload()"></form-component>
+        </v-dialog>
       </template>
 
       <template v-slot:item.creator="{ item }">
@@ -98,7 +46,6 @@
       </template>
 
       <template v-slot:item.tags="{ item }">
-        <!-- <v-chip>{{ item.raw.tags }}</v-chip> -->
         <v-chip v-for="tag in item.raw.tags">{{ tag }}</v-chip>
       </template>
 
@@ -121,7 +68,7 @@
       </template>
 
       <template v-slot:item.actions="{ item }">
-        <NuxtLink :to="'/workorders?id=' + item.raw.id" target="_blank" title="Edit work order">
+        <NuxtLink :to="'/workorders?id=' + item.raw.id" title="Edit work order">
           <v-icon size="small" class="me-2">mdi-pencil</v-icon>
         </NuxtLink>
       </template>
@@ -143,12 +90,13 @@
 import { ref, nextTick, watch, toRaw } from 'vue'
 import axios from 'axios'
 import { useAuthStore } from '~/store/auth';
+import { useCurrentUrlStore } from '~/store/currenturl'
 import { convertToDate, dateToISOStr, hoursToMilliseconds } from '~/helpers/datetimeConversions.js';
 import { capitalizeFirstLetter } from '~/helpers/capitalizeFirstLetter.js';
 
 const runtimeConfig = useRuntimeConfig()
 const authStore = useAuthStore()
-const dialog = ref(false)
+const urlStore = useCurrentUrlStore()
 const itemsPerPage = ref(100)
 const loading = ref(true)
 const totalItems = ref(0)
@@ -157,11 +105,28 @@ const page = ref(0)
 const lastPage = ref(false)
 const data = ref([])
 const search = ref('')
-const filterByUser = ref(true)
-const showCompleted = ref(false)
-const drawer = ref(true)
+// const drawer = ref(true)
 const clickUpUserInfo = ref()
 const statuses = ref([])
+
+// use provide/inject pattern to receive data from layout
+const dialog = inject('dialog')
+const filterByUser = inject('filterByUser')
+const showCompleted = inject('showCompleted')
+
+// reload table when filterByUser data is changed
+watch(filterByUser, (currentValue, newValue) => {
+  if(currentValue !== newValue) {
+    loadItems()
+  }
+})
+
+// reload table when showCompleted data is changed
+watch(showCompleted, (currentValue, newValue) => {
+  if(currentValue !== newValue) {
+    loadItems()
+  }
+})
 
 const headers = [
   { title: 'Name', key: 'name', align: 'start', sortable: false, width: '25%' },
@@ -220,16 +185,6 @@ const groupBy = computed(() => {
   }
 })
 
-// form field validation rules
-const rules =
-{
-  required: v => !!v || 'Field is required',
-  length: v => v.length >= 3 || 'Minimum length is 3 characters',
-  select: v => !!v || 'Select a valid option',
-  due_date: v => !!v || 'Date must be selected',
-  due_date_threshold: v => dateValidation(v) || 'Date must be 2 business days from today',
-}
-
 onBeforeMount(() => {
   loadClickUpUserInfo()
 })
@@ -245,6 +200,9 @@ function loadClickUpUserInfo() {
 
 // mounted life-cycle hook
 onMounted(() => {
+  // needed for menu bar logic
+  urlStore.changeUrl(window.location.href)
+
   loadStatuses()
 })
 
@@ -319,10 +277,6 @@ function loadStatuses() {
   .catch(err => console.log(err))
 }
 
-function editItem(item) {
-  dialog.value = true
-}
-
 function close() {
   dialog.value = false
 }
@@ -330,24 +284,6 @@ function close() {
 function closeAndReload() {
   dialog.value = false
   loadItems()
-}
-
-function toggleShowUsersWorkOrders (value) {
-  if(value != filterByUser.value) {
-    filterByUser.value = (value) ? true : false
-    loadItems()
-  } else {
-    return
-  }
-}
-
-function toggleShowCompleted (value) {
-  if(value != showCompleted.value) {
-    showCompleted.value = (value) ? true : false
-    loadItems()
-  } else {
-    return
-  }
 }
 
 function incrementPage() {

@@ -4,7 +4,7 @@
 -->
 <template>
   <div>
-    <form-component form-action="edit" :record-id="route.query.id" :clickUpUserInfo="clickUpUserInfo"></form-component>
+    <form-component form-action="edit" :record-id="route.query.id" :clickUpUserInfo="clickUpUserInfo" @close="close"></form-component>
   </div>
 </template>
 
@@ -18,6 +18,10 @@ const clickUpUserInfo = ref()
 const runtimeConfig = useRuntimeConfig()
 const authStore = useAuthStore()
 const { $msal } = useNuxtApp()
+
+function close() {
+  navigateTo('/')
+}
 
 onMounted(async () => {
   await $msal.handleRedirectPromise()

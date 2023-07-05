@@ -1,15 +1,15 @@
 <template>
     <div>
-        <!-- <p>{{ comments.data.data }}</p> -->
-
-        <v-list lines="two" style="max-height: 500px" class="overflow-y-auto">
+        <v-list lines="two" style="width:100vw;" class="overflow-y-auto">
             <v-list-item
+                v-if="commentsData.length > 0"
                 v-for="comment in commentsData"
                 :key="comment.id"
             >
                 <v-list-item-title><strong>{{  comment.username + ' (' + convertToDate(comment.date, 'table') + ')' }}</strong></v-list-item-title>
                 <v-list-item-subtitle v-html="comment.comment_text" class="comment-subtitle"></v-list-item-subtitle>
             </v-list-item>
+            <v-list-item v-else>No comments</v-list-item>
         </v-list>
 
         <v-divider :thickness="3"></v-divider>
@@ -114,5 +114,17 @@ function submitComment() {
     font-size: 1rem;
     opacity: 1;
     line-height: 1.2;
+}
+
+@media (max-width: 1279px) {
+    .comment-subtitle {
+        width: 90%;
+    }
+}
+
+@media (min-width: 1280px) {
+    .comment-subtitle {
+        width: 75%;
+    }
 }
 </style>
