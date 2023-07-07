@@ -37,7 +37,33 @@
           <v-card-text>
             <v-form ref="form" @submit.prevent="submit">
               <v-row>
-                <v-col cols="12" sm="12" md="12">
+
+                <v-col v-for="field in props.fields" :key="field.name" :cols="field.cols" :sm="field.sm" :md="field.md">
+                  <v-text-field v-if="field.type == 'text'"
+                    v-model="editedItem[field.name]"
+                    :label="field.label"
+                    :rules="[rules[field.rules]]"
+                  >  
+                  </v-text-field>
+
+                  <v-select v-if="field.type == 'select'"
+                    v-model="editedItem[field.name]"
+                    :label="field.label"
+                    :items="field.items"
+                    :rules="[rules[field.rules]]"
+                  >
+                    <!-- <template v-slot:append-item>
+                      <v-list-item
+                        :title="title"
+                        disabled
+                      >
+                      </v-list-item>
+                    </template> -->
+                  </v-select>
+                </v-col>
+
+
+                <!-- <v-col cols="12" sm="12" md="12">
                   <v-text-field v-model="editedItem.name" label="Name" 
                     :rules="[rules.required]"></v-text-field>
                 </v-col>
@@ -88,7 +114,7 @@
                 <v-col cols="12" sm="12" md="12" class="mt-5">
                   <v-text-field v-model="editedItem.links" label="SharePoint File"></v-text-field>
                   <v-btn href="https://kauffmaninc.sharepoint.com/" target="_blank" variant="tonal" class="rounded" color="#428086" title="Open SharePoint">Open SharePoint site</v-btn>
-                </v-col>
+                </v-col> -->
 
                 <!-- hide for production -->
                 <!-- <v-col v-if="editedItem.url" cols="12" sm="12" md="12">
@@ -138,7 +164,7 @@ const urlStore = useCurrentUrlStore()
 const clickUpUserInfo = ref()
 const tags = ref([])
 const members = ref([])
-const folders = ref([])
+// const folders = ref([])
 const lists = ref([])
 const statuses = ref([])
 const priorities = ref([])
@@ -149,6 +175,7 @@ const submitStatusOverlay = ref(false)
 const submitStatus = ref('')
 const submitInfo = ref('')
 const props = defineProps({
+    fields: Array,
     recordId: String,
     formAction: String,
 })
@@ -280,7 +307,7 @@ onMounted(() => {
   loadItem()
   loadTags()
   loadMembers()
-  loadFolders()
+  // loadFolders()
   loadStatuses()
   loadPriorities()
   loadClickUpUserInfo()
@@ -308,7 +335,7 @@ async function loadItem() {
       editedItem.value.status =  editedItem.value.status.status
     })
     .then(() => {
-      loadFolders()
+      // loadFolders()
       loadLists(editedItem.value.folder.id)
     })
     .catch(err => console.log(err))
@@ -354,19 +381,19 @@ function loadMembers() {
   .catch(err => console.log(err))
 }
 
-function loadFolders() {
-  // load folder options
-  axios.get(`${runtimeConfig.public.API_URL}/folders`)
-  .then((response) => {
-    folders.value = response.data.data.map((item) => {
-      return {
-        id: item.id,
-        name: item.name
-      }
-    })
-  })
-  .catch(err => console.log(err))
-}
+// function loadFolders() {
+//   // load folder options
+//   axios.get(`${runtimeConfig.public.API_URL}/folders`)
+//   .then((response) => {
+//     folders.value = response.data.data.map((item) => {
+//       return {
+//         id: item.id,
+//         name: item.name
+//       }
+//     })
+//   })
+//   .catch(err => console.log(err))
+// }
 
 function loadLists(folderId) {
   // load list/subtask options

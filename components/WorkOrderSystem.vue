@@ -29,7 +29,24 @@
     >
       <template v-slot:top>
         <v-dialog v-model="dialog" max-width="800px">
-          <form-component form-action="new" :clickUpUserInfo="clickUpUserInfo" @close="close()" @closeAndReload="closeAndReload()"></form-component>
+          <!-- <form-component form-action="new" :clickUpUserInfo="clickUpUserInfo" @close="close()" @closeAndReload="closeAndReload()"></form-component> -->
+          <form-component 
+            :fields="[
+              { 'name': 'name', 'label': 'Name', 'type': 'text', 'rules': 'required', 'cols': '12', 'sm': '12', 'md': '12' },
+              { 'name': 'project', 
+                'label': 'Project', 
+                'items': folders,
+                'type': 'select', 
+                'rules': 'select', 
+                'cols': '12', 'sm': '6', 'md': '6' 
+              },
+              // { 'name': 'subtask', 'label': 'Subtask', 'items': 'lists', 'item-title': 'name', 'item-value': 'id', 'type': 'select', 'rules': 'select', 'cols': '12', 'sm': '6', 'md': '6' },
+              // { 'name': 'type', 'label': 'Type', 'items': 'tags', 'item-title': 'title', 'item-value': 'value', 'type': 'select', 'cols': '12', 'sm': '12', 'md': '12' }
+            ]"
+            
+            form-action="new" :clickUpUserInfo="clickUpUserInfo" @close="close()" @closeAndReload="closeAndReload()"
+          >
+          </form-component>
         </v-dialog>
       </template>
 
@@ -108,6 +125,7 @@ const search = ref('')
 // const drawer = ref(true)
 const clickUpUserInfo = ref()
 const statuses = ref([])
+const folders = ref([])
 
 // use provide/inject pattern to receive data from layout
 const dialog = inject('dialog')
@@ -204,6 +222,7 @@ onMounted(() => {
   urlStore.changeUrl(window.location.href)
 
   loadStatuses()
+  loadFolders()
 })
 
 // function loadItems({ page }) {
@@ -271,6 +290,20 @@ function loadStatuses() {
       return {
         title: capitalizeFirstLetter(item.name),
         value: item.name,
+      }
+    })
+  })
+  .catch(err => console.log(err))
+}
+
+function loadFolders() {
+  // load folder options
+  axios.get(`${runtimeConfig.public.API_URL}/folders`)
+  .then((response) => {
+    folders.value = response.data.data.map((item) => {
+      return {
+        value: item.id,
+        title: item.name
       }
     })
   })
