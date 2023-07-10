@@ -20,7 +20,7 @@
       </v-container>
     </v-overlay>
 
-    <h3 v-if="props.formAction === 'edit'">{{ formTitle }}</h3>
+    <!-- <h3 v-if="props.formAction === 'edit'">{{ formTitle }}</h3> -->
 
     <v-card :class="scrollingClasses">
       <v-card-title>
@@ -56,6 +56,9 @@
 </template>
 
 <script setup>
+import axios from 'axios'
+
+const runtimeConfig = useRuntimeConfig()
 const form = ref(null)
 const submitBtnDisabled = ref(false)
 const submitStatusOverlay = ref(false)
@@ -84,6 +87,24 @@ const formTitle = computed(() => {
 // computed value for save/submit button text
 const submitBtnText = computed(() => {
   return (!props.recordId) ? 'Submit' : 'Save'
+})
+
+// computed value for work order submit progress messages
+const onSubmitMsg = computed(() => {
+  switch(submitStatus.value) {
+    case 'submitting':
+      return 'Submitting. Please wait...'
+    case 'internal_api_error':
+      return 'There was an issue with the API.'
+    case 'connection_failure':
+      return 'There was an issue submitting your form. Please try again.'
+    case 'success':
+      return 'Work order submitted successfully.'
+    case 'updated':
+      return 'Work order updated successfully.'
+    default:
+      return ''
+  }
 })
 
 // computed CSS class to control scrolling of the form
@@ -126,8 +147,7 @@ function resetSubmitStatus() {
 async function submit() {
   const { valid } = await form.value.validate()
   if (valid) {
-    // save()
-    console.log(editedItem.value)
+    save()
   }
 }
 
@@ -142,29 +162,12 @@ function save() {
   // create a data object that will be passed to API to prevent user from seeing conversions
   let data = Object.assign({}, editedItem.value)
 
-  // since API needs IDs of assignees, pull the assignee(s) ID(s) and store in temp array
-  let assigneeids = []
-
-  if(data.assignees) {
-    data.assignees.forEach(element => {
-      assigneeids.push(element.id)
-    })
-    data.assignees = assigneeids
-  }
-
-  // convert time estimate (hours) to milliseconds
-  if(data.time_estimate) data.time_estimate = hoursToMilliseconds(data.time_estimate)
-
-  // test list - will put WO in "Other KAI Clients" project
-  // data.list = 901001092394
-
   if (!props.recordId) {
-    data.creator = clickUpUserInfo.value.id
     method = 'post'
-    url = `${runtimeConfig.public.API_URL}/list/` + data.list + `/task`
+    url = `${runtimeConfig.public.API_URL}/project/`
   } else {
     method = 'put'
-    url = `${runtimeConfig.public.API_URL}/task/` + data.id
+    url = `${runtimeConfig.public.API_URL}/project/` + data.id
   }
 
   axios({
