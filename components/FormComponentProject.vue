@@ -36,7 +36,7 @@
             </v-col>
 
             <v-col cols="12" sm="12" md="12">
-              <v-text-field v-model="editedItem.subtask" label="Subtask(s)" 
+              <v-text-field v-model="editedItem.subtask" label="Subtask(s)" placeholder="Multiple subtask format: &quot;subtask1, subtask2&quot; (no quotes)"
                 :rules="[rules.required]"></v-text-field>
             </v-col>
           </v-row>
