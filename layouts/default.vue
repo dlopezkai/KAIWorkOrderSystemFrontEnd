@@ -54,11 +54,11 @@
                 <v-list-item-title title="Show completed orders">Completed</v-list-item-title>
               </v-list-item>
 
-              <v-list-item prepend-icon="mdi-form-select" @click="openModal()">
+              <v-list-item prepend-icon="mdi-form-select" @click="openModal('workorder')">
                 <v-list-item-title title="Add a new work order">Add New Work Order</v-list-item-title>
               </v-list-item>
 
-              <v-list-item prepend-icon="mdi-form-select" @click="openModal()">
+              <v-list-item prepend-icon="mdi-form-select" @click="openModal('project')">
                 <v-list-item-title title="Add a new project">Add New Project</v-list-item-title>
               </v-list-item>
             </v-list>
@@ -91,6 +91,9 @@
   // use provide/inject pattern to send data to child component
   const showModal = ref(false)
   provide('dialog', showModal)
+  
+  const modalFormType = ref('')
+  provide('modalFormType', modalFormType)
 
   const filterByUser = ref(true)
   provide('filterByUser', filterByUser)
@@ -102,8 +105,9 @@
     await signIn()
   }
 
-  function openModal() {
+  function openModal(type) {
     showModal.value = true
+    modalFormType.value = type
   }
 </script>
 

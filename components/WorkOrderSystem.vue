@@ -29,7 +29,8 @@
     >
       <template v-slot:top>
         <v-dialog v-model="dialog" max-width="800px">
-          <form-component form-action="new" :clickUpUserInfo="clickUpUserInfo" @close="close()" @closeAndReload="closeAndReload()"></form-component>
+          <form-component v-if="modalFormType === 'workorder'" form-action="new" :clickUpUserInfo="clickUpUserInfo" @close="close()" @closeAndReload="closeAndReload()"></form-component>
+          <form-reusable-component  v-if="modalFormType === 'project'"></form-reusable-component>
         </v-dialog>
       </template>
 
@@ -111,6 +112,7 @@ const statuses = ref([])
 
 // use provide/inject pattern to receive data from layout
 const dialog = inject('dialog')
+const modalFormType = inject('modalFormType')
 const filterByUser = inject('filterByUser')
 const showCompleted = inject('showCompleted')
 
