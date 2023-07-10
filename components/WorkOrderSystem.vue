@@ -30,7 +30,19 @@
       <template v-slot:top>
         <v-dialog v-model="dialog" max-width="800px">
           <form-component v-if="modalFormType === 'workorder'" form-action="new" :clickUpUserInfo="clickUpUserInfo" @close="close()" @closeAndReload="closeAndReload()"></form-component>
-          <form-reusable-component  v-if="modalFormType === 'project'"></form-reusable-component>
+          <form-reusable-component v-if="modalFormType === 'project'" @close="close()"
+            form-action="new"
+            form-title="Project"
+            :fields="[
+              { 'name': 'project', 
+                'label': 'Project', 
+                'type': 'text', 
+                'rules': 'required', 
+                'cols': '12', 'sm': '12', 'md': '12' 
+              },
+              // { 'name': 'subtask', 'label': 'Subtask', 'items': 'lists', 'item-title': 'name', 'item-value': 'id', 'type': 'select', 'rules': 'select', 'cols': '12', 'sm': '6', 'md': '6' },
+            ]"
+          ></form-reusable-component>
         </v-dialog>
       </template>
 
