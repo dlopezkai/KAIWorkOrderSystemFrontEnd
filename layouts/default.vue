@@ -31,9 +31,13 @@
               <nuxt-img src="/images/kai-logo.svg" sizes="sm:100vw md:50vw lg:400px" width="200px" class="mt-3 mb-1 pa-1" style="background:white;"/>
             </div>
             
-            <v-list v-if="urlStore.url.href.indexOf('workorders') > -1" color="transparent">
+            <v-list v-if="urlStore.url.href.indexOf('workorders') > -1 || urlStore.url.href.indexOf('projects') > -1" color="transparent">
               <v-list-item prepend-icon="mdi-keyboard-backspace" @click="navigateTo('/')">
                 <v-list-item-title title="Show work orders">Show work orders</v-list-item-title>
+              </v-list-item>
+
+              <v-list-item v-if="urlStore.url.href.indexOf('projects') > -1" prepend-icon="mdi-form-select" @click="openModal()">
+                <v-list-item-title title="Add a new project">Add New Project</v-list-item-title>
               </v-list-item>
             </v-list>
 
@@ -54,12 +58,12 @@
                 <v-list-item-title title="Show completed orders">Completed</v-list-item-title>
               </v-list-item>
 
-              <v-list-item prepend-icon="mdi-form-select" @click="openModal('workorder')">
+              <v-list-item prepend-icon="mdi-form-select" @click="openModal()">
                 <v-list-item-title title="Add a new work order">Add New Work Order</v-list-item-title>
               </v-list-item>
 
-              <v-list-item prepend-icon="mdi-form-select" @click="openModal('project')">
-                <v-list-item-title title="Add a new project">Add New Project</v-list-item-title>
+              <v-list-item prepend-icon="mdi-form-select" @click="navigateTo('/projects')">
+                <v-list-item-title title="Manage projects">Manage Projects</v-list-item-title>
               </v-list-item>
             </v-list>
           </v-navigation-drawer>
@@ -92,9 +96,6 @@
   const showModal = ref(false)
   provide('dialog', showModal)
 
-  const modalFormType = ref('')
-  provide('modalFormType', modalFormType)
-
   const filterByUser = ref(true)
   provide('filterByUser', filterByUser)
 
@@ -105,9 +106,8 @@
     await signIn()
   }
 
-  function openModal(type) {
+  function openModal() {
     showModal.value = true
-    modalFormType.value = type
   }
 </script>
 
