@@ -50,6 +50,8 @@
                 'cols': '12', 'sm': '12', 'md': '12' 
               },
             ]"
+            axios-url="/project"
+            axios-method="post"
           ></form-reusable-component>
         </v-dialog>
       </template>

@@ -92,11 +92,16 @@
   </template>
 
 <script setup>
+import axios from 'axios'
+const runtimeConfig = useRuntimeConfig()
+
 const props = defineProps({
     recordId: String,
     formAction: String,
     formTitle: String,
     fields: Array,
+    axiosUrl: String,
+    axiosMethod: String,
 })
 
 const emit = defineEmits(['close', 'closeAndReload'])
@@ -137,9 +142,54 @@ function close() {
 async function submit() {
   const { valid } = await form.value.validate()
   if (valid) {
-    // save()
-    console.log(state.value.formData)
+    save()
   }
+}
+
+function save() {
+  // submitInfo.value = ''
+  // submitStatus.value = 'submitting'
+  // submitStatusOverlay.value = true
+  // submitBtnDisabled.value = true
+  let method = ''
+  let url = ''
+
+  // create a data object that will be passed to API to prevent user from seeing conversions
+  let data = Object.assign({}, state.value.formData)
+
+  // since API needs IDs of assignees, pull the assignee(s) ID(s) and store in temp array
+
+  if (props.formAction === 'new') {
+    method = props.axiosMethod
+    url = `${runtimeConfig.public.API_URL}` + props.axiosUrl
+  }
+
+  axios({
+      method: method,
+      url: url,
+      data: data,
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    })
+    .then(function (response) {
+      if (response.status === 200) {
+        if (response.data.response_code === 200) {
+          // submitStatus.value = (!props.recordId) ? 'success' : 'updated'
+          // submitInfo.value = (!props.recordId) ? 'Work order URL: ' + window.location.origin + '/workorders?id=' + response.data.data.id : ''
+        } else {
+          // submitStatus.value = 'internal_api_error'
+          // submitInfo.value = data
+          console.log(response)
+          return
+        }
+      }
+    })
+    .catch(function (error) {
+      // submitStatus.value = 'connection_failure'
+      // submitInfo.value = error
+      console.log(error)
+    })
 }
 </script>
 
