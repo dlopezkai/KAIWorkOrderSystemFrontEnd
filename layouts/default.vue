@@ -54,8 +54,12 @@
                 <v-list-item-title title="Show completed orders">Completed</v-list-item-title>
               </v-list-item>
 
-              <v-list-item prepend-icon="mdi-form-select" @click="openModal(item)">
+              <v-list-item prepend-icon="mdi-form-select" @click="openModal()">
                 <v-list-item-title title="Add a new work order">Add New Work Order</v-list-item-title>
+              </v-list-item>
+
+              <v-list-item prepend-icon="mdi-form-select" @click="openModal()">
+                <v-list-item-title title="Add a new project">Add New Project</v-list-item-title>
               </v-list-item>
             </v-list>
           </v-navigation-drawer>
