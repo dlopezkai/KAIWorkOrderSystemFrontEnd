@@ -57,7 +57,7 @@
 
 <script setup>
 import axios from 'axios'
-
+const route = useRoute()
 const runtimeConfig = useRuntimeConfig()
 const form = ref(null)
 const submitBtnDisabled = ref(false)
@@ -81,7 +81,7 @@ const editedItem = ref([
 
 // computed value for form title
 const formTitle = computed(() => {
-  return (!props.recordId) ? 'New Project Form' : 'Edit Project Form'
+  return (!route.params.id) ? 'New Project Form' : 'Edit Project Form'
 })
 
 // computed value for save/submit button text
