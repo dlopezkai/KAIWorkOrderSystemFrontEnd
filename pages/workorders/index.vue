@@ -4,14 +4,13 @@
 -->
 <template>
   <div>
-    <form-component form-action="edit" :record-id="route.query.id" :clickUpUserInfo="clickUpUserInfo" @close="close"></form-component>
+    <form-component-work-order form-action="edit" :record-id="route.query.id" :clickUpUserInfo="clickUpUserInfo" @close="close"></form-component-work-order>
   </div>
 </template>
 
 <script setup>
 import axios from 'axios'
 import { useAuthStore } from '~/store/auth';
-import FormComponent from '~/components/FormComponent'
 
 const route = useRoute()
 const clickUpUserInfo = ref()

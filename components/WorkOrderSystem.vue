@@ -29,7 +29,7 @@
     >
       <template v-slot:top>
         <v-dialog v-model="dialog" max-width="800px">
-          <form-component v-if="modalFormType === 'workorder'" form-action="new" :clickUpUserInfo="clickUpUserInfo" @close="close()" @closeAndReload="closeAndReload()"></form-component>
+          <form-component-work-order v-if="modalFormType === 'workorder'" form-action="new" :clickUpUserInfo="clickUpUserInfo" @close="close()" @closeAndReload="closeAndReload()"></form-component-work-order>
           <form-component-project v-else-if="modalFormType === 'project'" form-action="new" @close="close()" @closeAndReload="closeAndReload()"></form-component-project>
         </v-dialog>
       </template>
