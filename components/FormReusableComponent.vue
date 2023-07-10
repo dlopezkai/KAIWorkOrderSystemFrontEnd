@@ -42,6 +42,7 @@
                       v-model="state.formData[field.name]"
                       :label="field.label"
                       :rules="[rules[field.rules]]"
+                      :placeholder="field.placeholder"
                   >  
                   </v-text-field>
 

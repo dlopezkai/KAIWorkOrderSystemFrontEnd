@@ -34,13 +34,21 @@
             form-action="new"
             form-title="Project"
             :fields="[
-              { 'name': 'project', 
+              { 
+                'name': 'project', 
                 'label': 'Project', 
                 'type': 'text', 
                 'rules': 'required', 
                 'cols': '12', 'sm': '12', 'md': '12' 
               },
-              // { 'name': 'subtask', 'label': 'Subtask', 'items': 'lists', 'item-title': 'name', 'item-value': 'id', 'type': 'select', 'rules': 'select', 'cols': '12', 'sm': '6', 'md': '6' },
+              { 
+                'name': 'subtask', 
+                'label': 'Subtask(s)', 
+                'type': 'text', 
+                'rules': 'required', 
+                'placeholder': 'Provide a comma-separated list if adding more than one (1) subtask',
+                'cols': '12', 'sm': '12', 'md': '12' 
+              },
             ]"
           ></form-reusable-component>
         </v-dialog>
