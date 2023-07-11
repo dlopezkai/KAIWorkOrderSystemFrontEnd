@@ -12,10 +12,6 @@ import { useAuthStore } from '~/store/auth';
 const authStore = useAuthStore()
 const { $msal } = useNuxtApp()
 
-function close() {
-  navigateTo('/')
-}
-
 onMounted(async () => {
   await $msal.handleRedirectPromise()
   if(!authStore.loggedIn) {
