@@ -64,6 +64,10 @@ onMounted(() => {
   urlStore.changeUrl(window.location.href)
 })
 
+function close() {
+  dialog.value = false
+}
+
 function loadItems() {
   data.value = [
     {
