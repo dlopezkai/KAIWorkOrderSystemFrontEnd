@@ -74,6 +74,7 @@
                 <v-list-item-title title="Add a new work order">Add New Work Order</v-list-item-title>
               </v-list-item>
 
+              <!-- comment this <v-list-item> before merging -->
               <v-list-item prepend-icon="mdi-form-select" @click="navigateTo('/projects')">
                 <v-list-item-title title="Manage projects">Manage Projects</v-list-item-title>
               </v-list-item>
