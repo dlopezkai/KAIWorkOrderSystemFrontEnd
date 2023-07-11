@@ -504,7 +504,7 @@ function save() {
       if (response.status === 200) {
         if (response.data.response_code === 200) {
           submitStatus.value = (!props.recordId) ? 'success' : 'updated'
-          submitInfo.value = (!props.recordId) ? 'Work order URL: ' + window.location.origin + '/workorders?id=' + response.data.data.id : ''
+          submitInfo.value = (!props.recordId) ? 'Work order URL: ' + window.location.origin + '/workorders/' + response.data.data.id : ''
         } else {
           submitStatus.value = 'internal_api_error'
           submitInfo.value = data
