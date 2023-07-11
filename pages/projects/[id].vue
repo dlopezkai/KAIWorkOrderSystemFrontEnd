@@ -7,12 +7,10 @@
 <script setup>
 import { useCurrentUrlStore } from '~/store/currenturl'
 
-const route = useRoute()
-console.log(route.params.id)
-
 const urlStore = useCurrentUrlStore()
 
-urlStore.changeUrl(window.location.href)
+// set urlStore url AND type
+urlStore.changeUrl(window.location.href, 'edit')
 
 </script>
 
