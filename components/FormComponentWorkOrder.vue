@@ -125,7 +125,6 @@
 <script setup>
 import axios from 'axios'
 import { useAuthStore } from '~/store/auth';
-import { useCurrentUrlStore } from '~/store/currenturl'
 import CommentsComp from './CommentsComp.vue';
 import { convertToDate, dateToISOStr, hoursToMilliseconds } from '~/helpers/datetimeConversions.js';
 import { capitalizeFirstLetter } from '~/helpers/capitalizeFirstLetter.js';
@@ -134,7 +133,6 @@ import '~/assets/css/main.css'
 const loading = ref(true)
 const runtimeConfig = useRuntimeConfig()
 const authStore = useAuthStore()
-const urlStore = useCurrentUrlStore()
 const clickUpUserInfo = ref()
 const tags = ref([])
 const members = ref([])
@@ -274,9 +272,6 @@ function millisecondsToHours(value) {
 }
 
 onMounted(() => {
-  // needed for menu bar logic
-  urlStore.changeUrl(window.location.href)
-
   loadItem()
   loadTags()
   loadMembers()
