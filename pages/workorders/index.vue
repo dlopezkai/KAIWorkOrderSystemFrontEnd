@@ -1,5 +1,5 @@
 <!-- 
-  reuse <work-order-system component> since 
+  reuse <work-order-system> component since 
   both root index.vue and /workorders/index.vue utilize it
 -->
 <template>
