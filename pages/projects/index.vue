@@ -1,5 +1,5 @@
 <template>
-  <form-component-project v-if="route.query.id" form-action="edit" :record-id="route.query.id" @close="close()" @closeAndReload="closeAndReload()" @load="console.log('load')"></form-component-project>
+  <form-component-project v-if="route.query.id" form-action="edit" :record-id="route.query.id" @close="close()" @closeAndReload="closeAndReload()"></form-component-project>
   
   <v-container v-else fluid>
     <!-- <v-text-field
