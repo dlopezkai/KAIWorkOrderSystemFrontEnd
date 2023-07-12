@@ -1,5 +1,7 @@
 <template>
-  <v-container v-if="clickUpUserInfo" fluid>
+  <form-component-work-order v-if="route.query.id" form-action="edit" :record-id="route.query.id" :clickUpUserInfo="clickUpUserInfo" @close="close()" @closeAndReload="closeAndReload()"></form-component-work-order>
+  
+  <v-container v-else-if="clickUpUserInfo" fluid>
     <v-text-field
       v-model="search"
       append-icon="mdi-magnify"
@@ -68,7 +70,7 @@
       </template>
 
       <template v-slot:item.actions="{ item }">
-        <NuxtLink :to="'/workorders/' + item.raw.id" title="Edit work order">
+        <NuxtLink :to="'/workorders?id=' + item.raw.id" title="Edit work order">
           <v-icon size="small" class="me-2">mdi-pencil</v-icon>
         </NuxtLink>
       </template>
@@ -90,13 +92,12 @@
 import { ref, nextTick, watch, toRaw } from 'vue'
 import axios from 'axios'
 import { useAuthStore } from '~/store/auth';
-import { useCurrentUrlStore } from '~/store/currenturl'
 import { convertToDate, dateToISOStr, hoursToMilliseconds } from '~/helpers/datetimeConversions.js';
 import { capitalizeFirstLetter } from '~/helpers/capitalizeFirstLetter.js';
 
+const route = useRoute()
 const runtimeConfig = useRuntimeConfig()
 const authStore = useAuthStore()
-const urlStore = useCurrentUrlStore()
 const itemsPerPage = ref(100)
 const loading = ref(true)
 const totalItems = ref(0)
@@ -200,9 +201,6 @@ function loadClickUpUserInfo() {
 
 // mounted life-cycle hook
 onMounted(() => {
-  // needed for menu bar logic
-  urlStore.changeUrl(window.location.href)
-
   loadStatuses()
 })
 
@@ -278,7 +276,11 @@ function loadStatuses() {
 }
 
 function close() {
-  dialog.value = false
+  if(route.query.id) {
+    navigateTo('/')
+  } else {
+    dialog.value = false
+  }
 }
 
 function closeAndReload() {
