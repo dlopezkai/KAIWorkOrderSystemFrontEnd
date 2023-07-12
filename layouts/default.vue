@@ -31,13 +31,8 @@
               <nuxt-img src="/images/kai-logo.svg" sizes="sm:100vw md:50vw lg:400px" width="200px" class="mt-3 mb-1 pa-1" style="background:white;"/>
             </div>
 
-            <v-list v-if="(urlStore.url.href.indexOf('workorders') > -1) && (urlStore.url.type === 'edit')" color="transparent">
-              <v-list-item prepend-icon="mdi-keyboard-backspace" @click="navigateTo('/')">
-                <v-list-item-title title="Show work orders">Show work orders</v-list-item-title>
-              </v-list-item>
-            </v-list>
-
-            <v-list v-else-if="(urlStore.url.href.indexOf('projects') > -1) && (urlStore.url.type !== 'edit')" color="transparent">
+            <!-- projects table page -->
+            <v-list v-if="(urlStore.url.href.indexOf('projects') > -1) && (urlStore.url.type !== 'edit')" color="transparent">
               <v-list-item prepend-icon="mdi-keyboard-backspace" @click="navigateTo('/')">
                 <v-list-item-title title="Show work orders">Show work orders</v-list-item-title>
               </v-list-item>
@@ -47,12 +42,21 @@
               </v-list-item>
             </v-list>
 
+            <!-- projects record page -->
             <v-list v-else-if="(urlStore.url.href.indexOf('projects') > -1) && (urlStore.url.type === 'edit')" color="transparent">
               <v-list-item prepend-icon="mdi-keyboard-backspace" @click="navigateTo('/projects')">
                 <v-list-item-title title="Show projects">Show Projects</v-list-item-title>
               </v-list-item>
             </v-list>
 
+            <!-- workorders record page -->
+            <v-list v-else-if="(urlStore.url.href.indexOf('workorders') > -1) && (urlStore.url.type === 'edit')" color="transparent">
+              <v-list-item prepend-icon="mdi-keyboard-backspace" @click="navigateTo('/')">
+                <v-list-item-title title="Show work orders">Show work orders</v-list-item-title>
+              </v-list-item>
+            </v-list>
+
+            <!-- root or /workorders -->
             <v-list v-else>              
               <v-list-item prepend-icon="mdi-account-box" @click="filterByUser = true">
                 <v-list-item-title title="Show my work orders">My work orders</v-list-item-title>
@@ -102,7 +106,7 @@
   const authStore = useAuthStore()
   // const { currentUser } = storeToRefs(authStore)
   const urlStore = useCurrentUrlStore()
-
+  const route = useRoute()
   const drawer = ref(true)
 
   // use provide/inject pattern to send data to child component
@@ -122,6 +126,17 @@
   function openModal() {
     showModal.value = true
   }
+
+  /* 
+    update urlStore. this is needed to determine what links 
+    will render in <v-navigation-drawer> above. 
+    
+    if url contains "?id={{ id }}", set type. 
+    otherwise do not set type.
+  */
+  watch(() => route.query, () => 
+    (route.query.hasOwnProperty('id')) ? urlStore.changeUrl(window.location.href, 'edit') : urlStore.changeUrl(window.location.href)
+  )
 </script>
 
 <style scoped>

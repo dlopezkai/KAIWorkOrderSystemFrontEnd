@@ -1,5 +1,7 @@
 <template>
-  <v-container fluid>
+  <form-component-project v-if="route.query.id" form-action="edit" :record-id="route.query.id" @close="close()" @closeAndReload="closeAndReload()" @load="console.log('load')"></form-component-project>
+  
+  <v-container v-else fluid>
     <!-- <v-text-field
       v-model="search"
       append-icon="mdi-magnify"
@@ -34,7 +36,7 @@
       </template>
 
       <template v-slot:item.actions="{ item }">
-        <NuxtLink :to="'/projects/' + item.raw.id" title="Edit work order">
+        <NuxtLink :to="'/projects?id=' + item.raw.id" title="Edit work order">
           <v-icon size="small" class="me-2">mdi-pencil</v-icon>
         </NuxtLink>
       </template>
@@ -45,9 +47,8 @@
 </template>
 
 <script setup>
-import { useCurrentUrlStore } from '~/store/currenturl'
 
-const urlStore = useCurrentUrlStore()
+const route = useRoute()
 const dialog = inject('dialog')
 const modalFormType = inject('modalFormType')
 const data = ref([])
@@ -58,14 +59,12 @@ const headers = [
   { title: 'Actions', key: 'actions', align: 'center', sortable: false },
 ]
 
-// mounted life-cycle hook
-onMounted(() => {
-  // needed for menu bar logic
-  urlStore.changeUrl(window.location.href)
-})
-
 function close() {
-  dialog.value = false
+  if(route.query.id) {
+    navigateTo('/projects')
+  } else {
+    dialog.value = false
+  }
 }
 
 function loadItems() {
