@@ -128,14 +128,23 @@
   }
 
   /* 
-    update urlStore. this is needed to determine what links 
-    will render in <v-navigation-drawer> above. 
+    update urlStore. this is needed to determine 
+    what links will render in <v-navigation-drawer>
     
-    if url contains "?id={{ id }}", set type. 
-    otherwise do not set type.
+    if url contains "?id={{ id }}", set type to "edit"
   */
+  function recordPageCheck() {
+    return (route.query.hasOwnProperty('id')) ? urlStore.changeUrl(window.location.href, 'edit') : urlStore.changeUrl(window.location.href)
+  }
+
+	onMounted(() => {
+    // initial page load check for query string
+    recordPageCheck()
+	})
+
+  // checks for query string param while mounted
   watch(() => route.query, () => 
-    (route.query.hasOwnProperty('id')) ? urlStore.changeUrl(window.location.href, 'edit') : urlStore.changeUrl(window.location.href)
+    recordPageCheck()
   )
 </script>
 
