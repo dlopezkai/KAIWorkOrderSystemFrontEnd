@@ -31,8 +31,58 @@
               <nuxt-img src="/images/kai-logo.svg" sizes="sm:100vw md:50vw lg:400px" width="200px" class="mt-3 mb-1 pa-1" style="background:white;"/>
             </div>
 
+            <v-list v-if="urlStore.url.type !== 'edit' && urlStore.url.isRoot" color="transparent">
+              <v-list-item prepend-icon="mdi-account-box" @click="filterByUser = true">
+                <v-list-item-title title="Show my work orders">My Work Orders</v-list-item-title>
+              </v-list-item>
+
+              <v-list-item prepend-icon="mdi-account-box-multiple" @click="filterByUser = false">
+                <v-list-item-title title="Show all work orders">All Work Orders</v-list-item-title>
+              </v-list-item>
+
+              <v-list-item prepend-icon="mdi-format-list-bulleted" @click="showCompleted = false">
+                <v-list-item-title title="Show non-completed work orders">Not Completed</v-list-item-title>
+              </v-list-item>
+
+              <v-list-item prepend-icon="mdi-playlist-check" @click="showCompleted = true">
+                <v-list-item-title title="Show completed orders">Completed</v-list-item-title>
+              </v-list-item>
+
+              <!-- comment this <v-list-item> before merging -->
+              <v-list-item prepend-icon="mdi-form-select" @click="navigateTo('/projects')">
+                <v-list-item-title title="Manage projects">Manage Projects</v-list-item-title>
+              </v-list-item>
+            </v-list>
+
+            <v-list color="transparent">
+              <!-- return links -->
+              <!-- for all non-record pages -->
+              <v-list-item v-if="urlStore.url.type !== 'edit' && !urlStore.url.isRoot" prepend-icon="mdi-keyboard-backspace" @click="navigateTo('/')">
+                <v-list-item-title title="Show work orders">Work Orders</v-list-item-title>
+              </v-list-item>
+
+              <!-- record pages -->
+              <v-list-item v-if="urlStore.url.type === 'edit'" prepend-icon="mdi-keyboard-backspace" @click="navigateTo(urlStore.url.pathname)">
+                <v-list-item-title :title="`Show ` + urlStore.url.pathDisplayText">{{ capitalizeFirstLetterOfEachWord(urlStore.url.pathDisplayText) }}</v-list-item-title>
+              </v-list-item>
+
+
+              <!-- modal toggles -->
+              <!-- for all non-record pages -->
+              <v-list-item v-if="urlStore.url.type !== 'edit' && urlStore.url.isRoot" prepend-icon="mdi-form-select" @click="openModal()">
+                <v-list-item-title title="Add new work order">Add New Work Order</v-list-item-title>
+              </v-list-item>
+
+              <!-- record pages -->
+              <v-list-item v-if="urlStore.url.type !== 'edit' && !urlStore.url.isRoot" prepend-icon="mdi-form-select" @click="openModal()">
+                <v-list-item-title :title="`Add new ` + urlStore.url.pathDisplayText">Add New {{ capitalizeFirstLetterOfEachWord(urlStore.url.pathDisplayText).slice(0, -1) }}</v-list-item-title>
+              </v-list-item>
+            </v-list>
+
+
+
             <!-- projects table page -->
-            <v-list v-if="(urlStore.url.href.indexOf('projects') > -1) && (urlStore.url.type !== 'edit')" color="transparent">
+            <!-- <v-list v-if="(urlStore.url.href.indexOf('projects') > -1) && (urlStore.url.type !== 'edit')" color="transparent">
               <v-list-item prepend-icon="mdi-keyboard-backspace" @click="navigateTo('/')">
                 <v-list-item-title title="Show work orders">Show work orders</v-list-item-title>
               </v-list-item>
@@ -40,24 +90,24 @@
               <v-list-item prepend-icon="mdi-form-select" @click="openModal()">
                 <v-list-item-title title="Add a new project">Add New Project</v-list-item-title>
               </v-list-item>
-            </v-list>
+            </v-list> -->
 
             <!-- projects record page -->
-            <v-list v-else-if="(urlStore.url.href.indexOf('projects') > -1) && (urlStore.url.type === 'edit')" color="transparent">
+            <!-- <v-list v-else-if="(urlStore.url.href.indexOf('projects') > -1) && (urlStore.url.type === 'edit')" color="transparent">
               <v-list-item prepend-icon="mdi-keyboard-backspace" @click="navigateTo('/projects')">
                 <v-list-item-title title="Show projects">Show Projects</v-list-item-title>
               </v-list-item>
-            </v-list>
+            </v-list> -->
 
             <!-- workorders record page -->
-            <v-list v-else-if="(urlStore.url.href.indexOf('workorders') > -1) && (urlStore.url.type === 'edit')" color="transparent">
+            <!-- <v-list v-else-if="(urlStore.url.href.indexOf('workorders') > -1) && (urlStore.url.type === 'edit')" color="transparent">
               <v-list-item prepend-icon="mdi-keyboard-backspace" @click="navigateTo('/')">
                 <v-list-item-title title="Show work orders">Show work orders</v-list-item-title>
               </v-list-item>
-            </v-list>
+            </v-list> -->
 
             <!-- root or /workorders -->
-            <v-list v-else>              
+            <!-- <v-list v-else>              
               <v-list-item prepend-icon="mdi-account-box" @click="filterByUser = true">
                 <v-list-item-title title="Show my work orders">My work orders</v-list-item-title>
               </v-list-item>
@@ -76,13 +126,13 @@
 
               <v-list-item prepend-icon="mdi-form-select" @click="openModal()">
                 <v-list-item-title title="Add a new work order">Add New Work Order</v-list-item-title>
-              </v-list-item>
+              </v-list-item> -->
 
               <!-- comment this <v-list-item> before merging -->
-              <v-list-item prepend-icon="mdi-form-select" @click="navigateTo('/projects')">
+              <!-- <v-list-item prepend-icon="mdi-form-select" @click="navigateTo('/projects')">
                 <v-list-item-title title="Manage projects">Manage Projects</v-list-item-title>
               </v-list-item>
-            </v-list>
+            </v-list> -->
           </v-navigation-drawer>
 
           <v-app-bar flat app clipped-left dark color="#92D5D5">
@@ -102,6 +152,7 @@
   import { useAuthStore } from '~/store/auth';
   // import { storeToRefs } from 'pinia'
   import { useCurrentUrlStore } from '~/store/currenturl'
+  import { capitalizeFirstLetterOfEachWord } from '~/helpers/capitalizeFirstLetter.js';
 
   const authStore = useAuthStore()
   // const { currentUser } = storeToRefs(authStore)
