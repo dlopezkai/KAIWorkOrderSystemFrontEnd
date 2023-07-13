@@ -277,7 +277,7 @@ function loadStatuses() {
 
 function close() {
   if(route.query.id) {
-    navigateTo('/')
+    navigateTo('/workorders')
   } else {
     dialog.value = false
   }

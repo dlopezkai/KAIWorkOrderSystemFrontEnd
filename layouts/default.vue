@@ -57,7 +57,7 @@
             <v-list color="transparent">
               <!-- return links -->
               <!-- for all non-record pages -->
-              <v-list-item v-if="urlStore.url.type !== 'edit' && !urlStore.url.isRoot" prepend-icon="mdi-keyboard-backspace" @click="navigateTo('/')">
+              <v-list-item v-if="urlStore.url.type !== 'edit' && !urlStore.url.isRoot" prepend-icon="mdi-keyboard-backspace" @click="navigateTo('/workorders')">
                 <v-list-item-title title="Show work orders">Work Orders</v-list-item-title>
               </v-list-item>
 
