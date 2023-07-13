@@ -185,7 +185,7 @@
     if url contains "?id={{ id }}", set type to "edit"
   */
   function recordPageCheck() {
-    return (route.query.hasOwnProperty('id')) ? urlStore.changeUrl(window.location.href, 'edit') : urlStore.changeUrl(window.location.href)
+    return (route.query.hasOwnProperty('id')) ? urlStore.changeUrl(window.location.href, window.location.pathname, 'edit') : urlStore.changeUrl(window.location.href, window.location.pathname)
   }
 
 	onMounted(() => {
