@@ -1,8 +1,8 @@
 <template>
-  <div v-if="loading && props.formAction === 'edit'" class="pa-5">
+  <div v-if="loading && props.formAction === 'edit'" class="pa-1">
     Retrieving data ...
   </div>
-  <div v-else class="pa-5">
+  <div v-else class="pa-1">
     <v-overlay v-model="submitStatusOverlay" class="align-center justify-center" persistent>
       <v-container style="height: 400px;">
         <v-row class="fill-height" align-content="center" justify="center">

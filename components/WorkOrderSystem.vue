@@ -1,8 +1,12 @@
 <template>
-  <form-component-work-order v-if="route.query.id" form-action="edit" :record-id="route.query.id" :clickUpUserInfo="clickUpUserInfo" @close="close()" @closeAndReload="closeAndReload()"></form-component-work-order>
+
   
-  <v-container v-else-if="clickUpUserInfo" fluid>
-    <v-text-field
+  <v-container fluid full-height>
+        <v-layout child-flex>
+      <v-card width="100vw">
+          <form-component-work-order v-if="route.query.id" form-action="edit" :record-id="route.query.id" :clickUpUserInfo="clickUpUserInfo" @close="close()" @closeAndReload="closeAndReload()"></form-component-work-order>
+    
+          <v-text-field v-else
       v-model="search"
       append-icon="mdi-magnify"
       label="Search (TBD)"
@@ -17,7 +21,7 @@
     </div> -->
     <!-- <div v-else>  -->
     <!-- to make row clickable again, add @click:row="(pointerEvent, {item}) => editItem(item.raw)" -->
-    <v-data-table-server
+    <v-data-table-server v-else
       v-model:page="page"
       :headers="headers" 
       :items-length="totalItems"
@@ -77,6 +81,8 @@
 
       <template v-slot:bottom v-if="!showFooter"></template>
     </v-data-table-server>
+          </v-card>
+    </v-layout>
   </v-container>
   
   <v-container>
@@ -210,7 +216,7 @@ function loadItems() {
   let axiosGetRequestURL = `${runtimeConfig.public.API_URL}/tasks/?page=` + page.value
 
   // set assignee filter
-  if(filterByUser.value) axiosGetRequestURL = axiosGetRequestURL + `&assignees[]=` + clickUpUserInfo.value.id
+  // if(filterByUser.value) axiosGetRequestURL = axiosGetRequestURL + `&assignees[]=` + clickUpUserInfo.value.id
 
   // set display completed work order filter
   if(showCompleted.value) {
