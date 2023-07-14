@@ -1,9 +1,10 @@
 <template>
   <v-container fluid fill-height>
     <v-layout child-flex>
-      <v-card width="100vw">
-        <form-component-project v-if="route.query.id" form-action="edit" :record-id="route.query.id" @close="close()" @closeAndReload="closeAndReload()"></form-component-project>
-
+      <v-card v-if="route.query.id" width="100vw">
+        <form-component-project form-action="edit" :record-id="route.query.id" @close="close()" @closeAndReload="closeAndReload()"></form-component-project>
+      </v-card>
+      <v-card v-else width="100vw">
         <!-- <v-text-field
           v-model="search"
           append-icon="mdi-magnify"
@@ -19,7 +20,7 @@
         </div> -->
         <!-- <div v-else>  -->
         <!-- to make row clickable again, add @click:row="(pointerEvent, {item}) => editItem(item.raw)" -->
-        <v-data-table-server v-else
+        <v-data-table-server
           v-model:page="page"
           :headers="headers" 
           :items-length="totalItems"

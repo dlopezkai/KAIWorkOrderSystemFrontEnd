@@ -1,10 +1,11 @@
 <template>
   <v-container fluid full-height>
     <v-layout child-flex>
-      <v-card width="100vw">
-        <form-component-work-order v-if="route.query.id" form-action="edit" :record-id="route.query.id" :clickUpUserInfo="clickUpUserInfo" @close="close()" @closeAndReload="closeAndReload()"></form-component-work-order>
-
-        <v-text-field v-else
+      <v-card v-if="route.query.id" width="100vw">
+        <form-component-work-order form-action="edit" :record-id="route.query.id" :clickUpUserInfo="clickUpUserInfo" @close="close()" @closeAndReload="closeAndReload()"></form-component-work-order>
+      </v-card>
+      <v-card v-else width="100vw">
+        <v-text-field
           v-model="search"
           append-icon="mdi-magnify"
           label="Search (TBD)"
@@ -19,7 +20,7 @@
         </div> -->
         <!-- <div v-else>  -->
         <!-- to make row clickable again, add @click:row="(pointerEvent, {item}) => editItem(item.raw)" -->
-        <v-data-table-server v-else
+        <v-data-table-server
           v-model:page="page"
           :headers="headers" 
           :items-length="totalItems"
