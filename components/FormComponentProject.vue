@@ -2,7 +2,7 @@
   <div v-if="loading && props.formAction === 'edit'" class="pa-5">
     Retrieving data ...
   </div>
-  <div v-else class="pa-5">
+  <div v-else class="pa-1">
     <v-overlay v-model="submitStatusOverlay" class="align-center justify-center" persistent>
       <v-container style="height: 400px;">
         <v-row class="fill-height" align-content="center" justify="center">
@@ -20,10 +20,10 @@
       </v-container>
     </v-overlay>
 
-    <!-- <h3 v-if="props.formAction === 'edit'">{{ formTitle }}</h3> -->
+    <h3 v-if="props.formAction === 'edit'">{{ formTitle }}</h3>
 
-    <v-card :class="scrollingClasses">
-      <v-card-title>
+    <v-card :class="scrollingClasses" flat>
+      <v-card-title v-if="props.formAction === 'new'">
         <h4>{{ formTitle }}</h4>
       </v-card-title>
 
