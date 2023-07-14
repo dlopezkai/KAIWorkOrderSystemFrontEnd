@@ -1,5 +1,5 @@
 <template>
-  <div v-if="loading && props.formAction === 'edit'" class="pa-5">
+  <div v-if="loading && props.formAction === 'edit'" class="pa-1">
     Retrieving data ...
   </div>
   <div v-else class="pa-1">
