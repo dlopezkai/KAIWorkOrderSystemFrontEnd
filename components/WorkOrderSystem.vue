@@ -1,87 +1,85 @@
 <template>
-
-  
   <v-container fluid full-height>
-        <v-layout child-flex>
+    <v-layout child-flex>
       <v-card width="100vw">
-          <form-component-work-order v-if="route.query.id" form-action="edit" :record-id="route.query.id" :clickUpUserInfo="clickUpUserInfo" @close="close()" @closeAndReload="closeAndReload()"></form-component-work-order>
-    
-          <v-text-field v-else
-      v-model="search"
-      append-icon="mdi-magnify"
-      label="Search (TBD)"
-      single-line
-      density="comfortable"
-      hide-details
-      disabled
-    ></v-text-field>
+        <form-component-work-order v-if="route.query.id" form-action="edit" :record-id="route.query.id" :clickUpUserInfo="clickUpUserInfo" @close="close()" @closeAndReload="closeAndReload()"></form-component-work-order>
 
-    <!-- <div v-if="!clickUpUserInfo.length">
-      <p>Please register for a KAI ClickUp account to use this application</p>
-    </div> -->
-    <!-- <div v-else>  -->
-    <!-- to make row clickable again, add @click:row="(pointerEvent, {item}) => editItem(item.raw)" -->
-    <v-data-table-server v-else
-      v-model:page="page"
-      :headers="headers" 
-      :items-length="totalItems"
-      :items="data" 
-      :loading="loading" 
-      class="elevation-1 overflow-y-auto"
-      style="max-height: 80vh"
-      density="comfortable"
-      :search="search"
-      @update:options="loadItems"
-    >
-      <template v-slot:top>
-        <v-dialog v-model="dialog" max-width="800px">
-          <form-component-work-order form-action="new" :clickUpUserInfo="clickUpUserInfo" @close="close()" @closeAndReload="closeAndReload()"></form-component-work-order>
-        </v-dialog>
-      </template>
+        <v-text-field v-else
+          v-model="search"
+          append-icon="mdi-magnify"
+          label="Search (TBD)"
+          single-line
+          density="comfortable"
+          hide-details
+          disabled
+        ></v-text-field>
 
-      <template v-slot:item.creator="{ item }">
-        {{ item.raw.creator.username }}
-      </template>
+        <!-- <div v-if="!clickUpUserInfo.length">
+        <p>Please register for a KAI ClickUp account to use this application</p>
+        </div> -->
+        <!-- <div v-else>  -->
+        <!-- to make row clickable again, add @click:row="(pointerEvent, {item}) => editItem(item.raw)" -->
+        <v-data-table-server v-else
+          v-model:page="page"
+          :headers="headers" 
+          :items-length="totalItems"
+          :items="data" 
+          :loading="loading" 
+          class="elevation-1 overflow-y-auto"
+          style="max-height: 80vh"
+          density="comfortable"
+          :search="search"
+          @update:options="loadItems"
+        >
+        <template v-slot:top>
+          <v-dialog v-model="dialog" max-width="800px">
+            <form-component-work-order form-action="new" :clickUpUserInfo="clickUpUserInfo" @close="close()" @closeAndReload="closeAndReload()"></form-component-work-order>
+          </v-dialog>
+        </template>
 
-      <template v-slot:item.assignees="{ item }">
-        <v-chip v-for="assignee in item.raw.assignees">{{ (!assignee.username) ? assignee.email : assignee.username }}</v-chip>
-      </template>
+        <template v-slot:item.creator="{ item }">
+          {{ item.raw.creator.username }}
+        </template>
 
-      <template v-slot:item.watchers="{ item }">
-        <v-chip v-for="watcher in item.raw.watchers">{{ (!watcher.username) ? watcher.email : watcher.username }}</v-chip>
-      </template>
+        <template v-slot:item.assignees="{ item }">
+          <v-chip v-for="assignee in item.raw.assignees">{{ (!assignee.username) ? assignee.email : assignee.username }}</v-chip>
+        </template>
 
-      <template v-slot:item.tags="{ item }">
-        <v-chip v-for="tag in item.raw.tags">{{ tag }}</v-chip>
-      </template>
+        <template v-slot:item.watchers="{ item }">
+          <v-chip v-for="watcher in item.raw.watchers">{{ (!watcher.username) ? watcher.email : watcher.username }}</v-chip>
+        </template>
 
-      <template v-slot:item.status="{ item }">
-        <v-chip :color="item.raw.status_color">
-          {{ capitalizeFirstLetter(item.raw.status) }}
-        </v-chip>
-      </template>
+        <template v-slot:item.tags="{ item }">
+          <v-chip v-for="tag in item.raw.tags">{{ tag }}</v-chip>
+        </template>
 
-      <template v-slot:item.priority="{ item }">
-        <v-chip v-if="item.raw.priority" :color="getPriorityColor(item.raw.priority)">
-          {{ capitalizeFirstLetter(item.raw.priority.priority) }}
-        </v-chip>
-      </template>
-
-      <template v-slot:item.due_date="{ item }">
-        <v-chip v-if="item.raw.due_date" :color="getDueDateColor(item.raw.due_date, item.raw.status)">
-          {{ convertToDate(item.raw.due_date, "table") }}
+        <template v-slot:item.status="{ item }">
+          <v-chip :color="item.raw.status_color">
+            {{ capitalizeFirstLetter(item.raw.status) }}
           </v-chip>
-      </template>
+        </template>
 
-      <template v-slot:item.actions="{ item }">
-        <NuxtLink :to="'/workorders?id=' + item.raw.id" title="Edit work order">
-          <v-icon size="small" class="me-2">mdi-pencil</v-icon>
-        </NuxtLink>
-      </template>
+        <template v-slot:item.priority="{ item }">
+          <v-chip v-if="item.raw.priority" :color="getPriorityColor(item.raw.priority)">
+            {{ capitalizeFirstLetter(item.raw.priority.priority) }}
+          </v-chip>
+        </template>
 
-      <template v-slot:bottom v-if="!showFooter"></template>
-    </v-data-table-server>
-          </v-card>
+        <template v-slot:item.due_date="{ item }">
+          <v-chip v-if="item.raw.due_date" :color="getDueDateColor(item.raw.due_date, item.raw.status)">
+            {{ convertToDate(item.raw.due_date, "table") }}
+            </v-chip>
+        </template>
+
+        <template v-slot:item.actions="{ item }">
+          <NuxtLink :to="'/workorders?id=' + item.raw.id" title="Edit work order">
+            <v-icon size="small" class="me-2">mdi-pencil</v-icon>
+          </NuxtLink>
+        </template>
+
+        <template v-slot:bottom v-if="!showFooter"></template>
+        </v-data-table-server>
+      </v-card>
     </v-layout>
   </v-container>
   
