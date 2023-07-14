@@ -69,12 +69,12 @@
 
               <!-- modal toggles -->
               <!-- for all non-record pages -->
-              <v-list-item v-if="urlStore.url.type !== 'edit' && urlStore.url.isRoot" prepend-icon="mdi-form-select" @click="openModal()">
+              <v-list-item v-if="urlStore.url.type !== 'edit' && urlStore.url.isRoot" prepend-icon="mdi-file-document-plus-outline" @click="openModal()">
                 <v-list-item-title title="Add new work order">Add New Work Order</v-list-item-title>
               </v-list-item>
 
               <!-- record pages -->
-              <v-list-item v-if="urlStore.url.type !== 'edit' && !urlStore.url.isRoot" prepend-icon="mdi-form-select" @click="openModal()">
+              <v-list-item v-if="urlStore.url.type !== 'edit' && !urlStore.url.isRoot" prepend-icon="mdi-file-document-plus-outline" @click="openModal()">
                 <v-list-item-title :title="`Add new ` + urlStore.url.pathDisplayText">Add New {{ capitalizeFirstLetterOfEachWord(urlStore.url.pathDisplayText).slice(0, -1) }}</v-list-item-title>
               </v-list-item>
             </v-list>
