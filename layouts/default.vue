@@ -31,7 +31,6 @@
               <nuxt-img src="/images/kai-logo.svg" sizes="sm:100vw md:50vw lg:400px" width="200px" class="mt-3 mb-1 pa-1" style="background:white;"/>
             </div>
 
-            <!-- version 2 -->
             <v-list color="transparent">
               <!-- navigation group -->
               <v-list-subheader v-if="navMenuStore.menuItems.navigationItems.length > 0">Navigation</v-list-subheader>
@@ -53,55 +52,6 @@
                 <v-list-item-title v-text="menuItem.label"></v-list-item-title>
               </v-list-item>
             </v-list>
-
-            <!-- version 1 -->
-            <!-- <v-list v-if="urlStore.url.type !== 'edit' && urlStore.url.isRoot" color="transparent">
-              <v-list-item prepend-icon="mdi-account-box" @click="filterByUser = true">
-                <v-list-item-title title="Show my work orders">My Work Orders</v-list-item-title>
-              </v-list-item>
-
-              <v-list-item prepend-icon="mdi-account-box-multiple" @click="filterByUser = false">
-                <v-list-item-title title="Show all work orders">All Work Orders</v-list-item-title>
-              </v-list-item>
-
-              <v-list-item prepend-icon="mdi-format-list-bulleted" @click="showCompleted = false">
-                <v-list-item-title title="Show non-completed work orders">Not Completed</v-list-item-title>
-              </v-list-item>
-
-              <v-list-item prepend-icon="mdi-playlist-check" @click="showCompleted = true">
-                <v-list-item-title title="Show completed orders">Completed</v-list-item-title>
-              </v-list-item> -->
-
-              <!-- comment this <v-list-item> before merging -->
-              <!-- <v-list-item prepend-icon="mdi-form-select" @click="navigateTo('/projects')">
-                <v-list-item-title title="Manage projects">Manage Projects</v-list-item-title>
-              </v-list-item> -->
-            <!-- </v-list> -->
-
-            <!-- <v-list color="transparent"> -->
-              <!-- return links -->
-              <!-- for all non-record pages -->
-              <!-- <v-list-item v-if="urlStore.url.type !== 'edit' && !urlStore.url.isRoot" prepend-icon="mdi-keyboard-backspace" @click="navigateTo('/workorders')">
-                <v-list-item-title title="Show work orders">Work Orders</v-list-item-title>
-              </v-list-item> -->
-
-              <!-- record pages -->
-              <!-- <v-list-item v-if="urlStore.url.type === 'edit'" prepend-icon="mdi-keyboard-backspace" @click="navigateTo(urlStore.url.pathname)">
-                <v-list-item-title :title="`Show ` + urlStore.url.pathDisplayText">{{ capitalizeFirstLetterOfEachWord(urlStore.url.pathDisplayText) }}</v-list-item-title>
-              </v-list-item> -->
-
-
-              <!-- modal toggles -->
-              <!-- for all non-record pages -->
-              <!-- <v-list-item v-if="urlStore.url.type !== 'edit' && urlStore.url.isRoot" prepend-icon="mdi-file-document-plus-outline" @click="openModal()">
-                <v-list-item-title title="Add new work order">Add New Work Order</v-list-item-title>
-              </v-list-item> -->
-
-              <!-- record pages -->
-              <!-- <v-list-item v-if="urlStore.url.type !== 'edit' && !urlStore.url.isRoot" prepend-icon="mdi-file-document-plus-outline" @click="openModal()">
-                <v-list-item-title :title="`Add new ` + urlStore.url.pathDisplayText">Add New {{ capitalizeFirstLetterOfEachWord(urlStore.url.pathDisplayText).slice(0, -1) }}</v-list-item-title>
-              </v-list-item> -->
-            <!-- </v-list> -->
           </v-navigation-drawer>
 
           <v-app-bar flat app clipped-left dark color="#92D5D5">
@@ -120,13 +70,11 @@
 <script setup>
   import { useAuthStore } from '~/store/auth';
   // import { storeToRefs } from 'pinia'
-  // import { useCurrentUrlStore } from '~/store/currenturl'
   import { useNavMenuStore } from '~/store/navMenuStore'
   import { capitalizeFirstLetterOfEachWord } from '~/helpers/capitalizeFirstLetter.js';
 
   const authStore = useAuthStore()
   // const { currentUser } = storeToRefs(authStore)
-  // const urlStore = useCurrentUrlStore()
   const navMenuStore = useNavMenuStore()
   const route = useRoute()
   const drawer = ref(true)
@@ -163,7 +111,6 @@
   }
 
   function recordPageCheck() {
-    // return (route.query.hasOwnProperty('id')) ? urlStore.changeUrl(window.location.href, window.location.pathname, 'edit') : urlStore.changeUrl(window.location.href, window.location.pathname)
     isRecordPage.value = (route.query.hasOwnProperty('id')) ? true : false
   }
 
