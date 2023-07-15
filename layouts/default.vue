@@ -141,8 +141,8 @@
   const showCompleted = ref(false)
   provide('showCompleted', showCompleted)
 
-  const pageType = ref('')
-  provide('pageType', pageType)
+  const isRecordPage = ref(false)
+  provide('isRecordPage', isRecordPage)
 
   async function signInAction() {
     await signIn()
@@ -164,9 +164,7 @@
 
   function recordPageCheck() {
     // return (route.query.hasOwnProperty('id')) ? urlStore.changeUrl(window.location.href, window.location.pathname, 'edit') : urlStore.changeUrl(window.location.href, window.location.pathname)
-
-    pageType.value = (route.query.hasOwnProperty('id')) ? 'record' : 'table'
-
+    isRecordPage.value = (route.query.hasOwnProperty('id')) ? true : false
   }
 
 	onBeforeMount(() => {

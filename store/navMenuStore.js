@@ -1,6 +1,8 @@
 /*
     This store is used to maintain what items are displayed in the <v-navigation> menu panel.
-    Each index page will set/update the store by passing an array of menu items.
+
+    Each index page will inject layouts/default.vue's isRecordPage boolean to determine what 
+    links are updated to the store via the setMenuItems setter method.
 */
 
 import { ref } from 'vue'

@@ -58,7 +58,7 @@ const navMenuStore = useNavMenuStore()
 const route = useRoute()
 
 const dialog = inject('dialog')
-const pageType = inject('pageType')
+const isRecordPage = inject('isRecordPage')
 const data = ref([])
 
 const headers = [
@@ -113,7 +113,7 @@ function setMenuItems() {
   let filterItemsGroup = []
   let addRecordItemsGroup = []
 
-  if (pageType.value === 'record') {
+  if (isRecordPage.value) {
     navigationItemsGroup = [
       { 'label': 'Projects', 'destination': '/projects', 'icon': 'mdi-keyboard-backspace' },
     ]

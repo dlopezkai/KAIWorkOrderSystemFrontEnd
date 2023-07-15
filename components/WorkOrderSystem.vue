@@ -119,7 +119,7 @@ const statuses = ref([])
 
 // use provide/inject pattern to receive data from layout
 const dialog = inject('dialog')
-const pageType = inject('pageType')
+const isRecordPage = inject('isRecordPage')
 const filterByUser = inject('filterByUser')
 const showCompleted = inject('showCompleted')
 
@@ -222,7 +222,7 @@ function setMenuItems() {
   let filterItemsGroup = []
   let addRecordItemsGroup = []
 
-  if (pageType.value === 'record') {
+  if (isRecordPage.value) {
     navigationItemsGroup = [
       { 'label': 'Work Orders', 'destination': '/workorders', 'icon': 'mdi-keyboard-backspace' },
     ]
