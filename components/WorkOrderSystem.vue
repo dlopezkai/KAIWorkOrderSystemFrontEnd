@@ -97,12 +97,14 @@
 import { ref, nextTick, watch, toRaw } from 'vue'
 import axios from 'axios'
 import { useAuthStore } from '~/store/auth';
+import { useNavMenuStore } from '~/store/navMenuStore'
 import { convertToDate, dateToISOStr, hoursToMilliseconds } from '~/helpers/datetimeConversions.js';
 import { capitalizeFirstLetter } from '~/helpers/capitalizeFirstLetter.js';
 
 const route = useRoute()
 const runtimeConfig = useRuntimeConfig()
 const authStore = useAuthStore()
+const navMenuStore = useNavMenuStore()
 const itemsPerPage = ref(100)
 const loading = ref(true)
 const totalItems = ref(0)
@@ -117,6 +119,7 @@ const statuses = ref([])
 
 // use provide/inject pattern to receive data from layout
 const dialog = inject('dialog')
+const pageType = inject('pageType')
 const filterByUser = inject('filterByUser')
 const showCompleted = inject('showCompleted')
 
@@ -206,8 +209,40 @@ function loadClickUpUserInfo() {
 
 // mounted life-cycle hook
 onMounted(() => {
+  setMenuItems()
   loadStatuses()
 })
+
+watch(() => route.query, () => 
+  setMenuItems()
+)
+
+function setMenuItems() {
+  let navigationItemsGroup = []
+  let filterItemsGroup = []
+  let addRecordItemsGroup = []
+
+  if (pageType.value === 'record') {
+    navigationItemsGroup = [
+      { 'label': 'Work Orders', 'destination': '/workorders', 'icon': 'mdi-keyboard-backspace' },
+    ]
+  } else {
+    navigationItemsGroup = [
+      { 'label': 'Projects', 'destination': '/projects', 'icon': 'mdi-form-select' },
+    ]
+    filterItemsGroup = [
+      { 'label': 'My Work Orders', 'icon': 'mdi-account-box', 'filter_name': 'filterByUser', 'filter_value': true },
+      { 'label': 'All Work Orders', 'icon': 'mdi-account-box-multiple', 'filter_name': 'filterByUser', 'filter_value': false },
+      { 'label': 'Not Completed', 'icon': 'mdi-format-list-bulleted', 'filter_name': 'showCompleted', 'filter_value': false },
+      { 'label': 'Completed', 'icon': 'mdi-playlist-check', 'filter_name': 'showCompleted', 'filter_value': true },
+    ]
+    addRecordItemsGroup = [
+      { 'label': 'Add New Work Order', 'icon': 'mdi-file-document-plus-outline' },
+    ]
+  }
+
+  navMenuStore.setMenuItems(navigationItemsGroup, filterItemsGroup, addRecordItemsGroup)
+}
 
 // function loadItems({ page }) {
 function loadItems() {

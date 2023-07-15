@@ -52,10 +52,13 @@
 </template>
 
 <script setup>
+import { useNavMenuStore } from '~/store/navMenuStore'
 
+const navMenuStore = useNavMenuStore()
 const route = useRoute()
+
 const dialog = inject('dialog')
-const modalFormType = inject('modalFormType')
+const pageType = inject('pageType')
 const data = ref([])
 
 const headers = [
@@ -95,6 +98,35 @@ function loadItems() {
       subtask: 'Task C',
     },
   ]
+}
+
+onMounted(() => {
+  setMenuItems()
+})
+
+watch(() => route.query, () => 
+  setMenuItems()
+)
+
+function setMenuItems() {
+  let navigationItemsGroup = []
+  let filterItemsGroup = []
+  let addRecordItemsGroup = []
+
+  if (pageType.value === 'record') {
+    navigationItemsGroup = [
+      { 'label': 'Projects', 'destination': '/projects', 'icon': 'mdi-keyboard-backspace' },
+    ]
+  } else {
+    navigationItemsGroup = [
+      { 'label': 'Work Orders', 'destination': '/workorders', 'icon': 'mdi-keyboard-backspace' },
+    ]
+    addRecordItemsGroup = [
+      { 'label': 'Add New Project', 'icon': 'mdi-file-document-plus-outline' },
+    ]
+  }
+
+  navMenuStore.setMenuItems(navigationItemsGroup, filterItemsGroup, addRecordItemsGroup)
 }
 </script>
 
