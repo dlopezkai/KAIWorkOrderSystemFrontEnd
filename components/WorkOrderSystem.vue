@@ -194,19 +194,6 @@ const groupBy = computed(() => {
   }
 })
 
-onBeforeMount(() => {
-  loadClickUpUserInfo()
-})
-
-function loadClickUpUserInfo() {
-  axios.get(`${runtimeConfig.public.API_URL}/members/?email=` + authStore.currentUser.username.toLowerCase())
-  .then((response) => {
-    clickUpUserInfo.value = response.data.data[0]
-  })
-  .catch(err => console.log(err))
-}
-
-
 // mounted life-cycle hook
 onMounted(() => {
   setMenuItems()
@@ -245,12 +232,22 @@ function setMenuItems() {
 }
 
 // function loadItems({ page }) {
-function loadItems() {
+async function loadItems() {
   loading.value = true
+
+  // get the current user's CU info.
+  // TODO: look into making this information globally accessible
+  await axios.get(`${runtimeConfig.public.API_URL}/members/?email=` + authStore.currentUser.username.toLowerCase())
+    .then((response) => {
+      clickUpUserInfo.value = response.data.data[0]
+    })
+    .catch(err => console.log(err))
+
+
   let axiosGetRequestURL = `${runtimeConfig.public.API_URL}/tasks/?page=` + page.value
 
   // set assignee filter
-  // if(filterByUser.value) axiosGetRequestURL = axiosGetRequestURL + `&assignees[]=` + clickUpUserInfo.value.id
+  if(filterByUser.value) axiosGetRequestURL = axiosGetRequestURL + `&assignees[]=` + clickUpUserInfo.value.id
 
   // set display completed work order filter
   if(showCompleted.value) {
