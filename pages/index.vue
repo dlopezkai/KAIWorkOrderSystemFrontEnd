@@ -1,9 +1,9 @@
 <template>
-  <work-order-system></work-order-system>
+
 </template>
 
-<script setup lang="ts">
-
+<script setup>
+  navigateTo('/workorders')
 </script>
 
 <style scoped>
