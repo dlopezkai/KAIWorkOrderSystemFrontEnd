@@ -2,7 +2,7 @@
   <v-container fluid full-height>
     <v-layout child-flex>
       <v-card v-if="route.query.id" width="100vw">
-        <form-component-work-order form-action="edit" :record-id="route.query.id" :clickUpUserInfo="clickUpUserInfo" @close="close()" @closeAndReload="closeAndReload()"></form-component-work-order>
+        <form-component-work-order form-action="edit" :record-id="route.query.id" @close="close()" @closeAndReload="closeAndReload()"></form-component-work-order>
       </v-card>
       <v-card v-else width="100vw">
         <v-text-field
@@ -34,7 +34,7 @@
         >
           <template v-slot:top>
             <v-dialog v-model="dialog" max-width="800px">
-              <form-component-work-order form-action="new" :clickUpUserInfo="clickUpUserInfo" @close="close()" @closeAndReload="closeAndReload()"></form-component-work-order>
+              <form-component-work-order form-action="new" @close="close()" @closeAndReload="closeAndReload()"></form-component-work-order>
             </v-dialog>
           </template>
 
