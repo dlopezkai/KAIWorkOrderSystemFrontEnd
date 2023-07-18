@@ -194,17 +194,27 @@ const groupBy = computed(() => {
   }
 })
 
-// mounted life-cycle hook
-onMounted(() => {
-  setMenuItems()
-  loadStatuses()
+onBeforeMount(async () => {
+  await getUserInfo()
+  setMenuItems(clickUpUserInfo.value)
+  await loadStatuses()
 })
 
 watch(() => route.query, () => 
-  setMenuItems()
+  setMenuItems(clickUpUserInfo.value)
 )
 
-function setMenuItems() {
+async function getUserInfo() {
+  try {
+    const response = await axios.get(`${runtimeConfig.public.API_URL}/members/?email=` + authStore.currentUser.username.toLowerCase())
+    clickUpUserInfo.value = response.data.data[0]
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+// passing in userInfo in prep for ACL logic of menu itmes
+function setMenuItems(userInfo) {
   let navigationItemsGroup = []
   let filterItemsGroup = []
   let addRecordItemsGroup = []
@@ -214,6 +224,11 @@ function setMenuItems() {
       { 'label': 'Work Orders', 'destination': '/workorders', 'icon': 'mdi-keyboard-backspace' },
     ]
   } else {
+    // example ACL logic
+    // navigationItemsGroup = (userInfo.role = 'manager') ? [] : [
+    //   { 'label': 'Projects', 'destination': '/projects', 'icon': 'mdi-form-select' },
+    // ]
+
     navigationItemsGroup = [
       { 'label': 'Projects', 'destination': '/projects', 'icon': 'mdi-form-select' },
     ]
@@ -235,14 +250,8 @@ function setMenuItems() {
 async function loadItems() {
   loading.value = true
 
-  // get the current user's CU info.
-  // TODO: look into making this information globally accessible
-  await axios.get(`${runtimeConfig.public.API_URL}/members/?email=` + authStore.currentUser.username.toLowerCase())
-    .then((response) => {
-      clickUpUserInfo.value = response.data.data[0]
-    })
-    .catch(err => console.log(err))
-
+  // TODO: figure out why this is needed on initial load. can't get userinfo with this here.
+  await getUserInfo()
 
   let axiosGetRequestURL = `${runtimeConfig.public.API_URL}/tasks/?page=` + page.value
 
@@ -299,17 +308,18 @@ async function loadItems() {
   .catch(err => console.log(err))
 }
 
-function loadStatuses() {
-  axios.get(`${runtimeConfig.public.API_URL}/statuses`)
-  .then((response) => {
-    statuses.value = response.data.data.map((item) => {
-      return {
-        title: capitalizeFirstLetter(item.name),
-        value: item.name,
-      }
-    })
-  })
-  .catch(err => console.log(err))
+async function loadStatuses() {
+  try {
+    const response = await axios.get(`${runtimeConfig.public.API_URL}/statuses`)
+      statuses.value = response.data.data.map((item) => {
+        return {
+          title: capitalizeFirstLetter(item.name),
+          value: item.name,
+        }
+      })
+  } catch (err) {
+    console.log(err)
+  }
 }
 
 function close() {
