@@ -43,10 +43,10 @@
                 </v-col>
 
                 <v-col cols="12" sm="6" md="6">
-                  <v-select v-model="editedItem.project" label="Project" :items="projects" item-title="name" item-value="id" @update:modelValue="resetAndReloadLists()" :rules="[rules.select]"></v-select>
+                  <v-select v-model="editedItem.project" label="Project" :items="projects" item-title="name" item-value="id" @update:modelValue="resetAndReloadSubtasks()" :rules="[rules.select]"></v-select>
                 </v-col>
                 <v-col cols="12" sm="6" md="6">
-                  <v-select v-model="editedItem.list" label="Subtask" :items="lists" item-title="name" item-value="id" :rules="[rules.select]"></v-select>
+                  <v-select v-model="editedItem.subtask" label="Subtask" :items="subtasks" item-title="name" item-value="id" :rules="[rules.select]"></v-select>
                 </v-col>
 
                 <v-col cols="12" sm="12" md="12">
@@ -137,7 +137,7 @@ const clickUpUserInfo = ref()
 const tags = ref([])
 const persons = ref([])
 const projects = ref([])
-const lists = ref([])
+const subtasks = ref([])
 const statuses = ref([])
 const priorities = ref([])
 const form = ref(null)
@@ -162,7 +162,7 @@ const editedItem = ref([
     project: '',
     id: '',
     links: '',
-    list: '',
+    subtask: '',
     name: '',
     priority: '',
     project: '',
@@ -306,7 +306,7 @@ async function loadItem() {
         editedItem.value.status =  editedItem.value.status.status
 
         loadProjects()
-        loadLists(editedItem.value.project.id)
+        loadSubtasks(editedItem.value.project.id)
     } catch (err) {
       console.log(err)
     }
@@ -366,11 +366,11 @@ function loadProjects() {
   .catch(err => console.log(err))
 }
 
-function loadLists(projectId) {
-  // load list/subtask options
-  axios.get(`${runtimeConfig.public.API_URL}/folder/` + projectId + `/lists`)
+function loadSubtasks(projectId) {
+  // load subtask options
+  axios.get(`${runtimeConfig.public.API_URL}/project/` + projectId + `/subtasks`)
   .then((response) => {
-    lists.value = response.data.data.map((item) => {
+    subtasks.value = response.data.data.map((item) => {
       return {
         id: item.id,
         name: item.name
@@ -380,10 +380,10 @@ function loadLists(projectId) {
   .catch(err => console.log(err))
 }
 
-function resetAndReloadLists() {
-  editedItem.value.list = ''
-  lists.value = ''
-  loadLists(editedItem.value.project)
+function resetAndReloadSubtasks() {
+  editedItem.value.subtask = ''
+  subtasks.value = ''
+  loadSubtasks(editedItem.value.project)
 }
 
 function loadStatuses() {
