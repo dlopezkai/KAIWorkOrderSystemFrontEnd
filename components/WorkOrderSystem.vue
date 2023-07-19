@@ -38,33 +38,32 @@
             </v-dialog>
           </template>
 
-          <!-- <template v-slot:item.creator="{ item }">
-            {{ item.raw.creator.username }}
-          </template> -->
+          <template v-slot:item.creator="{ item }">
+            {{ item.raw.creator.name }}
+          </template>
 
           <template v-slot:item.assignees="{ item }">
             <v-chip v-for="assignee in item.raw.assignees">{{ assignee.name }}</v-chip>
           </template>
 
-          <template v-slot:item.watchers="{ item }">
+          <!-- <template v-slot:item.watchers="{ item }">
             <v-chip v-for="watcher in item.raw.watchers">{{ (!watcher.username) ? watcher.email : watcher.username }}</v-chip>
-          </template>
+          </template> -->
 
           <template v-slot:item.tags="{ item }">
-            <v-chip v-for="tag in item.raw.tags">{{ tag }}</v-chip>
+            <v-chip v-for="tag in item.raw.tags">{{ tag.name }}</v-chip>
           </template>
 
           <template v-slot:item.status="{ item }">
-            <v-chip :color="item.raw.status_color">
-              <!-- {{ capitalizeFirstLetter(item.raw.status) }} -->
-              {{ item.raw.status }}
+            <!-- need v-if since some statuses come in as NULL -->
+            <v-chip v-if="item.raw.status" :color="item.raw.status_color">
+              {{ capitalizeFirstLetter(item.raw.status.name) }}
             </v-chip>
           </template>
 
           <template v-slot:item.priority="{ item }">
-            <v-chip v-if="item.raw.priority" :color="getPriorityColor(item.raw.priority)">
-              <!-- {{ capitalizeFirstLetter(item.raw.priority.priority) }} -->
-              {{ item.raw.priority }}
+            <v-chip v-if="item.raw.priority" :color="getPriorityColor(item.raw.priority.name)">
+              {{ capitalizeFirstLetter(item.raw.priority.name) }}
             </v-chip>
           </template>
 
@@ -291,24 +290,23 @@ async function loadItems() {
       return {
         assignees: item.assignees,
         
-        // creator: item.creator, --> need creator name
-        creator: item.creatorid, // subbing in for now
+        creator: item.creator,
         
         subtask: item.subtaskid,
         description: item.description,
         due_date: item.due_date,
-        // folder: item.folder.id, ---> project: item.projectid (????)
         id: item.id,
         links: item.links,
         name: item.name,
 
         // priority: item.priority, --> need priority name
-        priority: item.priorityid,
+        priority: item.priority,
 
-        // project: item.folder.name + ' | ' + item.list.name,
+        // since this not in a pill, need to do this way
+        // some projects/subtasks come in as NULL
+        project: (item.project) ? item.project.name + ' | ' + item.subtask.name : '',
         
-        // status: item.status, --> need status name
-        status: item.statusid, // subbing in for now
+        status: item.status,
         // status_color: item.status.color,
 
         tags: item.tags,
@@ -361,7 +359,7 @@ function decrementPage() {
 
 // priority color method for v-chip component
 function getPriorityColor (priority) {
-  switch(priority.priority) {
+  switch(priority) {
     case 'urgent':
       return '#f50000'
     case 'high':
