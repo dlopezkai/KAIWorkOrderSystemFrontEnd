@@ -38,12 +38,12 @@
             </v-dialog>
           </template>
 
-          <template v-slot:item.creator="{ item }">
+          <!-- <template v-slot:item.creator="{ item }">
             {{ item.raw.creator.username }}
-          </template>
+          </template> -->
 
           <template v-slot:item.assignees="{ item }">
-            <v-chip v-for="assignee in item.raw.assignees">{{ (!assignee.username) ? assignee.email : assignee.username }}</v-chip>
+            <v-chip v-for="assignee in item.raw.assignees">{{ assignee.name }}</v-chip>
           </template>
 
           <template v-slot:item.watchers="{ item }">
@@ -56,20 +56,23 @@
 
           <template v-slot:item.status="{ item }">
             <v-chip :color="item.raw.status_color">
-              {{ capitalizeFirstLetter(item.raw.status) }}
+              <!-- {{ capitalizeFirstLetter(item.raw.status) }} -->
+              {{ item.raw.status }}
             </v-chip>
           </template>
 
           <template v-slot:item.priority="{ item }">
             <v-chip v-if="item.raw.priority" :color="getPriorityColor(item.raw.priority)">
-              {{ capitalizeFirstLetter(item.raw.priority.priority) }}
+              <!-- {{ capitalizeFirstLetter(item.raw.priority.priority) }} -->
+              {{ item.raw.priority }}
             </v-chip>
           </template>
 
           <template v-slot:item.due_date="{ item }">
             <v-chip v-if="item.raw.due_date" :color="getDueDateColor(item.raw.due_date, item.raw.status)">
-              {{ convertToDate(item.raw.due_date, "table") }}
-              </v-chip>
+              <!-- {{ convertToDate(item.raw.due_date, "table") }} -->
+              {{ item.raw.due_date }}
+            </v-chip>
           </template>
 
           <template v-slot:item.actions="{ item }">
@@ -208,7 +211,8 @@ watch(() => route.query, () =>
 
 async function getUserInfo() {
   try {
-    const response = await axios.get(`${runtimeConfig.public.API_URL}/members/?email=` + authStore.currentUser.username.toLowerCase())
+    // const response = await axios.get(`${runtimeConfig.public.API_URL}/members/?email=` + authStore.currentUser.username.toLowerCase())
+    const response = await axios.get(`${runtimeConfig.public.API_URL}/persons`)
     clickUpUserInfo.value = response.data.data[0]
   } catch (err) {
     console.log(err)
@@ -255,10 +259,11 @@ async function loadItems() {
   // TODO: figure out why this is needed on initial load. can't get userinfo with this here.
   await getUserInfo()
 
-  let axiosGetRequestURL = `${runtimeConfig.public.API_URL}/tasks/?page=` + page.value
+  // let axiosGetRequestURL = `${runtimeConfig.public.API_URL}/tasks/?page=` + page.value
+  let axiosGetRequestURL = `${runtimeConfig.public.API_URL}/workorders`
 
   // set assignee filter
-  if(filterByUser.value) axiosGetRequestURL = axiosGetRequestURL + `&assignees[]=` + clickUpUserInfo.value.id
+  // if(filterByUser.value) axiosGetRequestURL = axiosGetRequestURL + `&assignees[]=` + clickUpUserInfo.value.id
 
   // set display completed work order filter
   if(showCompleted.value) {
@@ -285,18 +290,27 @@ async function loadItems() {
     data.value = response.data.data.map((item) => {
       return {
         assignees: item.assignees,
-        creator: item.creator,
-        list: item.list.id,
+        
+        // creator: item.creator, --> need creator name
+        creator: item.creatorid, // subbing in for now
+        
+        subtask: item.subtaskid,
         description: item.description,
         due_date: item.due_date,
-        folder: item.folder.id,
+        // folder: item.folder.id, ---> project: item.projectid (????)
         id: item.id,
         links: item.links,
         name: item.name,
-        priority: item.priority,
-        project: item.folder.name + ' | ' + item.list.name,
-        status: item.status.status,
-        status_color: item.status.color,
+
+        // priority: item.priority, --> need priority name
+        priority: item.priorityid,
+
+        // project: item.folder.name + ' | ' + item.list.name,
+        
+        // status: item.status, --> need status name
+        status: item.statusid, // subbing in for now
+        // status_color: item.status.color,
+
         tags: item.tags,
         time_estimate: item.time_estimate,
         url: item.url,
