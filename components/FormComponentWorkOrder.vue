@@ -271,42 +271,45 @@ function millisecondsToHours(value) {
   }
 }
 
-onMounted(() => {
-  loadItem()
+onBeforeMount(async () => {
+  await loadClickUpUserInfo()
   loadTags()
   loadMembers()
   loadFolders()
   loadStatuses()
   loadPriorities()
-  loadClickUpUserInfo()
+})
+
+onMounted(async () => {
+  await loadItem()
 })
 
 async function loadItem() {
   // convert time estimate (milliseconds) to hours if not a new work order
   if (props.recordId) {
-    await axios.get(`${runtimeConfig.public.API_URL}/task/` + props.recordId)
-    .then((response) => {
-      loading.value = true
-      editedItem.value = Object.assign({}, response.data.data)
-      editedItem.value.priority = (response.data.data.priority != null) ? Number(response.data.data.priority.id) : null
-      editedItem.value.due_date = (response.data.data.due_date != null) ? convertToDate(response.data.data.due_date, "table") : null
-      editedItem.value.time_estimate = millisecondsToHours(response.data.data.time_estimate)
-      
-      // for arrays
-      let tagsTemp = []
-      editedItem.value.tags.forEach((tag) => {
-        tagsTemp.push(tag.name)
-      })
-      editedItem.value.tags = tagsTemp
+    try {
+      const response = await axios.get(`${runtimeConfig.public.API_URL}/task/` + props.recordId)
+        loading.value = true
+        editedItem.value = Object.assign({}, response.data.data)
+        editedItem.value.priority = (response.data.data.priority != null) ? Number(response.data.data.priority.id) : null
+        editedItem.value.due_date = (response.data.data.due_date != null) ? convertToDate(response.data.data.due_date, "table") : null
+        editedItem.value.time_estimate = millisecondsToHours(response.data.data.time_estimate)
+        
+        // for arrays
+        let tagsTemp = []
+        editedItem.value.tags.forEach((tag) => {
+          tagsTemp.push(tag.name)
+        })
+        editedItem.value.tags = tagsTemp
 
-      // for objects
-      editedItem.value.status =  editedItem.value.status.status
-    })
-    .then(() => {
-      loadFolders()
-      loadLists(editedItem.value.folder.id)
-    })
-    .catch(err => console.log(err))
+        // for objects
+        editedItem.value.status =  editedItem.value.status.status
+
+        loadFolders()
+        loadLists(editedItem.value.folder.id)
+    } catch (err) {
+      console.log(err)
+    }
   } else {
     editedItem.value = Object.assign({}, '')
   }
@@ -410,12 +413,13 @@ function loadPriorities() {
   .catch(err => console.log(err))
 }
 
-function loadClickUpUserInfo() {
-  axios.get(`${runtimeConfig.public.API_URL}/members/?email=` + authStore.currentUser.username.toLowerCase())
-  .then((response) => {
+async function loadClickUpUserInfo() {
+  try {
+    const response = await axios.get(`${runtimeConfig.public.API_URL}/members/?email=` + authStore.currentUser.username.toLowerCase())
     clickUpUserInfo.value = response.data.data[0]
-  })
-  .catch(err => console.log(err))
+  } catch (err) {
+    console.log(err)
+  }
 }
 
 function close() {
