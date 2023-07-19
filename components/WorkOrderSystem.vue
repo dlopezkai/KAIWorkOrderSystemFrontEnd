@@ -289,17 +289,12 @@ async function loadItems() {
     data.value = response.data.data.map((item) => {
       return {
         assignees: item.assignees,
-        
         creator: item.creator,
-        
-        subtask: item.subtaskid,
         description: item.description,
         due_date: item.due_date,
         id: item.id,
         links: item.links,
         name: item.name,
-
-        // priority: item.priority, --> need priority name
         priority: item.priority,
 
         // since this not in a pill, need to do this way
@@ -308,10 +303,9 @@ async function loadItems() {
         
         status: item.status,
         // status_color: item.status.color,
-
+        subtask: item.subtask,
         tags: item.tags,
         time_estimate: item.time_estimate,
-        url: item.url,
         watchers: item.watchers
       }
     })
