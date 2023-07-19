@@ -195,9 +195,11 @@ const groupBy = computed(() => {
 })
 
 onBeforeMount(async () => {
-  await getUserInfo()
-  setMenuItems(clickUpUserInfo.value)
+  if(!isRecordPage.value) {
+    await getUserInfo()
+  }
   await loadStatuses()
+  setMenuItems(clickUpUserInfo.value)
 })
 
 watch(() => route.query, () => 
