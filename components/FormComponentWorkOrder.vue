@@ -57,14 +57,14 @@
                   <v-select v-model="editedItem.status" label="Status" :items="statuses" item-title="title" item-value="value"></v-select>
                 </v-col>
                 <v-col cols="12" sm="6" md="6">
-                  <v-autocomplete v-model="editedItem.assignees" label="Assignee(s)" :items="members" item-title="title" item-value="value" multiple chips clearable></v-autocomplete>
+                  <v-autocomplete v-model="editedItem.assignees" label="Assignee(s)" :items="persons" item-title="title" item-value="value" multiple chips clearable></v-autocomplete>
                 </v-col>
 
                 <v-col cols="12" sm="6" md="6">
                   <v-text-field v-model="editedItem.due_date" label="Due Date" type="date" :rules="[rules.due_date, rules.due_date_threshold]"></v-text-field>
                 </v-col>
                 <v-col cols="12" sm="6" md="6">
-                  <v-autocomplete v-model="editedItem.watchers" label="Notify Person" :items="members" item-title="title" item-value="value" multiple chips clearable></v-autocomplete>
+                  <v-autocomplete v-model="editedItem.watchers" label="Notify Person" :items="persons" item-title="title" item-value="value" multiple chips clearable></v-autocomplete>
                 </v-col>
 
                 <v-col cols="12" sm="6" md="6">
@@ -135,7 +135,7 @@ const runtimeConfig = useRuntimeConfig()
 const authStore = useAuthStore()
 const clickUpUserInfo = ref()
 const tags = ref([])
-const members = ref([])
+const persons = ref([])
 const folders = ref([])
 const lists = ref([])
 const statuses = ref([])
@@ -274,7 +274,7 @@ function millisecondsToHours(value) {
 onBeforeMount(async () => {
   await loadClickUpUserInfo()
   loadTags()
-  loadMembers()
+  loadPersons()
   loadFolders()
   loadStatuses()
   loadPriorities()
@@ -335,18 +335,18 @@ function loadTags() {
   .catch(err => console.log(err))
 }
 
-function loadMembers() {
-  axios.get(`${runtimeConfig.public.API_URL}/members`)
+function loadPersons() {
+  axios.get(`${runtimeConfig.public.API_URL}/persons`)
   .then((response) => {
-    members.value = response.data.data.map((item) => {
+    persons.value = response.data.data.map((item) => {
       return {
-        title: (!item.username) ? item.email : item.username,
-        value: {color: item.color, email: item.email, id: item.id, initials: item.initials, profile: item.profile, username: item.username}
+        title: item.name,
+        value: {color: item.color, email: item.email, id: item.id, initials: item.initials}
       }
     })
 
-    // sort members list
-    members.value = members.value.sort((a, b) => 
+    // sort persons list
+    persons.value = persons.value.sort((a, b) => 
       a.title.localeCompare(b.title))
   })
   .catch(err => console.log(err))
