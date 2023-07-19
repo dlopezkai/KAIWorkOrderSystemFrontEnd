@@ -43,7 +43,7 @@
                 </v-col>
 
                 <v-col cols="12" sm="6" md="6">
-                  <v-select v-model="editedItem.folder" label="Project" :items="folders" item-title="name" item-value="id" @update:modelValue="resetAndReloadLists()" :rules="[rules.select]"></v-select>
+                  <v-select v-model="editedItem.project" label="Project" :items="projects" item-title="name" item-value="id" @update:modelValue="resetAndReloadLists()" :rules="[rules.select]"></v-select>
                 </v-col>
                 <v-col cols="12" sm="6" md="6">
                   <v-select v-model="editedItem.list" label="Subtask" :items="lists" item-title="name" item-value="id" :rules="[rules.select]"></v-select>
@@ -136,7 +136,7 @@ const authStore = useAuthStore()
 const clickUpUserInfo = ref()
 const tags = ref([])
 const persons = ref([])
-const folders = ref([])
+const projects = ref([])
 const lists = ref([])
 const statuses = ref([])
 const priorities = ref([])
@@ -159,7 +159,7 @@ const editedItem = ref([
     creator: '',
     description: '',
     due_date: '',
-    folder: '',
+    project: '',
     id: '',
     links: '',
     list: '',
@@ -275,7 +275,7 @@ onBeforeMount(async () => {
   await loadClickUpUserInfo()
   loadTags()
   loadPersons()
-  loadFolders()
+  loadProjects()
   loadStatuses()
   loadPriorities()
 })
@@ -305,8 +305,8 @@ async function loadItem() {
         // for objects
         editedItem.value.status =  editedItem.value.status.status
 
-        loadFolders()
-        loadLists(editedItem.value.folder.id)
+        loadProjects()
+        loadLists(editedItem.value.project.id)
     } catch (err) {
       console.log(err)
     }
@@ -352,11 +352,11 @@ function loadPersons() {
   .catch(err => console.log(err))
 }
 
-function loadFolders() {
-  // load folder options
-  axios.get(`${runtimeConfig.public.API_URL}/folders`)
+function loadProjects() {
+  // load project options
+  axios.get(`${runtimeConfig.public.API_URL}/projects`)
   .then((response) => {
-    folders.value = response.data.data.map((item) => {
+    projects.value = response.data.data.map((item) => {
       return {
         id: item.id,
         name: item.name
@@ -366,9 +366,9 @@ function loadFolders() {
   .catch(err => console.log(err))
 }
 
-function loadLists(folderId) {
+function loadLists(projectId) {
   // load list/subtask options
-  axios.get(`${runtimeConfig.public.API_URL}/folder/` + folderId + `/lists`)
+  axios.get(`${runtimeConfig.public.API_URL}/folder/` + projectId + `/lists`)
   .then((response) => {
     lists.value = response.data.data.map((item) => {
       return {
@@ -383,7 +383,7 @@ function loadLists(folderId) {
 function resetAndReloadLists() {
   editedItem.value.list = ''
   lists.value = ''
-  loadLists(editedItem.value.folder)
+  loadLists(editedItem.value.project)
 }
 
 function loadStatuses() {
