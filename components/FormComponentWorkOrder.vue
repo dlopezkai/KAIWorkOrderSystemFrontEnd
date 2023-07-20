@@ -54,7 +54,7 @@
                 </v-col>
 
                 <v-col v-if="props.recordId" cols="12" sm="6" md="6">
-                  <v-select v-model="editedItem.status" label="Status" :items="statuses" item-title="title" item-value="value"></v-select>
+                  <v-select v-model="editedItem.status" label="Status" :items="statuses" item-title="title" item-value="id"></v-select>
                 </v-col>
                 <v-col cols="12" sm="6" md="6">
                   <v-autocomplete v-model="editedItem.assignees" label="Assignee(s)" :items="persons" item-title="title" item-value="value" multiple chips clearable></v-autocomplete>
@@ -308,7 +308,7 @@ async function loadItem() {
         editedItem.value.tags = tagsTemp
 
         // for objects
-        editedItem.value.status =  editedItem.value.status.status
+        editedItem.value.status = editedItem.value.status.id
 
         loadProjects()
         loadSubtasks(editedItem.value.project.id)
@@ -397,7 +397,7 @@ function loadStatuses() {
     statuses.value = response.data.data.map((item) => {
       return {
         title: capitalizeFirstLetter(item.name),
-        value: item.name,
+        id: item.id
       }
     })
   })
