@@ -292,13 +292,14 @@ async function loadItem() {
   // convert time estimate (milliseconds) to hours if not a new work order
   if (props.recordId) {
     try {
-      const response = await axios.get(`${runtimeConfig.public.API_URL}/task/` + props.recordId)
+      const response = await axios.get(`${runtimeConfig.public.API_URL}/workorder/` + props.recordId)
         loading.value = true
-        editedItem.value = Object.assign({}, response.data.data)
-        editedItem.value.priority = (response.data.data.priority != null) ? Number(response.data.data.priority.id) : null
-        editedItem.value.due_date = (response.data.data.due_date != null) ? convertToDate(response.data.data.due_date, "table") : null
-        editedItem.value.time_estimate = millisecondsToHours(response.data.data.time_estimate)
-        
+        console.log(response.data.data[0])
+        editedItem.value = Object.assign({}, response.data.data[0])
+        editedItem.value.priority = (response.data.data[0].priority != null) ? Number(response.data.data.priority[0].id) : null
+        editedItem.value.due_date = (response.data.data[0].due_date != null) ? convertToDate(response.data.data[0].due_date, "table") : null
+        editedItem.value.time_estimate = millisecondsToHours(response.data.data[0].time_estimate)
+
         // for arrays
         let tagsTemp = []
         editedItem.value.tags.forEach((tag) => {
