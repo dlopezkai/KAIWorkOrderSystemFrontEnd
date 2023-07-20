@@ -209,8 +209,7 @@ watch(() => route.query, () =>
 
 async function getUserInfo() {
   try {
-    // const response = await axios.get(`${runtimeConfig.public.API_URL}/members/?email=` + authStore.currentUser.username.toLowerCase())
-    const response = await axios.get(`${runtimeConfig.public.API_URL}/persons`)
+    const response = await axios.get(`${runtimeConfig.public.API_URL}/persons?email=` + authStore.currentUser.username.toLowerCase())
     clickUpUserInfo.value = response.data.data[0]
   } catch (err) {
     console.log(err)
@@ -264,7 +263,7 @@ async function loadItems() {
    // TODO: need to figure out how to pass without "?" if no filters are set
   let axiosGetRequestURL = `${runtimeConfig.public.API_URL}/workorders?`
 
-  // set assignee filter
+  // set assignee filter - PENDING API IMPLEMENTATION
   // if(filterByUser.value) axiosGetRequestURL = axiosGetRequestURL + `&assignees[]=` + clickUpUserInfo.value.id
 
   // set display completed work order filter
