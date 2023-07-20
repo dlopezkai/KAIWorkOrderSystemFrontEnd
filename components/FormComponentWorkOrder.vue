@@ -126,7 +126,7 @@
 import axios from 'axios'
 import { useAuthStore } from '~/store/auth';
 import CommentsComp from './CommentsComp.vue';
-import { convertToDate, dateToISOStr, hoursToMilliseconds } from '~/helpers/datetimeConversions.js';
+import { convertToDate, dateToISOStr, hoursToMilliseconds, hoursToMinutes } from '~/helpers/datetimeConversions.js';
 import { capitalizeFirstLetter } from '~/helpers/capitalizeFirstLetter.js';
 import '~/assets/css/main.css'
 
@@ -476,8 +476,7 @@ function save() {
     data.assignees = assigneeids
   }
 
-  // convert time estimate (hours) to milliseconds
-  if(data.time_estimate) data.time_estimate = hoursToMilliseconds(data.time_estimate)
+  if(data.time_estimate) data.time_estimate = hoursToMinutes(data.time_estimate)
 
   // test list - will put WO in "Other KAI Clients" project
   // data.list = 901001092394
