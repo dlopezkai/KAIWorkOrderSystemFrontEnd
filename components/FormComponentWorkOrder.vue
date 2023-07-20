@@ -71,7 +71,7 @@
                   <v-text-field v-model="editedItem.time_estimate" label="Budgeted Hours"></v-text-field>
                 </v-col>
                 <v-col cols="12" sm="6" md="6">
-                  <v-select v-model="editedItem.priority" label="Priority" :items="priorities" item-title="title" item-value="value" :hint="priorityMessages" persistent-hint></v-select>
+                  <v-select v-model="editedItem.priorityid" label="Priority" :items="priorities" item-title="title" item-value="value" :hint="priorityMessages" persistent-hint></v-select>
                 </v-col>
 
                 <v-col cols="12" sm="12" md="12">
@@ -164,7 +164,7 @@ const editedItem = ref([
     links: '',
     subtask: '',
     name: '',
-    priority: '',
+    priorityid: '',
     project: '',
     status: '',
     tags: '',
@@ -203,10 +203,10 @@ const onSubmitMsg = computed(() => {
 
 // computed value for priority SLA messages
 const priorityMessages = computed(() => {
-  if (editedItem.value.priority === null || editedItem.value.priority === undefined) {
+  if (editedItem.value.priorityid === null || editedItem.value.priorityid === undefined) {
     return ''
   } else {
-    const index = editedItem.value.priority - 1
+    const index = editedItem.value.priorityid - 1
     return priorities.value[index].description
   }
 })
