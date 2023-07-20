@@ -200,7 +200,6 @@ onBeforeMount(async () => {
   if(!isRecordPage.value) {
     await getUserInfo()
   }
-  await loadStatuses()
   setMenuItems(clickUpUserInfo.value)
 })
 
@@ -254,6 +253,7 @@ function setMenuItems(userInfo) {
 // function loadItems({ page }) {
 async function loadItems() {
   loading.value = true
+  // await loadStatuses() --> uncomment this when /workorders can query by status(es)
 
   // TODO: figure out why this is needed on initial load. can't get userinfo with this here.
   await getUserInfo()
