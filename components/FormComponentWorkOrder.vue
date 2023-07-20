@@ -61,7 +61,7 @@
                 </v-col>
 
                 <v-col cols="12" sm="6" md="6">
-                  <v-text-field v-model="editedItem.due_date" label="Due Date" type="date" :rules="[rules.due_date, rules.due_date_threshold]"></v-text-field>
+                  <v-text-field v-model="editedItem.due_date" label="Due Date" type="date" :rules="[rules.due_date_threshold]" clearable></v-text-field>
                 </v-col>
                 <v-col cols="12" sm="6" md="6">
                   <v-autocomplete v-model="editedItem.watchers" label="Notify Person" :items="persons" item-title="title" item-value="value" multiple chips clearable></v-autocomplete>
@@ -230,28 +230,32 @@ const rules =
 
 // checks for the 2 business days rule
 function dateValidation(input) {
-  // get day of week
-  let selectedDateDay = new Date(input).getDay()
+  if(input) {
+    // get day of week
+    let selectedDateDay = new Date(input).getDay()
 
-  // get the current date plus 2 days, the convert to ISO format
-  let date = new Date();
-  let twoDaysFromNow = date.setDate(date.getDate() + 2);
-  twoDaysFromNow = new Date(twoDaysFromNow).toISOString();
+    // get the current date plus 2 days, the convert to ISO format
+    let date = new Date();
+    let twoDaysFromNow = date.setDate(date.getDate() + 2);
+    twoDaysFromNow = new Date(twoDaysFromNow).toISOString();
 
-  // convert to local time
-  let twoDaysFromNowLocaleString = new Date(twoDaysFromNow).toLocaleDateString()
-  let twoDaysFromNowDateObj = new Date(twoDaysFromNowLocaleString)
+    // convert to local time
+    let twoDaysFromNowLocaleString = new Date(twoDaysFromNow).toLocaleDateString()
+    let twoDaysFromNowDateObj = new Date(twoDaysFromNowLocaleString)
 
-  // convert to yyyy-mm-dd to match format of calendar input
-  let twoDaysFromNowFormatted = convertToYyyymmddFormat(twoDaysFromNowDateObj)
+    // convert to yyyy-mm-dd to match format of calendar input
+    let twoDaysFromNowFormatted = convertToYyyymmddFormat(twoDaysFromNowDateObj)
 
-  // logic to determine if selected date is valid
-  if(selectedDateDay !== 5 && selectedDateDay !== 6) {
-    if(input >= twoDaysFromNowFormatted) {
-      return true
-    } else {
-      return false
+    // logic to determine if selected date is valid
+    if(selectedDateDay !== 5 && selectedDateDay !== 6) {
+      if(input >= twoDaysFromNowFormatted) {
+        return true
+      } else {
+        return false
+      }
     }
+  } else {
+    return true
   }
 }
 
