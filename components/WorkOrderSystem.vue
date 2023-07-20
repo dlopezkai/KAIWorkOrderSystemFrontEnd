@@ -253,31 +253,33 @@ function setMenuItems(userInfo) {
 // function loadItems({ page }) {
 async function loadItems() {
   loading.value = true
-  // await loadStatuses() --> uncomment this when /workorders can query by status(es)
+  await loadStatuses()
 
   // TODO: figure out why this is needed on initial load. can't get userinfo with this here.
   await getUserInfo()
 
+  // leave this here for when pagination comes back
   // let axiosGetRequestURL = `${runtimeConfig.public.API_URL}/tasks/?page=` + page.value
-  let axiosGetRequestURL = `${runtimeConfig.public.API_URL}/workorders`
+
+   // TODO: need to figure out how to pass without "?" if no filters are set
+  let axiosGetRequestURL = `${runtimeConfig.public.API_URL}/workorders?`
 
   // set assignee filter
   // if(filterByUser.value) axiosGetRequestURL = axiosGetRequestURL + `&assignees[]=` + clickUpUserInfo.value.id
 
   // set display completed work order filter
   if(showCompleted.value) {
-    axiosGetRequestURL = axiosGetRequestURL + `&statuses[]=complete`
+    // get the ID of status = "complete"
+    const completeStatusObj = statuses.value.filter(e => e.value == 'complete')
+    const completeStatusID = completeStatusObj[0].id
+
+    axiosGetRequestURL = axiosGetRequestURL + `&status[]=` + completeStatusID
   } else {
-    /* 
-      since the API doesn't have the capability to accept a NOT operator in the query string,
-      we will need to filter out status of "complete" here.
-      if/when it does, then mimic assignee filter logic.
-    */
     const statusesArray = statuses.value.filter(e => e.value !== 'complete')
 
     let statusQueryStr = ''
     statusesArray.forEach(element => 
-      statusQueryStr += '&statuses[]=' + encodeURIComponent(toRaw(element).value)
+      statusQueryStr += '&status[]=' + toRaw(element).id
     )
 
     axiosGetRequestURL = axiosGetRequestURL + statusQueryStr
@@ -323,6 +325,7 @@ async function loadStatuses() {
         return {
           title: capitalizeFirstLetter(item.name),
           value: item.name,
+          id: item.id
         }
       })
   } catch (err) {
