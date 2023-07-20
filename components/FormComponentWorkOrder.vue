@@ -415,7 +415,7 @@ function loadPriorities() {
 
 async function loadClickUpUserInfo() {
   try {
-    const response = await axios.get(`${runtimeConfig.public.API_URL}/members/?email=` + authStore.currentUser.username.toLowerCase())
+    const response = await axios.get(`${runtimeConfig.public.API_URL}/persons?email=` + authStore.currentUser.username.toLowerCase())
     clickUpUserInfo.value = response.data.data[0]
   } catch (err) {
     console.log(err)
@@ -483,9 +483,9 @@ function save() {
   // data.list = 901001092394
 
   if (!props.recordId) {
-    data.creator = clickUpUserInfo.value.id
+    data.creatorid = clickUpUserInfo.value.id
     method = 'post'
-    url = `${runtimeConfig.public.API_URL}/list/` + data.list + `/task`
+    url = `${runtimeConfig.public.API_URL}/subtask/` + data.subtask + `/workorder`
   } else {
     method = 'put'
     url = `${runtimeConfig.public.API_URL}/task/` + data.id
