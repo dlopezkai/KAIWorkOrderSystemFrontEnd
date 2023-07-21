@@ -480,7 +480,7 @@ function save() {
     url = `${runtimeConfig.public.API_URL}/subtask/` + data.subtask + `/workorder`
   } else {
     method = 'put'
-    url = `${runtimeConfig.public.API_URL}/task/` + data.id
+    url = `${runtimeConfig.public.API_URL}/workorder/` + data.id
   }
 
   axios({
