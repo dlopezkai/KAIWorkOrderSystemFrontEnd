@@ -479,7 +479,11 @@ function save() {
   // create a data object that will be passed to API to prevent user from seeing conversions
   let data = Object.assign({}, editedItem.value)
 
-  // since API needs IDs of assignees, pull the assignee(s) ID(s) and store in temp array
+  /* 
+    TODO: TEST TO SEE IF WE CAN DELETE THIS
+    Verified with create and read..  need to check with update  
+    since API needs IDs of assignees, pull the assignee(s) ID(s) and store in temp array
+
   let assigneeids = []
 
   if(data.assignees) {
@@ -488,6 +492,7 @@ function save() {
     })
     data.assignees = assigneeids
   }
+  */
   
   // hack warning: since API only accepts "priorityid" to set priority, but fetched data contains a "priority" object.
   if(data.priority) {
