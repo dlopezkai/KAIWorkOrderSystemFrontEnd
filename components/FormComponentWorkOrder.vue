@@ -293,7 +293,7 @@ async function loadItem() {
         if(editedItem.value.tags) {
           let tagsTemp = []
           editedItem.value.tags.forEach((tag) => {
-            tagsTemp.push(tag.name)
+            tagsTemp.push(tag.id)
           })
           editedItem.value.tags = tagsTemp
         }
@@ -336,7 +336,7 @@ function loadTags() {
     tags.value = response.data.data.map((item) => {
       return {
         title: item.name,
-        value: item.name
+        value: item.id
       }
     })
 
