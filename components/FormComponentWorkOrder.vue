@@ -298,6 +298,14 @@ async function loadItem() {
           editedItem.value.tags = tagsTemp
         }
 
+        if(editedItem.value.assignees) {
+          let assigneesTemp = []
+          editedItem.value.assignees.forEach((assignee) => {
+            assigneesTemp.push(assignee.id)
+          })
+          editedItem.value.assignees = assigneesTemp
+        }
+
         // for objects
         editedItem.value.status = editedItem.value.status.id
 
@@ -337,7 +345,8 @@ function loadPersons() {
     persons.value = response.data.data.map((item) => {
       return {
         title: item.name,
-        value: {color: item.color, email: item.email, id: item.id, initials: item.initials}
+        // value: {color: item.color, email: item.email, id: item.id, initials: item.initials}
+        value: item.id
       }
     })
 
@@ -463,6 +472,15 @@ function save() {
   let data = Object.assign({}, editedItem.value)
 
   // since API needs IDs of assignees, pull the assignee(s) ID(s) and store in temp array
+  let assigneeids = []
+
+  if(data.assignees) {
+    data.assignees.forEach(element => {
+      assigneeids.push(element)
+    })
+    data.assignees = assigneeids
+  }
+  
   // hack warning: since API only accepts "priorityid" to set priority, but fetched data contains a "priority" object.
   if(data.priority) {
     if(data.priority.id) {
@@ -483,6 +501,8 @@ function save() {
     url = `${runtimeConfig.public.API_URL}/workorder/` + data.id
   }
 
+  console.log(data)
+  
   axios({
       method: method,
       url: url,
