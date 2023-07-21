@@ -78,7 +78,7 @@
           </template>
 
           <template v-slot:item.actions="{ item }">
-            <NuxtLink :to="'/workorders?id=' + item.raw.id" title="Edit work order">
+            <NuxtLink :to="'/workorders?id=' + item.raw.id" title="View and edit work order">
               <v-icon size="small" class="me-2">mdi-pencil</v-icon>
             </NuxtLink>
           </template>
