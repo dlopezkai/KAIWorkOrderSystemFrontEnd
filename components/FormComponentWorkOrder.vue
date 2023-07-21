@@ -126,7 +126,7 @@
 import axios from 'axios'
 import { useAuthStore } from '~/store/auth';
 import CommentsComp from './CommentsComp.vue';
-import { convertToDate, dateToISOStr, hoursToMilliseconds, hoursToMinutes } from '~/helpers/datetimeConversions.js';
+import { convertToDate, hoursToMinutes, minutesToHours } from '~/helpers/datetimeConversions.js';
 import { capitalizeFirstLetter } from '~/helpers/capitalizeFirstLetter.js';
 import '~/assets/css/main.css'
 
@@ -267,14 +267,6 @@ function convertToYyyymmddFormat(value) {
     + (value.getDate().toString().length != 2 ? "0" + value.getDate() : value.getDate());
 }
 
-function millisecondsToHours(value) {
-  if(value) {
-    const hours = (value / 1000 / 60 / 60).toFixed(2)
-
-    return hours
-  }
-}
-
 onBeforeMount(async () => {
   await loadClickUpUserInfo()
   loadTags()
@@ -296,7 +288,7 @@ async function loadItem() {
         loading.value = true
         editedItem.value = Object.assign({}, response.data.data[0])
         editedItem.value.due_date = (response.data.data[0].due_date != null) ? convertToDate(response.data.data[0].due_date, "table") : null
-        editedItem.value.time_estimate = millisecondsToHours(response.data.data[0].time_estimate)
+        editedItem.value.time_estimate = minutesToHours(response.data.data[0].time_estimate)
 
         // for arrays
         let tagsTemp = []
@@ -480,9 +472,6 @@ function save() {
   }
 
   if(data.time_estimate) data.time_estimate = hoursToMinutes(data.time_estimate)
-
-  // test list - will put WO in "Other KAI Clients" project
-  // data.list = 901001092394
 
   if (!props.recordId) {
     data.creatorid = clickUpUserInfo.value.id

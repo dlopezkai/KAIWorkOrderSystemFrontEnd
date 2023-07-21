@@ -29,3 +29,7 @@ export function hoursToMilliseconds(value) {
 export function hoursToMinutes(value) {
   return value * 60
 }
+
+export function minutesToHours(value) {
+  return value / 60
+}
