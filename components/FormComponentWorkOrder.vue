@@ -281,7 +281,6 @@ onMounted(async () => {
 })
 
 async function loadItem() {
-  // convert time estimate (milliseconds) to hours if not a new work order
   if (props.recordId) {
     try {
       const response = await axios.get(`${runtimeConfig.public.API_URL}/workorder/` + props.recordId)
