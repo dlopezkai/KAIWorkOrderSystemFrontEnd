@@ -71,7 +71,8 @@
                   <v-text-field v-model="editedItem.time_estimate" label="Budgeted Hours"></v-text-field>
                 </v-col>
                 <v-col cols="12" sm="6" md="6">
-                  <v-select v-model="editedItem.priorityid" label="Priority" :items="priorities" item-title="title" item-value="value" :hint="priorityMessages" persistent-hint></v-select>
+                  <!-- <v-select v-model="editedItem.priority" label="Priority" :items="priorities" item-title="title" item-value="id" :hint="priorityMessages" persistent-hint></v-select> -->
+                  <v-select v-model="editedItem.priority" label="Priority" :items="priorities" item-title="title" item-value="id"></v-select>
                 </v-col>
 
                 <v-col cols="12" sm="12" md="12">
@@ -164,7 +165,7 @@ const editedItem = ref([
     links: '',
     subtask: '',
     name: '',
-    priorityid: '',
+    priority: '',
     project: '',
     status: '',
     tags: '',
@@ -294,9 +295,7 @@ async function loadItem() {
     try {
       const response = await axios.get(`${runtimeConfig.public.API_URL}/workorder/` + props.recordId)
         loading.value = true
-        console.log(response.data.data[0])
         editedItem.value = Object.assign({}, response.data.data[0])
-        editedItem.value.priority = (response.data.data[0].priority != null) ? Number(response.data.data.priority[0].id) : null
         editedItem.value.due_date = (response.data.data[0].due_date != null) ? convertToDate(response.data.data[0].due_date, "table") : null
         editedItem.value.time_estimate = millisecondsToHours(response.data.data[0].time_estimate)
 
@@ -410,7 +409,7 @@ function loadPriorities() {
     priorities.value = response.data.data.map((item) => {
       return {
         title: capitalizeFirstLetter(item.name),
-        value: item.id,
+        id: item.id,
         description: item.description,
       }
     })
@@ -472,13 +471,13 @@ function save() {
   let data = Object.assign({}, editedItem.value)
 
   // since API needs IDs of assignees, pull the assignee(s) ID(s) and store in temp array
-  let assigneeids = []
-
-  if(data.assignees) {
-    data.assignees.forEach(element => {
-      assigneeids.push(element.id)
-    })
-    data.assignees = assigneeids
+  // hack warning: since API only accepts "priorityid" to set priority, but fetched data contains a "priority" object.
+  if(data.priority) {
+    if(data.priority.id) {
+      data.priorityid = data.priority.id
+    } else {
+      data.priorityid = data.priority
+    }
   }
 
   if(data.time_estimate) data.time_estimate = hoursToMinutes(data.time_estimate)
