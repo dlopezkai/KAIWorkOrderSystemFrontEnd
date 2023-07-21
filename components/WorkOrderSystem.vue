@@ -5,16 +5,19 @@
         <form-component-work-order form-action="edit" :record-id="route.query.id" @close="close()" @closeAndReload="closeAndReload()"></form-component-work-order>
       </v-card>
       <v-card v-else width="100vw">
-        <v-text-field
-          v-model="search"
-          append-icon="mdi-magnify"
-          label="Search (TBD)"
-          single-line
-          density="comfortable"
-          hide-details
-          disabled
-        ></v-text-field>
+        <div class="d-flex mb-2">
+          <v-text-field
+            v-model="searchString"
+            prepend-icon="mdi-magnify"
+            label="Search work orders"
+            single-line
+            density="comfortable"
+            class="pr-5"
+            hide-details
+          ></v-text-field>
 
+          <v-btn color="blue" class="rounded" @click="submitSearch()">Search</v-btn>
+        </div>
         <!-- <div v-if="!clickUpUserInfo.length">
         <p>Please register for a KAI ClickUp account to use this application</p>
         </div> -->
@@ -114,6 +117,7 @@ const page = ref(0)
 const lastPage = ref(false)
 const data = ref([])
 const search = ref('')
+const searchString = ref('')
 // const drawer = ref(true)
 const clickUpUserInfo = ref()
 const statuses = ref([])
@@ -253,7 +257,7 @@ async function loadItems() {
   loading.value = true
   await loadStatuses()
 
-  // TODO: figure out why this is needed on initial load. can't get userinfo with this here.
+  // TODO: figure out why this is needed on initial load. can't get userinfo without this here.
   await getUserInfo()
 
   // leave this here for when pagination comes back
@@ -261,6 +265,8 @@ async function loadItems() {
 
    // TODO: need to figure out how to pass without "?" if no filters are set
   let axiosGetRequestURL = `${runtimeConfig.public.API_URL}/workorders?`
+
+  if(search.value) axiosGetRequestURL = axiosGetRequestURL + `&search=` + search.value
 
   // set assignee filter - PENDING API IMPLEMENTATION
   // if(filterByUser.value) axiosGetRequestURL = axiosGetRequestURL + `&assignees[]=` + clickUpUserInfo.value.id
@@ -350,6 +356,10 @@ function incrementPage() {
 
 function decrementPage() {
   page.value = (page.value - 1)
+}
+
+function submitSearch() {
+  search.value = searchString.value
 }
 
 // priority color method for v-chip component
