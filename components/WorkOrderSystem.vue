@@ -100,7 +100,6 @@ import { ref, nextTick, watch, toRaw } from 'vue'
 import axios from 'axios'
 import { useAuthStore } from '~/store/auth';
 import { useNavMenuStore } from '~/store/navMenuStore'
-import { convertToDate, dateToISOStr, hoursToMilliseconds } from '~/helpers/datetimeConversions.js';
 import { capitalizeFirstLetter } from '~/helpers/capitalizeFirstLetter.js';
 
 const route = useRoute()
