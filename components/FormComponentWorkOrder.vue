@@ -462,12 +462,7 @@ async function submit() {
   }
 }
 
-/* 
-  known CU update limitations:
-  - can't update OR save watchers
-  - can't update tags
-  - can't update folder (project) or list (subtask)
-*/
+
 function save() {
   submitInfo.value = ''
   submitStatus.value = 'submitting'
