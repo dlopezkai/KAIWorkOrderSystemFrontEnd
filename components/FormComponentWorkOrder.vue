@@ -112,7 +112,7 @@
       <v-window-item v-if="props.recordId" value="two">
         <v-card>
           <v-card-text>
-            <comments-comp :taskid="props.recordId" :clickUpUserInfo="clickUpUserInfo"></comments-comp>
+            <comments-comp :workorderid="props.recordId" :clickUpUserInfo="clickUpUserInfo"></comments-comp>
           </v-card-text>
         </v-card>
         

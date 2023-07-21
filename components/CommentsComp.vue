@@ -38,10 +38,10 @@ const runtimeConfig = useRuntimeConfig()
 const commentsData = ref([])
 
 const props = defineProps({
-    taskid: String,
+    workorderid: String,
     clickUpUserInfo: Object
 })
-const { taskid } = toRefs(props);
+const { workorderid } = toRefs(props);
 const { clickUpUserInfo } = toRefs(props)
 
 const commentForm = ref({
@@ -56,7 +56,7 @@ onMounted(() => {
 })
 
 function loadComments() {
-    axios.get(`${runtimeConfig.public.API_URL}/task/` + taskid.value + `/comments`)
+    axios.get(`${runtimeConfig.public.API_URL}/workorder/` + workorderid.value + `/comments`)
     .then((response) => {
         commentsData.value = response.data.data.map((item) => {
             return {
@@ -78,7 +78,7 @@ function submitComment() {
             notify_all: commentForm.value.notify_all,
         }
 
-        axios.post(`${runtimeConfig.public.API_URL}/task/` + taskid.value + `/comment`, data, {
+        axios.post(`${runtimeConfig.public.API_URL}/workorder/` + workorderid.value + `/comment`, data, {
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
             }
