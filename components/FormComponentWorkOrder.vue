@@ -290,11 +290,13 @@ async function loadItem() {
         editedItem.value.time_estimate = minutesToHours(response.data.data[0].time_estimate)
 
         // for arrays
-        let tagsTemp = []
-        editedItem.value.tags.forEach((tag) => {
-          tagsTemp.push(tag.name)
-        })
-        editedItem.value.tags = tagsTemp
+        if(editedItem.value.tags) {
+          let tagsTemp = []
+          editedItem.value.tags.forEach((tag) => {
+            tagsTemp.push(tag.name)
+          })
+          editedItem.value.tags = tagsTemp
+        }
 
         // for objects
         editedItem.value.status = editedItem.value.status.id
