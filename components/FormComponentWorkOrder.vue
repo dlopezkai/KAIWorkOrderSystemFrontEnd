@@ -306,6 +306,14 @@ async function loadItem() {
           editedItem.value.assignees = assigneesTemp
         }
 
+        if(editedItem.value.watchers) {
+          let watchersTemp = []
+          editedItem.value.watchers.forEach((watcher) => {
+            watchersTemp.push(watcher.id)
+          })
+          editedItem.value.watchers = watchersTemp
+        }
+
         // for objects
         editedItem.value.status = editedItem.value.status.id
 
