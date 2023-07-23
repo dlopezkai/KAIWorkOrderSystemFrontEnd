@@ -6,8 +6,8 @@
                 v-for="comment in commentsData"
                 :key="comment.id"
             >
-                <v-list-item-title><strong>{{  comment.username + ' (' + convertToDate(comment.date, 'table') + ')' }}</strong></v-list-item-title>
-                <v-list-item-subtitle v-html="comment.comment_text" class="comment-subtitle"></v-list-item-subtitle>
+                <v-list-item-title><strong>{{ comment.username + ' (' + comment.post_date + ')' }}</strong></v-list-item-title>
+                <v-list-item-subtitle v-html="comment.message" class="comment-subtitle"></v-list-item-subtitle>
             </v-list-item>
             <v-list-item v-else>No comments</v-list-item>
         </v-list>
@@ -17,7 +17,7 @@
         <v-form ref="form" @submit.prevent="submitComment">
             <v-row class="pl-3 pr-3">
                 <v-col cols="12" sm="12" md="12">
-                    <v-text-field v-model="commentForm.comment_text" class="pt-5" placeholder="Enter a comment" outlined clearable></v-text-field>
+                    <v-text-field v-model="commentForm.message" class="pt-5" placeholder="Enter a comment" outlined clearable></v-text-field>
                 </v-col>
             </v-row>
             <v-row class="pb-5">
@@ -32,21 +32,20 @@
 <script setup>
 import { ref } from 'vue'
 import axios from 'axios'
-import { convertToDate } from '~/helpers/datetimeConversions.js'
 
 const runtimeConfig = useRuntimeConfig()
 const commentsData = ref([])
 
 const props = defineProps({
     workorderid: String,
-    clickUpUserInfo: Object
+    userInfo: Object
 })
 const { workorderid } = toRefs(props);
-const { clickUpUserInfo } = toRefs(props)
+const { userInfo } = toRefs(props)
 
 const commentForm = ref({
-    assignee: clickUpUserInfo.value.id,
-    comment_text: '',
+    assignee: userInfo.value.id,
+    message: '',
     notify_all: false,
     username: ''
 })
@@ -60,10 +59,10 @@ function loadComments() {
     .then((response) => {
         commentsData.value = response.data.data.map((item) => {
             return {
-                comment_text: item.comment_text,
-                date: item.date,
+                message: item.message,
+                post_date: item.post_date,
                 id: item.id,
-                username: item.user.username,
+                // username: item.user.username, // need user info here
             }
         })
     })
@@ -71,9 +70,9 @@ function loadComments() {
 }
 
 function submitComment() {
-    if(commentForm.value.comment_text != "") {
+    if(commentForm.value.message != "") {
         const data = {
-            comment_text: commentForm.value.comment_text, 
+            message: commentForm.value.message, 
             assignee: commentForm.value.assignee, 
             notify_all: commentForm.value.notify_all,
         }
@@ -86,16 +85,16 @@ function submitComment() {
         .then(function (response){
             // the next 4 commands are here to simulate a "live-update", and avoid an additional API GET request
             // actual data from clickup will be rendered in the list when user closes and reopens the modal
-            commentForm.value.username = clickUpUserInfo.value.username
-            commentForm.value.assignee = clickUpUserInfo.value.id
-            commentForm.value.date = response.data.data.date
+            commentForm.value.username = userInfo.value.username
+            commentForm.value.assignee = userInfo.value.id
+            commentForm.value.post_date = response.data.data.post_date
 
             commentsData.value.push(commentForm.value)
 
             // reset the form
             commentForm.value = {
-                assignee: clickUpUserInfo.value.id,
-                comment_text: '',
+                assignee: userInfo.value.id,
+                message: '',
                 notify_all: false,
                 username: ''
             }
