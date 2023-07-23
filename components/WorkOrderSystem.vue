@@ -89,12 +89,13 @@
     </v-layout>
   </v-container>
   
-  <v-container>
+  <!-- remove if we can paginate from backend (i.e. number of items per page / get total pages) -->
+  <!-- <v-container>
     <v-row justify="center" align="center">
       <v-btn class="rounded-0" flat :disabled="previousPageBtnDisabled" @click="decrementPage" title="Go to previous page">Previous page</v-btn>
       <v-btn class="rounded-0" flat :disabled="nextPageBtnDisabled" @click="incrementPage" title="Go to next page">Next page</v-btn>
     </v-row>
-  </v-container>
+  </v-container> -->
   <!-- </div> -->
 </template>
 
