@@ -18,10 +18,7 @@
 
           <v-btn color="blue" class="rounded" @click="submitSearch()">Search</v-btn>
         </div>
-        <!-- <div v-if="!clickUpUserInfo.length">
-        <p>Please register for a KAI ClickUp account to use this application</p>
-        </div> -->
-        <!-- <div v-else>  -->
+
         <!-- to make row clickable again, add @click:row="(pointerEvent, {item}) => editItem(item.raw)" -->
         <v-data-table-server
           v-model:page="page"
@@ -96,7 +93,6 @@
       <v-btn class="rounded-0" flat :disabled="nextPageBtnDisabled" @click="incrementPage" title="Go to next page">Next page</v-btn>
     </v-row>
   </v-container> -->
-  <!-- </div> -->
 </template>
 
 <script setup>
@@ -120,7 +116,7 @@ const data = ref([])
 const search = ref('')
 const searchString = ref('')
 // const drawer = ref(true)
-const clickUpUserInfo = ref()
+const userInfo = ref()
 const statuses = ref([])
 
 // use provide/inject pattern to receive data from layout
@@ -204,17 +200,17 @@ onBeforeMount(async () => {
   if(!isRecordPage.value) {
     await getUserInfo()
   }
-  setMenuItems(clickUpUserInfo.value)
+  setMenuItems(userInfo.value)
 })
 
 watch(() => route.query, () => 
-  setMenuItems(clickUpUserInfo.value)
+  setMenuItems(userInfo.value)
 )
 
 async function getUserInfo() {
   try {
     const response = await axios.get(`${runtimeConfig.public.API_URL}/persons?email=` + authStore.currentUser.username.toLowerCase())
-    clickUpUserInfo.value = response.data.data[0]
+    userInfo.value = response.data.data[0]
   } catch (err) {
     console.log(err)
   }
@@ -270,7 +266,7 @@ async function loadItems() {
   if(search.value) axiosGetRequestURL = axiosGetRequestURL + `&search=` + search.value
 
   // set assignee filter - PENDING API IMPLEMENTATION
-  // if(filterByUser.value) axiosGetRequestURL = axiosGetRequestURL + `&assignees[]=` + clickUpUserInfo.value.id
+  // if(filterByUser.value) axiosGetRequestURL = axiosGetRequestURL + `&assignees[]=` + userInfo.value.id
 
   // set display completed work order filter
   if(showCompleted.value) {

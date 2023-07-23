@@ -89,11 +89,6 @@
                   <v-text-field v-model="editedItem.links" label="SharePoint File"></v-text-field>
                   <v-btn href="https://kauffmaninc.sharepoint.com/" target="_blank" variant="tonal" class="rounded" color="#428086" title="Open SharePoint">Open SharePoint site</v-btn>
                 </v-col>
-
-                <!-- hide for production -->
-                <!-- <v-col v-if="editedItem.url" cols="12" sm="12" md="12">
-                  <v-btn :href="editedItem.url" target="_blank" variant="text">ClickUp reference link</v-btn>
-                </v-col> -->
               </v-row>
             </v-form>
           </v-card-text>
@@ -112,7 +107,7 @@
       <v-window-item v-if="props.recordId" value="two">
         <v-card>
           <v-card-text>
-            <comments-comp :workorderid="props.recordId" :clickUpUserInfo="clickUpUserInfo"></comments-comp>
+            <comments-comp :workorderid="props.recordId" :userInfo="userInfo"></comments-comp>
           </v-card-text>
         </v-card>
         
@@ -133,7 +128,7 @@ import '~/assets/css/main.css'
 const loading = ref(true)
 const runtimeConfig = useRuntimeConfig()
 const authStore = useAuthStore()
-const clickUpUserInfo = ref()
+const userInfo = ref()
 const tags = ref([])
 const persons = ref([])
 const projects = ref([])
@@ -268,7 +263,7 @@ function convertToYyyymmddFormat(value) {
 }
 
 onBeforeMount(async () => {
-  await loadClickUpUserInfo()
+  await loadUserInfo()
   loadTags()
   loadPersons()
   loadProjects()
@@ -426,10 +421,10 @@ function loadPriorities() {
   .catch(err => console.log(err))
 }
 
-async function loadClickUpUserInfo() {
+async function loadUserInfo() {
   try {
     const response = await axios.get(`${runtimeConfig.public.API_URL}/persons?email=` + authStore.currentUser.username.toLowerCase())
-    clickUpUserInfo.value = response.data.data[0]
+    userInfo.value = response.data.data[0]
   } catch (err) {
     console.log(err)
   }
@@ -501,7 +496,7 @@ function save() {
   if(data.time_estimate) data.time_estimate = hoursToMinutes(data.time_estimate)
 
   if (!props.recordId) {
-    data.creatorid = clickUpUserInfo.value.id
+    data.creatorid = userInfo.value.id
     method = 'post'
     url = `${runtimeConfig.public.API_URL}/subtask/` + data.subtask + `/workorder`
   } else {
