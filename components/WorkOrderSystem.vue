@@ -22,6 +22,7 @@
         <!-- to make row clickable again, add @click:row="(pointerEvent, {item}) => editItem(item.raw)" -->
         <v-data-table-server
           v-model:page="page"
+          v-model:items-per-page="itemsPerPage"
           :headers="headers" 
           :items-length="totalItems"
           :items="data" 
@@ -31,6 +32,12 @@
           density="comfortable"
           :search="search"
           @update:options="loadItems"
+          :items-per-page-options="[
+            {value: 10, title: '10'},
+            {value: 25, title: '25'},
+            {value: 50, title: '50'},
+            {value: 100, title: '100'},
+          ]"
         >
           <template v-slot:top>
             <v-dialog v-model="dialog" max-width="800px">
@@ -79,20 +86,10 @@
               <v-icon size="small" class="me-2">mdi-pencil</v-icon>
             </NuxtLink>
           </template>
-
-          <template v-slot:bottom v-if="!showFooter"></template>
         </v-data-table-server>
       </v-card>
     </v-layout>
   </v-container>
-  
-  <!-- remove if we can paginate from backend (i.e. number of items per page / get total pages) -->
-  <!-- <v-container>
-    <v-row justify="center" align="center">
-      <v-btn class="rounded-0" flat :disabled="previousPageBtnDisabled" @click="decrementPage" title="Go to previous page">Previous page</v-btn>
-      <v-btn class="rounded-0" flat :disabled="nextPageBtnDisabled" @click="incrementPage" title="Go to next page">Next page</v-btn>
-    </v-row>
-  </v-container> -->
 </template>
 
 <script setup>
@@ -106,11 +103,10 @@ const route = useRoute()
 const runtimeConfig = useRuntimeConfig()
 const authStore = useAuthStore()
 const navMenuStore = useNavMenuStore()
-const itemsPerPage = ref(100)
+const itemsPerPage = ref(10)
 const loading = ref(true)
 const totalItems = ref(0)
-const showFooter = ref(false)
-const page = ref(0)
+const page = ref(1)
 const lastPage = ref(false)
 const data = ref([])
 const search = ref('')
@@ -177,16 +173,6 @@ const headers = [
 //     })
 //   },
 // }
-
-// computed value to disable / enable the "Previous page" button
-const previousPageBtnDisabled = computed(() => {
-  return (loading.value) ? true : (page.value === 0) ? true : false
-})
-
-// computed value to disable / enable the "Next page" button
-const nextPageBtnDisabled = computed(() => {
-  return (loading.value) ? true : (lastPage.value) ? true : false
-})
 
 // computed value for toggling group-by behavior
 // if we still plan to incorporate grouping, then we will need to pass a :group-by="groupBy" prop in the <v-data-table-server> component
@@ -257,11 +243,7 @@ async function loadItems() {
   // TODO: figure out why this is needed on initial load. can't get userinfo without this here.
   await getUserInfo()
 
-  // leave this here for when pagination comes back
-  // let axiosGetRequestURL = `${runtimeConfig.public.API_URL}/tasks/?page=` + page.value
-
-   // TODO: need to figure out how to pass without "?" if no filters are set
-  let axiosGetRequestURL = `${runtimeConfig.public.API_URL}/workorders?`
+  let axiosGetRequestURL = `${runtimeConfig.public.API_URL}/workorders?page=` + page.value + `&page_size=` + itemsPerPage.value
 
   if(search.value) axiosGetRequestURL = axiosGetRequestURL + `&search=` + search.value
 
@@ -345,14 +327,6 @@ function close() {
 function closeAndReload() {
   dialog.value = false
   loadItems()
-}
-
-function incrementPage() {
-  page.value = (page.value + 1)
-}
-
-function decrementPage() {
-  page.value = (page.value - 1)
 }
 
 function submitSearch() {
