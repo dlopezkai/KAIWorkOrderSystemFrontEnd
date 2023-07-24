@@ -68,7 +68,7 @@
           </template>
 
           <template v-slot:item.due_date="{ item }">
-            <v-chip v-if="item.raw.due_date" :color="getDueDateColor(item.raw.due_date, item.raw.status)">
+            <v-chip v-if="item.raw.due_date" :color="getDueDateColor(item.raw.due_date, item.raw.status.name)">
               <!-- {{ convertToDate(item.raw.due_date, "table") }} -->
               {{ item.raw.due_date }}
             </v-chip>
@@ -375,16 +375,32 @@ function getPriorityColor (priority) {
   }
 }
 
-function getDueDateColor(rawDateTime, status) {
-  let color = ""
-  const convertedRawDateTime = Number(rawDateTime)
+function getDueDateColor(input, status) {
+  // since input comes in as raw YYYY-MM-DD, we need to convert it back to MS in the user's timezone
+
+  // get date object of input
+  const rawDateTime = new Date(input)
+
+  // get timezone offset (in minutes)
+  const timeZoneOffset = rawDateTime.getTimezoneOffset()
+
+  // convert timezone offset to milliseconds
+  const timeZoneOffsetInMS = timeZoneOffset * 60000
+
+  // Number(rawDateTime) will convert input's date object to milliseconds
+  const convertedRawDateTime = (Number(rawDateTime) + Number(timeZoneOffsetInMS))
+  
   const date = new Date(convertedRawDateTime)
 
-  const todayInMS = new Date()
+  // today's date in user's current timezone
+  const todayInMS = new Date() 
+
+  // today's date in user's current timezone plus 5 days
   const todayPlusFiveDays = Number(todayInMS) + 432000000
 
   // if task is not complete, then set color
   // red for overdue (or due today), yellow for due within 5 days
+  let color = ""
   if(status != "complete") {
     if (todayInMS >= date) {
       color = "#f50000"
