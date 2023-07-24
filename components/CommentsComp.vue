@@ -6,7 +6,7 @@
                 v-for="comment in commentsData"
                 :key="comment.id"
             >
-                <v-list-item-title><strong>{{ comment.username + ' (' + comment.post_date + ')' }}</strong></v-list-item-title>
+                <v-list-item-title><strong>{{ comment.author_name + ' (' + comment.post_date + ')' }}</strong></v-list-item-title>
                 <v-list-item-subtitle v-html="comment.message" class="comment-subtitle"></v-list-item-subtitle>
             </v-list-item>
             <v-list-item v-else>No comments</v-list-item>
@@ -44,10 +44,10 @@ const { workorderid } = toRefs(props);
 const { userInfo } = toRefs(props)
 
 const commentForm = ref({
-    assignee: userInfo.value.id,
+    authorid: userInfo.value.id,
+    author_name: '',
     message: '',
-    notify_all: false,
-    username: ''
+    post_date: '',
 })
 
 onMounted(() => {
@@ -59,10 +59,10 @@ function loadComments() {
     .then((response) => {
         commentsData.value = response.data.data.map((item) => {
             return {
-                message: item.message,
-                post_date: item.post_date,
                 id: item.id,
-                // username: item.user.username, // need user info here
+                author_name: item.author.name,
+                message: item.message,
+                post_date: item.post_date
             }
         })
     })
@@ -72,9 +72,8 @@ function loadComments() {
 function submitComment() {
     if(commentForm.value.message != "") {
         const data = {
+            authorid: commentForm.value.authorid, 
             message: commentForm.value.message, 
-            assignee: commentForm.value.assignee, 
-            notify_all: commentForm.value.notify_all,
         }
 
         axios.post(`${runtimeConfig.public.API_URL}/workorder/` + workorderid.value + `/comment`, data, {
@@ -83,20 +82,20 @@ function submitComment() {
             }
         })
         .then(function (response){
-            // the next 4 commands are here to simulate a "live-update", and avoid an additional API GET request
+            // the next set of commands are here to simulate a "live-update", and avoid an additional API GET request
             // actual data from clickup will be rendered in the list when user closes and reopens the modal
-            commentForm.value.username = userInfo.value.username
-            commentForm.value.assignee = userInfo.value.id
+            
+            // commentForm.value.author_name = userInfo.value.name
+            commentForm.value.author_name = response.data.data.author.name
             commentForm.value.post_date = response.data.data.post_date
-
+            
             commentsData.value.push(commentForm.value)
 
             // reset the form
             commentForm.value = {
-                assignee: userInfo.value.id,
+                author_name: '',
                 message: '',
-                notify_all: false,
-                username: ''
+                post_date: '',
             }
         })
         .catch(function (error) {
