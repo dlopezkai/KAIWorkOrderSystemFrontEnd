@@ -111,7 +111,6 @@ const lastPage = ref(false)
 const data = ref([])
 const search = ref('')
 const searchString = ref('')
-// const drawer = ref(true)
 const userInfo = ref()
 const statuses = ref([])
 
