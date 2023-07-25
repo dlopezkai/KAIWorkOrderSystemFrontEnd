@@ -63,7 +63,7 @@
 
           <template v-slot:item.status="{ item }">
             <!-- need v-if since some statuses come in as NULL -->
-            <v-chip v-if="item.raw.status" :color="item.raw.status_color">
+            <v-chip v-if="item.raw.status" :color="item.raw.status.color" variant="outlined">
               {{ capitalizeFirstLetter(item.raw.status.name) }}
             </v-chip>
           </template>
@@ -271,9 +271,7 @@ function loadItems() {
         // since this not in a pill, need to do this way
         // some projects/subtasks come in as NULL
         project: (item.project) ? item.project.name + ' | ' + item.subtask.name : '',
-        
         status: item.status,
-        // status_color: item.status.color,
         subtask: item.subtask,
         tags: item.tags,
         time_estimate: item.time_estimate,
