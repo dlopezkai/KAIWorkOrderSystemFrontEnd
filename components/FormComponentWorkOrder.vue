@@ -460,6 +460,24 @@ function save() {
   }
   */
   
+  /* 
+    to clear-out assignees, watchers and/or tags while modifying a workorder, 
+    the API requires a value of '0' to be sent over for that specific field.
+  */
+  if (props.recordId) {
+    if (data.assignees && data.assignees.length === 0) {
+      data.assignees = 0
+    }
+
+    if (data.watchers && data.watchers.length === 0) {
+      data.watchers = 0
+    }
+
+    if (data.tags && data.tags.length === 0) {
+      data.tags = 0
+    }
+  }
+
   // hack warning: since API only accepts "priorityid" to set priority, but fetched data contains a "priority" object.
   if(data.priority) {
     if(data.priority.id) {
