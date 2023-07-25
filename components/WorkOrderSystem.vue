@@ -111,7 +111,6 @@ const lastPage = ref(false)
 const data = ref([])
 const search = ref('')
 const searchString = ref('')
-const userInfo = ref()
 const statuses = ref([])
 
 // use provide/inject pattern to receive data from layout
@@ -119,6 +118,10 @@ const dialog = inject('dialog')
 const isRecordPage = inject('isRecordPage')
 const filterByUser = inject('filterByUser')
 const showCompleted = inject('showCompleted')
+
+const props = defineProps({
+  userInfo: Object,
+})
 
 // reload table when filterByUser data is changed
 watch(filterByUser, (currentValue, newValue) => {
@@ -182,24 +185,12 @@ const groupBy = computed(() => {
 })
 
 onBeforeMount(async () => {
-  if(!isRecordPage.value) {
-    await getUserInfo()
-  }
-  setMenuItems(userInfo.value)
+  setMenuItems(props.userInfo)
 })
 
 watch(() => route.query, () => 
-  setMenuItems(userInfo.value)
+  setMenuItems(props.userInfo)
 )
-
-async function getUserInfo() {
-  try {
-    const response = await axios.get(`${runtimeConfig.public.API_URL}/persons?email=` + authStore.currentUser.username.toLowerCase())
-    userInfo.value = response.data.data[0]
-  } catch (err) {
-    console.log(err)
-  }
-}
 
 // passing in userInfo in prep for ACL logic of menu itmes
 function setMenuItems(userInfo) {
@@ -239,15 +230,12 @@ async function loadItems() {
   loading.value = true
   await loadStatuses()
 
-  // TODO: figure out why this is needed on initial load. can't get userinfo without this here.
-  await getUserInfo()
-
   let axiosGetRequestURL = `${runtimeConfig.public.API_URL}/workorders?page=` + page.value + `&page_size=` + itemsPerPage.value
 
   if(search.value) axiosGetRequestURL = axiosGetRequestURL + `&search=` + search.value
 
   // set assignee filter - PENDING API IMPLEMENTATION
-  // if(filterByUser.value) axiosGetRequestURL = axiosGetRequestURL + `&assignees[]=` + userInfo.value.id
+  if(filterByUser.value) axiosGetRequestURL = axiosGetRequestURL + `&assignees[]=` + props.userInfo.id
 
   // set display completed work order filter
   if(showCompleted.value) {
