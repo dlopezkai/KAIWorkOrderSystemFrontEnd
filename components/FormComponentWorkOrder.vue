@@ -107,7 +107,7 @@
       <v-window-item v-if="props.recordId" value="two">
         <v-card>
           <v-card-text>
-            <comments-comp :workorderid="props.recordId" :userInfo="userInfo"></comments-comp>
+            <comments-comp :workorderid="props.recordId" :userInfo="props.userInfo"></comments-comp>
           </v-card-text>
         </v-card>
         
@@ -128,7 +128,6 @@ import '~/assets/css/main.css'
 const loading = ref(true)
 const runtimeConfig = useRuntimeConfig()
 const authStore = useAuthStore()
-const userInfo = ref()
 const tags = ref([])
 const persons = ref([])
 const projects = ref([])
@@ -144,6 +143,7 @@ const submitInfo = ref('')
 const props = defineProps({
     recordId: String,
     formAction: String,
+    userInfo: Object,
 })
 
 const emit = defineEmits(['close', 'closeAndReload'])
@@ -263,7 +263,6 @@ function convertToYyyymmddFormat(value) {
 }
 
 onBeforeMount(async () => {
-  await loadUserInfo()
   loadTags()
   loadPersons()
   loadProjects()
@@ -421,15 +420,6 @@ function loadPriorities() {
   .catch(err => console.log(err))
 }
 
-async function loadUserInfo() {
-  try {
-    const response = await axios.get(`${runtimeConfig.public.API_URL}/persons?email=` + authStore.currentUser.username.toLowerCase())
-    userInfo.value = response.data.data[0]
-  } catch (err) {
-    console.log(err)
-  }
-}
-
 function close() {
   if (!props.recordId) {
     if(submitStatus.value === 'success') {
@@ -496,7 +486,7 @@ function save() {
   if(data.time_estimate) data.time_estimate = hoursToMinutes(data.time_estimate)
 
   if (!props.recordId) {
-    data.creatorid = userInfo.value.id
+    data.creatorid = props.userInfo.id
     method = 'post'
     url = `${runtimeConfig.public.API_URL}/subtask/` + data.subtask + `/workorder`
   } else {
