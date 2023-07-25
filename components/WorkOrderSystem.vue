@@ -235,7 +235,7 @@ async function loadItems() {
   if(search.value) axiosGetRequestURL = axiosGetRequestURL + `&search=` + search.value
 
   // set assignee filter - PENDING API IMPLEMENTATION
-  if(filterByUser.value) axiosGetRequestURL = axiosGetRequestURL + `&assignees[]=` + props.userInfo.id
+  // if(filterByUser.value) axiosGetRequestURL = axiosGetRequestURL + `&assignees[]=` + props.userInfo.id
 
   // set display completed work order filter
   if(showCompleted.value) {
