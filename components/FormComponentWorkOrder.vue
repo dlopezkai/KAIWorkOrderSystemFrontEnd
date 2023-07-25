@@ -277,7 +277,6 @@ async function loadItem() {
   if (props.recordId) {
     try {
       const response = await axios.get(`${runtimeConfig.public.API_URL}/workorder/` + props.recordId)
-        console.log(response.data.data[0])
         loading.value = true
         editedItem.value = Object.assign({}, response.data.data[0])
         editedItem.value.time_estimate = minutesToHours(response.data.data[0].time_estimate)
@@ -483,8 +482,6 @@ function save() {
     url = `${runtimeConfig.public.API_URL}/workorder/` + data.id
   }
 
-  console.log(data)
-  
   axios({
       method: method,
       url: url,
