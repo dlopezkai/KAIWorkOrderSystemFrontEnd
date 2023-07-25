@@ -132,7 +132,6 @@ const tags = ref([])
 const persons = ref([])
 const projects = ref([])
 const subtasks = ref([])
-const statuses = ref([])
 const priorities = ref([])
 const form = ref(null)
 const formTab = ref(null)
@@ -144,6 +143,7 @@ const props = defineProps({
     recordId: String,
     formAction: String,
     userInfo: Object,
+    statuses: Array,
 })
 
 const emit = defineEmits(['close', 'closeAndReload'])
@@ -266,7 +266,6 @@ onBeforeMount(() => {
   loadTags()
   loadPersons()
   loadProjects()
-  loadStatuses()
   loadPriorities()
 })
 
@@ -391,19 +390,6 @@ function resetAndReloadSubtasks() {
   editedItem.value.subtask = ''
   subtasks.value = ''
   loadSubtasks(editedItem.value.project)
-}
-
-function loadStatuses() {
-  axios.get(`${runtimeConfig.public.API_URL}/statuses`)
-  .then((response) => {
-    statuses.value = response.data.data.map((item) => {
-      return {
-        title: capitalizeFirstLetter(item.name),
-        id: item.id
-      }
-    })
-  })
-  .catch(err => console.log(err))
 }
 
 function loadPriorities() {

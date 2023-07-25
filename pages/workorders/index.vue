@@ -3,27 +3,44 @@
   both root index.vue and /workorders/index.vue utilize it
 -->
 <template>
-  <work-order-system v-if="!loading" :userInfo="userInfo"></work-order-system>
+  <work-order-system v-if="!loading" :userInfo="userInfo" :statuses="statuses"></work-order-system>
 </template>
 
 <script setup>
 import { useAuthStore } from '~/store/auth';
 import axios from 'axios'
+import { capitalizeFirstLetter } from '~/helpers/capitalizeFirstLetter.js';
+
 
 const authStore = useAuthStore()
 const { $msal } = useNuxtApp()
 const runtimeConfig = useRuntimeConfig()
 const userInfo = ref()
+const statuses = ref()
 const loading = ref(true)
 
 onBeforeMount(async () => {
   try {
     const response = await axios.get(`${runtimeConfig.public.API_URL}/persons?email=` + authStore.currentUser.username.toLowerCase())
     userInfo.value = response.data.data[0]
-    loading.value = false
   } catch (err) {
     console.log(err)
   }
+
+  try {
+    const response = await axios.get(`${runtimeConfig.public.API_URL}/statuses`)
+      statuses.value = response.data.data.map((item) => {
+        return {
+          title: capitalizeFirstLetter(item.name),
+          value: item.name,
+          id: item.id
+        }
+      })
+  } catch (err) {
+    console.log(err)
+  }
+
+  loading.value = false
 })
 
 onMounted(async () => {

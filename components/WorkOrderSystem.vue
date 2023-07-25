@@ -2,7 +2,7 @@
   <v-container fluid full-height>
     <v-layout child-flex>
       <v-card v-if="route.query.id" width="100vw">
-        <form-component-work-order form-action="edit" :userInfo="props.userInfo" :record-id="route.query.id" @close="close()" @closeAndReload="closeAndReload()"></form-component-work-order>
+        <form-component-work-order form-action="edit" :userInfo="props.userInfo" :statuses="props.statuses" :record-id="route.query.id" @close="close()" @closeAndReload="closeAndReload()"></form-component-work-order>
       </v-card>
       <v-card v-else width="100vw">
         <div class="d-flex mb-2">
@@ -41,7 +41,7 @@
         >
           <template v-slot:top>
             <v-dialog v-model="dialog" max-width="800px">
-              <form-component-work-order form-action="new" :userInfo="props.userInfo" @close="close()" @closeAndReload="closeAndReload()"></form-component-work-order>
+              <form-component-work-order form-action="new" :userInfo="props.userInfo" :statuses="props.statuses" @close="close()" @closeAndReload="closeAndReload()"></form-component-work-order>
             </v-dialog>
           </template>
 
@@ -111,7 +111,6 @@ const lastPage = ref(false)
 const data = ref([])
 const search = ref('')
 const searchString = ref('')
-const statuses = ref([])
 
 // use provide/inject pattern to receive data from layout
 const dialog = inject('dialog')
@@ -121,6 +120,7 @@ const showCompleted = inject('showCompleted')
 
 const props = defineProps({
   userInfo: Object,
+  statuses: Array,
 })
 
 // reload table when filterByUser data is changed
@@ -228,7 +228,6 @@ function setMenuItems(userInfo) {
 // function loadItems({ page }) {
 async function loadItems() {
   loading.value = true
-  await loadStatuses()
 
   let axiosGetRequestURL = `${runtimeConfig.public.API_URL}/workorders?page=` + page.value + `&page_size=` + itemsPerPage.value
 
@@ -240,12 +239,12 @@ async function loadItems() {
   // set display completed work order filter
   if(showCompleted.value) {
     // get the ID of status = "complete"
-    const completeStatusObj = statuses.value.filter(e => e.value == 'complete')
+    const completeStatusObj = props.statuses.filter(e => e.value == 'complete')
     const completeStatusID = completeStatusObj[0].id
 
     axiosGetRequestURL = axiosGetRequestURL + `&status[]=` + completeStatusID
   } else {
-    const statusesArray = statuses.value.filter(e => e.value !== 'complete')
+    const statusesArray = props.statuses.filter(e => e.value !== 'complete')
 
     let statusQueryStr = ''
     statusesArray.forEach(element => 
@@ -286,21 +285,6 @@ async function loadItems() {
     loading.value = false
   })
   .catch(err => console.log(err))
-}
-
-async function loadStatuses() {
-  try {
-    const response = await axios.get(`${runtimeConfig.public.API_URL}/statuses`)
-      statuses.value = response.data.data.map((item) => {
-        return {
-          title: capitalizeFirstLetter(item.name),
-          value: item.name,
-          id: item.id
-        }
-      })
-  } catch (err) {
-    console.log(err)
-  }
 }
 
 function close() {
