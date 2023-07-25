@@ -446,21 +446,6 @@ function save() {
   let data = Object.assign({}, editedItem.value)
 
   /* 
-    TODO: TEST TO SEE IF WE CAN DELETE THIS
-    Verified with create and read..  need to check with update  
-    since API needs IDs of assignees, pull the assignee(s) ID(s) and store in temp array
-
-  let assigneeids = []
-
-  if(data.assignees) {
-    data.assignees.forEach(element => {
-      assigneeids.push(element)
-    })
-    data.assignees = assigneeids
-  }
-  */
-  
-  /* 
     to clear-out assignees, watchers and/or tags while modifying a workorder, 
     the API requires a value of '0' to be sent over for that specific field.
   */
