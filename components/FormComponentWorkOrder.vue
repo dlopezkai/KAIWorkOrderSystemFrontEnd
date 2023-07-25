@@ -262,7 +262,7 @@ function convertToYyyymmddFormat(value) {
     + (value.getDate().toString().length != 2 ? "0" + value.getDate() : value.getDate());
 }
 
-onBeforeMount(async () => {
+onBeforeMount(() => {
   loadTags()
   loadPersons()
   loadProjects()

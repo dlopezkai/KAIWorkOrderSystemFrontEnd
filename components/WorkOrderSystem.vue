@@ -184,7 +184,7 @@ const groupBy = computed(() => {
   }
 })
 
-onBeforeMount(async () => {
+onBeforeMount(() => {
   setMenuItems(props.userInfo)
 })
 
