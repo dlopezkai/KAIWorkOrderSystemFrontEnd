@@ -226,7 +226,7 @@ function setMenuItems(userInfo) {
 }
 
 // function loadItems({ page }) {
-async function loadItems() {
+function loadItems() {
   loading.value = true
 
   let axiosGetRequestURL = `${runtimeConfig.public.API_URL}/workorders?page=` + page.value + `&page_size=` + itemsPerPage.value
