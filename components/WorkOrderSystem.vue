@@ -117,14 +117,23 @@ const dialog = inject('dialog')
 const isRecordPage = inject('isRecordPage')
 const filterByUser = inject('filterByUser')
 const showCompleted = inject('showCompleted')
+const selectedAssignee = inject('selectedUser')
 
 const props = defineProps({
   userInfo: Object,
   statuses: Array,
+  persons: Array,
 })
 
 // reload table when filterByUser data is changed
 watch(filterByUser, (currentValue, newValue) => {
+  if(currentValue !== newValue) {
+    loadItems()
+  }
+})
+
+// reload table when selectedAssignee data is changed
+watch(selectedAssignee, (currentValue, newValue) => {
   if(currentValue !== newValue) {
     loadItems()
   }
@@ -185,6 +194,7 @@ const groupBy = computed(() => {
 })
 
 onBeforeMount(() => {
+  selectedAssignee.value = props.userInfo.id
   setMenuItems(props.userInfo)
 })
 
@@ -212,10 +222,11 @@ function setMenuItems(userInfo) {
       { 'label': 'Projects', 'destination': '/projects', 'icon': 'mdi-form-select' },
     ]
     filterItemsGroup = [
-      { 'label': 'My Work Orders', 'icon': 'mdi-account-box', 'filter_name': 'filterByUser', 'filter_value': true },
-      { 'label': 'All Work Orders', 'icon': 'mdi-account-box-multiple', 'filter_name': 'filterByUser', 'filter_value': false },
-      { 'label': 'Not Completed', 'icon': 'mdi-format-list-bulleted', 'filter_name': 'showCompleted', 'filter_value': false },
-      { 'label': 'Completed', 'icon': 'mdi-playlist-check', 'filter_name': 'showCompleted', 'filter_value': true },
+      { 'type': 'selectAssignee', 'label': 'Filter by Assignee', 'filter_name': 'filterByUser', 'items': props.persons },
+      // { 'label': 'My Work Orders', 'icon': 'mdi-account-box', 'filter_name': 'filterByUser', 'filter_value': true },
+      // { 'label': 'All Work Orders', 'icon': 'mdi-account-box-multiple', 'filter_name': 'filterByUser', 'filter_value': false },
+      { 'type': 'link', 'label': 'Not Completed', 'icon': 'mdi-format-list-bulleted', 'filter_name': 'showCompleted', 'filter_value': false },
+      { 'type': 'link', 'label': 'Completed', 'icon': 'mdi-playlist-check', 'filter_name': 'showCompleted', 'filter_value': true },
     ]
     addRecordItemsGroup = [
       { 'label': 'Add New Work Order', 'icon': 'mdi-file-document-plus-outline' },
@@ -235,6 +246,9 @@ function loadItems() {
 
   // set assignee filter - PENDING API IMPLEMENTATION
   // if(filterByUser.value) axiosGetRequestURL = axiosGetRequestURL + `&assignees[]=` + props.userInfo.id
+
+  // new way of filtering by user since grouping doesn't work - PENDING API IMPLEMENTATION
+  // if(selectedAssignee.value !== '0') axiosGetRequestURL = axiosGetRequestURL + `&assignees[]=` + selectedAssignee.value
 
   // set display completed work order filter
   if(showCompleted.value) {

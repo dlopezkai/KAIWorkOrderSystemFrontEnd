@@ -38,19 +38,30 @@
                 <v-list-item-title :title="`Go to ` + menuItem.label" v-text="menuItem.label"></v-list-item-title>
               </v-list-item>
 
-              <!-- filters group -->
-              <v-divider v-if="navMenuStore.menuItems.filterItemsGroup.length > 0"></v-divider>
-              <v-list-subheader v-if="navMenuStore.menuItems.filterItemsGroup.length > 0">Table Filters</v-list-subheader>
-              <v-list-item v-for="menuItem in navMenuStore.menuItems.filterItemsGroup" :prepend-icon="menuItem.icon" @click="filteringMethod(menuItem.filter_name, menuItem.filter_value)">
-                <v-list-item-title :title="`Filter by ` + menuItem.label" v-text="menuItem.label"></v-list-item-title>
-              </v-list-item>
-
               <!-- add record group -->
               <v-divider v-if="navMenuStore.menuItems.addRecordItems.length > 0"></v-divider>
               <v-list-subheader v-if="navMenuStore.menuItems.addRecordItems.length > 0">New Item Management</v-list-subheader>
               <v-list-item v-for="menuItem in navMenuStore.menuItems.addRecordItems" :prepend-icon="menuItem.icon" @click="openModal()">
                 <v-list-item-title :title="menuItem.label" v-text="menuItem.label"></v-list-item-title>
               </v-list-item>
+
+              <!-- filters group -->
+              <v-divider v-if="navMenuStore.menuItems.filterItemsGroup.length > 0"></v-divider>
+              <v-list-subheader v-if="navMenuStore.menuItems.filterItemsGroup.length > 0">Table Filters</v-list-subheader>
+
+              <div v-for="menuItem in navMenuStore.menuItems.filterItemsGroup">
+                <v-list-item v-if="menuItem.type =='selectAssignee'">
+                  <v-select v-model="selectedAssignee" :label="menuItem.label" :items="menuItem.items"></v-select>
+                </v-list-item>
+
+                <v-list-item v-else :prepend-icon="menuItem.icon" @click="filteringMethod(menuItem.filter_name, menuItem.filter_value)">
+                  <v-list-item-title :title="`Filter by ` + menuItem.label" v-text="menuItem.label"></v-list-item-title>
+                </v-list-item>
+              </div>
+
+              <!-- <v-list-item v-for="menuItem in navMenuStore.menuItems.filterItemsGroup" :prepend-icon="menuItem.icon" @click="filteringMethod(menuItem.filter_name, menuItem.filter_value)">
+                <v-list-item-title :title="`Filter by ` + menuItem.label" v-text="menuItem.label"></v-list-item-title>
+              </v-list-item> -->
             </v-list>
           </v-navigation-drawer>
 
@@ -91,6 +102,9 @@
 
   const isRecordPage = ref(false)
   provide('isRecordPage', isRecordPage)
+
+  const selectedAssignee = ref('0')
+  provide('selectedUser', selectedAssignee)
 
   async function signInAction() {
     await signIn()
