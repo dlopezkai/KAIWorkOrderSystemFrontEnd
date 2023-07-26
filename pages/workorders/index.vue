@@ -50,7 +50,6 @@ onBeforeMount(async () => {
         }
       })
       persons.value.push({'title': '-- None --', 'value': '0'})
-      console.log(persons.value)
 
       // sort persons list
     persons.value = persons.value.sort((a, b) => 
