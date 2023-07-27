@@ -105,24 +105,21 @@ watch(() => route.query, () =>
 )
 
 function setMenuItems() {
-  let navigationItemsGroup = []
-  let filterItemsGroup = []
-  let addRecordItemsGroup = []
+  let navigationItems = []
+  let settingsItems = []
+  let filterItems = []
 
   if (isRecordPage.value) {
-    navigationItemsGroup = [
+    navigationItems = [
       { 'label': 'Projects', 'destination': '/projects', 'icon': 'mdi-keyboard-backspace' },
     ]
   } else {
-    navigationItemsGroup = [
+    navigationItems = [
       { 'label': 'Work Orders', 'destination': '/workorders', 'icon': 'mdi-keyboard-backspace' },
-    ]
-    addRecordItemsGroup = [
-      { 'label': 'Add New Project', 'icon': 'mdi-file-document-plus-outline' },
     ]
   }
 
-  navMenuStore.setMenuItems(navigationItemsGroup, filterItemsGroup, addRecordItemsGroup)
+  navMenuStore.setMenuItems(navigationItems, settingsItems, filterItems)
 }
 </script>
 

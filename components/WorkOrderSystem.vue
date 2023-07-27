@@ -195,35 +195,31 @@ watch(() => route.query, () =>
 
 // passing in userInfo in prep for ACL logic of menu itmes
 function setMenuItems(userInfo) {
-  let navigationItemsGroup = []
-  let filterItemsGroup = []
-  let addRecordItemsGroup = []
+  let navigationItems = []
+  let filterItems = []
+  let settingsItems = []
 
   if (isRecordPage.value) {
-    navigationItemsGroup = [
+    navigationItems = [
       { 'label': 'Work Orders', 'destination': '/workorders', 'icon': 'mdi-keyboard-backspace' },
     ]
   } else {
     // example ACL logic
-    // navigationItemsGroup = (userInfo.role = 'manager') ? [] : [
+    // settingsItems = (userInfo.role = 'manager') ? [] : [
     //   { 'label': 'Projects', 'destination': '/projects', 'icon': 'mdi-form-select' },
     // ]
-
-    navigationItemsGroup = [
+    settingsItems = [
       { 'label': 'Projects', 'destination': '/projects', 'icon': 'mdi-form-select' },
       { 'label': 'Users', 'destination': '/', 'icon': 'mdi-account-multiple' },
     ]
-    filterItemsGroup = [
+    filterItems = [
       { 'label': 'My Work Orders', 'icon': 'mdi-account-box', 'filter_name': 'filterByUserTrigger', 'filter_value': true },
       { 'label': 'All Work Orders', 'icon': 'mdi-format-list-bulleted', 'filter_name': 'showCompleted', 'filter_value': false },
       { 'label': 'Completed', 'icon': 'mdi-playlist-check', 'filter_name': 'showCompleted', 'filter_value': true },
     ]
-    addRecordItemsGroup = [
-      { 'label': 'Add New Work Order', 'icon': 'mdi-file-document-plus-outline' },
-    ]
   }
 
-  navMenuStore.setMenuItems(navigationItemsGroup, filterItemsGroup, addRecordItemsGroup)
+  navMenuStore.setMenuItems(navigationItems, settingsItems, filterItems)
 }
 
 // function loadItems({ page }) {

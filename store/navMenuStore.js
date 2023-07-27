@@ -10,15 +10,15 @@ import { defineStore } from 'pinia'
 
 export const useNavMenuStore = defineStore('navMenuStore', () => {
     const menuItems = ref({
-        navigationItems: '',
-        filterItemsGroup: '',
-        addRecordItems: ''
+        navigationItemsGroup: '',
+        settingsItemsGroup: '',
+        filterItemsGroup: ''
     })
 
-    const setMenuItems = (navigationItems, filterItemsGroup, addRecordItems) => {
-        menuItems.value.navigationItems = navigationItems
-        menuItems.value.filterItemsGroup = filterItemsGroup
-        menuItems.value.addRecordItems = addRecordItems
+    const setMenuItems = (navigationItems, settingsItems, filterItems) => {
+        menuItems.value.navigationItemsGroup = navigationItems
+        menuItems.value.settingsItemsGroup = settingsItems
+        menuItems.value.filterItemsGroup = filterItems
     }
 
     return {
