@@ -6,12 +6,12 @@
       </v-card>
       <v-card v-else width="100vw">
         <div class="d-flex mb-2">
+          <v-select v-model="selectedAssignee" label="Filter by Assignee" :items="props.persons" class="pr-10"></v-select>
           <v-text-field
             v-model="searchString"
             prepend-icon="mdi-magnify"
             label="Search work orders"
             single-line
-            density="comfortable"
             class="pr-5"
             hide-details
           ></v-text-field>
@@ -112,13 +112,13 @@ const page = ref(1)
 const data = ref([])
 const search = ref('')
 const searchString = ref('')
+const selectedAssignee = ref(userInfoStore.userInfo.id)
 
 // use provide/inject pattern to receive data from layout
 const dialog = inject('dialog')
 const isRecordPage = inject('isRecordPage')
 const filterByUser = inject('filterByUser')
 const showCompleted = inject('showCompleted')
-const selectedAssignee = inject('selectedAssignee')
 
 const props = defineProps({
   statuses: Array,
@@ -219,13 +219,14 @@ function setMenuItems(userInfo) {
 
     navigationItemsGroup = [
       { 'label': 'Projects', 'destination': '/projects', 'icon': 'mdi-form-select' },
+      { 'label': 'Users', 'destination': '/', 'icon': 'mdi-account-multiple' },
     ]
     filterItemsGroup = [
-      { 'type': 'selectAssignee', 'label': 'Filter by Assignee', 'filter_name': 'filterByUser', 'items': props.persons },
       // { 'label': 'My Work Orders', 'icon': 'mdi-account-box', 'filter_name': 'filterByUser', 'filter_value': true },
       // { 'label': 'All Work Orders', 'icon': 'mdi-account-box-multiple', 'filter_name': 'filterByUser', 'filter_value': false },
-      { 'type': 'link', 'label': 'Not Completed', 'icon': 'mdi-format-list-bulleted', 'filter_name': 'showCompleted', 'filter_value': false },
-      { 'type': 'link', 'label': 'Completed', 'icon': 'mdi-playlist-check', 'filter_name': 'showCompleted', 'filter_value': true },
+      { 'label': 'My Work Orders', 'icon': 'mdi-account-box', 'filter_name': 'showCompleted', 'filter_value': false },
+      { 'label': 'All Work Orders', 'icon': 'mdi-format-list-bulleted', 'filter_name': 'showCompleted', 'filter_value': false },
+      { 'label': 'Completed', 'icon': 'mdi-playlist-check', 'filter_name': 'showCompleted', 'filter_value': true },
     ]
     addRecordItemsGroup = [
       { 'label': 'Add New Work Order', 'icon': 'mdi-file-document-plus-outline' },
@@ -366,6 +367,8 @@ function getDueDateColor(input, status) {
 
 </script>
 
-<style scoped>
-
+<style>
+.v-input__details {
+  display:none;
+}
 </style>

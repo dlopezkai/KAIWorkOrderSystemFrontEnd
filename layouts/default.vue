@@ -32,36 +32,29 @@
             </div>
 
             <v-list color="transparent">
+
+
+              <!-- add record group -->
+              <!-- <v-divider v-if="navMenuStore.menuItems.addRecordItems.length > 0"></v-divider>
+              <v-list-subheader v-if="navMenuStore.menuItems.addRecordItems.length > 0">New Item Management</v-list-subheader>
+              <v-list-item v-for="menuItem in navMenuStore.menuItems.addRecordItems" :prepend-icon="menuItem.icon" @click="openModal()">
+                <v-list-item-title :title="menuItem.label" v-text="menuItem.label"></v-list-item-title>
+              </v-list-item> -->
+
+              <!-- filters group -->
+              <v-list-subheader v-if="navMenuStore.menuItems.filterItemsGroup.length > 0" @click="openModal()">Work Orders | Add Work Order</v-list-subheader>
+              
+              <v-list-item v-for="menuItem in navMenuStore.menuItems.filterItemsGroup" :prepend-icon="menuItem.icon" @click="filteringMethod(menuItem.filter_name, menuItem.filter_value)">
+                <v-list-item-title :title="`Filter by ` + menuItem.label" v-text="menuItem.label"></v-list-item-title>
+              </v-list-item>
+
               <!-- navigation group -->
-              <v-list-subheader v-if="navMenuStore.menuItems.navigationItems.length > 0">Navigation</v-list-subheader>
+              <v-divider v-if="navMenuStore.menuItems.navigationItems.length > 0"></v-divider>
+              <v-list-subheader v-if="navMenuStore.menuItems.navigationItems.length > 0">Settings</v-list-subheader>
               <v-list-item v-for="menuItem in navMenuStore.menuItems.navigationItems" :prepend-icon="menuItem.icon" @click=navigateTo(menuItem.destination)>
                 <v-list-item-title :title="`Go to ` + menuItem.label" v-text="menuItem.label"></v-list-item-title>
               </v-list-item>
 
-              <!-- add record group -->
-              <v-divider v-if="navMenuStore.menuItems.addRecordItems.length > 0"></v-divider>
-              <v-list-subheader v-if="navMenuStore.menuItems.addRecordItems.length > 0">New Item Management</v-list-subheader>
-              <v-list-item v-for="menuItem in navMenuStore.menuItems.addRecordItems" :prepend-icon="menuItem.icon" @click="openModal()">
-                <v-list-item-title :title="menuItem.label" v-text="menuItem.label"></v-list-item-title>
-              </v-list-item>
-
-              <!-- filters group -->
-              <v-divider v-if="navMenuStore.menuItems.filterItemsGroup.length > 0"></v-divider>
-              <v-list-subheader v-if="navMenuStore.menuItems.filterItemsGroup.length > 0">Table Filters</v-list-subheader>
-
-              <div v-for="menuItem in navMenuStore.menuItems.filterItemsGroup">
-                <v-list-item v-if="menuItem.type =='selectAssignee'">
-                  <v-select v-model="selectedAssignee" :label="menuItem.label" :items="menuItem.items"></v-select>
-                </v-list-item>
-
-                <v-list-item v-else :prepend-icon="menuItem.icon" @click="filteringMethod(menuItem.filter_name, menuItem.filter_value)">
-                  <v-list-item-title :title="`Filter by ` + menuItem.label" v-text="menuItem.label"></v-list-item-title>
-                </v-list-item>
-              </div>
-
-              <!-- <v-list-item v-for="menuItem in navMenuStore.menuItems.filterItemsGroup" :prepend-icon="menuItem.icon" @click="filteringMethod(menuItem.filter_name, menuItem.filter_value)">
-                <v-list-item-title :title="`Filter by ` + menuItem.label" v-text="menuItem.label"></v-list-item-title>
-              </v-list-item> -->
             </v-list>
           </v-navigation-drawer>
 
@@ -107,9 +100,6 @@
   const isRecordPage = ref(false)
   provide('isRecordPage', isRecordPage)
 
-  const selectedAssignee = ref()
-  provide('selectedAssignee', selectedAssignee)
-
   async function signInAction() {
     await signIn()
   }
@@ -137,7 +127,6 @@
       try {
         const response = await axios.get(`${runtimeConfig.public.API_URL}/persons?email=` + authStore.currentUser.username.toLowerCase())
         userInfoStore.setUserInfo(response.data.data[0].id, response.data.data[0].name, response.data.data[0].email)
-        selectedAssignee.value = userInfoStore.userInfo.id
       } catch (err) {
         console.log(err)
       }
