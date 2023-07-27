@@ -293,8 +293,7 @@ function loadItems() {
       }
     })
     lastPage.value = response.data.last_page
-    // totalItems.value = response.data.data.length
-    totalItems.value = 100 // will need total (i.e. unpaginated) number of items from server
+    totalItems.value = response.data.count
     loading.value = false
   })
   .catch(err => console.log(err))
