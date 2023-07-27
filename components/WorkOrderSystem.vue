@@ -243,11 +243,8 @@ function loadItems() {
 
   if(search.value) axiosGetRequestURL = axiosGetRequestURL + `&search=` + search.value
 
-  // set assignee filter - PENDING API IMPLEMENTATION
-  // if(filterByUser.value) axiosGetRequestURL = axiosGetRequestURL + `&assignees[]=` + props.userInfo.id
-
   // new way of filtering by user since grouping doesn't work - PENDING API IMPLEMENTATION
-  if(selectedAssignee.value !== '0') axiosGetRequestURL = axiosGetRequestURL + `&assignees[]=` + selectedAssignee.value
+  // if(selectedAssignee.value !== '0') axiosGetRequestURL = axiosGetRequestURL + `&assignees[]=` + selectedAssignee.value
 
   // set display completed work order filter
   if(showCompleted.value) {
