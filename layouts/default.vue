@@ -48,20 +48,9 @@
               <!-- filters group -->
               <v-divider v-if="navMenuStore.menuItems.filterItemsGroup.length > 0"></v-divider>
               <v-list-subheader v-if="navMenuStore.menuItems.filterItemsGroup.length > 0">Table Filters</v-list-subheader>
-
-              <div v-for="menuItem in navMenuStore.menuItems.filterItemsGroup">
-                <v-list-item v-if="menuItem.type =='selectAssignee'">
-                  <v-select v-model="selectedAssignee" :label="menuItem.label" :items="menuItem.items"></v-select>
-                </v-list-item>
-
-                <v-list-item v-else :prepend-icon="menuItem.icon" @click="filteringMethod(menuItem.filter_name, menuItem.filter_value)">
-                  <v-list-item-title :title="`Filter by ` + menuItem.label" v-text="menuItem.label"></v-list-item-title>
-                </v-list-item>
-              </div>
-
-              <!-- <v-list-item v-for="menuItem in navMenuStore.menuItems.filterItemsGroup" :prepend-icon="menuItem.icon" @click="filteringMethod(menuItem.filter_name, menuItem.filter_value)">
+              <v-list-item v-for="menuItem in navMenuStore.menuItems.filterItemsGroup" :prepend-icon="menuItem.icon" @click="filteringMethod(menuItem.filter_name, menuItem.filter_value)">
                 <v-list-item-title :title="`Filter by ` + menuItem.label" v-text="menuItem.label"></v-list-item-title>
-              </v-list-item> -->
+              </v-list-item>
             </v-list>
           </v-navigation-drawer>
 
@@ -107,9 +96,6 @@
   const isRecordPage = ref(false)
   provide('isRecordPage', isRecordPage)
 
-  const selectedAssignee = ref()
-  provide('selectedAssignee', selectedAssignee)
-
   async function signInAction() {
     await signIn()
   }
@@ -137,7 +123,6 @@
       try {
         const response = await axios.get(`${runtimeConfig.public.API_URL}/persons?email=` + authStore.currentUser.username.toLowerCase())
         userInfoStore.setUserInfo(response.data.data[0].id, response.data.data[0].name, response.data.data[0].email)
-        selectedAssignee.value = userInfoStore.userInfo.id
       } catch (err) {
         console.log(err)
       }

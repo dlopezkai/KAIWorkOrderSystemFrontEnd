@@ -6,6 +6,7 @@
       </v-card>
       <v-card v-else width="100vw">
         <div class="d-flex mb-2">
+          <v-select v-model="selectedAssignee" label="Filter by Assignee" :items="props.persons" class="pr-10"></v-select>
           <v-text-field
             v-model="searchString"
             prepend-icon="mdi-magnify"
@@ -112,13 +113,13 @@ const page = ref(1)
 const data = ref([])
 const search = ref('')
 const searchString = ref('')
+const selectedAssignee = ref(userInfoStore.userInfo.id)
 
 // use provide/inject pattern to receive data from layout
 const dialog = inject('dialog')
 const isRecordPage = inject('isRecordPage')
 const filterByUser = inject('filterByUser')
 const showCompleted = inject('showCompleted')
-const selectedAssignee = inject('selectedAssignee')
 
 const props = defineProps({
   statuses: Array,
@@ -222,7 +223,6 @@ function setMenuItems(userInfo) {
       { 'label': 'Users', 'destination': '/', 'icon': 'mdi-account-multiple' },
     ]
     filterItemsGroup = [
-      { 'type': 'selectAssignee', 'label': 'Filter by Assignee', 'filter_name': 'filterByUser', 'items': props.persons },
       // { 'label': 'My Work Orders', 'icon': 'mdi-account-box', 'filter_name': 'filterByUser', 'filter_value': true },
       // { 'label': 'All Work Orders', 'icon': 'mdi-account-box-multiple', 'filter_name': 'filterByUser', 'filter_value': false },
       { 'type': 'link', 'label': 'All Work Orders', 'icon': 'mdi-format-list-bulleted', 'filter_name': 'showCompleted', 'filter_value': false },
