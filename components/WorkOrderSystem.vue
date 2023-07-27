@@ -2,26 +2,27 @@
   <v-container fluid full-height>
     <v-layout child-flex>
       <v-card v-if="route.query.id" width="100vw">
-        <form-component-work-order form-action="edit" :record-id="route.query.id" @close="close()" @closeAndReload="closeAndReload()"></form-component-work-order>
+        <form-component-work-order form-action="edit" :statuses="props.statuses" :record-id="route.query.id" @close="close()" @closeAndReload="closeAndReload()"></form-component-work-order>
       </v-card>
       <v-card v-else width="100vw">
-        <v-text-field
-          v-model="search"
-          append-icon="mdi-magnify"
-          label="Search (TBD)"
-          single-line
-          density="comfortable"
-          hide-details
-          disabled
-        ></v-text-field>
+        <div class="d-flex mb-2">
+          <v-text-field
+            v-model="searchString"
+            prepend-icon="mdi-magnify"
+            label="Search work orders"
+            single-line
+            density="comfortable"
+            class="pr-5"
+            hide-details
+          ></v-text-field>
 
-        <!-- <div v-if="!clickUpUserInfo.length">
-        <p>Please register for a KAI ClickUp account to use this application</p>
-        </div> -->
-        <!-- <div v-else>  -->
+          <v-btn color="blue" class="rounded" @click="submitSearch()">Search</v-btn>
+        </div>
+
         <!-- to make row clickable again, add @click:row="(pointerEvent, {item}) => editItem(item.raw)" -->
         <v-data-table-server
           v-model:page="page"
+          v-model:items-per-page="itemsPerPage"
           :headers="headers" 
           :items-length="totalItems"
           :items="data" 
@@ -31,66 +32,64 @@
           density="comfortable"
           :search="search"
           @update:options="loadItems"
+          :items-per-page-options="[
+            {value: 10, title: '10'},
+            {value: 25, title: '25'},
+            {value: 50, title: '50'},
+            {value: 100, title: '100'},
+          ]"
         >
           <template v-slot:top>
             <v-dialog v-model="dialog" max-width="800px">
-              <form-component-work-order form-action="new" @close="close()" @closeAndReload="closeAndReload()"></form-component-work-order>
+              <form-component-work-order form-action="new" :statuses="props.statuses" @close="close()" @closeAndReload="closeAndReload()"></form-component-work-order>
             </v-dialog>
           </template>
 
           <template v-slot:item.creator="{ item }">
-            {{ item.raw.creator.username }}
+            {{ item.raw.creator.name }}
           </template>
 
           <template v-slot:item.assignees="{ item }">
-            <v-chip v-for="assignee in item.raw.assignees">{{ (!assignee.username) ? assignee.email : assignee.username }}</v-chip>
+            <v-chip v-for="assignee in item.raw.assignees">{{ assignee.name }}</v-chip>
           </template>
 
-          <template v-slot:item.watchers="{ item }">
+          <!-- <template v-slot:item.watchers="{ item }">
             <v-chip v-for="watcher in item.raw.watchers">{{ (!watcher.username) ? watcher.email : watcher.username }}</v-chip>
-          </template>
+          </template> -->
 
           <template v-slot:item.tags="{ item }">
-            <v-chip v-for="tag in item.raw.tags">{{ tag }}</v-chip>
+            <v-chip v-for="tag in item.raw.tags">{{ tag.name }}</v-chip>
           </template>
 
           <template v-slot:item.status="{ item }">
-            <v-chip :color="item.raw.status_color">
-              {{ capitalizeFirstLetter(item.raw.status) }}
+            <!-- need v-if since some statuses come in as NULL -->
+            <v-chip v-if="item.raw.status" :color="item.raw.status.color" variant="outlined">
+              {{ capitalizeFirstLetter(item.raw.status.name) }}
             </v-chip>
           </template>
 
           <template v-slot:item.priority="{ item }">
-            <v-chip v-if="item.raw.priority" :color="getPriorityColor(item.raw.priority)">
-              {{ capitalizeFirstLetter(item.raw.priority.priority) }}
+            <v-chip v-if="item.raw.priority" :color="getPriorityColor(item.raw.priority.name)">
+              {{ capitalizeFirstLetter(item.raw.priority.name) }}
             </v-chip>
           </template>
 
           <template v-slot:item.due_date="{ item }">
-            <v-chip v-if="item.raw.due_date" :color="getDueDateColor(item.raw.due_date, item.raw.status)">
-              {{ convertToDate(item.raw.due_date, "table") }}
-              </v-chip>
+            <v-chip v-if="item.raw.due_date" :color="getDueDateColor(item.raw.due_date, item.raw.status.name)">
+              <!-- {{ convertToDate(item.raw.due_date, "table") }} -->
+              {{ item.raw.due_date }}
+            </v-chip>
           </template>
 
           <template v-slot:item.actions="{ item }">
-            <NuxtLink :to="'/workorders?id=' + item.raw.id" title="Edit work order">
+            <NuxtLink :to="'/workorders?id=' + item.raw.id" title="View and edit work order">
               <v-icon size="small" class="me-2">mdi-pencil</v-icon>
             </NuxtLink>
           </template>
-
-          <template v-slot:bottom v-if="!showFooter"></template>
         </v-data-table-server>
       </v-card>
     </v-layout>
   </v-container>
-  
-  <v-container>
-    <v-row justify="center" align="center">
-      <v-btn class="rounded-0" flat :disabled="previousPageBtnDisabled" @click="decrementPage" title="Go to previous page">Previous page</v-btn>
-      <v-btn class="rounded-0" flat :disabled="nextPageBtnDisabled" @click="incrementPage" title="Go to next page">Next page</v-btn>
-    </v-row>
-  </v-container>
-  <!-- </div> -->
 </template>
 
 <script setup>
@@ -98,33 +97,43 @@ import { ref, nextTick, watch, toRaw } from 'vue'
 import axios from 'axios'
 import { useAuthStore } from '~/store/auth';
 import { useNavMenuStore } from '~/store/navMenuStore'
-import { convertToDate, dateToISOStr, hoursToMilliseconds } from '~/helpers/datetimeConversions.js';
+import { useUserInfoStore } from '~/store/userInfoStore'
 import { capitalizeFirstLetter } from '~/helpers/capitalizeFirstLetter.js';
 
 const route = useRoute()
 const runtimeConfig = useRuntimeConfig()
 const authStore = useAuthStore()
 const navMenuStore = useNavMenuStore()
-const itemsPerPage = ref(100)
+const userInfoStore = useUserInfoStore()
+const itemsPerPage = ref(10)
 const loading = ref(true)
 const totalItems = ref(0)
-const showFooter = ref(false)
-const page = ref(0)
-const lastPage = ref(false)
+const page = ref(1)
 const data = ref([])
 const search = ref('')
-// const drawer = ref(true)
-const clickUpUserInfo = ref()
-const statuses = ref([])
+const searchString = ref('')
 
 // use provide/inject pattern to receive data from layout
 const dialog = inject('dialog')
 const isRecordPage = inject('isRecordPage')
 const filterByUser = inject('filterByUser')
 const showCompleted = inject('showCompleted')
+const selectedAssignee = inject('selectedAssignee')
+
+const props = defineProps({
+  statuses: Array,
+  persons: Array,
+})
 
 // reload table when filterByUser data is changed
 watch(filterByUser, (currentValue, newValue) => {
+  if(currentValue !== newValue) {
+    loadItems()
+  }
+})
+
+// reload table when selectedAssignee data is changed
+watch(selectedAssignee, (currentValue, newValue) => {
   if(currentValue !== newValue) {
     loadItems()
   }
@@ -176,16 +185,6 @@ const headers = [
 //   },
 // }
 
-// computed value to disable / enable the "Previous page" button
-const previousPageBtnDisabled = computed(() => {
-  return (loading.value) ? true : (page.value === 0) ? true : false
-})
-
-// computed value to disable / enable the "Next page" button
-const nextPageBtnDisabled = computed(() => {
-  return (loading.value) ? true : (lastPage.value) ? true : false
-})
-
 // computed value for toggling group-by behavior
 // if we still plan to incorporate grouping, then we will need to pass a :group-by="groupBy" prop in the <v-data-table-server> component
 const groupBy = computed(() => {
@@ -194,26 +193,13 @@ const groupBy = computed(() => {
   }
 })
 
-onBeforeMount(async () => {
-  if(!isRecordPage.value) {
-    await getUserInfo()
-  }
-  await loadStatuses()
-  setMenuItems(clickUpUserInfo.value)
+onBeforeMount(() => {
+  setMenuItems(userInfoStore.userInfo)
 })
 
 watch(() => route.query, () => 
-  setMenuItems(clickUpUserInfo.value)
+  setMenuItems(userInfoStore.userInfo)
 )
-
-async function getUserInfo() {
-  try {
-    const response = await axios.get(`${runtimeConfig.public.API_URL}/members/?email=` + authStore.currentUser.username.toLowerCase())
-    clickUpUserInfo.value = response.data.data[0]
-  } catch (err) {
-    console.log(err)
-  }
-}
 
 // passing in userInfo in prep for ACL logic of menu itmes
 function setMenuItems(userInfo) {
@@ -235,10 +221,11 @@ function setMenuItems(userInfo) {
       { 'label': 'Projects', 'destination': '/projects', 'icon': 'mdi-form-select' },
     ]
     filterItemsGroup = [
-      { 'label': 'My Work Orders', 'icon': 'mdi-account-box', 'filter_name': 'filterByUser', 'filter_value': true },
-      { 'label': 'All Work Orders', 'icon': 'mdi-account-box-multiple', 'filter_name': 'filterByUser', 'filter_value': false },
-      { 'label': 'Not Completed', 'icon': 'mdi-format-list-bulleted', 'filter_name': 'showCompleted', 'filter_value': false },
-      { 'label': 'Completed', 'icon': 'mdi-playlist-check', 'filter_name': 'showCompleted', 'filter_value': true },
+      { 'type': 'selectAssignee', 'label': 'Filter by Assignee', 'filter_name': 'filterByUser', 'items': props.persons },
+      // { 'label': 'My Work Orders', 'icon': 'mdi-account-box', 'filter_name': 'filterByUser', 'filter_value': true },
+      // { 'label': 'All Work Orders', 'icon': 'mdi-account-box-multiple', 'filter_name': 'filterByUser', 'filter_value': false },
+      { 'type': 'link', 'label': 'Not Completed', 'icon': 'mdi-format-list-bulleted', 'filter_name': 'showCompleted', 'filter_value': false },
+      { 'type': 'link', 'label': 'Completed', 'icon': 'mdi-playlist-check', 'filter_name': 'showCompleted', 'filter_value': true },
     ]
     addRecordItemsGroup = [
       { 'label': 'Add New Work Order', 'icon': 'mdi-file-document-plus-outline' },
@@ -249,31 +236,29 @@ function setMenuItems(userInfo) {
 }
 
 // function loadItems({ page }) {
-async function loadItems() {
+function loadItems() {
   loading.value = true
 
-  // TODO: figure out why this is needed on initial load. can't get userinfo with this here.
-  await getUserInfo()
+  let axiosGetRequestURL = `${runtimeConfig.public.API_URL}/workorders?page=` + page.value + `&page_size=` + itemsPerPage.value
 
-  let axiosGetRequestURL = `${runtimeConfig.public.API_URL}/tasks/?page=` + page.value
+  if(search.value) axiosGetRequestURL = axiosGetRequestURL + `&search=` + search.value
 
-  // set assignee filter
-  if(filterByUser.value) axiosGetRequestURL = axiosGetRequestURL + `&assignees[]=` + clickUpUserInfo.value.id
+  // new way of filtering by user since grouping doesn't work - PENDING API IMPLEMENTATION
+  // if(selectedAssignee.value !== '0') axiosGetRequestURL = axiosGetRequestURL + `&assignees[]=` + selectedAssignee.value
 
   // set display completed work order filter
   if(showCompleted.value) {
-    axiosGetRequestURL = axiosGetRequestURL + `&statuses[]=complete`
+    // get the ID of status = "complete"
+    const completeStatusObj = props.statuses.filter(e => e.value == 'complete')
+    const completeStatusID = completeStatusObj[0].id
+
+    axiosGetRequestURL = axiosGetRequestURL + `&status[]=` + completeStatusID
   } else {
-    /* 
-      since the API doesn't have the capability to accept a NOT operator in the query string,
-      we will need to filter out status of "complete" here.
-      if/when it does, then mimic assignee filter logic.
-    */
-    const statusesArray = statuses.value.filter(e => e.value !== 'complete')
+    const statusesArray = props.statuses.filter(e => e.value !== 'complete')
 
     let statusQueryStr = ''
     statusesArray.forEach(element => 
-      statusQueryStr += '&statuses[]=' + encodeURIComponent(toRaw(element).value)
+      statusQueryStr += '&status[]=' + toRaw(element).id
     )
 
     axiosGetRequestURL = axiosGetRequestURL + statusQueryStr
@@ -286,42 +271,27 @@ async function loadItems() {
       return {
         assignees: item.assignees,
         creator: item.creator,
-        list: item.list.id,
         description: item.description,
         due_date: item.due_date,
-        folder: item.folder.id,
         id: item.id,
         links: item.links,
         name: item.name,
         priority: item.priority,
-        project: item.folder.name + ' | ' + item.list.name,
-        status: item.status.status,
-        status_color: item.status.color,
+
+        // since this not in a pill, need to do this way
+        // some projects/subtasks come in as NULL
+        project: (item.project) ? item.project.name + ' | ' + item.subtask.name : '',
+        status: item.status,
+        subtask: item.subtask,
         tags: item.tags,
         time_estimate: item.time_estimate,
-        url: item.url,
         watchers: item.watchers
       }
     })
-    lastPage.value = response.data.last_page
-    totalItems.value = response.data.data.length
+    totalItems.value = response.data.count
     loading.value = false
   })
   .catch(err => console.log(err))
-}
-
-async function loadStatuses() {
-  try {
-    const response = await axios.get(`${runtimeConfig.public.API_URL}/statuses`)
-      statuses.value = response.data.data.map((item) => {
-        return {
-          title: capitalizeFirstLetter(item.name),
-          value: item.name,
-        }
-      })
-  } catch (err) {
-    console.log(err)
-  }
 }
 
 function close() {
@@ -337,17 +307,13 @@ function closeAndReload() {
   loadItems()
 }
 
-function incrementPage() {
-  page.value = (page.value + 1)
-}
-
-function decrementPage() {
-  page.value = (page.value - 1)
+function submitSearch() {
+  search.value = searchString.value
 }
 
 // priority color method for v-chip component
 function getPriorityColor (priority) {
-  switch(priority.priority) {
+  switch(priority) {
     case 'urgent':
       return '#f50000'
     case 'high':
@@ -361,16 +327,32 @@ function getPriorityColor (priority) {
   }
 }
 
-function getDueDateColor(rawDateTime, status) {
-  let color = ""
-  const convertedRawDateTime = Number(rawDateTime)
+function getDueDateColor(input, status) {
+  // since input comes in as raw YYYY-MM-DD, we need to convert it back to MS in the user's timezone
+
+  // get date object of input
+  const rawDateTime = new Date(input)
+
+  // get timezone offset (in minutes)
+  const timeZoneOffset = rawDateTime.getTimezoneOffset()
+
+  // convert timezone offset to milliseconds
+  const timeZoneOffsetInMS = timeZoneOffset * 60000
+
+  // Number(rawDateTime) will convert input's date object to milliseconds
+  const convertedRawDateTime = (Number(rawDateTime) + Number(timeZoneOffsetInMS))
+  
   const date = new Date(convertedRawDateTime)
 
-  const todayInMS = new Date()
+  // today's date in user's current timezone
+  const todayInMS = new Date() 
+
+  // today's date in user's current timezone plus 5 days
   const todayPlusFiveDays = Number(todayInMS) + 432000000
 
   // if task is not complete, then set color
   // red for overdue (or due today), yellow for due within 5 days
+  let color = ""
   if(status != "complete") {
     if (todayInMS >= date) {
       color = "#f50000"

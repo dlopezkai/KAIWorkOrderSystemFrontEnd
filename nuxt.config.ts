@@ -11,9 +11,9 @@ export default defineNuxtConfig({
       }
     },
     runtimeConfig:{
-      API_URL: 'https://kai.huberspace.net',
+      API_URL: 'http://workorderapi.kauffmaninc.com/v2',
       public: {
-        API_URL: 'https://kai.huberspace.net',
+        API_URL: 'http://workorderapi.kauffmaninc.com/v2',
       }
     },
     modules: ['@pinia/nuxt', '@nuxt/image-edge', '@nuxtjs/google-fonts'],

@@ -38,19 +38,30 @@
                 <v-list-item-title :title="`Go to ` + menuItem.label" v-text="menuItem.label"></v-list-item-title>
               </v-list-item>
 
-              <!-- filters group -->
-              <v-divider v-if="navMenuStore.menuItems.filterItemsGroup.length > 0"></v-divider>
-              <v-list-subheader v-if="navMenuStore.menuItems.filterItemsGroup.length > 0">Table Filters</v-list-subheader>
-              <v-list-item v-for="menuItem in navMenuStore.menuItems.filterItemsGroup" :prepend-icon="menuItem.icon" @click="filteringMethod(menuItem.filter_name, menuItem.filter_value)">
-                <v-list-item-title :title="`Filter by ` + menuItem.label" v-text="menuItem.label"></v-list-item-title>
-              </v-list-item>
-
               <!-- add record group -->
               <v-divider v-if="navMenuStore.menuItems.addRecordItems.length > 0"></v-divider>
               <v-list-subheader v-if="navMenuStore.menuItems.addRecordItems.length > 0">New Item Management</v-list-subheader>
               <v-list-item v-for="menuItem in navMenuStore.menuItems.addRecordItems" :prepend-icon="menuItem.icon" @click="openModal()">
                 <v-list-item-title :title="menuItem.label" v-text="menuItem.label"></v-list-item-title>
               </v-list-item>
+
+              <!-- filters group -->
+              <v-divider v-if="navMenuStore.menuItems.filterItemsGroup.length > 0"></v-divider>
+              <v-list-subheader v-if="navMenuStore.menuItems.filterItemsGroup.length > 0">Table Filters</v-list-subheader>
+
+              <div v-for="menuItem in navMenuStore.menuItems.filterItemsGroup">
+                <v-list-item v-if="menuItem.type =='selectAssignee'">
+                  <v-select v-model="selectedAssignee" :label="menuItem.label" :items="menuItem.items"></v-select>
+                </v-list-item>
+
+                <v-list-item v-else :prepend-icon="menuItem.icon" @click="filteringMethod(menuItem.filter_name, menuItem.filter_value)">
+                  <v-list-item-title :title="`Filter by ` + menuItem.label" v-text="menuItem.label"></v-list-item-title>
+                </v-list-item>
+              </div>
+
+              <!-- <v-list-item v-for="menuItem in navMenuStore.menuItems.filterItemsGroup" :prepend-icon="menuItem.icon" @click="filteringMethod(menuItem.filter_name, menuItem.filter_value)">
+                <v-list-item-title :title="`Filter by ` + menuItem.label" v-text="menuItem.label"></v-list-item-title>
+              </v-list-item> -->
             </v-list>
           </v-navigation-drawer>
 
@@ -68,14 +79,18 @@
 </template>
 
 <script setup>
+  import axios from 'axios'
   import { useAuthStore } from '~/store/auth';
   // import { storeToRefs } from 'pinia'
   import { useNavMenuStore } from '~/store/navMenuStore'
+  import { useUserInfoStore } from '~/store/userInfoStore'
   import { capitalizeFirstLetterOfEachWord } from '~/helpers/capitalizeFirstLetter.js';
 
+  const runtimeConfig = useRuntimeConfig()
   const authStore = useAuthStore()
   // const { currentUser } = storeToRefs(authStore)
   const navMenuStore = useNavMenuStore()
+  const userInfoStore = useUserInfoStore()
   const route = useRoute()
   const drawer = ref(true)
 
@@ -91,6 +106,9 @@
 
   const isRecordPage = ref(false)
   provide('isRecordPage', isRecordPage)
+
+  const selectedAssignee = ref()
+  provide('selectedAssignee', selectedAssignee)
 
   async function signInAction() {
     await signIn()
@@ -114,15 +132,37 @@
     isRecordPage.value = (route.query.hasOwnProperty('id')) ? true : false
   }
 
-	onBeforeMount(() => {
+  async function getUserInfo() {
+    if(authStore.currentUser) {
+      try {
+        const response = await axios.get(`${runtimeConfig.public.API_URL}/persons?email=` + authStore.currentUser.username.toLowerCase())
+        userInfoStore.setUserInfo(response.data.data[0].id, response.data.data[0].name, response.data.data[0].email)
+        selectedAssignee.value = userInfoStore.userInfo.id
+      } catch (err) {
+        console.log(err)
+      }
+    }
+  }
+
+	onBeforeMount(async () => {
+    // get logged-in user's info from DB 
+    getUserInfo()
+
     // initial page load check for query string
     recordPageCheck()
 	})
+
+  // DO NOT DELETE THE BELOW WATCHERS - they are no needed if page is reloaded
+  // get logged-in user's info from DB while mounted
+  watch(() => route.query, () => 
+    getUserInfo()
+  )
 
   // checks for query string param while mounted
   watch(() => route.query, () => 
     recordPageCheck()
   )
+
 </script>
 
 <style scoped>

@@ -25,3 +25,11 @@ export function dateToISOStr(value) {
 export function hoursToMilliseconds(value) {
   return value * 60 * 60 * 1000
 }
+
+export function hoursToMinutes(value) {
+  return value * 60
+}
+
+export function minutesToHours(value) {
+  return value / 60
+}

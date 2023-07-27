@@ -43,10 +43,10 @@
                 </v-col>
 
                 <v-col cols="12" sm="6" md="6">
-                  <v-select v-model="editedItem.folder" label="Project" :items="folders" item-title="name" item-value="id" @update:modelValue="resetAndReloadLists()" :rules="[rules.select]"></v-select>
+                  <v-select v-model="editedItem.project" label="Project" :items="projects" item-title="name" item-value="id" @update:modelValue="resetAndReloadSubtasks()" :rules="[rules.select]"></v-select>
                 </v-col>
                 <v-col cols="12" sm="6" md="6">
-                  <v-select v-model="editedItem.list" label="Subtask" :items="lists" item-title="name" item-value="id" :rules="[rules.select]"></v-select>
+                  <v-select v-model="editedItem.subtask" label="Subtask" :items="subtasks" item-title="name" item-value="id" :rules="[rules.select]"></v-select>
                 </v-col>
 
                 <v-col cols="12" sm="12" md="12">
@@ -54,24 +54,24 @@
                 </v-col>
 
                 <v-col v-if="props.recordId" cols="12" sm="6" md="6">
-                  <v-select v-model="editedItem.status" label="Status" :items="statuses" item-title="title" item-value="value"></v-select>
+                  <v-select v-model="editedItem.status" label="Status" :items="statuses" item-title="title" item-value="id"></v-select>
                 </v-col>
                 <v-col cols="12" sm="6" md="6">
-                  <v-autocomplete v-model="editedItem.assignees" label="Assignee(s)" :items="members" item-title="title" item-value="value" multiple chips clearable></v-autocomplete>
+                  <v-autocomplete v-model="editedItem.assignees" label="Assignee(s)" :items="persons" item-title="title" item-value="value" multiple chips clearable></v-autocomplete>
                 </v-col>
 
                 <v-col cols="12" sm="6" md="6">
-                  <v-text-field v-model="editedItem.due_date" label="Due Date" type="date" :rules="[rules.due_date, rules.due_date_threshold]"></v-text-field>
+                  <v-text-field v-model="editedItem.due_date" label="Due Date" type="date" :rules="[rules.due_date_threshold]" clearable></v-text-field>
                 </v-col>
                 <v-col cols="12" sm="6" md="6">
-                  <v-autocomplete v-model="editedItem.watchers" label="Notify Person" :items="members" item-title="title" item-value="value" multiple chips clearable></v-autocomplete>
+                  <v-autocomplete v-model="editedItem.watchers" label="Notify Person" :items="persons" item-title="title" item-value="value" multiple chips clearable></v-autocomplete>
                 </v-col>
 
                 <v-col cols="12" sm="6" md="6">
                   <v-text-field v-model="editedItem.time_estimate" label="Budgeted Hours"></v-text-field>
                 </v-col>
                 <v-col cols="12" sm="6" md="6">
-                  <v-select v-model="editedItem.priority" label="Priority" :items="priorities" item-title="title" item-value="value" :hint="priorityMessages" persistent-hint></v-select>
+                  <v-select v-model="editedItem.priority" label="Priority" :items="priorities" item-title="title" item-value="id" :hint="priorityMessages" persistent-hint></v-select>
                 </v-col>
 
                 <v-col cols="12" sm="12" md="12">
@@ -89,11 +89,6 @@
                   <v-text-field v-model="editedItem.links" label="SharePoint File"></v-text-field>
                   <v-btn href="https://kauffmaninc.sharepoint.com/" target="_blank" variant="tonal" class="rounded" color="#428086" title="Open SharePoint">Open SharePoint site</v-btn>
                 </v-col>
-
-                <!-- hide for production -->
-                <!-- <v-col v-if="editedItem.url" cols="12" sm="12" md="12">
-                  <v-btn :href="editedItem.url" target="_blank" variant="text">ClickUp reference link</v-btn>
-                </v-col> -->
               </v-row>
             </v-form>
           </v-card-text>
@@ -112,7 +107,7 @@
       <v-window-item v-if="props.recordId" value="two">
         <v-card>
           <v-card-text>
-            <comments-comp :taskid="props.recordId" :clickUpUserInfo="clickUpUserInfo"></comments-comp>
+            <comments-comp :workorderid="props.recordId"></comments-comp>
           </v-card-text>
         </v-card>
         
@@ -125,20 +120,20 @@
 <script setup>
 import axios from 'axios'
 import { useAuthStore } from '~/store/auth';
+import { useUserInfoStore } from '~/store/userInfoStore'
 import CommentsComp from './CommentsComp.vue';
-import { convertToDate, dateToISOStr, hoursToMilliseconds } from '~/helpers/datetimeConversions.js';
+import { convertToDate, hoursToMinutes, minutesToHours } from '~/helpers/datetimeConversions.js';
 import { capitalizeFirstLetter } from '~/helpers/capitalizeFirstLetter.js';
 import '~/assets/css/main.css'
 
 const loading = ref(true)
 const runtimeConfig = useRuntimeConfig()
 const authStore = useAuthStore()
-const clickUpUserInfo = ref()
+const userInfoStore = useUserInfoStore()
 const tags = ref([])
-const members = ref([])
-const folders = ref([])
-const lists = ref([])
-const statuses = ref([])
+const persons = ref([])
+const projects = ref([])
+const subtasks = ref([])
 const priorities = ref([])
 const form = ref(null)
 const formTab = ref(null)
@@ -149,6 +144,8 @@ const submitInfo = ref('')
 const props = defineProps({
     recordId: String,
     formAction: String,
+    userInfo: Object,
+    statuses: Array,
 })
 
 const emit = defineEmits(['close', 'closeAndReload'])
@@ -159,10 +156,10 @@ const editedItem = ref([
     creator: '',
     description: '',
     due_date: '',
-    folder: '',
+    project: '',
     id: '',
     links: '',
-    list: '',
+    subtask: '',
     name: '',
     priority: '',
     project: '',
@@ -206,7 +203,7 @@ const priorityMessages = computed(() => {
   if (editedItem.value.priority === null || editedItem.value.priority === undefined) {
     return ''
   } else {
-    const index = editedItem.value.priority - 1
+    const index = (typeof editedItem.value.priority === 'object') ? editedItem.value.priority.id : editedItem.value.priority
     return priorities.value[index].description
   }
 })
@@ -230,28 +227,32 @@ const rules =
 
 // checks for the 2 business days rule
 function dateValidation(input) {
-  // get day of week
-  let selectedDateDay = new Date(input).getDay()
+  if(input) {
+    // get day of week
+    let selectedDateDay = new Date(input).getDay()
 
-  // get the current date plus 2 days, the convert to ISO format
-  let date = new Date();
-  let twoDaysFromNow = date.setDate(date.getDate() + 2);
-  twoDaysFromNow = new Date(twoDaysFromNow).toISOString();
+    // get the current date plus 2 days, the convert to ISO format
+    let date = new Date();
+    let twoDaysFromNow = date.setDate(date.getDate() + 2);
+    twoDaysFromNow = new Date(twoDaysFromNow).toISOString();
 
-  // convert to local time
-  let twoDaysFromNowLocaleString = new Date(twoDaysFromNow).toLocaleDateString()
-  let twoDaysFromNowDateObj = new Date(twoDaysFromNowLocaleString)
+    // convert to local time
+    let twoDaysFromNowLocaleString = new Date(twoDaysFromNow).toLocaleDateString()
+    let twoDaysFromNowDateObj = new Date(twoDaysFromNowLocaleString)
 
-  // convert to yyyy-mm-dd to match format of calendar input
-  let twoDaysFromNowFormatted = convertToYyyymmddFormat(twoDaysFromNowDateObj)
+    // convert to yyyy-mm-dd to match format of calendar input
+    let twoDaysFromNowFormatted = convertToYyyymmddFormat(twoDaysFromNowDateObj)
 
-  // logic to determine if selected date is valid
-  if(selectedDateDay !== 5 && selectedDateDay !== 6) {
-    if(input >= twoDaysFromNowFormatted) {
-      return true
-    } else {
-      return false
+    // logic to determine if selected date is valid
+    if(selectedDateDay !== 5 && selectedDateDay !== 6) {
+      if(input >= twoDaysFromNowFormatted) {
+        return true
+      } else {
+        return false
+      }
     }
+  } else {
+    return true
   }
 }
 
@@ -263,20 +264,10 @@ function convertToYyyymmddFormat(value) {
     + (value.getDate().toString().length != 2 ? "0" + value.getDate() : value.getDate());
 }
 
-function millisecondsToHours(value) {
-  if(value) {
-    const hours = (value / 1000 / 60 / 60).toFixed(2)
-
-    return hours
-  }
-}
-
-onBeforeMount(async () => {
-  await loadClickUpUserInfo()
+onBeforeMount(() => {
   loadTags()
-  loadMembers()
-  loadFolders()
-  loadStatuses()
+  loadPersons()
+  loadProjects()
   loadPriorities()
 })
 
@@ -285,28 +276,43 @@ onMounted(async () => {
 })
 
 async function loadItem() {
-  // convert time estimate (milliseconds) to hours if not a new work order
   if (props.recordId) {
     try {
-      const response = await axios.get(`${runtimeConfig.public.API_URL}/task/` + props.recordId)
+      const response = await axios.get(`${runtimeConfig.public.API_URL}/workorder/` + props.recordId)
         loading.value = true
-        editedItem.value = Object.assign({}, response.data.data)
-        editedItem.value.priority = (response.data.data.priority != null) ? Number(response.data.data.priority.id) : null
-        editedItem.value.due_date = (response.data.data.due_date != null) ? convertToDate(response.data.data.due_date, "table") : null
-        editedItem.value.time_estimate = millisecondsToHours(response.data.data.time_estimate)
-        
+        editedItem.value = Object.assign({}, response.data.data[0])
+        editedItem.value.time_estimate = minutesToHours(response.data.data[0].time_estimate)
+
         // for arrays
-        let tagsTemp = []
-        editedItem.value.tags.forEach((tag) => {
-          tagsTemp.push(tag.name)
-        })
-        editedItem.value.tags = tagsTemp
+        if(editedItem.value.tags) {
+          let tagsTemp = []
+          editedItem.value.tags.forEach((tag) => {
+            tagsTemp.push(tag.id)
+          })
+          editedItem.value.tags = tagsTemp
+        }
+
+        if(editedItem.value.assignees) {
+          let assigneesTemp = []
+          editedItem.value.assignees.forEach((assignee) => {
+            assigneesTemp.push(assignee.id)
+          })
+          editedItem.value.assignees = assigneesTemp
+        }
+
+        if(editedItem.value.watchers) {
+          let watchersTemp = []
+          editedItem.value.watchers.forEach((watcher) => {
+            watchersTemp.push(watcher.id)
+          })
+          editedItem.value.watchers = watchersTemp
+        }
 
         // for objects
-        editedItem.value.status =  editedItem.value.status.status
+        editedItem.value.status = editedItem.value.status.id
 
-        loadFolders()
-        loadLists(editedItem.value.folder.id)
+        loadProjects()
+        loadSubtasks(editedItem.value.project.id)
     } catch (err) {
       console.log(err)
     }
@@ -324,7 +330,7 @@ function loadTags() {
     tags.value = response.data.data.map((item) => {
       return {
         title: item.name,
-        value: item.name
+        value: item.id
       }
     })
 
@@ -335,28 +341,29 @@ function loadTags() {
   .catch(err => console.log(err))
 }
 
-function loadMembers() {
-  axios.get(`${runtimeConfig.public.API_URL}/members`)
+function loadPersons() {
+  axios.get(`${runtimeConfig.public.API_URL}/persons`)
   .then((response) => {
-    members.value = response.data.data.map((item) => {
+    persons.value = response.data.data.map((item) => {
       return {
-        title: (!item.username) ? item.email : item.username,
-        value: {color: item.color, email: item.email, id: item.id, initials: item.initials, profile: item.profile, username: item.username}
+        title: item.name,
+        // value: {color: item.color, email: item.email, id: item.id, initials: item.initials}
+        value: item.id
       }
     })
 
-    // sort members list
-    members.value = members.value.sort((a, b) => 
+    // sort persons list
+    persons.value = persons.value.sort((a, b) => 
       a.title.localeCompare(b.title))
   })
   .catch(err => console.log(err))
 }
 
-function loadFolders() {
-  // load folder options
-  axios.get(`${runtimeConfig.public.API_URL}/folders`)
+function loadProjects() {
+  // load project options
+  axios.get(`${runtimeConfig.public.API_URL}/projects`)
   .then((response) => {
-    folders.value = response.data.data.map((item) => {
+    projects.value = response.data.data.map((item) => {
       return {
         id: item.id,
         name: item.name
@@ -366,11 +373,11 @@ function loadFolders() {
   .catch(err => console.log(err))
 }
 
-function loadLists(folderId) {
-  // load list/subtask options
-  axios.get(`${runtimeConfig.public.API_URL}/folder/` + folderId + `/lists`)
+function loadSubtasks(projectId) {
+  // load subtask options
+  axios.get(`${runtimeConfig.public.API_URL}/project/` + projectId + `/subtasks`)
   .then((response) => {
-    lists.value = response.data.data.map((item) => {
+    subtasks.value = response.data.data.map((item) => {
       return {
         id: item.id,
         name: item.name
@@ -380,23 +387,10 @@ function loadLists(folderId) {
   .catch(err => console.log(err))
 }
 
-function resetAndReloadLists() {
-  editedItem.value.list = ''
-  lists.value = ''
-  loadLists(editedItem.value.folder)
-}
-
-function loadStatuses() {
-  axios.get(`${runtimeConfig.public.API_URL}/statuses`)
-  .then((response) => {
-    statuses.value = response.data.data.map((item) => {
-      return {
-        title: capitalizeFirstLetter(item.name),
-        value: item.name,
-      }
-    })
-  })
-  .catch(err => console.log(err))
+function resetAndReloadSubtasks() {
+  editedItem.value.subtask = ''
+  subtasks.value = ''
+  loadSubtasks(editedItem.value.project)
 }
 
 function loadPriorities() {
@@ -405,21 +399,12 @@ function loadPriorities() {
     priorities.value = response.data.data.map((item) => {
       return {
         title: capitalizeFirstLetter(item.name),
-        value: item.id,
+        id: item.id,
         description: item.description,
       }
     })
   })
   .catch(err => console.log(err))
-}
-
-async function loadClickUpUserInfo() {
-  try {
-    const response = await axios.get(`${runtimeConfig.public.API_URL}/members/?email=` + authStore.currentUser.username.toLowerCase())
-    clickUpUserInfo.value = response.data.data[0]
-  } catch (err) {
-    console.log(err)
-  }
 }
 
 function close() {
@@ -449,12 +434,7 @@ async function submit() {
   }
 }
 
-/* 
-  known CU update limitations:
-  - can't update OR save watchers
-  - can't update tags
-  - can't update folder (project) or list (subtask)
-*/
+
 function save() {
   submitInfo.value = ''
   submitStatus.value = 'submitting'
@@ -466,29 +446,42 @@ function save() {
   // create a data object that will be passed to API to prevent user from seeing conversions
   let data = Object.assign({}, editedItem.value)
 
-  // since API needs IDs of assignees, pull the assignee(s) ID(s) and store in temp array
-  let assigneeids = []
+  /* 
+    to clear-out assignees, watchers and/or tags while modifying a workorder, 
+    the API requires a value of '0' to be sent over for that specific field.
+  */
+  if (props.recordId) {
+    if (data.assignees && data.assignees.length === 0) {
+      data.assignees = 0
+    }
 
-  if(data.assignees) {
-    data.assignees.forEach(element => {
-      assigneeids.push(element.id)
-    })
-    data.assignees = assigneeids
+    if (data.watchers && data.watchers.length === 0) {
+      data.watchers = 0
+    }
+
+    if (data.tags && data.tags.length === 0) {
+      data.tags = 0
+    }
   }
 
-  // convert time estimate (hours) to milliseconds
-  if(data.time_estimate) data.time_estimate = hoursToMilliseconds(data.time_estimate)
+  // hack warning: since API only accepts "priorityid" to set priority, but fetched data contains a "priority" object.
+  if(data.priority) {
+    if(data.priority.id) {
+      data.priorityid = data.priority.id
+    } else {
+      data.priorityid = data.priority
+    }
+  }
 
-  // test list - will put WO in "Other KAI Clients" project
-  // data.list = 901001092394
+  if(data.time_estimate) data.time_estimate = hoursToMinutes(data.time_estimate)
 
   if (!props.recordId) {
-    data.creator = clickUpUserInfo.value.id
+    data.creatorid = userInfoStore.userInfo.id
     method = 'post'
-    url = `${runtimeConfig.public.API_URL}/list/` + data.list + `/task`
+    url = `${runtimeConfig.public.API_URL}/subtask/` + data.subtask + `/workorder`
   } else {
     method = 'put'
-    url = `${runtimeConfig.public.API_URL}/task/` + data.id
+    url = `${runtimeConfig.public.API_URL}/workorder/` + data.id
   }
 
   axios({

@@ -6,8 +6,8 @@
                 v-for="comment in commentsData"
                 :key="comment.id"
             >
-                <v-list-item-title><strong>{{  comment.username + ' (' + convertToDate(comment.date, 'table') + ')' }}</strong></v-list-item-title>
-                <v-list-item-subtitle v-html="comment.comment_text" class="comment-subtitle"></v-list-item-subtitle>
+                <v-list-item-title><strong>{{ comment.author_name + ' (' + comment.post_date + ')' }}</strong></v-list-item-title>
+                <v-list-item-subtitle v-html="comment.message" class="comment-subtitle"></v-list-item-subtitle>
             </v-list-item>
             <v-list-item v-else>No comments</v-list-item>
         </v-list>
@@ -17,7 +17,7 @@
         <v-form ref="form" @submit.prevent="submitComment">
             <v-row class="pl-3 pr-3">
                 <v-col cols="12" sm="12" md="12">
-                    <v-text-field v-model="commentForm.comment_text" class="pt-5" placeholder="Enter a comment" outlined clearable></v-text-field>
+                    <v-text-field v-model="commentForm.message" class="pt-5" placeholder="Enter a comment" outlined clearable></v-text-field>
                 </v-col>
             </v-row>
             <v-row class="pb-5">
@@ -32,23 +32,22 @@
 <script setup>
 import { ref } from 'vue'
 import axios from 'axios'
-import { convertToDate } from '~/helpers/datetimeConversions.js'
+import { useUserInfoStore } from '~/store/userInfoStore'
 
 const runtimeConfig = useRuntimeConfig()
+const userInfoStore = useUserInfoStore()
 const commentsData = ref([])
 
 const props = defineProps({
-    taskid: String,
-    clickUpUserInfo: Object
+    workorderid: String,
 })
-const { taskid } = toRefs(props);
-const { clickUpUserInfo } = toRefs(props)
+const { workorderid } = toRefs(props);
 
 const commentForm = ref({
-    assignee: clickUpUserInfo.value.id,
-    comment_text: '',
-    notify_all: false,
-    username: ''
+    authorid: userInfoStore.userInfo.id,
+    author_name: '',
+    message: '',
+    post_date: '',
 })
 
 onMounted(() => {
@@ -56,14 +55,14 @@ onMounted(() => {
 })
 
 function loadComments() {
-    axios.get(`${runtimeConfig.public.API_URL}/task/` + taskid.value + `/comments`)
+    axios.get(`${runtimeConfig.public.API_URL}/workorder/` + workorderid.value + `/comments`)
     .then((response) => {
         commentsData.value = response.data.data.map((item) => {
             return {
-                comment_text: item.comment_text,
-                date: item.date,
                 id: item.id,
-                username: item.user.username,
+                author_name: item.author.name,
+                message: item.message,
+                post_date: item.post_date
             }
         })
     })
@@ -71,33 +70,36 @@ function loadComments() {
 }
 
 function submitComment() {
-    if(commentForm.value.comment_text != "") {
+    if(commentForm.value.message != "") {
         const data = {
-            comment_text: commentForm.value.comment_text, 
-            assignee: commentForm.value.assignee, 
-            notify_all: commentForm.value.notify_all,
+            authorid: commentForm.value.authorid, 
+            message: commentForm.value.message, 
         }
 
-        axios.post(`${runtimeConfig.public.API_URL}/task/` + taskid.value + `/comment`, data, {
+        axios.post(`${runtimeConfig.public.API_URL}/workorder/` + workorderid.value + `/comment`, data, {
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
             }
         })
         .then(function (response){
-            // the next 4 commands are here to simulate a "live-update", and avoid an additional API GET request
+            // the next set of commands are here to simulate a "live-update", and avoid an additional API GET request
             // actual data from clickup will be rendered in the list when user closes and reopens the modal
-            commentForm.value.username = clickUpUserInfo.value.username
-            commentForm.value.assignee = clickUpUserInfo.value.id
-            commentForm.value.date = response.data.data.date
+            
+            // commentForm.value.author_name = userInfo.value.name
+            
+            // commentForm.value.author_name = response.data.data.author.name
+            // commentForm.value.post_date = response.data.data.post_date
 
+            commentForm.value.author_name = '{{ response_author_name }}'
+            commentForm.value.post_date = '{{ response_author_date }}'
+            
             commentsData.value.push(commentForm.value)
 
             // reset the form
             commentForm.value = {
-                assignee: clickUpUserInfo.value.id,
-                comment_text: '',
-                notify_all: false,
-                username: ''
+                author_name: '',
+                message: '',
+                post_date: '',
             }
         })
         .catch(function (error) {
