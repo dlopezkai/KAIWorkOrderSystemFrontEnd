@@ -6,7 +6,7 @@
       </v-card>
       <v-card v-else width="100vw">
         <div class="d-flex mb-2">
-          <v-select v-model="selectedAssignee" label="Filter by Assignee" :items="props.persons" class="pr-10"></v-select>
+          <v-select v-model="selectedAssignee" hide-details=true label="Filter by Assignee" :items="props.persons" class="pr-10"></v-select>
           <v-text-field
             v-model="searchString"
             prepend-icon="mdi-magnify"
@@ -354,8 +354,6 @@ function getDueDateColor(input, status) {
 
 </script>
 
-<style>
-.v-input__details {
-  display:none;
-}
+<style scoped>
+
 </style>
