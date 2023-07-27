@@ -2,7 +2,7 @@
   <v-container fluid full-height>
     <v-layout child-flex>
       <v-card v-if="route.query.id" width="100vw">
-        <form-component-work-order form-action="edit" :userInfo="props.userInfo" :statuses="props.statuses" :record-id="route.query.id" @close="close()" @closeAndReload="closeAndReload()"></form-component-work-order>
+        <form-component-work-order form-action="edit" :statuses="props.statuses" :record-id="route.query.id" @close="close()" @closeAndReload="closeAndReload()"></form-component-work-order>
       </v-card>
       <v-card v-else width="100vw">
         <div class="d-flex mb-2">
@@ -41,7 +41,7 @@
         >
           <template v-slot:top>
             <v-dialog v-model="dialog" max-width="800px">
-              <form-component-work-order form-action="new" :userInfo="props.userInfo" :statuses="props.statuses" @close="close()" @closeAndReload="closeAndReload()"></form-component-work-order>
+              <form-component-work-order form-action="new" :statuses="props.statuses" @close="close()" @closeAndReload="closeAndReload()"></form-component-work-order>
             </v-dialog>
           </template>
 
@@ -97,12 +97,14 @@ import { ref, nextTick, watch, toRaw } from 'vue'
 import axios from 'axios'
 import { useAuthStore } from '~/store/auth';
 import { useNavMenuStore } from '~/store/navMenuStore'
+import { useUserInfoStore } from '~/store/userInfoStore'
 import { capitalizeFirstLetter } from '~/helpers/capitalizeFirstLetter.js';
 
 const route = useRoute()
 const runtimeConfig = useRuntimeConfig()
 const authStore = useAuthStore()
 const navMenuStore = useNavMenuStore()
+const userInfoStore = useUserInfoStore()
 const itemsPerPage = ref(10)
 const loading = ref(true)
 const totalItems = ref(0)
@@ -120,7 +122,6 @@ const showCompleted = inject('showCompleted')
 const selectedAssignee = inject('selectedAssignee')
 
 const props = defineProps({
-  userInfo: Object,
   statuses: Array,
   persons: Array,
 })
@@ -194,11 +195,11 @@ const groupBy = computed(() => {
 })
 
 onBeforeMount(() => {
-  setMenuItems(props.userInfo)
+  setMenuItems(userInfoStore.userInfo)
 })
 
 watch(() => route.query, () => 
-  setMenuItems(props.userInfo)
+  setMenuItems(userInfoStore.userInfo)
 )
 
 // passing in userInfo in prep for ACL logic of menu itmes

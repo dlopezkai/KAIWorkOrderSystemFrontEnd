@@ -3,7 +3,7 @@
   both root index.vue and /workorders/index.vue utilize it
 -->
 <template>
-  <work-order-system v-if="!loading" :userInfo="userInfo" :statuses="statuses" :persons="persons"></work-order-system>
+  <work-order-system v-if="!loading" :statuses="statuses" :persons="persons"></work-order-system>
 </template>
 
 <script setup>
@@ -15,7 +15,6 @@ import { capitalizeFirstLetter } from '~/helpers/capitalizeFirstLetter.js';
 const authStore = useAuthStore()
 const { $msal } = useNuxtApp()
 const runtimeConfig = useRuntimeConfig()
-const userInfo = ref()
 const statuses = ref()
 const persons = ref()
 const loading = ref(true)
