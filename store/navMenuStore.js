@@ -9,11 +9,19 @@ import { ref } from 'vue'
 import { defineStore } from 'pinia'
 
 export const useNavMenuStore = defineStore('navMenuStore', () => {
+    const table = ref({
+        name: ''
+    })
+    
     const menuItems = ref({
         navigationItemsGroup: '',
         settingsItemsGroup: '',
         filterItemsGroup: ''
     })
+
+    const setTableName = (tableName) => {
+        table.value.name = tableName
+    }
 
     const setMenuItems = (navigationItems, settingsItems, filterItems) => {
         menuItems.value.navigationItemsGroup = navigationItems
@@ -22,7 +30,9 @@ export const useNavMenuStore = defineStore('navMenuStore', () => {
     }
 
     return {
+        table,
         menuItems,
+        setTableName,
         setMenuItems
     }
 })

@@ -33,16 +33,42 @@
 
             <v-list color="transparent">
               <!-- navigation group -->
-              <v-list-subheader v-if="navMenuStore.menuItems.navigationItemsGroup.length > 0">Navigation</v-list-subheader>
+              <v-row v-if="navMenuStore.menuItems.navigationItemsGroup.length > 0">
+                <v-col>
+                  <v-list-subheader>{{ navMenuStore.table.name }}</v-list-subheader>
+                </v-col>
+                <v-col v-if="!isRecordPage" class="text-right pr-6">
+                  <v-btn icon variant="tonal" size="x-small" @click="openModal">
+                    <v-icon
+                      color="white"
+                      icon="mdi-plus"
+                    ></v-icon>
+                  </v-btn>
+                </v-col>
+              </v-row>
               <v-list-item v-for="menuItem in navMenuStore.menuItems.navigationItemsGroup" :prepend-icon="menuItem.icon" @click="navigateTo(menuItem.destination)">
                 <v-list-item-title :title="menuItem.label" v-text="menuItem.label"></v-list-item-title>
               </v-list-item>
 
+
               <!-- filters group -->
-              <v-list-subheader v-if="navMenuStore.menuItems.filterItemsGroup.length > 0" @click="openModal()">Work Orders | Add Work Order</v-list-subheader>
+              <v-row v-if="navMenuStore.menuItems.filterItemsGroup.length > 0">
+                <v-col>
+                  <v-list-subheader>{{ navMenuStore.table.name }}</v-list-subheader>
+                </v-col>
+                <v-col class="text-right pr-6">
+                  <v-btn icon variant="tonal" size="x-small" @click="openModal">
+                    <v-icon
+                      color="white"
+                      icon="mdi-plus"
+                    ></v-icon>
+                  </v-btn>
+                </v-col>
+              </v-row>
               <v-list-item v-for="menuItem in navMenuStore.menuItems.filterItemsGroup" :prepend-icon="menuItem.icon" @click="filteringMethod(menuItem.filter_name, menuItem.filter_value)">
                 <v-list-item-title :title="`Filter by ` + menuItem.label" v-text="menuItem.label"></v-list-item-title>
               </v-list-item>
+
 
               <!-- settings group -->
               <v-divider v-if="navMenuStore.menuItems.settingsItemsGroup.length > 0"></v-divider>

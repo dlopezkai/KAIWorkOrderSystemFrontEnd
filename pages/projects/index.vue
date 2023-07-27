@@ -119,6 +119,7 @@ function setMenuItems() {
     ]
   }
 
+  navMenuStore.setTableName('Projects')
   navMenuStore.setMenuItems(navigationItems, settingsItems, filterItems)
 }
 </script>
