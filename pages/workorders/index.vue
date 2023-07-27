@@ -22,13 +22,6 @@ const loading = ref(true)
 
 onBeforeMount(async () => {
   try {
-    const response = await axios.get(`${runtimeConfig.public.API_URL}/persons?email=` + authStore.currentUser.username.toLowerCase())
-    userInfo.value = response.data.data[0]
-  } catch (err) {
-    console.log(err)
-  }
-
-  try {
     const response = await axios.get(`${runtimeConfig.public.API_URL}/statuses`)
       statuses.value = response.data.data.map((item) => {
         return {

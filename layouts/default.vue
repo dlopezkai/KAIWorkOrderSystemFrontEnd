@@ -79,14 +79,18 @@
 </template>
 
 <script setup>
+  import axios from 'axios'
   import { useAuthStore } from '~/store/auth';
   // import { storeToRefs } from 'pinia'
   import { useNavMenuStore } from '~/store/navMenuStore'
+  import { useUserInfoStore } from '~/store/userInfoStore'
   import { capitalizeFirstLetterOfEachWord } from '~/helpers/capitalizeFirstLetter.js';
 
+  const runtimeConfig = useRuntimeConfig()
   const authStore = useAuthStore()
   // const { currentUser } = storeToRefs(authStore)
   const navMenuStore = useNavMenuStore()
+  const userInfoStore = useUserInfoStore()
   const route = useRoute()
   const drawer = ref(true)
 
@@ -103,8 +107,8 @@
   const isRecordPage = ref(false)
   provide('isRecordPage', isRecordPage)
 
-  const selectedAssignee = ref('0')
-  provide('selectedUser', selectedAssignee)
+  const selectedAssignee = ref()
+  provide('selectedAssignee', selectedAssignee)
 
   async function signInAction() {
     await signIn()
@@ -128,15 +132,37 @@
     isRecordPage.value = (route.query.hasOwnProperty('id')) ? true : false
   }
 
-	onBeforeMount(() => {
+  async function getUserInfo() {
+    if(authStore.currentUser) {
+      try {
+        const response = await axios.get(`${runtimeConfig.public.API_URL}/persons?email=` + authStore.currentUser.username.toLowerCase())
+        userInfoStore.setUserInfo(response.data.data[0].id, response.data.data[0].name, response.data.data[0].email)
+        selectedAssignee.value = userInfoStore.userInfo.id
+      } catch (err) {
+        console.log(err)
+      }
+    }
+  }
+
+	onBeforeMount(async () => {
+    // get logged-in user's info from DB 
+    getUserInfo()
+
     // initial page load check for query string
     recordPageCheck()
 	})
 
-  // checks for query string param while mounted
+  // DO NOT DELETE THE BELOW WATCHERS - they are no needed if page is reloaded
+  // get logged-in user's info from DB while mounted
   watch(() => route.query, () => 
-    recordPageCheck()
+    getUserInfo()
   )
+
+  // checks for query string param while mounted
+  // watch(() => route.query, () => 
+  //   recordPageCheck()
+  // )
+
 </script>
 
 <style scoped>
