@@ -12,7 +12,6 @@
             prepend-icon="mdi-magnify"
             label="Search work orders"
             single-line
-            density="comfortable"
             class="pr-5"
             hide-details
           ></v-text-field>
@@ -367,6 +366,8 @@ function getDueDateColor(input, status) {
 
 </script>
 
-<style scoped>
-
+<style>
+.v-input__details {
+  display:none;
+}
 </style>
