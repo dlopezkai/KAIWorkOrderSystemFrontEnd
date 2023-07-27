@@ -91,7 +91,8 @@
   const showModal = ref(false)
   provide('dialog', showModal)
 
-  const filterByUser = ref(true)
+  // using an incremental counter to trigger event since boolean is not efficient here
+  const filterByUser = ref(0)
   provide('filterByUser', filterByUser)
 
   const showCompleted = ref(false)
@@ -109,8 +110,9 @@
   }
 
   function filteringMethod(filter_name, filter_value) {
+    // increment counter to guarantee new value in component watcher 
     if (filter_name === 'filterByUser') {
-      filterByUser.value = filter_value
+      filterByUser.value++
     }
 
     if (filter_name === 'showCompleted') {

@@ -125,10 +125,10 @@ const props = defineProps({
   persons: Array,
 })
 
-// reload table when filterByUser data is changed
+// set the selectedAssignee back to logged-in user
 watch(filterByUser, (currentValue, newValue) => {
   if(currentValue !== newValue) {
-    loadItems()
+    selectedAssignee.value = userInfoStore.userInfo.id
   }
 })
 
@@ -224,7 +224,7 @@ function setMenuItems(userInfo) {
     filterItemsGroup = [
       // { 'label': 'My Work Orders', 'icon': 'mdi-account-box', 'filter_name': 'filterByUser', 'filter_value': true },
       // { 'label': 'All Work Orders', 'icon': 'mdi-account-box-multiple', 'filter_name': 'filterByUser', 'filter_value': false },
-      { 'label': 'My Work Orders', 'icon': 'mdi-account-box', 'filter_name': 'showCompleted', 'filter_value': false },
+      { 'label': 'My Work Orders', 'icon': 'mdi-account-box', 'filter_name': 'filterByUser', 'filter_value': true },
       { 'label': 'All Work Orders', 'icon': 'mdi-format-list-bulleted', 'filter_name': 'showCompleted', 'filter_value': false },
       { 'label': 'Completed', 'icon': 'mdi-playlist-check', 'filter_name': 'showCompleted', 'filter_value': true },
     ]
@@ -245,7 +245,7 @@ function loadItems() {
   if(search.value) axiosGetRequestURL = axiosGetRequestURL + `&search=` + search.value
 
   // new way of filtering by user since grouping doesn't work - PENDING API IMPLEMENTATION
-  // if(selectedAssignee.value !== '0') axiosGetRequestURL = axiosGetRequestURL + `&assignees[]=` + selectedAssignee.value
+  if(selectedAssignee.value !== '0') axiosGetRequestURL = axiosGetRequestURL + `&assignees[]=` + selectedAssignee.value
 
   // set display completed work order filter
   if(showCompleted.value) {
