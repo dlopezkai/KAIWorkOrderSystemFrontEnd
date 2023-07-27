@@ -32,19 +32,19 @@
 <script setup>
 import { ref } from 'vue'
 import axios from 'axios'
+import { useUserInfoStore } from '~/store/userInfoStore'
 
 const runtimeConfig = useRuntimeConfig()
+const userInfoStore = useUserInfoStore()
 const commentsData = ref([])
 
 const props = defineProps({
     workorderid: String,
-    userInfo: Object
 })
 const { workorderid } = toRefs(props);
-const { userInfo } = toRefs(props)
 
 const commentForm = ref({
-    authorid: userInfo.value.id,
+    authorid: userInfoStore.userInfo.id,
     author_name: '',
     message: '',
     post_date: '',

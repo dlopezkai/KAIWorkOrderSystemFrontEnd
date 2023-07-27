@@ -2,7 +2,7 @@
   <v-container fluid full-height>
     <v-layout child-flex>
       <v-card v-if="route.query.id" width="100vw">
-        <form-component-work-order form-action="edit" :userInfo="props.userInfo" :statuses="props.statuses" :record-id="route.query.id" @close="close()" @closeAndReload="closeAndReload()"></form-component-work-order>
+        <form-component-work-order form-action="edit" :statuses="props.statuses" :record-id="route.query.id" @close="close()" @closeAndReload="closeAndReload()"></form-component-work-order>
       </v-card>
       <v-card v-else width="100vw">
         <div class="d-flex mb-2">
@@ -41,7 +41,7 @@
         >
           <template v-slot:top>
             <v-dialog v-model="dialog" max-width="800px">
-              <form-component-work-order form-action="new" :userInfo="props.userInfo" :statuses="props.statuses" @close="close()" @closeAndReload="closeAndReload()"></form-component-work-order>
+              <form-component-work-order form-action="new" :statuses="props.statuses" @close="close()" @closeAndReload="closeAndReload()"></form-component-work-order>
             </v-dialog>
           </template>
 
@@ -97,17 +97,18 @@ import { ref, nextTick, watch, toRaw } from 'vue'
 import axios from 'axios'
 import { useAuthStore } from '~/store/auth';
 import { useNavMenuStore } from '~/store/navMenuStore'
+import { useUserInfoStore } from '~/store/userInfoStore'
 import { capitalizeFirstLetter } from '~/helpers/capitalizeFirstLetter.js';
 
 const route = useRoute()
 const runtimeConfig = useRuntimeConfig()
 const authStore = useAuthStore()
 const navMenuStore = useNavMenuStore()
+const userInfoStore = useUserInfoStore()
 const itemsPerPage = ref(10)
 const loading = ref(true)
 const totalItems = ref(0)
 const page = ref(1)
-const lastPage = ref(false)
 const data = ref([])
 const search = ref('')
 const searchString = ref('')
@@ -117,14 +118,22 @@ const dialog = inject('dialog')
 const isRecordPage = inject('isRecordPage')
 const filterByUser = inject('filterByUser')
 const showCompleted = inject('showCompleted')
+const selectedAssignee = inject('selectedAssignee')
 
 const props = defineProps({
-  userInfo: Object,
   statuses: Array,
+  persons: Array,
 })
 
 // reload table when filterByUser data is changed
 watch(filterByUser, (currentValue, newValue) => {
+  if(currentValue !== newValue) {
+    loadItems()
+  }
+})
+
+// reload table when selectedAssignee data is changed
+watch(selectedAssignee, (currentValue, newValue) => {
   if(currentValue !== newValue) {
     loadItems()
   }
@@ -185,11 +194,11 @@ const groupBy = computed(() => {
 })
 
 onBeforeMount(() => {
-  setMenuItems(props.userInfo)
+  setMenuItems(userInfoStore.userInfo)
 })
 
 watch(() => route.query, () => 
-  setMenuItems(props.userInfo)
+  setMenuItems(userInfoStore.userInfo)
 )
 
 // passing in userInfo in prep for ACL logic of menu itmes
@@ -212,10 +221,11 @@ function setMenuItems(userInfo) {
       { 'label': 'Projects', 'destination': '/projects', 'icon': 'mdi-form-select' },
     ]
     filterItemsGroup = [
-      { 'label': 'My Work Orders', 'icon': 'mdi-account-box', 'filter_name': 'filterByUser', 'filter_value': true },
-      { 'label': 'All Work Orders', 'icon': 'mdi-account-box-multiple', 'filter_name': 'filterByUser', 'filter_value': false },
-      { 'label': 'Not Completed', 'icon': 'mdi-format-list-bulleted', 'filter_name': 'showCompleted', 'filter_value': false },
-      { 'label': 'Completed', 'icon': 'mdi-playlist-check', 'filter_name': 'showCompleted', 'filter_value': true },
+      { 'type': 'selectAssignee', 'label': 'Filter by Assignee', 'filter_name': 'filterByUser', 'items': props.persons },
+      // { 'label': 'My Work Orders', 'icon': 'mdi-account-box', 'filter_name': 'filterByUser', 'filter_value': true },
+      // { 'label': 'All Work Orders', 'icon': 'mdi-account-box-multiple', 'filter_name': 'filterByUser', 'filter_value': false },
+      { 'type': 'link', 'label': 'Not Completed', 'icon': 'mdi-format-list-bulleted', 'filter_name': 'showCompleted', 'filter_value': false },
+      { 'type': 'link', 'label': 'Completed', 'icon': 'mdi-playlist-check', 'filter_name': 'showCompleted', 'filter_value': true },
     ]
     addRecordItemsGroup = [
       { 'label': 'Add New Work Order', 'icon': 'mdi-file-document-plus-outline' },
@@ -235,6 +245,9 @@ function loadItems() {
 
   // set assignee filter - PENDING API IMPLEMENTATION
   // if(filterByUser.value) axiosGetRequestURL = axiosGetRequestURL + `&assignees[]=` + props.userInfo.id
+
+  // new way of filtering by user since grouping doesn't work - PENDING API IMPLEMENTATION
+  if(selectedAssignee.value !== '0') axiosGetRequestURL = axiosGetRequestURL + `&assignees[]=` + selectedAssignee.value
 
   // set display completed work order filter
   if(showCompleted.value) {
@@ -278,9 +291,7 @@ function loadItems() {
         watchers: item.watchers
       }
     })
-    lastPage.value = response.data.last_page
-    // totalItems.value = response.data.data.length
-    totalItems.value = 100 // will need total (i.e. unpaginated) number of items from server
+    totalItems.value = response.data.count
     loading.value = false
   })
   .catch(err => console.log(err))

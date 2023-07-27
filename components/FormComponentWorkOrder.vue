@@ -107,7 +107,7 @@
       <v-window-item v-if="props.recordId" value="two">
         <v-card>
           <v-card-text>
-            <comments-comp :workorderid="props.recordId" :userInfo="props.userInfo"></comments-comp>
+            <comments-comp :workorderid="props.recordId"></comments-comp>
           </v-card-text>
         </v-card>
         
@@ -120,6 +120,7 @@
 <script setup>
 import axios from 'axios'
 import { useAuthStore } from '~/store/auth';
+import { useUserInfoStore } from '~/store/userInfoStore'
 import CommentsComp from './CommentsComp.vue';
 import { convertToDate, hoursToMinutes, minutesToHours } from '~/helpers/datetimeConversions.js';
 import { capitalizeFirstLetter } from '~/helpers/capitalizeFirstLetter.js';
@@ -128,6 +129,7 @@ import '~/assets/css/main.css'
 const loading = ref(true)
 const runtimeConfig = useRuntimeConfig()
 const authStore = useAuthStore()
+const userInfoStore = useUserInfoStore()
 const tags = ref([])
 const persons = ref([])
 const projects = ref([])
@@ -474,7 +476,7 @@ function save() {
   if(data.time_estimate) data.time_estimate = hoursToMinutes(data.time_estimate)
 
   if (!props.recordId) {
-    data.creatorid = props.userInfo.id
+    data.creatorid = userInfoStore.userInfo.id
     method = 'post'
     url = `${runtimeConfig.public.API_URL}/subtask/` + data.subtask + `/workorder`
   } else {

@@ -3,7 +3,7 @@
   both root index.vue and /workorders/index.vue utilize it
 -->
 <template>
-  <work-order-system v-if="!loading" :userInfo="userInfo" :statuses="statuses"></work-order-system>
+  <work-order-system v-if="!loading" :statuses="statuses" :persons="persons"></work-order-system>
 </template>
 
 <script setup>
@@ -15,18 +15,11 @@ import { capitalizeFirstLetter } from '~/helpers/capitalizeFirstLetter.js';
 const authStore = useAuthStore()
 const { $msal } = useNuxtApp()
 const runtimeConfig = useRuntimeConfig()
-const userInfo = ref()
 const statuses = ref()
+const persons = ref()
 const loading = ref(true)
 
 onBeforeMount(async () => {
-  try {
-    const response = await axios.get(`${runtimeConfig.public.API_URL}/persons?email=` + authStore.currentUser.username.toLowerCase())
-    userInfo.value = response.data.data[0]
-  } catch (err) {
-    console.log(err)
-  }
-
   try {
     const response = await axios.get(`${runtimeConfig.public.API_URL}/statuses`)
       statuses.value = response.data.data.map((item) => {
@@ -36,6 +29,24 @@ onBeforeMount(async () => {
           id: item.id
         }
       })
+  } catch (err) {
+    console.log(err)
+  }
+
+  try {
+    const response = await axios.get(`${runtimeConfig.public.API_URL}/persons`)
+      persons.value = response.data.data.map((item) => {
+        return {
+          title: item.name,
+          value: item.id
+        }
+      })
+      persons.value.push({'title': '-- None --', 'value': '0'})
+
+      // sort persons list
+    persons.value = persons.value.sort((a, b) => 
+      a.title.localeCompare(b.title))
+
   } catch (err) {
     console.log(err)
   }
