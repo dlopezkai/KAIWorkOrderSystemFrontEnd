@@ -231,7 +231,7 @@ function loadItems() {
 
   if(search.value) axiosGetRequestURL = axiosGetRequestURL + `&search=` + search.value
 
-  // new way of filtering by user since grouping doesn't work - PENDING API IMPLEMENTATION
+  // filter by user if a valid user is selected
   if(selectedAssignee.value !== '0') axiosGetRequestURL = axiosGetRequestURL + `&assignees[]=` + selectedAssignee.value
 
   // set display completed work order filter
