@@ -219,12 +219,13 @@ function setMenuItems(userInfo) {
 
     navigationItemsGroup = [
       { 'label': 'Projects', 'destination': '/projects', 'icon': 'mdi-form-select' },
+      { 'label': 'Users', 'destination': '/', 'icon': 'mdi-account-multiple' },
     ]
     filterItemsGroup = [
       { 'type': 'selectAssignee', 'label': 'Filter by Assignee', 'filter_name': 'filterByUser', 'items': props.persons },
       // { 'label': 'My Work Orders', 'icon': 'mdi-account-box', 'filter_name': 'filterByUser', 'filter_value': true },
       // { 'label': 'All Work Orders', 'icon': 'mdi-account-box-multiple', 'filter_name': 'filterByUser', 'filter_value': false },
-      { 'type': 'link', 'label': 'Not Completed', 'icon': 'mdi-format-list-bulleted', 'filter_name': 'showCompleted', 'filter_value': false },
+      { 'type': 'link', 'label': 'All Work Orders', 'icon': 'mdi-format-list-bulleted', 'filter_name': 'showCompleted', 'filter_value': false },
       { 'type': 'link', 'label': 'Completed', 'icon': 'mdi-playlist-check', 'filter_name': 'showCompleted', 'filter_value': true },
     ]
     addRecordItemsGroup = [

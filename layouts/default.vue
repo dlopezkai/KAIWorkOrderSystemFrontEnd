@@ -33,7 +33,7 @@
 
             <v-list color="transparent">
               <!-- navigation group -->
-              <v-list-subheader v-if="navMenuStore.menuItems.navigationItems.length > 0">Navigation</v-list-subheader>
+              <v-list-subheader v-if="navMenuStore.menuItems.navigationItems.length > 0">Settings</v-list-subheader>
               <v-list-item v-for="menuItem in navMenuStore.menuItems.navigationItems" :prepend-icon="menuItem.icon" @click=navigateTo(menuItem.destination)>
                 <v-list-item-title :title="`Go to ` + menuItem.label" v-text="menuItem.label"></v-list-item-title>
               </v-list-item>
