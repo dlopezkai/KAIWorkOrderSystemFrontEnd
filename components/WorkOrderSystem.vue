@@ -6,7 +6,7 @@
       </v-card>
       <v-card v-else width="100vw">
         <div class="d-flex mb-2">
-          <v-select v-model="selectedAssignee" label="Filter by Assignee" :items="props.persons" class="pr-10"></v-select>
+          <v-select v-model="selectedAssignee" hide-details=true label="Filter by Assignee" :items="props.persons" class="pr-10"></v-select>
           <v-text-field
             v-model="searchString"
             prepend-icon="mdi-magnify"
@@ -117,7 +117,7 @@ const selectedAssignee = ref(userInfoStore.userInfo.id)
 // use provide/inject pattern to receive data from layout
 const dialog = inject('dialog')
 const isRecordPage = inject('isRecordPage')
-const filterByUser = inject('filterByUser')
+const filterByUserTrigger = inject('filterByUserTrigger')
 const showCompleted = inject('showCompleted')
 
 const props = defineProps({
@@ -125,10 +125,10 @@ const props = defineProps({
   persons: Array,
 })
 
-// reload table when filterByUser data is changed
-watch(filterByUser, (currentValue, newValue) => {
+// set the selectedAssignee back to logged-in user
+watch(filterByUserTrigger, (currentValue, newValue) => {
   if(currentValue !== newValue) {
-    loadItems()
+    selectedAssignee.value = userInfoStore.userInfo.id
   }
 })
 
@@ -185,14 +185,6 @@ const headers = [
 //   },
 // }
 
-// computed value for toggling group-by behavior
-// if we still plan to incorporate grouping, then we will need to pass a :group-by="groupBy" prop in the <v-data-table-server> component
-const groupBy = computed(() => {
-  if(!filterByUser.value){
-    return [{key: 'assignees'}]
-  }
-})
-
 onBeforeMount(() => {
   setMenuItems(userInfoStore.userInfo)
 })
@@ -203,37 +195,32 @@ watch(() => route.query, () =>
 
 // passing in userInfo in prep for ACL logic of menu itmes
 function setMenuItems(userInfo) {
-  let navigationItemsGroup = []
-  let filterItemsGroup = []
-  let addRecordItemsGroup = []
+  let navigationItems = []
+  let filterItems = []
+  let settingsItems = []
 
   if (isRecordPage.value) {
-    navigationItemsGroup = [
+    navigationItems = [
       { 'label': 'Work Orders', 'destination': '/workorders', 'icon': 'mdi-keyboard-backspace' },
     ]
   } else {
     // example ACL logic
-    // navigationItemsGroup = (userInfo.role = 'manager') ? [] : [
+    // settingsItems = (userInfo.role = 'manager') ? [] : [
     //   { 'label': 'Projects', 'destination': '/projects', 'icon': 'mdi-form-select' },
     // ]
-
-    navigationItemsGroup = [
+    settingsItems = [
       { 'label': 'Projects', 'destination': '/projects', 'icon': 'mdi-form-select' },
       { 'label': 'Users', 'destination': '/', 'icon': 'mdi-account-multiple' },
     ]
-    filterItemsGroup = [
-      // { 'label': 'My Work Orders', 'icon': 'mdi-account-box', 'filter_name': 'filterByUser', 'filter_value': true },
-      // { 'label': 'All Work Orders', 'icon': 'mdi-account-box-multiple', 'filter_name': 'filterByUser', 'filter_value': false },
-      { 'label': 'My Work Orders', 'icon': 'mdi-account-box', 'filter_name': 'showCompleted', 'filter_value': false },
+    filterItems = [
+      { 'label': 'My Work Orders', 'icon': 'mdi-account-box', 'filter_name': 'filterByUserTrigger', 'filter_value': true },
       { 'label': 'All Work Orders', 'icon': 'mdi-format-list-bulleted', 'filter_name': 'showCompleted', 'filter_value': false },
       { 'label': 'Completed', 'icon': 'mdi-playlist-check', 'filter_name': 'showCompleted', 'filter_value': true },
     ]
-    addRecordItemsGroup = [
-      { 'label': 'Add New Work Order', 'icon': 'mdi-file-document-plus-outline' },
-    ]
   }
 
-  navMenuStore.setMenuItems(navigationItemsGroup, filterItemsGroup, addRecordItemsGroup)
+  navMenuStore.setTableName('Work Orders')
+  navMenuStore.setMenuItems(navigationItems, settingsItems, filterItems)
 }
 
 // function loadItems({ page }) {
@@ -244,8 +231,8 @@ function loadItems() {
 
   if(search.value) axiosGetRequestURL = axiosGetRequestURL + `&search=` + search.value
 
-  // new way of filtering by user since grouping doesn't work - PENDING API IMPLEMENTATION
-  // if(selectedAssignee.value !== '0') axiosGetRequestURL = axiosGetRequestURL + `&assignees[]=` + selectedAssignee.value
+  // filter by user if a valid user is selected
+  if(selectedAssignee.value !== '0') axiosGetRequestURL = axiosGetRequestURL + `&assignees[]=` + selectedAssignee.value
 
   // set display completed work order filter
   if(showCompleted.value) {
@@ -367,8 +354,6 @@ function getDueDateColor(input, status) {
 
 </script>
 
-<style>
-.v-input__details {
-  display:none;
-}
+<style scoped>
+
 </style>

@@ -32,29 +32,50 @@
             </div>
 
             <v-list color="transparent">
-
-
-              <!-- add record group -->
-              <!-- <v-divider v-if="navMenuStore.menuItems.addRecordItems.length > 0"></v-divider>
-              <v-list-subheader v-if="navMenuStore.menuItems.addRecordItems.length > 0">New Item Management</v-list-subheader>
-              <v-list-item v-for="menuItem in navMenuStore.menuItems.addRecordItems" :prepend-icon="menuItem.icon" @click="openModal()">
+              <!-- navigation group -->
+              <v-row v-if="navMenuStore.menuItems.navigationItemsGroup.length > 0">
+                <v-col>
+                  <v-list-subheader>{{ navMenuStore.table.name }}</v-list-subheader>
+                </v-col>
+                <v-col v-if="!isRecordPage" class="text-right pr-6">
+                  <v-btn icon variant="tonal" size="x-small" @click="openModal">
+                    <v-icon
+                      color="white"
+                      icon="mdi-plus"
+                    ></v-icon>
+                  </v-btn>
+                </v-col>
+              </v-row>
+              <v-list-item v-for="menuItem in navMenuStore.menuItems.navigationItemsGroup" :prepend-icon="menuItem.icon" @click="navigateTo(menuItem.destination)">
                 <v-list-item-title :title="menuItem.label" v-text="menuItem.label"></v-list-item-title>
-              </v-list-item> -->
+              </v-list-item>
+
 
               <!-- filters group -->
-              <v-list-subheader v-if="navMenuStore.menuItems.filterItemsGroup.length > 0" @click="openModal()">Work Orders | Add Work Order</v-list-subheader>
-              
+              <v-row v-if="navMenuStore.menuItems.filterItemsGroup.length > 0">
+                <v-col>
+                  <v-list-subheader>{{ navMenuStore.table.name }}</v-list-subheader>
+                </v-col>
+                <v-col class="text-right pr-6">
+                  <v-btn icon variant="tonal" size="x-small" @click="openModal">
+                    <v-icon
+                      color="white"
+                      icon="mdi-plus"
+                    ></v-icon>
+                  </v-btn>
+                </v-col>
+              </v-row>
               <v-list-item v-for="menuItem in navMenuStore.menuItems.filterItemsGroup" :prepend-icon="menuItem.icon" @click="filteringMethod(menuItem.filter_name, menuItem.filter_value)">
                 <v-list-item-title :title="`Filter by ` + menuItem.label" v-text="menuItem.label"></v-list-item-title>
               </v-list-item>
 
-              <!-- navigation group -->
-              <v-divider v-if="navMenuStore.menuItems.navigationItems.length > 0"></v-divider>
-              <v-list-subheader v-if="navMenuStore.menuItems.navigationItems.length > 0">Settings</v-list-subheader>
-              <v-list-item v-for="menuItem in navMenuStore.menuItems.navigationItems" :prepend-icon="menuItem.icon" @click=navigateTo(menuItem.destination)>
+
+              <!-- settings group -->
+              <v-divider v-if="navMenuStore.menuItems.settingsItemsGroup.length > 0"></v-divider>
+              <v-list-subheader v-if="navMenuStore.menuItems.settingsItemsGroup.length > 0">Settings</v-list-subheader>
+              <v-list-item v-for="menuItem in navMenuStore.menuItems.settingsItemsGroup" :prepend-icon="menuItem.icon" @click="navigateTo(menuItem.destination)">
                 <v-list-item-title :title="`Go to ` + menuItem.label" v-text="menuItem.label"></v-list-item-title>
               </v-list-item>
-
             </v-list>
           </v-navigation-drawer>
 
@@ -91,8 +112,9 @@
   const showModal = ref(false)
   provide('dialog', showModal)
 
-  const filterByUser = ref(true)
-  provide('filterByUser', filterByUser)
+  // using an incremental counter to trigger event since boolean is not efficient here
+  const filterByUserTrigger = ref(0)
+  provide('filterByUserTrigger', filterByUserTrigger)
 
   const showCompleted = ref(false)
   provide('showCompleted', showCompleted)
@@ -109,8 +131,9 @@
   }
 
   function filteringMethod(filter_name, filter_value) {
-    if (filter_name === 'filterByUser') {
-      filterByUser.value = filter_value
+    // increment counter to guarantee new value in component watcher 
+    if (filter_name === 'filterByUserTrigger') {
+      filterByUserTrigger.value++
     }
 
     if (filter_name === 'showCompleted') {

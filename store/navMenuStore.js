@@ -9,20 +9,30 @@ import { ref } from 'vue'
 import { defineStore } from 'pinia'
 
 export const useNavMenuStore = defineStore('navMenuStore', () => {
+    const table = ref({
+        name: ''
+    })
+    
     const menuItems = ref({
-        navigationItems: '',
-        filterItemsGroup: '',
-        addRecordItems: ''
+        navigationItemsGroup: '',
+        settingsItemsGroup: '',
+        filterItemsGroup: ''
     })
 
-    const setMenuItems = (navigationItems, filterItemsGroup, addRecordItems) => {
-        menuItems.value.navigationItems = navigationItems
-        menuItems.value.filterItemsGroup = filterItemsGroup
-        menuItems.value.addRecordItems = addRecordItems
+    const setTableName = (tableName) => {
+        table.value.name = tableName
+    }
+
+    const setMenuItems = (navigationItems, settingsItems, filterItems) => {
+        menuItems.value.navigationItemsGroup = navigationItems
+        menuItems.value.settingsItemsGroup = settingsItems
+        menuItems.value.filterItemsGroup = filterItems
     }
 
     return {
+        table,
         menuItems,
+        setTableName,
         setMenuItems
     }
 })
