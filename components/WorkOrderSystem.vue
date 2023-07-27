@@ -288,7 +288,7 @@ function loadItems() {
         watchers: item.watchers
       }
     })
-    totalItems.value = response.data.count
+    totalItems.value = response.data.total
     loading.value = false
   })
   .catch(err => console.log(err))
