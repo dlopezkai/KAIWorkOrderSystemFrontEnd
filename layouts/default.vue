@@ -50,7 +50,6 @@
               <v-list-item v-for="menuItem in navMenuStore.menuItems.settingsItemsGroup" :prepend-icon="menuItem.icon" @click="navigateTo(menuItem.destination)">
                 <v-list-item-title :title="`Go to ` + menuItem.label" v-text="menuItem.label"></v-list-item-title>
               </v-list-item>
-
             </v-list>
           </v-navigation-drawer>
 
