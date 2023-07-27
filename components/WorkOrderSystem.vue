@@ -117,7 +117,7 @@ const selectedAssignee = ref(userInfoStore.userInfo.id)
 // use provide/inject pattern to receive data from layout
 const dialog = inject('dialog')
 const isRecordPage = inject('isRecordPage')
-const filterByUser = inject('filterByUser')
+const filterByUserTrigger = inject('filterByUserTrigger')
 const showCompleted = inject('showCompleted')
 
 const props = defineProps({
@@ -126,7 +126,7 @@ const props = defineProps({
 })
 
 // set the selectedAssignee back to logged-in user
-watch(filterByUser, (currentValue, newValue) => {
+watch(filterByUserTrigger, (currentValue, newValue) => {
   if(currentValue !== newValue) {
     selectedAssignee.value = userInfoStore.userInfo.id
   }
@@ -185,14 +185,6 @@ const headers = [
 //   },
 // }
 
-// computed value for toggling group-by behavior
-// if we still plan to incorporate grouping, then we will need to pass a :group-by="groupBy" prop in the <v-data-table-server> component
-const groupBy = computed(() => {
-  if(!filterByUser.value){
-    return [{key: 'assignees'}]
-  }
-})
-
 onBeforeMount(() => {
   setMenuItems(userInfoStore.userInfo)
 })
@@ -222,9 +214,7 @@ function setMenuItems(userInfo) {
       { 'label': 'Users', 'destination': '/', 'icon': 'mdi-account-multiple' },
     ]
     filterItemsGroup = [
-      // { 'label': 'My Work Orders', 'icon': 'mdi-account-box', 'filter_name': 'filterByUser', 'filter_value': true },
-      // { 'label': 'All Work Orders', 'icon': 'mdi-account-box-multiple', 'filter_name': 'filterByUser', 'filter_value': false },
-      { 'label': 'My Work Orders', 'icon': 'mdi-account-box', 'filter_name': 'filterByUser', 'filter_value': true },
+      { 'label': 'My Work Orders', 'icon': 'mdi-account-box', 'filter_name': 'filterByUserTrigger', 'filter_value': true },
       { 'label': 'All Work Orders', 'icon': 'mdi-format-list-bulleted', 'filter_name': 'showCompleted', 'filter_value': false },
       { 'label': 'Completed', 'icon': 'mdi-playlist-check', 'filter_name': 'showCompleted', 'filter_value': true },
     ]
