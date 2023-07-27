@@ -224,8 +224,9 @@ function setMenuItems(userInfo) {
     filterItemsGroup = [
       // { 'label': 'My Work Orders', 'icon': 'mdi-account-box', 'filter_name': 'filterByUser', 'filter_value': true },
       // { 'label': 'All Work Orders', 'icon': 'mdi-account-box-multiple', 'filter_name': 'filterByUser', 'filter_value': false },
-      { 'type': 'link', 'label': 'All Work Orders', 'icon': 'mdi-format-list-bulleted', 'filter_name': 'showCompleted', 'filter_value': false },
-      { 'type': 'link', 'label': 'Completed', 'icon': 'mdi-playlist-check', 'filter_name': 'showCompleted', 'filter_value': true },
+      { 'label': 'My Work Orders', 'icon': 'mdi-account-box', 'filter_name': 'showCompleted', 'filter_value': false },
+      { 'label': 'All Work Orders', 'icon': 'mdi-format-list-bulleted', 'filter_name': 'showCompleted', 'filter_value': false },
+      { 'label': 'Completed', 'icon': 'mdi-playlist-check', 'filter_name': 'showCompleted', 'filter_value': true },
     ]
     addRecordItemsGroup = [
       { 'label': 'Add New Work Order', 'icon': 'mdi-file-document-plus-outline' },
