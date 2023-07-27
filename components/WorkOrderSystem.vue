@@ -109,7 +109,6 @@ const itemsPerPage = ref(10)
 const loading = ref(true)
 const totalItems = ref(0)
 const page = ref(1)
-const lastPage = ref(false)
 const data = ref([])
 const search = ref('')
 const searchString = ref('')
@@ -292,7 +291,6 @@ function loadItems() {
         watchers: item.watchers
       }
     })
-    lastPage.value = response.data.last_page
     totalItems.value = response.data.count
     loading.value = false
   })
