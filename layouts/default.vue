@@ -159,9 +159,9 @@
   )
 
   // checks for query string param while mounted
-  // watch(() => route.query, () => 
-  //   recordPageCheck()
-  // )
+  watch(() => route.query, () => 
+    recordPageCheck()
+  )
 
 </script>
 
