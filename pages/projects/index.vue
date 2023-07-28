@@ -34,6 +34,10 @@
             </v-dialog>
           </template>
 
+          <template v-slot:item.subtasks="{ item }">
+            <v-chip v-for="subtask in item.raw.subtasks">{{ subtask.name }}</v-chip>
+          </template>
+
           <template v-slot:item.actions="{ item }">
             <NuxtLink :to="'/projects?id=' + item.raw.id" title="Edit work order">
               <v-icon size="small" class="me-2">mdi-pencil</v-icon>
@@ -85,7 +89,7 @@ function loadItems() {
       return {
         id: item.id,
         project: item.name,
-        subtasks: item.content,
+        subtasks: item.subtasks,
       }
     })
     totalItems.value = response.data.total

@@ -36,7 +36,7 @@
             </v-col>
 
             <v-col cols="12" sm="12" md="12">
-              <v-combobox v-model="editedItem.content" label="Subtask(s)" placeholder="Type in subtask name, and press Enter, or click away"
+              <v-combobox v-model="editedItem.subtasks" label="Subtask(s)" placeholder="Type in subtask name, and press Enter, or click away"
                 :rules="[rules.required, rules.emptyArray]" chips multiple></v-combobox>
             </v-col>
           </v-row>
@@ -76,6 +76,7 @@ const editedItem = ref([
   {
     name: '',
     content: '',
+    subtasks: '',
   }
 ])
 
@@ -149,13 +150,13 @@ async function loadItem() {
         editedItem.value = Object.assign({}, response.data.data[0])
 
         // for arrays
-        // if(editedItem.value.tags) {
-        //   let tagsTemp = []
-        //   editedItem.value.tags.forEach((tag) => {
-        //     tagsTemp.push(tag.id)
-        //   })
-        //   editedItem.value.tags = tagsTemp
-        // }
+        if(editedItem.value.subtasks) {
+          let subtasksTemp = []
+          editedItem.value.subtasks.forEach((subtask) => {
+            subtasksTemp.push(subtask.name)
+          })
+          editedItem.value.subtasks = subtasksTemp
+        }
 
         // for objects
         // editedItem.value.status = editedItem.value.status.id
