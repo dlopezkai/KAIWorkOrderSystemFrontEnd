@@ -37,7 +37,7 @@
 
             <v-col cols="12" sm="12" md="12">
               <v-combobox v-model="editedItem.subtasks" label="Subtask(s)" placeholder="Type in subtask name, and press Enter, or click away"
-                :rules="[rules.required, rules.emptyArray]" chips multiple></v-combobox>
+                :items="editedItem.subtasks" item-title="name" item-value="name" :rules="[rules.required, rules.emptyArray]" chips multiple></v-combobox>
             </v-col>
           </v-row>
         </v-form>
@@ -153,7 +153,7 @@ async function loadItem() {
         if(editedItem.value.subtasks) {
           let subtasksTemp = []
           editedItem.value.subtasks.forEach((subtask) => {
-            subtasksTemp.push(subtask.name)
+            subtasksTemp.push(subtask)
           })
           editedItem.value.subtasks = subtasksTemp
         }
@@ -201,6 +201,12 @@ function save() {
     method = 'post'
     url = `${runtimeConfig.public.API_URL}/project/`
   } else {
+    let subtasksTemp = []
+    editedItem.value.subtasks.forEach((subtask) => {
+      (subtask.name) ? subtasksTemp.push(subtask.name) : subtasksTemp.push(subtask)
+    })
+    data.subtasks = subtasksTemp
+
     method = 'put'
     url = `${runtimeConfig.public.API_URL}/project/` + data.id
   }
