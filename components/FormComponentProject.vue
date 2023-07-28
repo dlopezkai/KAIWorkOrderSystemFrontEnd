@@ -25,7 +25,7 @@
         <v-row class="fill-height" align-content="center" justify="center">
           <v-col class="text-subtitle-1 text-center" cols="12">
             <v-card style="font-family:'Open Sans;'">
-              <v-card-title style="background-color:red; color: white">⚠️ WARNING ⚠️</v-card-title>
+              <v-card-title style="background-color:red; color:white">⚠️ WARNING ⚠️</v-card-title>
               <v-spacer></v-spacer>
               <v-card-text>Archiving this record is not reversible. Please confirm if you would like to proceed.</v-card-text>
               <v-card-actions>
