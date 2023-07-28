@@ -40,7 +40,6 @@
             </NuxtLink>
           </template>
 
-          <template v-slot:bottom v-if="!showFooter"></template>
         </v-data-table-server>
       </v-card>
     </v-layout>
@@ -48,18 +47,23 @@
 </template>
 
 <script setup>
+import axios from 'axios'
 import { useNavMenuStore } from '~/store/navMenuStore'
 
 const navMenuStore = useNavMenuStore()
 const route = useRoute()
-
+const runtimeConfig = useRuntimeConfig()
 const dialog = inject('dialog')
 const isRecordPage = inject('isRecordPage')
+const itemsPerPage = ref(10)
+const loading = ref(true)
+const totalItems = ref(0)
+const page = ref(1)
 const data = ref([])
 
 const headers = [
   { title: 'Project', key: 'project', align: 'start', sortable: false },
-  { title: 'Subtask', key: 'subtask', align: 'start', sortable: false },
+  { title: 'Subtask(s)', key: 'subtasks', align: 'start', sortable: false },
   { title: 'Actions', key: 'actions', align: 'center', sortable: false },
 ]
 
@@ -72,28 +76,22 @@ function close() {
 }
 
 function loadItems() {
-  data.value = [
-    {
-      id: 1,
-      project: 'CMS 6',
-      subtask: 'Common Tasks',
-    },
-    {
-      id: 2,
-      project: 'CMS 6',
-      subtask: 'Task A',
-    },
-    {
-      id: 3,
-      project: 'CMS 6',
-      subtask: 'Task B',
-    },
-    {
-      id: 4,
-      project: 'CMS 6',
-      subtask: 'Task C',
-    },
-  ]
+  loading.value = true
+  let axiosGetRequestURL = `${runtimeConfig.public.API_URL}/projects?page=` + page.value + `&page_size=` + itemsPerPage.value
+
+  axios.get(axiosGetRequestURL)
+  .then((response) => {
+    data.value = response.data.data.map((item) => {
+      return {
+        id: item.id,
+        project: item.name,
+        subtasks: item.content,
+      }
+    })
+    totalItems.value = response.data.total
+    loading.value = false
+  })
+  .catch(err => console.log(err))
 }
 
 onMounted(() => {
