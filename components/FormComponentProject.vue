@@ -36,8 +36,8 @@
             </v-col>
 
             <v-col cols="12" sm="12" md="12">
-              <v-text-field v-model="editedItem.subtask" label="Subtask(s)" placeholder="Multiple subtask format: &quot;subtask1, subtask2&quot; (no quotes)"
-                :rules="[rules.required]"></v-text-field>
+              <v-combobox v-model="editedItem.subtask" label="Subtask(s)" placeholder="Type in subtask name, and press Enter, or click away"
+                :rules="[rules.required, rules.emptyArray]" chips multiple></v-combobox>
             </v-col>
           </v-row>
         </v-form>
@@ -117,6 +117,7 @@ const scrollingClasses = computed(() => {
 const rules =
 {
   required: v => !!v || 'Field is required',
+  emptyArray: v => v.length > 0 || 'Field is required',
   length: v => v.length >= 3 || 'Minimum length is 3 characters',
   select: v => !!v || 'Select a valid option',
   due_date: v => !!v || 'Date must be selected',
