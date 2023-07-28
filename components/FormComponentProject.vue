@@ -31,12 +31,12 @@
         <v-form ref="form" @submit.prevent="submit">
           <v-row>
             <v-col cols="12" sm="12" md="12">
-              <v-text-field v-model="editedItem.project" label="Project" 
+              <v-text-field v-model="editedItem.name" label="Project" 
                 :rules="[rules.required]"></v-text-field>
             </v-col>
 
             <v-col cols="12" sm="12" md="12">
-              <v-combobox v-model="editedItem.subtask" label="Subtask(s)" placeholder="Type in subtask name, and press Enter, or click away"
+              <v-combobox v-model="editedItem.content" label="Subtask(s)" placeholder="Type in subtask name, and press Enter, or click away"
                 :rules="[rules.required, rules.emptyArray]" chips multiple></v-combobox>
             </v-col>
           </v-row>
@@ -63,6 +63,7 @@ const submitBtnDisabled = ref(false)
 const submitStatusOverlay = ref(false)
 const submitStatus = ref('')
 const submitInfo = ref('')
+const loading = ref(true)
 
 const props = defineProps({
     recordId: String,
@@ -73,8 +74,8 @@ const emit = defineEmits(['close', 'closeAndReload'])
 
 const editedItem = ref([
   {
-    project: '',
-    subtask: '',
+    name: '',
+    content: '',
   }
 ])
 
@@ -134,6 +135,39 @@ function close() {
   } else {
     emit('close')
   }
+}
+
+onMounted(async () => {
+  await loadItem()
+})
+
+async function loadItem() {
+  if (props.recordId) {
+    try {
+      const response = await axios.get(`${runtimeConfig.public.API_URL}/project/` + props.recordId)
+        loading.value = true
+        editedItem.value = Object.assign({}, response.data.data[0])
+
+        // for arrays
+        // if(editedItem.value.tags) {
+        //   let tagsTemp = []
+        //   editedItem.value.tags.forEach((tag) => {
+        //     tagsTemp.push(tag.id)
+        //   })
+        //   editedItem.value.tags = tagsTemp
+        // }
+
+        // for objects
+        // editedItem.value.status = editedItem.value.status.id
+    } catch (err) {
+      console.log(err)
+    }
+  } else {
+    editedItem.value = Object.assign({}, '')
+  }
+  setTimeout(() => {
+    loading.value = false
+  }, 500)
 }
 
 function resetSubmitStatus() {
