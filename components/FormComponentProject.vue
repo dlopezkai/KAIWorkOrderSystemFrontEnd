@@ -41,6 +41,11 @@
             </v-col>
 
             <v-col cols="12" sm="12" md="12">
+              <v-text-field v-model="editedItem.link" label="SharePoint Link"></v-text-field>
+              <v-btn href="https://kauffmaninc.sharepoint.com/" target="_blank" variant="tonal" class="rounded" color="#428086" title="Open SharePoint">Open SharePoint site</v-btn>
+            </v-col>
+
+            <v-col cols="12" sm="12" md="12">
               <v-checkbox v-model="editedItem.isarchived" label="Archived" true-value="1" false-value="0"></v-checkbox>
             </v-col>
           </v-row>
@@ -82,6 +87,7 @@ const editedItem = ref([
     content: '',
     subtasks: '',
     isarchived: '',
+    link: '',
   }
 ])
 
