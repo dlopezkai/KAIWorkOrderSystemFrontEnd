@@ -68,6 +68,7 @@ const data = ref([])
 const headers = [
   { title: 'Project', key: 'project', align: 'start', sortable: false },
   { title: 'Subtask(s)', key: 'subtasks', align: 'start', sortable: false },
+  { title: 'Archived', key: 'isarchived', align: 'center', sortable: false },
   { title: 'Actions', key: 'actions', align: 'center', sortable: false },
 ]
 
@@ -90,6 +91,7 @@ function loadItems() {
         id: item.id,
         project: item.name,
         subtasks: item.subtasks,
+        isarchived: (item.isarchived == 0) ? 'No' :  'Yes',
       }
     })
     totalItems.value = response.data.total
