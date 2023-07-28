@@ -20,6 +20,28 @@
       </v-container>
     </v-overlay>
 
+    <v-overlay v-model="confirmArchiveOverlay" class="align-center justify-center" persistent>
+      <v-container style="height: 400px;">
+        <v-row class="fill-height" align-content="center" justify="center">
+          <v-col class="text-subtitle-1 text-center" cols="12">
+            <v-card style="font-family:'Open Sans;'">
+              <v-card-title style="background-color:red; color: white">⚠️ WARNING ⚠️</v-card-title>
+              <v-spacer></v-spacer>
+              <v-card-text>Archiving this record is not reversible. Please confirm if you would like to proceed.</v-card-text>
+              <v-card-actions>
+                <v-row>
+                  <v-col class="text-right">
+                    <v-btn variant="plain" @click="closeArchiveConfirmationModal" title="Cancel">Cancel</v-btn>
+                    <v-btn class="rounded" color="error" @click="save">Confirm</v-btn>
+                  </v-col>
+                </v-row>
+              </v-card-actions>
+            </v-card>
+          </v-col>
+        </v-row>
+      </v-container>
+    </v-overlay>
+
     <h3 v-if="props.formAction === 'edit'">{{ formTitle }}</h3>
 
     <v-card :class="scrollingClasses" flat>
@@ -73,6 +95,7 @@ const submitStatusOverlay = ref(false)
 const submitStatus = ref('')
 const submitInfo = ref('')
 const loading = ref(true)
+const confirmArchiveOverlay = ref(false)
 
 const props = defineProps({
     recordId: String,
@@ -149,6 +172,10 @@ function close() {
   }
 }
 
+function closeArchiveConfirmationModal() {
+  confirmArchiveOverlay.value = false
+}
+
 onMounted(async () => {
   await loadItem()
 })
@@ -192,7 +219,12 @@ function resetSubmitStatus() {
 // form submit process
 async function submit() {
   const { valid } = await form.value.validate()
-  if (valid) {
+
+  // if archived flag is set to true, display confirmation modal warning that this process is not reversible
+  if (valid && editedItem.value.isarchived == 1) {
+    confirmArchiveOverlay.value = true
+    return
+  } else if (valid) {
     save()
   }
 }
