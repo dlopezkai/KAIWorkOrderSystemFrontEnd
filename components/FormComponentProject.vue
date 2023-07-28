@@ -101,7 +101,7 @@ const submitBtnText = computed(() => {
   return (!props.recordId) ? 'Submit' : 'Save'
 })
 
-// computed value for work order submit progress messages
+// computed value for project submit progress messages
 const onSubmitMsg = computed(() => {
   switch(submitStatus.value) {
     case 'submitting':
@@ -111,9 +111,9 @@ const onSubmitMsg = computed(() => {
     case 'connection_failure':
       return 'There was an issue submitting your form. Please try again.'
     case 'success':
-      return 'Work order submitted successfully.'
+      return 'Project submitted successfully.'
     case 'updated':
-      return 'Work order updated successfully.'
+      return 'Project updated successfully.'
     default:
       return ''
   }
@@ -234,7 +234,7 @@ function save() {
       if (response.status === 200) {
         if (response.data.response_code === 200) {
           submitStatus.value = (!props.recordId) ? 'success' : 'updated'
-          submitInfo.value = (!props.recordId) ? 'Work order URL: ' + window.location.origin + '/workorders?id=' + response.data.data.id : ''
+          submitInfo.value = (!props.recordId) ? 'Project URL: ' + window.location.origin + '/projects?id=' + response.data.data.id : ''
         } else {
           submitStatus.value = 'internal_api_error'
           submitInfo.value = data
