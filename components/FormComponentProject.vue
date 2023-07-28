@@ -39,6 +39,10 @@
               <v-combobox v-model="editedItem.subtasks" label="Subtask(s)" placeholder="Type in subtask name, and press Enter, or click away"
                 :items="editedItem.subtasks" item-title="name" item-value="name" :rules="[rules.required, rules.emptyArray]" chips multiple></v-combobox>
             </v-col>
+
+            <v-col cols="12" sm="12" md="12">
+              <v-checkbox v-model="editedItem.isarchived" label="Archived" true-value="1" false-value="0"></v-checkbox>
+            </v-col>
           </v-row>
         </v-form>
       </v-card-text>
@@ -77,6 +81,7 @@ const editedItem = ref([
     name: '',
     content: '',
     subtasks: '',
+    isarchived: '',
   }
 ])
 
