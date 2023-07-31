@@ -22,8 +22,7 @@ const loading = inject('displayLoadingMessage')
 const isRecordPage = inject('isRecordPage')
 
 onBeforeMount(async () => {
-  // only display loader overlay when not on a record page
-  loading.value = (!isRecordPage.value) ? true : false
+  loading.value = true
 
   if(userInfoStore.userInfo.id.length < 1) {
     try {

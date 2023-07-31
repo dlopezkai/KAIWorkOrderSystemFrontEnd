@@ -16,7 +16,11 @@
     </div>
   </div>
   <div v-else>
-    <v-overlay v-model="displayLoadingMessage" class="align-center justify-center" persistent>
+    <!-- 
+      only show this loader on non-record pages since those have their own loader.
+      maybe look at integrating later on.
+     -->
+    <v-overlay v-if="!isRecordPage" v-model="displayLoadingMessage" class="align-center justify-center" persistent>
       <v-container style="height: 400px;">
         <v-row class="fill-height" align-content="center" justify="center">
           <v-col class="text-subtitle-1 text-center" cols="12">
