@@ -8,18 +8,31 @@
 
 <script setup>
 import { useAuthStore } from '~/store/auth';
+import { useUserInfoStore } from '~/store/userInfoStore'
 import axios from 'axios'
 import { capitalizeFirstLetter } from '~/helpers/capitalizeFirstLetter.js';
 
-
 const authStore = useAuthStore()
+const userInfoStore = useUserInfoStore()
 const { $msal } = useNuxtApp()
 const runtimeConfig = useRuntimeConfig()
 const statuses = ref()
 const persons = ref()
-const loading = ref(true)
+const loading = inject('displayLoadingMessage')
+const isRecordPage = inject('isRecordPage')
 
 onBeforeMount(async () => {
+  loading.value = true
+
+  if(userInfoStore.userInfo.id.length < 1) {
+    try {
+      const response = await axios.get(`${runtimeConfig.public.API_URL}/persons?email=` + authStore.currentUser.username.toLowerCase())
+      userInfoStore.setUserInfo(response.data.data[0].id, response.data.data[0].name, response.data.data[0].email)
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
   try {
     const response = await axios.get(`${runtimeConfig.public.API_URL}/statuses`)
       statuses.value = response.data.data.map((item) => {
