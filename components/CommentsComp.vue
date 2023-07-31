@@ -12,9 +12,9 @@
             <v-list-item v-else>No comments</v-list-item>
         </v-list>
 
-        <v-divider :thickness="3"></v-divider>
+        <v-divider v-if="!readonly" :thickness="3"></v-divider>
 
-        <v-form ref="form" @submit.prevent="submitComment">
+        <v-form v-if="!readonly" ref="form" @submit.prevent="submitComment">
             <v-row class="pl-3 pr-3">
                 <v-col cols="12" sm="12" md="12">
                     <v-text-field v-model="commentForm.message" class="pt-5" placeholder="Enter a comment" outlined clearable></v-text-field>
@@ -40,8 +40,10 @@ const commentsData = ref([])
 
 const props = defineProps({
     workorderid: String,
+    readonly: Boolean,
 })
 const { workorderid } = toRefs(props);
+const { readonly } = toRefs(props);
 
 const commentForm = ref({
     authorid: userInfoStore.userInfo.id,

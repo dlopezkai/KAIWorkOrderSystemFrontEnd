@@ -107,7 +107,7 @@
       <v-window-item v-if="props.recordId" value="two">
         <v-card>
           <v-card-text>
-            <comments-comp :workorderid="props.recordId"></comments-comp>
+            <comments-comp :workorderid="props.recordId" :readonly="readonly"></comments-comp>
           </v-card-text>
         </v-card>
         
