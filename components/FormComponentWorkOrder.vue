@@ -369,7 +369,10 @@ function loadProjects() {
   // load project options
   axios.get(`${runtimeConfig.public.API_URL}/projects`)
   .then((response) => {
-    projects.value = response.data.data.map((item) => {
+    // change project.name to project.isarchived
+    const filteredResponse = response.data.data.filter(item => item.name !== 'Archived Project')
+
+    projects.value = filteredResponse.map((item) => {
       return {
         id: item.id,
         name: item.name
