@@ -16,6 +16,19 @@
     </div>
   </div>
   <div v-else>
+    <v-overlay v-model="displayLoadingMessage" class="align-center justify-center" persistent>
+      <v-container style="height: 400px;">
+        <v-row class="fill-height" align-content="center" justify="center">
+          <v-col class="text-subtitle-1 text-center" cols="12">
+            <v-card style="font-family:'Open Sans;'">
+              <v-card-text>Retrieving data...</v-card-text>
+              <v-progress-circular color="#92D5D5" indeterminate size="50" class="mb-4"></v-progress-circular>
+            </v-card>
+          </v-col>
+        </v-row>
+      </v-container>
+    </v-overlay>
+
     <v-layout>
       <v-main style="min-height: 300px;">
         <div>
@@ -107,6 +120,9 @@
   const userInfoStore = useUserInfoStore()
   const route = useRoute()
   const drawer = ref(true)
+
+  const displayLoadingMessage = ref(false)
+  provide('displayLoadingMessage', displayLoadingMessage)
 
   // use provide/inject pattern to send data to child component
   const showModal = ref(false)
