@@ -185,11 +185,6 @@
 	})
 
   // DO NOT DELETE THE BELOW WATCHERS - they are no needed if page is reloaded
-  // get logged-in user's info from DB while mounted
-  watch(() => route.query, () => 
-    getUserInfo()
-  )
-
   // checks for query string param while mounted
   watch(() => route.query, () => 
     recordPageCheck()

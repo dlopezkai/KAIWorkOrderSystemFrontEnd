@@ -223,7 +223,6 @@ function setMenuItems(userInfo) {
   navMenuStore.setMenuItems(navigationItems, settingsItems, filterItems)
 }
 
-// function loadItems({ page }) {
 function loadItems() {
   loading.value = true
 
