@@ -3,6 +3,19 @@
   both root index.vue and /workorders/index.vue utilize it
 -->
 <template>
+  <v-overlay v-model="loading" class="align-center justify-center" persistent>
+    <v-container style="height: 400px;">
+      <v-row class="fill-height" align-content="center" justify="center">
+        <v-col class="text-subtitle-1 text-center" cols="12">
+          <v-card style="font-family:'Open Sans;'">
+            <v-card-text>Retrieving data...</v-card-text>
+            <v-progress-circular color="#92D5D5" indeterminate size="50" class="mb-4"></v-progress-circular>
+          </v-card>
+        </v-col>
+      </v-row>
+    </v-container>
+  </v-overlay>
+
   <work-order-system v-if="!loading" :statuses="statuses" :persons="persons"></work-order-system>
 </template>
 
