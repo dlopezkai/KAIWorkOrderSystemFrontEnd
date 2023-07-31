@@ -35,7 +35,7 @@
           </v-card-title>
 
           <v-card-text>
-            <v-form ref="form" @submit.prevent="submit">
+            <v-form ref="form" @submit.prevent="submit" :readonly="readonly">
               <v-row>
                 <v-col cols="12" sm="12" md="12">
                   <v-text-field v-model="editedItem.name" label="Name" 
@@ -97,7 +97,7 @@
             <v-row>
               <v-col class="text-right">
                 <v-btn variant="plain" @click="close" title="Cancel">Cancel</v-btn>
-                <v-btn :disabled="submitBtnDisabled" class="rounded" color="blue" @click="submit" :title="`${ submitBtnText } work order`">{{ submitBtnText }}</v-btn>
+                <v-btn v-if="!readonly" :disabled="submitBtnDisabled" class="rounded" color="blue" @click="submit" :title="`${ submitBtnText } work order`">{{ submitBtnText }}</v-btn>
               </v-col>
             </v-row>
           </v-card-actions>
@@ -137,6 +137,7 @@ const subtasks = ref([])
 const priorities = ref([])
 const form = ref(null)
 const formTab = ref(null)
+const readonly = ref(false)
 const submitBtnDisabled = ref(false)
 const submitStatusOverlay = ref(false)
 const submitStatus = ref('')
@@ -273,6 +274,11 @@ onBeforeMount(() => {
 
 onMounted(async () => {
   await loadItem()
+
+  // change project.name to project.isarchived
+  if(editedItem.value.project.name === 'Archived Project') {
+    readonly.value = true
+  }
 })
 
 async function loadItem() {
