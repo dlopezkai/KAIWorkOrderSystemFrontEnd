@@ -23,6 +23,6 @@
     "pinia": "^2.0.35",
     "sass": "^1.62.1",
     "vite-plugin-vuetify": "^1.0.2",
-    "vuetify": "^3.3.2"
+    "vuetify": "^3.3.10"
   }
 }
