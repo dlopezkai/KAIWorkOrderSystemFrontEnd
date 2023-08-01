@@ -32,9 +32,10 @@
                     <v-col>
                         <v-list-item-title><strong>{{ comment.author_name + ' (' + comment.post_date + ')' }}</strong></v-list-item-title>
                     </v-col>
-                    <v-col v-if="userInfoStore.userInfo.id === comment.author_id" align="right">
+                    <!-- uncomment when DELETE endpoint is available -->
+                    <!-- <v-col v-if="userInfoStore.userInfo.id === comment.author_id" align="right">
                         <v-btn density="compact" icon="mdi-trash-can-outline" variant="plain" title="Remove comment" @click="displayConfirmDeleteModal(comment.id)"></v-btn>
-                    </v-col>
+                    </v-col> -->
                 </v-row>
                 <v-list-item-subtitle v-html="comment.message" class="comment-subtitle"></v-list-item-subtitle>
             </v-list-item>
