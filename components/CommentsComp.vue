@@ -1,12 +1,42 @@
 <template>
+    <v-overlay v-model="showConfirmDeleteModal" class="align-center justify-center" persistent>
+        <v-container style="height: 400px;">
+            <v-row class="fill-height" align-content="center" justify="center">
+                <v-col class="text-subtitle-1 text-center" cols="12">
+                    <v-card style="font-family:'Open Sans;'">
+                        <v-card-title style="background-color:red; color:white">⚠️ WARNING ⚠️</v-card-title>
+                        <v-spacer></v-spacer>
+                        <v-card-text>Deleting this comment is not reversible. Please confirm if you would like to proceed.</v-card-text>
+                        <v-card-actions>
+                            <v-row>
+                                <v-col class="text-right">
+                                    <v-btn variant="plain" @click="hideConfirmDeleteModal" title="Cancel">Cancel</v-btn>
+                                    <v-btn class="rounded" color="error" @click="deleteComment">Confirm</v-btn>
+                                </v-col>
+                            </v-row>
+                        </v-card-actions>
+                    </v-card>
+                </v-col>
+            </v-row>
+        </v-container>
+    </v-overlay>
+
     <div>
-        <v-list lines="two" style="width:100vw;" class="overflow-y-auto">
+        <v-list lines="two" style="width:100%;" class="overflow-y-auto">
             <v-list-item
                 v-if="commentsData.length > 0"
                 v-for="comment in commentsData"
                 :key="comment.id"
             >
-                <v-list-item-title><strong>{{ comment.author_name + ' (' + comment.post_date + ')' }}</strong></v-list-item-title>
+                <v-row>
+                    <v-col>
+                        <v-list-item-title><strong>{{ comment.author_name + ' (' + comment.post_date + ')' }}</strong></v-list-item-title>
+                    </v-col>
+                    <!-- uncomment when DELETE endpoint is available -->
+                    <!-- <v-col v-if="userInfoStore.userInfo.id === comment.author_id" align="right">
+                        <v-btn density="compact" icon="mdi-trash-can-outline" variant="plain" title="Remove comment" @click="displayConfirmDeleteModal(comment.id)"></v-btn>
+                    </v-col> -->
+                </v-row>
                 <v-list-item-subtitle v-html="comment.message" class="comment-subtitle"></v-list-item-subtitle>
             </v-list-item>
             <v-list-item v-else>No comments</v-list-item>
@@ -15,7 +45,7 @@
         <v-divider :thickness="3"></v-divider>
 
         <v-form ref="form" @submit.prevent="submitComment">
-            <v-row class="pl-3 pr-3">
+            <v-row>
                 <v-col cols="12" sm="12" md="12">
                     <v-text-field v-model="commentForm.message" class="pt-5" placeholder="Enter a comment" outlined clearable></v-text-field>
                 </v-col>
@@ -37,6 +67,8 @@ import { useUserInfoStore } from '~/store/userInfoStore'
 const runtimeConfig = useRuntimeConfig()
 const userInfoStore = useUserInfoStore()
 const commentsData = ref([])
+const showConfirmDeleteModal = ref(false)
+const deleteCommentId = ref('')
 
 const props = defineProps({
     workorderid: String,
@@ -60,6 +92,7 @@ function loadComments() {
         commentsData.value = response.data.data.map((item) => {
             return {
                 id: item.id,
+                author_id: item.author.id,
                 author_name: item.author.name,
                 message: item.message,
                 post_date: item.post_date
@@ -108,6 +141,21 @@ function submitComment() {
     }
 }
 
+function deleteComment() {
+    console.log(deleteCommentId.value)
+    // integrate DELETE endpoint when ready...
+}
+
+function displayConfirmDeleteModal(commentId) {
+    showConfirmDeleteModal.value = true
+    deleteCommentId.value = commentId
+}
+
+function hideConfirmDeleteModal() {
+    showConfirmDeleteModal.value = false
+    deleteCommentId.value = ''
+}
+
 </script>
 
 <style scoped>
@@ -128,5 +176,13 @@ function submitComment() {
     .comment-subtitle {
         width: 75%;
     }
+}
+
+.v-list-item:nth-child(even) {
+  background: #F8F8F8
+}
+
+.v-list-item:nth-child(odd) {
+  background: #FFFFFF
 }
 </style>
