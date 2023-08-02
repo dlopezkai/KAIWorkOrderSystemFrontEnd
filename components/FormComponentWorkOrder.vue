@@ -269,8 +269,9 @@ onBeforeMount(() => {
 onMounted(async () => {
   await loadItem()
 
+  // if on a record page, check if project is archived
   // change project.name to project.isarchived
-  if(editedItem.value.project.name === 'Archived Project') {
+  if(props.recordId && editedItem.value.project.name === 'Archived Project') {
     readonly.value = true
   }
 })
