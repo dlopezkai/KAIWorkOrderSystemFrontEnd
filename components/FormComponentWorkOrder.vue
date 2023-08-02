@@ -80,8 +80,8 @@
                 </v-col>
 
                 <v-col cols="12" sm="12" md="12" class="mt-5">
-                  <v-text-field v-model="editedItem.links" label="SharePoint File"></v-text-field>
-                  <v-btn href="https://kauffmaninc.sharepoint.com/" target="_blank" variant="tonal" class="rounded" color="#428086" title="Open SharePoint">Open SharePoint site</v-btn>
+                  <v-text-field v-model="editedItem.links" label="SharePoint Link"></v-text-field>
+                  <v-btn v-if="!readonly" href="https://kauffmaninc.sharepoint.com/" target="_blank" variant="tonal" class="rounded" color="#428086" title="Open SharePoint">Open SharePoint site</v-btn>
                 </v-col>
               </v-row>
             </v-form>
@@ -167,7 +167,8 @@ const editedItem = ref([
 
 // computed value for form title
 const formTitle = computed(() => {
-  return (!props.recordId) ? 'New Work Order Form' : 'Edit Work Order Form'
+  return (!props.recordId) ? 'New Work Order Form' : 
+    (readonly.value) ? 'Archived Work Order Details' : 'Edit Work Order Form'
 })
 
 // computed value for save/submit button text
@@ -269,7 +270,7 @@ onBeforeMount(() => {
 onMounted(async () => {
   await loadItem()
 
-  // if on a record page, check if project is archived
+  // set form to readonly state if on a record page and WO project is archived
   // change project.name to project.isarchived
   if(props.recordId && editedItem.value.project.name === 'Archived Project') {
     readonly.value = true
