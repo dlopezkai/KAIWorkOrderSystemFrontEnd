@@ -57,10 +57,6 @@
             <v-chip v-for="assignee in item.raw.assignees">{{ assignee.name }}</v-chip>
           </template>
 
-          <!-- <template v-slot:item.watchers="{ item }">
-            <v-chip v-for="watcher in item.raw.watchers">{{ (!watcher.username) ? watcher.email : watcher.username }}</v-chip>
-          </template> -->
-
           <template v-slot:item.tags="{ item }">
             <v-chip v-for="tag in item.raw.tags">{{ tag.name }}</v-chip>
           </template>
@@ -80,7 +76,6 @@
 
           <template v-slot:item.due_date="{ item }">
             <v-chip v-if="item.raw.due_date" :color="getDueDateColor(item.raw.due_date, item.raw.status.name)">
-              <!-- {{ convertToDate(item.raw.due_date, "table") }} -->
               {{ item.raw.due_date }}
             </v-chip>
           </template>
@@ -99,6 +94,7 @@
     </v-layout>
   </v-container>
 </template>
+
 
 <script setup>
 import { ref, nextTick, watch, toRaw } from 'vue'
@@ -131,27 +127,6 @@ const showCompleted = inject('showCompleted')
 const props = defineProps({
   statuses: Array,
   persons: Array,
-})
-
-// set the selectedAssignee back to logged-in user
-watch(filterByUserTrigger, (currentValue, newValue) => {
-  if(currentValue !== newValue) {
-    selectedAssignee.value = userInfoStore.userInfo.id
-  }
-})
-
-// reload table when selectedAssignee data is changed
-watch(selectedAssignee, (currentValue, newValue) => {
-  if(currentValue !== newValue) {
-    loadItems()
-  }
-})
-
-// reload table when showCompleted data is changed
-watch(showCompleted, (currentValue, newValue) => {
-  if(currentValue !== newValue) {
-    loadItems()
-  }
 })
 
 const headers = [
@@ -193,6 +168,7 @@ const headers = [
 //   },
 // }
 
+
 onBeforeMount(() => {
   setMenuItems(userInfoStore.userInfo)
 })
@@ -200,6 +176,28 @@ onBeforeMount(() => {
 watch(() => route.query, () => 
   setMenuItems(userInfoStore.userInfo)
 )
+
+// set the selectedAssignee back to logged-in user
+watch(filterByUserTrigger, (currentValue, newValue) => {
+  if(currentValue !== newValue) {
+    selectedAssignee.value = userInfoStore.userInfo.id
+  }
+})
+
+// reload table when selectedAssignee data is changed
+watch(selectedAssignee, (currentValue, newValue) => {
+  if(currentValue !== newValue) {
+    loadItems()
+  }
+})
+
+// reload table when showCompleted data is changed
+watch(showCompleted, (currentValue, newValue) => {
+  if(currentValue !== newValue) {
+    loadItems()
+  }
+})
+
 
 // passing in userInfo in prep for ACL logic of menu itmes
 function setMenuItems(userInfo) {
@@ -230,6 +228,7 @@ function setMenuItems(userInfo) {
   navMenuStore.setTableName('Work Orders')
   navMenuStore.setMenuItems(navigationItems, settingsItems, filterItems)
 }
+
 
 function loadItems() {
   loading.value = true
@@ -285,6 +284,7 @@ function loadItems() {
   .catch(err => console.log(err))
 }
 
+
 function close() {
   if(route.query.id) {
     navigateTo('/workorders')
@@ -293,14 +293,17 @@ function close() {
   }
 }
 
+
 function closeAndReload() {
   dialog.value = false
   loadItems()
 }
 
+
 function submitSearch() {
   search.value = searchString.value
 }
+
 
 // priority color method for v-chip component
 function getPriorityColor (priority) {
@@ -318,9 +321,9 @@ function getPriorityColor (priority) {
   }
 }
 
+
 function getDueDateColor(input, status) {
   // since input comes in as raw YYYY-MM-DD, we need to convert it back to MS in the user's timezone
-
   // get date object of input
   const rawDateTime = new Date(input)
 

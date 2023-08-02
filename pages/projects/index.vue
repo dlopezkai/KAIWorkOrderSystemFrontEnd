@@ -79,13 +79,15 @@ const headers = [
   { title: 'Actions', key: 'actions', align: 'center', sortable: false },
 ]
 
-function close() {
-  if(route.query.id) {
-    navigateTo('/projects')
-  } else {
-    dialog.value = false
-  }
-}
+
+onMounted(() => {
+  setMenuItems()
+})
+
+watch(() => route.query, () => 
+  setMenuItems()
+)
+
 
 function loadItems() {
   loading.value = true
@@ -107,13 +109,15 @@ function loadItems() {
   .catch(err => console.log(err))
 }
 
-onMounted(() => {
-  setMenuItems()
-})
 
-watch(() => route.query, () => 
-  setMenuItems()
-)
+function close() {
+  if(route.query.id) {
+    navigateTo('/projects')
+  } else {
+    dialog.value = false
+  }
+}
+
 
 function setMenuItems() {
   let navigationItems = []

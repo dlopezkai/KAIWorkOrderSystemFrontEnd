@@ -56,7 +56,7 @@ onBeforeMount(async () => {
       })
       persons.value.push({'title': '-- None --', 'value': '0'})
 
-      // sort persons list
+    // sort persons list
     persons.value = persons.value.sort((a, b) => 
       a.title.localeCompare(b.title))
 
