@@ -11,6 +11,16 @@
     >
     </modal-comp>
 
+    <modal-comp 
+      v-model="deleteStatusOverlay"
+      type="formSubmit"
+      :cardTitle="onDeleteMsg"
+      :cardText="deleteInfo"
+      confirmBtnText="OK"
+      :submitStatus="deleteStatus"
+      @confirm="resetDeleteStatus"
+    >
+    </modal-comp>
     <div>
         <v-list lines="two" style="width:100%;" class="overflow-y-auto">
             <v-list-item
@@ -22,10 +32,9 @@
                     <v-col>
                         <v-list-item-title><strong>{{ comment.author_name + ' (' + comment.post_date + ')' }}</strong></v-list-item-title>
                     </v-col>
-                    <!-- uncomment when DELETE endpoint is available -->
-                    <!-- <v-col v-if="userInfoStore.userInfo.id === comment.authorid" align="right">
+                    <v-col v-if="userInfoStore.userInfo.id === comment.authorid" align="right">
                         <v-btn density="compact" icon="mdi-trash-can-outline" variant="plain" title="Remove comment" @click="displayConfirmDeleteModal(comment.id)"></v-btn>
-                    </v-col> -->
+                    </v-col>
                 </v-row>
                 <v-list-item-subtitle v-html="comment.message" class="comment-subtitle"></v-list-item-subtitle>
             </v-list-item>
@@ -51,6 +60,9 @@ const userInfoStore = useUserInfoStore()
 const commentsData = ref([])
 const showConfirmDeleteModal = ref(false)
 const deleteCommentId = ref('')
+const deleteStatusOverlay = ref(false)
+const deleteStatus = ref('')
+const deleteInfo = ref('')
 
 const props = defineProps({
     workorderid: String,
@@ -64,6 +76,22 @@ const commentForm = ref({
     author_name: '',
     message: '',
     post_date: '',
+})
+
+// computed value for comment delete progress messages
+const onDeleteMsg = computed(() => {
+  switch(deleteStatus.value) {
+    case 'submitting':
+      return 'Deleting. Please wait...'
+    case 'internal_api_error':
+      return 'There was an issue with the API.'
+    case 'connection_failure':
+      return 'There was an issue deleting your comment. Please try again.'
+    case 'success':
+      return 'Comment deleted successfully.'
+    default:
+      return ''
+  }
 })
 
 
@@ -124,8 +152,41 @@ function submitComment() {
 
 
 function deleteComment() {
-    console.log(deleteCommentId.value)
-    // integrate DELETE endpoint when ready...
+    deleteInfo.value = ''
+    deleteStatus.value = 'submitting'
+    deleteStatusOverlay.value = true
+
+    axios.delete(`${runtimeConfig.public.API_URL}/comment/` + deleteCommentId.value, {
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        })
+        .then(function (response){
+            if(response.status === 200) {
+                if (response.data.response_code === 200) {
+                    deleteStatus.value = 'success'
+
+                    // perform logic to live-delete comment
+                    commentsData.value = commentsData.value.filter(item => item.id !== deleteCommentId.value)
+                } else {
+                    deleteStatus.value = 'internal_api_error'
+                    console.log(response)
+                }
+            }
+        })
+        .catch(function (error) {
+            deleteStatus.value = 'connection_failure'
+            deleteInfo.value = error
+            console.log(error)
+        })
+
+        showConfirmDeleteModal.value = false
+}
+
+
+function resetDeleteStatus() {
+  deleteStatus.value = ''
+  deleteStatusOverlay.value = false
 }
 
 
