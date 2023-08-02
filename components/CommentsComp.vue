@@ -1,25 +1,15 @@
 <template>
-    <v-overlay v-model="showConfirmDeleteModal" class="align-center justify-center" persistent>
-        <v-container style="height: 400px;">
-            <v-row class="fill-height" align-content="center" justify="center">
-                <v-col class="text-subtitle-1 text-center" cols="12">
-                    <v-card style="font-family:'Open Sans;'">
-                        <v-card-title style="background-color:red; color:white">⚠️ WARNING ⚠️</v-card-title>
-                        <v-spacer></v-spacer>
-                        <v-card-text>Deleting this comment is not reversible. Please confirm if you would like to proceed.</v-card-text>
-                        <v-card-actions>
-                            <v-row>
-                                <v-col class="text-right">
-                                    <v-btn variant="plain" @click="hideConfirmDeleteModal" title="Cancel">Cancel</v-btn>
-                                    <v-btn class="rounded" color="error" @click="deleteComment">Confirm</v-btn>
-                                </v-col>
-                            </v-row>
-                        </v-card-actions>
-                    </v-card>
-                </v-col>
-            </v-row>
-        </v-container>
-    </v-overlay>
+    <modal-comp 
+        v-model="showConfirmDeleteModal"
+        type="warning"
+        cardTitle="⚠️ WARNING ⚠️"
+        cardText="Deleting this comment is not reversible. Please confirm if you would like to proceed."
+        cancelBtnText="Cancel"
+        confirmBtnText="Confirm"
+        @close="hideConfirmDeleteModal"
+        @confirm="deleteComment"
+    >
+    </modal-comp>
 
     <div>
         <v-list lines="two" style="width:100%;" class="overflow-y-auto">
