@@ -38,8 +38,12 @@
             <v-chip v-for="subtask in item.raw.subtasks">{{ subtask.name }}</v-chip>
           </template>
 
+          <template v-slot:item.isarchived="{ item }">
+            {{ (item.raw.isarchived == 0) ? 'No' : 'Yes' }}
+          </template>
+
           <template v-slot:item.actions="{ item }">
-            <NuxtLink v-if="item.raw.isarchived === 'Yes'" :to="'/projects?id=' + item.raw.id" title="View archived project info">
+            <NuxtLink v-if="item.raw.isarchived == 1" :to="'/projects?id=' + item.raw.id" title="View archived project info">
               <v-icon size="small" class="me-2">mdi-list-box-outline</v-icon>
             </NuxtLink>
             <NuxtLink v-else :to="'/projects?id=' + item.raw.id" title="Edit project info">
@@ -94,7 +98,7 @@ function loadItems() {
         id: item.id,
         project: item.name,
         subtasks: item.subtasks,
-        isarchived: (item.isarchived == 0) ? 'No' : 'Yes',
+        isarchived: item.isarchived,
       }
     })
     totalItems.value = response.data.total
