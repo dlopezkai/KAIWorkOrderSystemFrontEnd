@@ -39,7 +39,10 @@
           </template>
 
           <template v-slot:item.actions="{ item }">
-            <NuxtLink :to="'/projects?id=' + item.raw.id" title="Edit work order">
+            <NuxtLink v-if="item.raw.isarchived === 'Yes'" :to="'/projects?id=' + item.raw.id" title="View archived project info">
+              <v-icon size="small" class="me-2">mdi-list-box-outline</v-icon>
+            </NuxtLink>
+            <NuxtLink v-else :to="'/projects?id=' + item.raw.id" title="Edit project info">
               <v-icon size="small" class="me-2">mdi-pencil</v-icon>
             </NuxtLink>
           </template>
@@ -91,7 +94,7 @@ function loadItems() {
         id: item.id,
         project: item.name,
         subtasks: item.subtasks,
-        isarchived: (item.isarchived == 0) ? 'No' :  'Yes',
+        isarchived: (item.isarchived == 0) ? 'No' : 'Yes',
       }
     })
     totalItems.value = response.data.total
