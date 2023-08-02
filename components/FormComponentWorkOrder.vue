@@ -143,8 +143,6 @@ const props = defineProps({
     statuses: Array,
 })
 
-const emit = defineEmits(['close', 'closeAndReload'])
-
 const editedItem = ref([
   {
     assignees: '',
@@ -164,6 +162,8 @@ const editedItem = ref([
     watchers: ''
   },
 ])
+
+const emit = defineEmits(['close', 'closeAndReload'])
 
 // computed value for form title
 const formTitle = computed(() => {
@@ -221,44 +221,6 @@ const rules =
   due_date_threshold: v => dateValidation(v) || 'Date must be 2 business days from today',
 }
 
-// checks for the 2 business days rule
-function dateValidation(input) {
-  if(input) {
-    // get day of week
-    let selectedDateDay = new Date(input).getDay()
-
-    // get the current date plus 2 days, the convert to ISO format
-    let date = new Date();
-    let twoDaysFromNow = date.setDate(date.getDate() + 2);
-    twoDaysFromNow = new Date(twoDaysFromNow).toISOString();
-
-    // convert to local time
-    let twoDaysFromNowLocaleString = new Date(twoDaysFromNow).toLocaleDateString()
-    let twoDaysFromNowDateObj = new Date(twoDaysFromNowLocaleString)
-
-    // convert to yyyy-mm-dd to match format of calendar input
-    let twoDaysFromNowFormatted = convertToYyyymmddFormat(twoDaysFromNowDateObj)
-
-    // logic to determine if selected date is valid
-    if(selectedDateDay !== 5 && selectedDateDay !== 6) {
-      if(input >= twoDaysFromNowFormatted) {
-        return true
-      } else {
-        return false
-      }
-    }
-  } else {
-    return true
-  }
-}
-
-function convertToYyyymmddFormat(value) {
-  return value.getFullYear() 
-    + "-" 
-    + ((value.getMonth()+1).toString().length != 2 ? "0" + (value.getMonth() + 1) : (value.getMonth()+1)) 
-    + "-" 
-    + (value.getDate().toString().length != 2 ? "0" + value.getDate() : value.getDate());
-}
 
 onBeforeMount(() => {
   loadTags()
@@ -276,6 +238,7 @@ onMounted(async () => {
     readonly.value = true
   }
 })
+
 
 async function loadItem() {
   if (props.recordId) {
@@ -326,6 +289,7 @@ async function loadItem() {
   }, 500)
 }
 
+
 function loadTags() {
   axios.get(`${runtimeConfig.public.API_URL}/tags`)
   .then((response) => {
@@ -342,6 +306,7 @@ function loadTags() {
   })
   .catch(err => console.log(err))
 }
+
 
 function loadPersons() {
   axios.get(`${runtimeConfig.public.API_URL}/persons`)
@@ -361,8 +326,8 @@ function loadPersons() {
   .catch(err => console.log(err))
 }
 
+
 function loadProjects() {
-  // load project options
   axios.get(`${runtimeConfig.public.API_URL}/projects`)
   .then((response) => {
     // change project.name to project.isarchived
@@ -378,8 +343,8 @@ function loadProjects() {
   .catch(err => console.log(err))
 }
 
+
 function loadSubtasks(projectId) {
-  // load subtask options
   axios.get(`${runtimeConfig.public.API_URL}/project/` + projectId + `/subtasks`)
   .then((response) => {
     subtasks.value = response.data.data.map((item) => {
@@ -392,11 +357,6 @@ function loadSubtasks(projectId) {
   .catch(err => console.log(err))
 }
 
-function resetAndReloadSubtasks() {
-  editedItem.value.subtask = ''
-  subtasks.value = ''
-  loadSubtasks(editedItem.value.project)
-}
 
 function loadPriorities() {
   axios.get(`${runtimeConfig.public.API_URL}/priorities`)
@@ -412,17 +372,6 @@ function loadPriorities() {
   .catch(err => console.log(err))
 }
 
-function close() {
-  if (!props.recordId) {
-    if(submitStatus.value === 'success') {
-      emit('closeAndReload')
-    } else {
-      emit('close')
-    }
-  } else {
-    emit('close')
-  }
-}
 
 function resetSubmitStatus() {
   close()
@@ -430,6 +379,7 @@ function resetSubmitStatus() {
   submitStatusOverlay.value = false
   submitBtnDisabled.value = false
 }
+
 
 // form submit process
 async function submit() {
@@ -517,6 +467,66 @@ function save() {
     })
 }
 
+
+function resetAndReloadSubtasks() {
+  editedItem.value.subtask = ''
+  subtasks.value = ''
+  loadSubtasks(editedItem.value.project)
+}
+
+
+function close() {
+  if (!props.recordId) {
+    if(submitStatus.value === 'success') {
+      emit('closeAndReload')
+    } else {
+      emit('close')
+    }
+  } else {
+    emit('close')
+  }
+}
+
+
+// checks for the 2 business days rule
+function dateValidation(input) {
+  if(input) {
+    // get day of week
+    let selectedDateDay = new Date(input).getDay()
+
+    // get the current date plus 2 days, the convert to ISO format
+    let date = new Date();
+    let twoDaysFromNow = date.setDate(date.getDate() + 2);
+    twoDaysFromNow = new Date(twoDaysFromNow).toISOString();
+
+    // convert to local time
+    let twoDaysFromNowLocaleString = new Date(twoDaysFromNow).toLocaleDateString()
+    let twoDaysFromNowDateObj = new Date(twoDaysFromNowLocaleString)
+
+    // convert to yyyy-mm-dd to match format of calendar input
+    let twoDaysFromNowFormatted = convertToYyyymmddFormat(twoDaysFromNowDateObj)
+
+    // logic to determine if selected date is valid
+    if(selectedDateDay !== 5 && selectedDateDay !== 6) {
+      if(input >= twoDaysFromNowFormatted) {
+        return true
+      } else {
+        return false
+      }
+    }
+  } else {
+    return true
+  }
+}
+
+
+function convertToYyyymmddFormat(value) {
+  return value.getFullYear() 
+    + "-" 
+    + ((value.getMonth()+1).toString().length != 2 ? "0" + (value.getMonth() + 1) : (value.getMonth()+1)) 
+    + "-" 
+    + (value.getDate().toString().length != 2 ? "0" + value.getDate() : value.getDate());
+}
 </script>
 
 <style scoped>
