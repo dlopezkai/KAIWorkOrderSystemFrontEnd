@@ -66,9 +66,11 @@ const commentForm = ref({
     post_date: '',
 })
 
+
 onMounted(() => {
   loadComments()
 })
+
 
 function loadComments() {
     axios.get(`${runtimeConfig.public.API_URL}/workorder/` + workorderid.value + `/comments`)
@@ -85,6 +87,7 @@ function loadComments() {
     })
     .catch(err => console.log(err))
 }
+
 
 function submitComment() {
     if(commentForm.value.message != "") {
@@ -119,15 +122,18 @@ function submitComment() {
     }
 }
 
+
 function deleteComment() {
     console.log(deleteCommentId.value)
     // integrate DELETE endpoint when ready...
 }
 
+
 function displayConfirmDeleteModal(commentId) {
     showConfirmDeleteModal.value = true
     deleteCommentId.value = commentId
 }
+
 
 function hideConfirmDeleteModal() {
     showConfirmDeleteModal.value = false
