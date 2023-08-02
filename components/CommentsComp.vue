@@ -114,6 +114,7 @@ function submitComment() {
 
             // reset the form
             commentForm.value = {
+                authorid: userInfoStore.userInfo.id,
                 author_name: '',
                 message: '',
                 post_date: '',
