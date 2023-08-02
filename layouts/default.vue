@@ -142,41 +142,8 @@
   const isRecordPage = ref(false)
   provide('isRecordPage', isRecordPage)
 
-  async function signInAction() {
-    await signIn()
-  }
 
-  function openModal() {
-    showModal.value = true
-  }
-
-  function filteringMethod(filter_name, filter_value) {
-    // increment counter to guarantee new value in component watcher 
-    if (filter_name === 'filterByUserTrigger') {
-      filterByUserTrigger.value++
-    }
-
-    if (filter_name === 'showCompleted') {
-      showCompleted.value = filter_value
-    }
-  }
-
-  function recordPageCheck() {
-    isRecordPage.value = (route.query.hasOwnProperty('id')) ? true : false
-  }
-
-  async function getUserInfo() {
-    if(authStore.currentUser) {
-      try {
-        const response = await axios.get(`${runtimeConfig.public.API_URL}/persons?email=` + authStore.currentUser.username.toLowerCase())
-        userInfoStore.setUserInfo(response.data.data[0].id, response.data.data[0].name, response.data.data[0].email)
-      } catch (err) {
-        console.log(err)
-      }
-    }
-  }
-
-	onBeforeMount(async () => {
+  onBeforeMount(async () => {
     // get logged-in user's info from DB 
     getUserInfo()
 
@@ -189,6 +156,45 @@
   watch(() => route.query, () => 
     recordPageCheck()
   )
+
+
+  async function signInAction() {
+    await signIn()
+  }
+
+
+  async function getUserInfo() {
+    if(authStore.currentUser) {
+      try {
+        const response = await axios.get(`${runtimeConfig.public.API_URL}/persons?email=` + authStore.currentUser.username.toLowerCase())
+        userInfoStore.setUserInfo(response.data.data[0].id, response.data.data[0].name, response.data.data[0].email)
+      } catch (err) {
+        console.log(err)
+      }
+    }
+  }
+
+
+  function openModal() {
+    showModal.value = true
+  }
+
+
+  function filteringMethod(filter_name, filter_value) {
+    // increment counter to guarantee new value in component watcher 
+    if (filter_name === 'filterByUserTrigger') {
+      filterByUserTrigger.value++
+    }
+
+    if (filter_name === 'showCompleted') {
+      showCompleted.value = filter_value
+    }
+  }
+
+
+  function recordPageCheck() {
+    isRecordPage.value = (route.query.hasOwnProperty('id')) ? true : false
+  }
 
 </script>
 
