@@ -23,7 +23,7 @@
                         <v-list-item-title><strong>{{ comment.author_name + ' (' + comment.post_date + ')' }}</strong></v-list-item-title>
                     </v-col>
                     <!-- uncomment when DELETE endpoint is available -->
-                    <!-- <v-col v-if="userInfoStore.userInfo.id === comment.author_id" align="right">
+                    <!-- <v-col v-if="userInfoStore.userInfo.id === comment.authorid" align="right">
                         <v-btn density="compact" icon="mdi-trash-can-outline" variant="plain" title="Remove comment" @click="displayConfirmDeleteModal(comment.id)"></v-btn>
                     </v-col> -->
                 </v-row>
@@ -84,7 +84,7 @@ function loadComments() {
         commentsData.value = response.data.data.map((item) => {
             return {
                 id: item.id,
-                author_id: item.author.id,
+                authorid: item.author.id,
                 author_name: item.author.name,
                 message: item.message,
                 post_date: item.post_date
@@ -110,6 +110,7 @@ function submitComment() {
             // the next set of commands are here to simulate a "live-update", and avoid an additional API GET request
             commentForm.value.author_name = response.data.data.author.name
             commentForm.value.post_date = response.data.data.post_date
+            commentForm.value.id = response.data.data.id
             commentsData.value.push(commentForm.value)
 
             // reset the form
