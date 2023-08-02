@@ -108,16 +108,8 @@ function submitComment() {
         })
         .then(function (response){
             // the next set of commands are here to simulate a "live-update", and avoid an additional API GET request
-            // actual data from clickup will be rendered in the list when user closes and reopens the modal
-            
-            // commentForm.value.author_name = userInfo.value.name
-            
-            // commentForm.value.author_name = response.data.data.author.name
-            // commentForm.value.post_date = response.data.data.post_date
-
-            commentForm.value.author_name = '{{ response_author_name }}'
-            commentForm.value.post_date = '{{ response_author_date }}'
-            
+            commentForm.value.author_name = response.data.data.author.name
+            commentForm.value.post_date = response.data.data.post_date
             commentsData.value.push(commentForm.value)
 
             // reset the form
