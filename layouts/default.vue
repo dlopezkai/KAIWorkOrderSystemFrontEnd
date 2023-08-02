@@ -36,7 +36,6 @@
     <v-layout>
       <v-main style="min-height: 300px;">
         <div>
-          <!-- TODO:find where 'class="bg-deep-purple"' is defined -->
           <v-navigation-drawer
             color="#428086"
             theme="dark"
@@ -205,11 +204,6 @@
   .router-link-exact-active {
     color: #000000;
   }
-
-  /* .container {
-    height: 100vh;
-    background-image: linear-gradient(#ffffff, #428086);
-  } */
 
   .centered-element {
     position: absolute; 
