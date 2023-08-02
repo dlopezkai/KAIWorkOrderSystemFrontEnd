@@ -34,17 +34,9 @@
 
         <v-divider v-if="!readonly" :thickness="3"></v-divider>
 
-        <v-form v-if="!readonly" ref="form" @submit.prevent="submitComment">
-            <v-row>
-                <v-col cols="12" sm="12" md="12">
-                    <v-text-field v-model="commentForm.message" class="pt-5" placeholder="Enter a comment" outlined clearable></v-text-field>
-                </v-col>
-            </v-row>
-            <v-row class="pb-5">
-                <v-col cols="12" sm="12" md="12" class="text-center">
-                    <v-btn color="blue" class="rounded" @click="submitComment" title="Submit comment">Submit</v-btn>
-                </v-col>
-            </v-row>
+        <v-form v-if="!readonly" ref="form" @submit.prevent="submitComment" class="d-flex mt-2">
+            <v-text-field v-model="commentForm.message" class="pr-5" placeholder="Enter a comment" outlined clearable></v-text-field>
+            <v-btn color="blue" class="rounded mt-2" @click="submitComment" title="Submit comment">Submit</v-btn>
         </v-form>
     </div> 
 </template>
