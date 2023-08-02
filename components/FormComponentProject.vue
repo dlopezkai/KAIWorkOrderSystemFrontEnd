@@ -35,7 +35,7 @@
       </v-card-title>
 
       <v-card-text>
-        <v-form ref="form" @submit.prevent="submit">
+        <v-form ref="form" @submit.prevent="submit" :readonly="readonly">
           <v-row>
             <v-col cols="12" sm="12" md="12">
               <v-text-field v-model="editedItem.name" label="Project" 
@@ -49,11 +49,11 @@
 
             <v-col cols="12" sm="12" md="12">
               <v-text-field v-model="editedItem.link" label="SharePoint Link"></v-text-field>
-              <v-btn href="https://kauffmaninc.sharepoint.com/" target="_blank" variant="tonal" class="rounded" color="#428086" title="Open SharePoint">Open SharePoint site</v-btn>
+              <v-btn v-if="!readonly" href="https://kauffmaninc.sharepoint.com/" target="_blank" variant="tonal" class="rounded" color="#428086" title="Open SharePoint">Open SharePoint site</v-btn>
             </v-col>
 
-            <v-col cols="12" sm="12" md="12">
-              <v-checkbox v-model="editedItem.isarchived" label="Archived" true-value="1" false-value="0"></v-checkbox>
+            <v-col v-if="props.recordId" cols="12" sm="12" md="12">
+              <v-checkbox v-model="editedItem.isarchived" label="Archived" true-value="1" false-value="0" :readonly="readonly"></v-checkbox>
             </v-col>
           </v-row>
         </v-form>
@@ -63,7 +63,7 @@
         <v-row>
           <v-col class="text-right">
             <v-btn variant="plain" @click="close" title="Cancel">Cancel</v-btn>
-            <v-btn :disabled="submitBtnDisabled" class="rounded" color="blue" @click="submit" :title="`${ submitBtnText } project`">{{ submitBtnText }}</v-btn>
+            <v-btn v-if="!readonly" :disabled="submitBtnDisabled" class="rounded" color="blue" @click="submit" :title="`${ submitBtnText } project`">{{ submitBtnText }}</v-btn>
           </v-col>
         </v-row>
       </v-card-actions>
@@ -81,6 +81,7 @@ const submitStatus = ref('')
 const submitInfo = ref('')
 const loading = ref(true)
 const confirmArchiveOverlay = ref(false)
+const readonly = ref(false)
 
 const props = defineProps({
     recordId: String,
@@ -101,7 +102,8 @@ const editedItem = ref([
 
 // computed value for form title
 const formTitle = computed(() => {
-  return (!props.recordId) ? 'New Project Form' : 'Edit Project Form'
+  return (!props.recordId) ? 'New Project Form' : 
+    (readonly.value) ? 'Archived Project Information' : 'Edit Project Form'
 })
 
 // computed value for save/submit button text
@@ -163,6 +165,11 @@ function closeArchiveConfirmationModal() {
 
 onMounted(async () => {
   await loadItem()
+
+  // set form to readonly state if on a record page and project is archived
+  if(props.recordId && editedItem.value.isarchived === '1') {
+    readonly.value = true
+  }
 })
 
 async function loadItem() {

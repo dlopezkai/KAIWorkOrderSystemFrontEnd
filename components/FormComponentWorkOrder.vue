@@ -29,7 +29,7 @@
           </v-card-title>
 
           <v-card-text>
-            <v-form ref="form" @submit.prevent="submit">
+            <v-form ref="form" @submit.prevent="submit" :readonly="readonly">
               <v-row>
                 <v-col cols="12" sm="12" md="12">
                   <v-text-field v-model="editedItem.name" label="Name" 
@@ -80,8 +80,8 @@
                 </v-col>
 
                 <v-col cols="12" sm="12" md="12" class="mt-5">
-                  <v-text-field v-model="editedItem.links" label="SharePoint File"></v-text-field>
-                  <v-btn href="https://kauffmaninc.sharepoint.com/" target="_blank" variant="tonal" class="rounded" color="#428086" title="Open SharePoint">Open SharePoint site</v-btn>
+                  <v-text-field v-model="editedItem.links" label="SharePoint Link"></v-text-field>
+                  <v-btn v-if="!readonly" href="https://kauffmaninc.sharepoint.com/" target="_blank" variant="tonal" class="rounded" color="#428086" title="Open SharePoint">Open SharePoint site</v-btn>
                 </v-col>
               </v-row>
             </v-form>
@@ -91,7 +91,7 @@
             <v-row>
               <v-col class="text-right">
                 <v-btn variant="plain" @click="close" title="Cancel">Cancel</v-btn>
-                <v-btn :disabled="submitBtnDisabled" class="rounded" color="blue" @click="submit" :title="`${ submitBtnText } work order`">{{ submitBtnText }}</v-btn>
+                <v-btn v-if="!readonly" :disabled="submitBtnDisabled" class="rounded" color="blue" @click="submit" :title="`${ submitBtnText } work order`">{{ submitBtnText }}</v-btn>
               </v-col>
             </v-row>
           </v-card-actions>
@@ -101,7 +101,7 @@
       <v-window-item v-if="props.recordId" value="two">
         <v-card>
           <v-card-text>
-            <comments-comp :workorderid="props.recordId"></comments-comp>
+            <comments-comp :workorderid="props.recordId" :readonly="readonly"></comments-comp>
           </v-card-text>
         </v-card>
         
@@ -131,6 +131,7 @@ const subtasks = ref([])
 const priorities = ref([])
 const form = ref(null)
 const formTab = ref(null)
+const readonly = ref(false)
 const submitBtnDisabled = ref(false)
 const submitStatusOverlay = ref(false)
 const submitStatus = ref('')
@@ -166,7 +167,8 @@ const editedItem = ref([
 
 // computed value for form title
 const formTitle = computed(() => {
-  return (!props.recordId) ? 'New Work Order Form' : 'Edit Work Order Form'
+  return (!props.recordId) ? 'New Work Order Form' : 
+    (readonly.value) ? 'Archived Work Order Details' : 'Edit Work Order Form'
 })
 
 // computed value for save/submit button text
@@ -267,6 +269,12 @@ onBeforeMount(() => {
 
 onMounted(async () => {
   await loadItem()
+
+  // set form to readonly state if on a record page and WO project is archived
+  // change project.name to project.isarchived
+  if(props.recordId && editedItem.value.project.name === 'Archived Project') {
+    readonly.value = true
+  }
 })
 
 async function loadItem() {
@@ -357,7 +365,10 @@ function loadProjects() {
   // load project options
   axios.get(`${runtimeConfig.public.API_URL}/projects`)
   .then((response) => {
-    projects.value = response.data.data.map((item) => {
+    // change project.name to project.isarchived
+    const filteredResponse = response.data.data.filter(item => item.name !== 'Archived Project')
+
+    projects.value = filteredResponse.map((item) => {
       return {
         id: item.id,
         name: item.name

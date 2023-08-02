@@ -45,6 +45,10 @@
             </v-dialog>
           </template>
 
+          <template v-slot:item.project="{ item }">
+            {{ item.raw.project.name + ' | ' + item.raw.subtask.name  }}
+          </template>
+
           <template v-slot:item.creator="{ item }">
             {{ item.raw.creator.name }}
           </template>
@@ -82,7 +86,11 @@
           </template>
 
           <template v-slot:item.actions="{ item }">
-            <NuxtLink :to="'/workorders?id=' + item.raw.id" title="View and edit work order">
+            <!-- change project.name to project.isarchived -->
+            <NuxtLink v-if="item.raw.project.name === 'Archived Project'" :to="'/workorders?id=' + item.raw.id" title="View work order">
+              <v-icon size="small" class="me-2">mdi-list-box-outline</v-icon>
+            </NuxtLink>
+            <NuxtLink v-else :to="'/workorders?id=' + item.raw.id" title="View and edit work order">
               <v-icon size="small" class="me-2">mdi-pencil</v-icon>
             </NuxtLink>
           </template>
@@ -253,7 +261,6 @@ function loadItems() {
 
   axios.get(axiosGetRequestURL)
   .then((response) => {
-    // data.value = response.data.data.slice(0, 10).map((item) => {
     data.value = response.data.data.map((item) => {
       return {
         assignees: item.assignees,
@@ -264,10 +271,7 @@ function loadItems() {
         links: item.links,
         name: item.name,
         priority: item.priority,
-
-        // since this not in a pill, need to do this way
-        // some projects/subtasks come in as NULL
-        project: (item.project) ? item.project.name + ' | ' + item.subtask.name : '',
+        project: item.project,
         status: item.status,
         subtask: item.subtask,
         tags: item.tags,
