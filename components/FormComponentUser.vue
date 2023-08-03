@@ -197,70 +197,38 @@ async function submit() {
 
 
 /*
-  Backend is setup in a way that we need to perform two seperate POST request
-  - One for Project.
-  - One for Subtasks (using the ID obtained in the response body of the Project POST).
-  - Since subtask only takes one single name, will need to iterate through array and do a POST request for each subtask.
+  Business rule: for should only be PUT request, and should only update the "Role" field
+  We are not adding user through front-end. Users are added to the DB via automated job on the backend.
 */
 async function save() {
   submitInfo.value = ''
   submitStatus.value = 'submitting'
   submitStatusOverlay.value = true
   submitBtnDisabled.value = true
-  let projectId = ''
 
   let data = Object.assign({}, editedItem.value)  // create a data object that will be passed to API to prevent user from seeing conversions
 
-  let subtasksTemp = []
-  editedItem.value.subtasks.forEach((subtask) => {
-    (subtask.name) ? subtasksTemp.push(subtask.name) : subtasksTemp.push(subtask)
-  })
-  data.subtasks = subtasksTemp
-
-
   try { 
-    if (!props.recordId) {
-      const projectPostRes = await axios({
-        method: 'POST',
-        url: `${runtimeConfig.public.API_URL}/project/`,
-        data: { 'name': data.name, 'link': data.link, 'billing_code': data.billing_code },
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
+    const response = await axios({
+      method: 'PUT',
+      url: `${runtimeConfig.public.API_URL}/person/` + props.recordId,
+      data: { 'role': data.role },
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    })
+
+    if (response.status === 200) {
+      if (response.data.response_code === 200) {
+        submitStatus.value = 'updated'
+      } else {
+        submitStatus.value = 'internal_api_error'
+        submitInfo.value = data
+        if (response.data.response_code !== 200) {
+          console.log(response)
         }
-      })
-      
-      projectId = projectPostRes.data.data.id
-
-      data.subtasks.forEach(async (subtask) => {
-        const subtasksPostRes = await axios({
-          method: 'POST',
-          url: `${runtimeConfig.public.API_URL}/project/` + projectId + `/subtask`,
-          data: { 'name': subtask },
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          }
-        })
-
-        if (projectPostRes.status === 200 && subtasksPostRes.status === 200) {
-          if (projectPostRes.data.response_code === 200 && subtasksPostRes.data.response_code === 200) {
-            submitStatus.value = (!props.recordId) ? 'success' : 'updated'
-            submitInfo.value = (!props.recordId) ? 'Project URL: ' + window.location.origin + '/projects?id=' + projectId : ''
-          } else {
-            submitStatus.value = 'internal_api_error'
-            submitInfo.value = data
-            if (projectPostRes.data.response_code !== 200) {
-              console.log(projectPostRes)
-            }
-            if (subtasksPostRes.data.response_code !== 200) {
-              console.log(subtasksPostRes)
-            }
-            return
-          }
-        }
-      })
-
-    } else {
-      // PUT requests here...
+        return
+      }
     }
   } catch (err) {
     submitStatus.value = 'connection_failure'
