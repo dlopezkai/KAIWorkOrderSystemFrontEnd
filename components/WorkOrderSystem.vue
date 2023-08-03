@@ -216,7 +216,7 @@ function setMenuItems(userInfo) {
     // ]
     settingsItems = [
       { 'label': 'Projects', 'destination': '/projects', 'icon': 'mdi-form-select' },
-      { 'label': 'Users', 'destination': '/', 'icon': 'mdi-account-multiple' },
+      { 'label': 'Users', 'destination': '/users', 'icon': 'mdi-account-multiple' },
     ]
     filterItems = [
       { 'label': 'My Work Orders', 'icon': 'mdi-account-box', 'filter_name': 'filterByUserTrigger', 'filter_value': true },
