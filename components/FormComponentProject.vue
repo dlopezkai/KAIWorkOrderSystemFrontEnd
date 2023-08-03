@@ -268,6 +268,8 @@ async function save() {
   submitStatusOverlay.value = true
   submitBtnDisabled.value = true
   let projectId = ''
+  let subtaskPostSuccess = true
+  let internalApiSuccess = true
 
   // create a data object that will be passed to API to prevent user from seeing conversions
   let data = Object.assign({}, editedItem.value)
@@ -301,16 +303,21 @@ async function save() {
             'Content-Type': 'application/x-www-form-urlencoded'
           }
         })
-        console.log(subtasksPostRes.data.data)
+
+        if (subtasksPostRes.status !== 200) {
+          subtaskPostSuccess = false
+        }
+
+        if (subtasksPostRes.data.response_code !== 200) {
+          internalApiSuccess = false
+        }
       })
 
       
-
-
-      if (projectPostRes.status === 200 && subtasksPostRes.status === 200) {
-        if (projectPostRes.data.response_code === 200 && subtasksPostRes.data.response_code === 200) {
+      if (projectPostRes.status === 200 && subtaskPostSuccess) {
+        if (projectPostRes.data.response_code === 200 && internalApiSuccess) {
           submitStatus.value = (!props.recordId) ? 'success' : 'updated'
-          submitInfo.value = (!props.recordId) ? 'Project URL: ' + window.location.origin + '/projects?id=' + response.data.data.id : ''
+          submitInfo.value = (!props.recordId) ? 'Project URL: ' + window.location.origin + '/projects?id=' + projectId : ''
         } else {
           submitStatus.value = 'internal_api_error'
           submitInfo.value = data
@@ -318,9 +325,9 @@ async function save() {
             console.log('projectPost error')
             console.log(projectPostRes)
           }
-          if (subtasksPostRes.data.response_code !== 200) {
+          if (!internalApiSuccess) {
             console.log('subtasksPost error')
-            console.log(subtasksPostRes)
+            // console.log(subtasksPostRes)
           }
           return
         }
@@ -346,7 +353,6 @@ async function save() {
     //   }
     // })
   } catch (err) {
-    console.log("error")
     submitStatus.value = 'connection_failure'
     submitInfo.value = err
     console.log(err)
