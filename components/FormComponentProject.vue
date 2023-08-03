@@ -48,6 +48,11 @@
             </v-col>
 
             <v-col cols="12" sm="12" md="12">
+              <v-text-field v-model="editedItem.billing_code" label="Billing Code" 
+                :rules="[rules.required]"></v-text-field>
+            </v-col>
+
+            <v-col cols="12" sm="12" md="12">
               <v-text-field v-model="editedItem.link" label="SharePoint Link"></v-text-field>
               <v-btn v-if="!readonly" href="https://kauffmaninc.sharepoint.com/" target="_blank" variant="tonal" class="rounded" color="#428086" title="Open SharePoint">Open SharePoint site</v-btn>
             </v-col>
@@ -93,6 +98,7 @@ const editedItem = ref([
     name: '',
     content: '',
     subtasks: '',
+    billing_code: '',
     isarchived: '',
     link: '',
   }
