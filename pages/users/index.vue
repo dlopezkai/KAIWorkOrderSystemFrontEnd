@@ -18,6 +18,7 @@
           <!-- to make row clickable again, add @click:row="(pointerEvent, {item}) => editItem(item.raw)" -->
           <v-data-table-server
             v-model:page="page"
+            v-model:items-per-page="itemsPerPage"
             :headers="headers" 
             :items-length="totalItems"
             :items="data" 
@@ -27,6 +28,12 @@
             density="comfortable"
             :search="search"
             @update:options="loadItems"
+            :items-per-page-options="[
+              {value: 10, title: '10'},
+              {value: 25, title: '25'},
+              {value: 50, title: '50'},
+              {value: 100, title: '100'},
+            ]"
           >
             <template v-slot:item.actions="{ item }">
               <NuxtLink :to="'/users?id=' + item.raw.id" title="Edit user info">
@@ -75,8 +82,7 @@
   
   function loadItems() {
     loading.value = true
-    // let axiosGetRequestURL = `${runtimeConfig.public.API_URL}/projects?page=` + page.value + `&page_size=` + itemsPerPage.value
-    let axiosGetRequestURL = `${runtimeConfig.public.API_URL}/persons`
+    let axiosGetRequestURL = `${runtimeConfig.public.API_URL}/persons?page=` + page.value + `&page_size=` + itemsPerPage.value
   
     axios.get(axiosGetRequestURL)
     .then((response) => {
