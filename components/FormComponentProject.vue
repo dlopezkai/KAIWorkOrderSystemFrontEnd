@@ -268,11 +268,10 @@ async function save() {
   submitStatusOverlay.value = true
   submitBtnDisabled.value = true
   let projectId = ''
-  let subtaskPostSuccess = true
-  let internalApiSuccess = true
+  let subtaskPostSuccess = true  // flag for axios request
+  let internalApiSuccess = true  // flag for internal API status (example: axios request can succeed, but API has an internal issue)
 
-  // create a data object that will be passed to API to prevent user from seeing conversions
-  let data = Object.assign({}, editedItem.value)
+  let data = Object.assign({}, editedItem.value)  // create a data object that will be passed to API to prevent user from seeing conversions
 
   let subtasksTemp = []
   editedItem.value.subtasks.forEach((subtask) => {
