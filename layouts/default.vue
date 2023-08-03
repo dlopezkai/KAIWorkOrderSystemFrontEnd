@@ -53,7 +53,7 @@
                 <v-col>
                   <v-list-subheader>{{ navMenuStore.table.name }}</v-list-subheader>
                 </v-col>
-                <v-col v-if="!isRecordPage" class="text-right pr-6">
+                <v-col v-if="!isRecordPage && navMenuStore.canAddNewRecord" class="text-right pr-6">
                   <v-btn icon variant="tonal" size="x-small" @click="openModal">
                     <v-icon
                       color="white"

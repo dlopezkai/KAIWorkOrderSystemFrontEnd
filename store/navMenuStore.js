@@ -19,6 +19,8 @@ export const useNavMenuStore = defineStore('navMenuStore', () => {
         filterItemsGroup: ''
     })
 
+    const canAddNewRecord = ref(true)
+
     const setTableName = (tableName) => {
         table.value.name = tableName
     }
@@ -29,10 +31,16 @@ export const useNavMenuStore = defineStore('navMenuStore', () => {
         menuItems.value.filterItemsGroup = filterItems
     }
 
+    const setCanAddNewRecord = (value) => {
+       canAddNewRecord.value = (!value) ? false : true
+    }
+
     return {
         table,
         menuItems,
+        canAddNewRecord,
         setTableName,
-        setMenuItems
+        setMenuItems,
+        setCanAddNewRecord
     }
 })

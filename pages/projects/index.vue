@@ -18,6 +18,7 @@
         <!-- to make row clickable again, add @click:row="(pointerEvent, {item}) => editItem(item.raw)" -->
         <v-data-table-server
           v-model:page="page"
+          v-model:items-per-page="itemsPerPage"
           :headers="headers" 
           :items-length="totalItems"
           :items="data" 
@@ -27,6 +28,12 @@
           density="comfortable"
           :search="search"
           @update:options="loadItems"
+          :items-per-page-options="[
+            {value: 10, title: '10'},
+            {value: 25, title: '25'},
+            {value: 50, title: '50'},
+            {value: 100, title: '100'},
+          ]"
         >
           <template v-slot:top>
             <v-dialog v-model="dialog" max-width="800px">
@@ -142,6 +149,7 @@ function setMenuItems() {
 
   navMenuStore.setTableName('Projects')
   navMenuStore.setMenuItems(navigationItems, settingsItems, filterItems)
+  navMenuStore.setCanAddNewRecord(true)
 }
 </script>
 
