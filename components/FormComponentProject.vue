@@ -235,7 +235,7 @@ async function save() {
       const projectPostRes = await axios({
         method: 'POST',
         url: `${runtimeConfig.public.API_URL}/project/`,
-        data: { 'name': data.name, 'link': data.link },
+        data: { 'name': data.name, 'link': data.link, 'billing_code': data.billing_code },
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
         }
