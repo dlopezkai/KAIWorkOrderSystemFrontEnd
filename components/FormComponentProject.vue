@@ -268,8 +268,6 @@ async function save() {
   submitStatusOverlay.value = true
   submitBtnDisabled.value = true
   let projectId = ''
-  let subtaskPostSuccess = true  // flag for axios request
-  let internalApiSuccess = true  // flag for internal API status (example: axios request can succeed, but API has an internal issue)
 
   let data = Object.assign({}, editedItem.value)  // create a data object that will be passed to API to prevent user from seeing conversions
 
@@ -303,54 +301,37 @@ async function save() {
           }
         })
 
-        if (subtasksPostRes.status !== 200) {
-          subtaskPostSuccess = false
-        }
+        // console.log('Project POST response:')
+        // console.log(projectPostRes.status)
+        // console.log(projectPostRes.data.response_code)
+        // console.log('Subtasks POST response:')
+        // console.log(subtasksPostRes.status)
+        // console.log(subtasksPostRes.data.response_code)
 
-        if (subtasksPostRes.data.response_code !== 200) {
-          internalApiSuccess = false
+
+        if (projectPostRes.status === 200 && subtasksPostRes.status === 200) {
+          if (projectPostRes.data.response_code === 200 && subtasksPostRes.data.response_code === 200) {
+            submitStatus.value = (!props.recordId) ? 'success' : 'updated'
+            submitInfo.value = (!props.recordId) ? 'Project URL: ' + window.location.origin + '/projects?id=' + projectId : ''
+          } else {
+            submitStatus.value = 'internal_api_error'
+            submitInfo.value = data
+            if (projectPostRes.data.response_code !== 200) {
+              console.log('projectPost error')
+              console.log(projectPostRes)
+            }
+            if (subtasksPostRes.data.response_code !== 200) {
+              console.log('subtasksPost error')
+              console.log(subtasksPostRes)
+            }
+            return
+          }
         }
       })
-
-      
-      if (projectPostRes.status === 200 && subtaskPostSuccess) {
-        if (projectPostRes.data.response_code === 200 && internalApiSuccess) {
-          submitStatus.value = (!props.recordId) ? 'success' : 'updated'
-          submitInfo.value = (!props.recordId) ? 'Project URL: ' + window.location.origin + '/projects?id=' + projectId : ''
-        } else {
-          submitStatus.value = 'internal_api_error'
-          submitInfo.value = data
-          if (projectPostRes.data.response_code !== 200) {
-            console.log('projectPost error')
-            console.log(projectPostRes)
-          }
-          if (!internalApiSuccess) {
-            console.log('subtasksPost error')
-            // console.log(subtasksPostRes)
-          }
-          return
-        }
-      }
 
     } else {
       // PUT requests here...
     }
-
-
-
-    // .then(function (response) {
-    //   if (response.status === 200) {
-    //     if (response.data.response_code === 200) {
-    //       submitStatus.value = (!props.recordId) ? 'success' : 'updated'
-    //       submitInfo.value = (!props.recordId) ? 'Project URL: ' + window.location.origin + '/projects?id=' + response.data.data.id : ''
-    //     } else {
-    //       submitStatus.value = 'internal_api_error'
-    //       submitInfo.value = data
-    //       console.log(response)
-    //       return
-    //     }
-    //   }
-    // })
   } catch (err) {
     submitStatus.value = 'connection_failure'
     submitInfo.value = err
