@@ -103,7 +103,7 @@
   
   function close() {
     if(route.query.id) {
-      navigateTo('/projects')
+      navigateTo('/users')
     } else {
       dialog.value = false
     }
