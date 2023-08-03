@@ -1,5 +1,5 @@
 <template>
-  <div v-if="loading && props.formAction === 'edit'" class="pa-1">
+  <div v-if="loading" class="pa-1">
     Retrieving data ...
   </div>
   <div v-else class="pa-1">
@@ -27,24 +27,18 @@
     </modal-comp>
 
 
-    <h3 v-if="props.formAction === 'edit'">{{ formTitle }}</h3>
+    <h3>{{ formTitle }}</h3>
 
-    <v-card :class="scrollingClasses" flat>
-      <v-card-title v-if="props.formAction === 'new'">
-        <h4>{{ formTitle }}</h4>
-      </v-card-title>
-
+    <v-card flat>
       <v-card-text>
         <v-form ref="form" @submit.prevent="submit" :readonly="readonly">
           <v-row>
             <v-col cols="12" sm="12" md="12">
-              <v-text-field v-model="editedItem.name" label="Name" 
-                :rules="[rules.required]" readonly="true"></v-text-field>
+              <v-text-field v-model="editedItem.name" label="Name" readonly="true"></v-text-field>
             </v-col>
 
             <v-col cols="12" sm="12" md="12">
-              <v-text-field v-model="editedItem.email" label="Email Address" 
-                :rules="[rules.required]" readonly="true"></v-text-field>
+              <v-text-field v-model="editedItem.email" label="Email Address" readonly="true"></v-text-field>
             </v-col>
 
             <v-col cols="12" sm="12" md="12">
@@ -59,7 +53,7 @@
         <v-row>
           <v-col class="text-right">
             <v-btn variant="plain" @click="close" title="Cancel">Cancel</v-btn>
-            <v-btn v-if="!readonly" :disabled="submitBtnDisabled" class="rounded" color="blue" @click="submit" :title="`${ submitBtnText } user`">{{ submitBtnText }}</v-btn>
+            <v-btn v-if="!readonly" :disabled="submitBtnDisabled" class="rounded" color="blue" @click="submit" title="Save user">Save</v-btn>
           </v-col>
         </v-row>
       </v-card-actions>
@@ -81,7 +75,6 @@ const readonly = ref(false)
 
 const props = defineProps({
     recordId: String,
-    formAction: String,
 })
 
 const editedItem = ref([
@@ -107,13 +100,7 @@ const rules =
 
 // computed value for form title
 const formTitle = computed(() => {
-  return (!props.recordId) ? 'New User Form' : 
-    (readonly.value) ? 'Archived User Information' : 'Edit User Form'
-})
-
-// computed value for save/submit button text
-const submitBtnText = computed(() => {
-  return (!props.recordId) ? 'Submit' : 'Save'
+  return (readonly.value) ? 'Archived User Information' : 'Edit User Form'
 })
 
 // computed value for project submit progress messages
@@ -134,13 +121,6 @@ const onSubmitMsg = computed(() => {
   }
 })
 
-// computed CSS class to control scrolling of the form
-const scrollingClasses = computed(() => {
-  if (props.formAction === 'new') {
-    return 'overflow-y-auto modal-form'
-  }
-})
-
 
 onMounted(async () => {
   await loadItem()
@@ -153,29 +133,26 @@ onMounted(async () => {
 
 
 async function loadItem() {
-  if (props.recordId) {
-    try {
-      const response = await axios.get(`${runtimeConfig.public.API_URL}/person/` + props.recordId)
-        loading.value = true
-        editedItem.value = Object.assign({}, response.data.data[0])
+  try {
+    const response = await axios.get(`${runtimeConfig.public.API_URL}/person/` + props.recordId)
+      loading.value = true
+      editedItem.value = Object.assign({}, response.data.data[0])
 
-        // for arrays
-        // if(editedItem.value.subtasks) {
-        //   let subtasksTemp = []
-        //   editedItem.value.subtasks.forEach((subtask) => {
-        //     subtasksTemp.push(subtask)
-        //   })
-        //   editedItem.value.subtasks = subtasksTemp
-        // }
+      // for arrays
+      // if(editedItem.value.subtasks) {
+      //   let subtasksTemp = []
+      //   editedItem.value.subtasks.forEach((subtask) => {
+      //     subtasksTemp.push(subtask)
+      //   })
+      //   editedItem.value.subtasks = subtasksTemp
+      // }
 
-        // for objects
-        // editedItem.value.status = editedItem.value.status.id
-    } catch (err) {
-      console.log(err)
-    }
-  } else {
-    editedItem.value = Object.assign({}, '')
+      // for objects
+      // editedItem.value.status = editedItem.value.status.id
+  } catch (err) {
+    console.log(err)
   }
+
   setTimeout(() => {
     loading.value = false
   }, 500)
@@ -252,15 +229,7 @@ function resetSubmitStatus() {
 
 
 function close() {
-  if (!props.recordId) {
-    if(submitStatus.value === 'success') {
-      emit('closeAndReload')
-    } else {
-      emit('close')
-    }
-  } else {
-    emit('close')
-  }
+  emit('close')
 }
 
 

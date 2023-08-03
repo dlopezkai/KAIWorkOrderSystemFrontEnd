@@ -2,7 +2,7 @@
     <v-container fluid fill-height>
       <v-layout child-flex>
         <v-card v-if="route.query.id" width="100vw">
-          <form-component-user form-action="edit" :record-id="route.query.id" @close="close()" @closeAndReload="closeAndReload()"></form-component-user>
+          <form-component-user :record-id="route.query.id" @close="close()" @closeAndReload="closeAndReload()"></form-component-user>
         </v-card>
         <v-card v-else width="100vw">
           <!-- <v-text-field
@@ -28,12 +28,6 @@
             :search="search"
             @update:options="loadItems"
           >
-            <template v-slot:top>
-              <v-dialog v-model="dialog" max-width="800px">
-                <form-component-user form-action="new" @close="close()" @closeAndReload="closeAndReload()"></form-component-user>
-              </v-dialog>
-            </template>
-  
             <template v-slot:item.actions="{ item }">
               <NuxtLink :to="'/users?id=' + item.raw.id" title="Edit user info">
                 <v-icon size="small" class="me-2">mdi-pencil</v-icon>
