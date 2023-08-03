@@ -90,7 +90,7 @@
         return {
           id: item.id,
           name: item.name,
-          role: 'some_role_here',
+          role: item.role,
           email: item.email,
         }
       })
