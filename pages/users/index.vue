@@ -133,6 +133,7 @@
   
     navMenuStore.setTableName('Users')
     navMenuStore.setMenuItems(navigationItems, settingsItems, filterItems)
+    navMenuStore.setCanAddNewRecord(false)
   }
   </script>
   

@@ -227,6 +227,7 @@ function setMenuItems(userInfo) {
 
   navMenuStore.setTableName('Work Orders')
   navMenuStore.setMenuItems(navigationItems, settingsItems, filterItems)
+  navMenuStore.setCanAddNewRecord(true)
 }
 
 
