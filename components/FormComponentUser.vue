@@ -69,7 +69,7 @@
         <v-row>
           <v-col class="text-right">
             <v-btn variant="plain" @click="close" title="Cancel">Cancel</v-btn>
-            <v-btn v-if="!readonly" :disabled="submitBtnDisabled" class="rounded" color="blue" @click="submit" :title="`${ submitBtnText } project`">{{ submitBtnText }}</v-btn>
+            <v-btn v-if="!readonly" :disabled="submitBtnDisabled" class="rounded" color="blue" @click="submit" :title="`${ submitBtnText } user`">{{ submitBtnText }}</v-btn>
           </v-col>
         </v-row>
       </v-card-actions>
