@@ -39,28 +39,18 @@
           <v-row>
             <v-col cols="12" sm="12" md="12">
               <v-text-field v-model="editedItem.name" label="Name" 
-                :rules="[rules.required]"></v-text-field>
+                :rules="[rules.required]" readonly="true"></v-text-field>
             </v-col>
 
             <v-col cols="12" sm="12" md="12">
               <v-text-field v-model="editedItem.email" label="Email Address" 
-                :rules="[rules.required]"></v-text-field>
-            </v-col>
-
-            Not sure what "Role" will look like, so here are some options...
-            <v-col cols="12" sm="12" md="12">
-              <v-combobox v-model="editedItem.role" label="Role - Combobox (multi-select)"
-              :items="['Admin', 'User']" item-title="name" item-value="name" :rules="[rules.required, rules.emptyArray]" chips multiple></v-combobox>
+                :rules="[rules.required]" readonly="true"></v-text-field>
             </v-col>
 
             <v-col cols="12" sm="12" md="12">
-              <v-select v-model="editedItem.role" label="Role - Drop-down (single select)"
-              :items="['Admin', 'User']" :rules="[rules.required]"></v-select>
+              <v-select v-model="editedItem.role" label="Role"
+              :items="['Admin', 'Normal']" :rules="[rules.required]"></v-select>
             </v-col>
-
-            <!-- <v-col v-if="props.recordId" cols="12" sm="12" md="12">
-              <v-checkbox v-model="editedItem.isarchived" label="Archived" true-value="1" false-value="0" :readonly="readonly"></v-checkbox>
-            </v-col> -->
           </v-row>
         </v-form>
       </v-card-text>
