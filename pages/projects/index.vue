@@ -119,6 +119,12 @@ function close() {
 }
 
 
+function closeAndReload() {
+  dialog.value = false
+  loadItems()
+}
+
+
 function setMenuItems() {
   let navigationItems = []
   let settingsItems = []

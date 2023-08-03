@@ -48,6 +48,11 @@
             </v-col>
 
             <v-col cols="12" sm="12" md="12">
+              <v-text-field v-model="editedItem.billing_code" label="Billing Code" 
+                :rules="[rules.required]"></v-text-field>
+            </v-col>
+
+            <v-col cols="12" sm="12" md="12">
               <v-text-field v-model="editedItem.link" label="SharePoint Link"></v-text-field>
               <v-btn v-if="!readonly" href="https://kauffmaninc.sharepoint.com/" target="_blank" variant="tonal" class="rounded" color="#428086" title="Open SharePoint">Open SharePoint site</v-btn>
             </v-col>
@@ -93,6 +98,7 @@ const editedItem = ref([
     name: '',
     content: '',
     subtasks: '',
+    billing_code: '',
     isarchived: '',
     link: '',
   }
@@ -202,57 +208,77 @@ async function submit() {
 }
 
 
-function save() {
+/*
+  Backend is setup in a way that we need to perform two seperate POST request
+  - One for Project.
+  - One for Subtasks (using the ID obtained in the response body of the Project POST).
+  - Since subtask only takes one single name, will need to iterate through array and do a POST request for each subtask.
+*/
+async function save() {
   submitInfo.value = ''
   submitStatus.value = 'submitting'
   submitStatusOverlay.value = true
   submitBtnDisabled.value = true
-  let method = ''
-  let url = ''
+  let projectId = ''
 
-  // create a data object that will be passed to API to prevent user from seeing conversions
-  let data = Object.assign({}, editedItem.value)
+  let data = Object.assign({}, editedItem.value)  // create a data object that will be passed to API to prevent user from seeing conversions
 
-  if (!props.recordId) {
-    method = 'post'
-    url = `${runtimeConfig.public.API_URL}/project/`
-  } else {
-    let subtasksTemp = []
-    editedItem.value.subtasks.forEach((subtask) => {
-      (subtask.name) ? subtasksTemp.push(subtask.name) : subtasksTemp.push(subtask)
-    })
-    data.subtasks = subtasksTemp
+  let subtasksTemp = []
+  editedItem.value.subtasks.forEach((subtask) => {
+    (subtask.name) ? subtasksTemp.push(subtask.name) : subtasksTemp.push(subtask)
+  })
+  data.subtasks = subtasksTemp
 
-    method = 'put'
-    url = `${runtimeConfig.public.API_URL}/project/` + data.id
-  }
 
-  axios({
-      method: method,
-      url: url,
-      data: data,
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      }
-    })
-    .then(function (response) {
-      if (response.status === 200) {
-        if (response.data.response_code === 200) {
-          submitStatus.value = (!props.recordId) ? 'success' : 'updated'
-          submitInfo.value = (!props.recordId) ? 'Project URL: ' + window.location.origin + '/projects?id=' + response.data.data.id : ''
-        } else {
-          submitStatus.value = 'internal_api_error'
-          submitInfo.value = data
-          console.log(response)
-          return
+  try { 
+    if (!props.recordId) {
+      const projectPostRes = await axios({
+        method: 'POST',
+        url: `${runtimeConfig.public.API_URL}/project/`,
+        data: { 'name': data.name, 'link': data.link, 'billing_code': data.billing_code },
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
         }
-      }
-    })
-    .catch(function (error) {
-      submitStatus.value = 'connection_failure'
-      submitInfo.value = error
-      console.log(error)
-    })
+      })
+      
+      projectId = projectPostRes.data.data.id
+
+      data.subtasks.forEach(async (subtask) => {
+        const subtasksPostRes = await axios({
+          method: 'POST',
+          url: `${runtimeConfig.public.API_URL}/project/` + projectId + `/subtask`,
+          data: { 'name': subtask },
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          }
+        })
+
+        if (projectPostRes.status === 200 && subtasksPostRes.status === 200) {
+          if (projectPostRes.data.response_code === 200 && subtasksPostRes.data.response_code === 200) {
+            submitStatus.value = (!props.recordId) ? 'success' : 'updated'
+            submitInfo.value = (!props.recordId) ? 'Project URL: ' + window.location.origin + '/projects?id=' + projectId : ''
+          } else {
+            submitStatus.value = 'internal_api_error'
+            submitInfo.value = data
+            if (projectPostRes.data.response_code !== 200) {
+              console.log(projectPostRes)
+            }
+            if (subtasksPostRes.data.response_code !== 200) {
+              console.log(subtasksPostRes)
+            }
+            return
+          }
+        }
+      })
+
+    } else {
+      // PUT requests here...
+    }
+  } catch (err) {
+    submitStatus.value = 'connection_failure'
+    submitInfo.value = err
+    console.log(err)
+  }
 }
 
 
