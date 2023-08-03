@@ -202,60 +202,6 @@ async function submit() {
 }
 
 
-// function save() {
-//   submitInfo.value = ''
-//   submitStatus.value = 'submitting'
-//   submitStatusOverlay.value = true
-//   submitBtnDisabled.value = true
-//   let method = ''
-//   let url = ''
-
-//   // create a data object that will be passed to API to prevent user from seeing conversions
-//   let data = Object.assign({}, editedItem.value)
-
-//   if (!props.recordId) {
-//     method = 'post'
-//     url = `${runtimeConfig.public.API_URL}/project/`
-//   } else {
-//     let subtasksTemp = []
-//     editedItem.value.subtasks.forEach((subtask) => {
-//       (subtask.name) ? subtasksTemp.push(subtask.name) : subtasksTemp.push(subtask)
-//     })
-//     data.subtasks = subtasksTemp
-
-//     method = 'put'
-//     url = `${runtimeConfig.public.API_URL}/project/` + data.id
-//   }
-
-//   axios({
-//       method: method,
-//       url: url,
-//       data: data,
-//       headers: {
-//         'Content-Type': 'application/x-www-form-urlencoded'
-//       }
-//     })
-//     .then(function (response) {
-//       if (response.status === 200) {
-//         if (response.data.response_code === 200) {
-//           submitStatus.value = (!props.recordId) ? 'success' : 'updated'
-//           submitInfo.value = (!props.recordId) ? 'Project URL: ' + window.location.origin + '/projects?id=' + response.data.data.id : ''
-//         } else {
-//           submitStatus.value = 'internal_api_error'
-//           submitInfo.value = data
-//           console.log(response)
-//           return
-//         }
-//       }
-//     })
-//     .catch(function (error) {
-//       submitStatus.value = 'connection_failure'
-//       submitInfo.value = error
-//       console.log(error)
-//     })
-// }
-
-
 /*
   Backend is setup in a way that we need to perform two seperate POST request
   - One for Project.
@@ -301,14 +247,6 @@ async function save() {
           }
         })
 
-        // console.log('Project POST response:')
-        // console.log(projectPostRes.status)
-        // console.log(projectPostRes.data.response_code)
-        // console.log('Subtasks POST response:')
-        // console.log(subtasksPostRes.status)
-        // console.log(subtasksPostRes.data.response_code)
-
-
         if (projectPostRes.status === 200 && subtasksPostRes.status === 200) {
           if (projectPostRes.data.response_code === 200 && subtasksPostRes.data.response_code === 200) {
             submitStatus.value = (!props.recordId) ? 'success' : 'updated'
@@ -317,11 +255,9 @@ async function save() {
             submitStatus.value = 'internal_api_error'
             submitInfo.value = data
             if (projectPostRes.data.response_code !== 200) {
-              console.log('projectPost error')
               console.log(projectPostRes)
             }
             if (subtasksPostRes.data.response_code !== 200) {
-              console.log('subtasksPost error')
               console.log(subtasksPostRes)
             }
             return
