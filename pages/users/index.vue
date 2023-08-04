@@ -1,5 +1,5 @@
 <template>
-    <v-container fluid fill-height>
+    <v-container v-if="userInfoStore.userInfo.role === 'admin'" fluid fill-height>
       <v-layout child-flex>
         <v-card v-if="route.query.id" width="100vw">
           <form-component-user :record-id="route.query.id" @close="close()" @closeAndReload="closeAndReload()"></form-component-user>
@@ -49,9 +49,13 @@
   
   <script setup>
   import axios from 'axios'
+  import { useAuthStore } from '~/store/auth';
   import { useNavMenuStore } from '~/store/navMenuStore'
+  import { useUserInfoStore } from '~/store/userInfoStore'
   
+  const authStore = useAuthStore()
   const navMenuStore = useNavMenuStore()
+  const userInfoStore = useUserInfoStore()
   const route = useRoute()
   const runtimeConfig = useRuntimeConfig()
   const dialog = inject('dialog')
@@ -70,7 +74,22 @@
     { title: 'Actions', key: 'actions', align: 'center', sortable: false },
   ]
   
-  
+  onBeforeMount(async () => {
+    if(userInfoStore.userInfo.id.length < 1) {
+      try {
+        const response = await axios.get(`${runtimeConfig.public.API_URL}/persons?email=` + authStore.currentUser.username.toLowerCase())
+        userInfoStore.setUserInfo(response.data.data[0].id, response.data.data[0].name, response.data.data[0].email, response.data.data[0].role)
+      } catch (err) {
+        console.log(err)
+      }
+    }
+
+    // redirect user back to workorder if they're not an admin
+    if (userInfoStore.userInfo.role !== 'admin') {
+      navigateTo('/workorders')
+    }
+  })
+
   onMounted(() => {
     setMenuItems()
   })

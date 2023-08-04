@@ -27,7 +27,7 @@ onBeforeMount(async () => {
   if(userInfoStore.userInfo.id.length < 1) {
     try {
       const response = await axios.get(`${runtimeConfig.public.API_URL}/persons?email=` + authStore.currentUser.username.toLowerCase())
-      userInfoStore.setUserInfo(response.data.data[0].id, response.data.data[0].name, response.data.data[0].email)
+      userInfoStore.setUserInfo(response.data.data[0].id, response.data.data[0].name, response.data.data[0].email, response.data.data[0].role)
     } catch (err) {
       console.log(err)
     }
