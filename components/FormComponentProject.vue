@@ -381,7 +381,8 @@ function closeArchiveConfirmationModal() {
 
 
 function resetSubmitStatus() {
-  close()
+  if(!props.recordId) close()
+  
   submitStatus.value = ''
   submitStatusOverlay.value = false
   submitBtnDisabled.value = false
@@ -389,12 +390,8 @@ function resetSubmitStatus() {
 
 
 function close() {
-  if (!props.recordId) {
-    if(submitStatus.value === 'success') {
-      emit('closeAndReload')
-    } else {
-      emit('close')
-    }
+  if(submitStatus.value === 'success') {
+    emit('closeAndReload')
   } else {
     emit('close')
   }
