@@ -415,11 +415,18 @@ function closeArchiveConfirmationModal() {
 function resetSubmitStatus() {
   if(!props.recordId) close()
   
-  closeArchiveConfirmationModal()
-
   submitStatus.value = ''
   submitStatusOverlay.value = false
   submitBtnDisabled.value = false
+
+  // put form in readonly state after save
+  if(props.recordId) {
+    if(editedItem.value.isarchived == 1) {
+      readonly.value = true
+    }
+  }
+
+  closeArchiveConfirmationModal()
 }
 
 
