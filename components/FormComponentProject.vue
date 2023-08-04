@@ -419,7 +419,7 @@ function resetSubmitStatus() {
   submitStatusOverlay.value = false
   submitBtnDisabled.value = false
 
-  // put form in readonly state after save
+  // put form in readonly state after save if archive flag is set to true
   if(props.recordId) {
     if(editedItem.value.isarchived == 1) {
       readonly.value = true
