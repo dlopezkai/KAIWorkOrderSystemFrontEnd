@@ -26,6 +26,17 @@
     >
     </modal-comp>
 
+    <modal-comp 
+      v-model="editSubtaskOverlay"
+      type="form"
+      cardTitle="Edit subtask"
+      cancelBtnText="Cancel"
+      confirmBtnText="Confirm"
+      :fields="editedSubtask"
+      @close="closeAndClearEditSubtaskModal"
+      @confirm="updateSubtask"
+    >
+    </modal-comp>
 
     <h3 v-if="props.formAction === 'edit'">{{ formTitle }}</h3>
 
@@ -43,8 +54,26 @@
             </v-col>
 
             <v-col cols="12" sm="12" md="12">
+              <!-- <v-combobox v-model="editedItem.subtasks" label="Subtask(s)" placeholder="Type in subtask name, and press Enter, or click away"
+                :items="editedItem.subtasks" item-title="name" item-value="name" :rules="[rules.required, rules.emptyArray]" chips multiple></v-combobox> -->
+
               <v-combobox v-model="editedItem.subtasks" label="Subtask(s)" placeholder="Type in subtask name, and press Enter, or click away"
-                :items="editedItem.subtasks" item-title="name" item-value="name" :rules="[rules.required, rules.emptyArray]" chips multiple></v-combobox>
+                :items="editedItem.subtasks" item-title="name" item-value="name" :rules="[rules.required, rules.emptyArray]" chips multiple>
+                <template v-if="props.recordId" v-slot:chip="{ item }">
+                  <v-chip
+                    small
+                    v-bind="attrs"
+                    :input-value="selected"
+                    close
+                    @click="subtaskClicked(item.raw)"
+                    @click:close="remove(item)"
+                  >
+                    {{ item.raw.name }}
+                  </v-chip>
+                </template>
+              
+              </v-combobox>
+              
             </v-col>
 
             <v-col cols="12" sm="12" md="12">
@@ -87,6 +116,7 @@ const submitInfo = ref('')
 const loading = ref(true)
 const confirmArchiveOverlay = ref(false)
 const readonly = ref(false)
+const editSubtaskOverlay = ref(false)
 
 const props = defineProps({
     recordId: String,
@@ -103,6 +133,8 @@ const editedItem = ref([
     link: '',
   }
 ])
+
+const editedSubtask = ref()
 
 const emit = defineEmits(['close', 'closeAndReload'])
 
@@ -279,6 +311,29 @@ async function save() {
     submitInfo.value = err
     console.log(err)
   }
+}
+
+
+function subtaskClicked(subtask) {
+  // grab the incoming subtask array index
+  subtask.index = editedItem.value.subtasks.map( subtask => subtask.id ).indexOf(subtask.id)
+
+  // assign subtask object to reactive field (to be used by form)
+  editedSubtask.value = Object.assign({}, subtask)
+
+  // open a modal with a (text) field bound to editedSubtask.value.name property
+  editSubtaskOverlay.value = true
+}
+
+
+function updateSubtask(subtask) {
+  console.log(subtask)
+}
+
+
+function closeAndClearEditSubtaskModal() {
+  editedSubtask.value = Object.assign({}, '')
+  editSubtaskOverlay.value = false
 }
 
 
