@@ -327,7 +327,11 @@ function subtaskClicked(subtask) {
 
 
 function updateSubtask(subtask) {
-  console.log(subtask)
+  // update subtask name for the given subtask array's index
+  editedItem.value.subtasks[subtask.index].name = subtask.name
+
+  // close modal and reset field
+  closeAndClearEditSubtaskModal()
 }
 
 
