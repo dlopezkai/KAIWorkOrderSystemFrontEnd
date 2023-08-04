@@ -173,6 +173,8 @@ const onSubmitMsg = computed(() => {
       return 'Project submitted successfully.'
     case 'updated':
       return 'Project updated successfully.'
+    case 'updated_subtask':
+      return 'Subtask updated successfully.'
     default:
       return ''
   }
@@ -326,9 +328,41 @@ function subtaskClicked(subtask) {
 }
 
 
-function updateSubtask(subtask) {
-  // update subtask name for the given subtask array's index
-  editedItem.value.subtasks[subtask.index].name = subtask.name
+async function updateSubtask(subtask) {
+  submitInfo.value = ''
+  submitStatus.value = 'submitting'
+  submitStatusOverlay.value = true
+
+  try { 
+    const response = await axios({
+      method: 'PUT',
+      url: `${runtimeConfig.public.API_URL}/subtask/` + subtask.id,
+      data: { 'name': subtask.name },
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    })
+
+    if (response.status === 200) {
+      if (response.data.response_code === 200) {
+        submitStatus.value = 'updated_subtask'
+
+        // update subtask name for the given subtask array's index
+        editedItem.value.subtasks[subtask.index].name = subtask.name
+      } else {
+        submitStatus.value = 'internal_api_error'
+        submitInfo.value = data
+        if (response.data.response_code !== 200) {
+          console.log(response)
+        }
+        return
+      }
+    }
+  } catch (err) {
+    submitStatus.value = 'connection_failure'
+    submitInfo.value = err
+    console.log(err)
+  }
 
   // close modal and reset field
   closeAndClearEditSubtaskModal()
