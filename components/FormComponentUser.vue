@@ -43,7 +43,7 @@
 
             <v-col cols="12" sm="12" md="12">
               <v-select v-model="editedItem.role" label="Role"
-              :items="['Admin', 'Normal']" :rules="[rules.required]"></v-select>
+              :items="['admin', 'normal']" :rules="[rules.required]"></v-select>
             </v-col>
           </v-row>
         </v-form>
@@ -63,6 +63,7 @@
 
 <script setup>
 import axios from 'axios'
+
 const runtimeConfig = useRuntimeConfig()
 const form = ref(null)
 const submitBtnDisabled = ref(false)
