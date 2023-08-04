@@ -209,14 +209,11 @@ function setMenuItems(userInfo) {
       { 'label': 'Work Orders', 'destination': '/workorders', 'icon': 'mdi-keyboard-backspace' },
     ]
   } else {
-    // example ACL logic
-    // settingsItems = (userInfo.role = 'manager') ? [] : [
-    //   { 'label': 'Projects', 'destination': '/projects', 'icon': 'mdi-form-select' },
-    // ]
-    settingsItems = [
+    // only show settings menu if current user has the admin role
+    settingsItems = (userInfoStore.userInfo.role === 'admin') ? [
       { 'label': 'Projects', 'destination': '/projects', 'icon': 'mdi-form-select' },
       { 'label': 'Users', 'destination': '/users', 'icon': 'mdi-account-multiple' },
-    ]
+    ] : []
     filterItems = [
       { 'label': 'My Work Orders', 'icon': 'mdi-account-box', 'filter_name': 'filterByUserTrigger', 'filter_value': true },
       { 'label': 'All Work Orders', 'icon': 'mdi-format-list-bulleted', 'filter_name': 'showCompleted', 'filter_value': false },
