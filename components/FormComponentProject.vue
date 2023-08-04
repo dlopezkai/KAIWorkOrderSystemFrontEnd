@@ -306,7 +306,27 @@ async function save() {
       })
 
     } else {
-      // PUT requests here...
+      const projectPutRes = await axios({
+        method: 'PUT',
+        url: `${runtimeConfig.public.API_URL}/project/` + data.id,
+        data: { 'name': data.name, 'link': data.link, 'billing_code': data.billing_code, 'isarchived': data.isarchived },
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      })
+
+      if (projectPutRes.status === 200) {
+        if (projectPutRes.data.response_code === 200) {
+          submitStatus.value = 'updated'
+        } else {
+          submitStatus.value = 'internal_api_error'
+          submitInfo.value = data
+          if (projectPutRes.data.response_code !== 200) {
+            console.log(projectPutRes)
+          }
+          return
+        }
+      }
     }
   } catch (err) {
     submitStatus.value = 'connection_failure'
@@ -395,6 +415,8 @@ function closeArchiveConfirmationModal() {
 function resetSubmitStatus() {
   if(!props.recordId) close()
   
+  closeArchiveConfirmationModal()
+
   submitStatus.value = ''
   submitStatusOverlay.value = false
   submitBtnDisabled.value = false
