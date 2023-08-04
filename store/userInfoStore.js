@@ -5,13 +5,15 @@ export const useUserInfoStore = defineStore('userInfoStore', () => {
     const userInfo = ref({
         id: '',
         name: '',
-        email: ''
+        email: '',
+        role: ''
     })
 
-    const setUserInfo = (id, name, email) => {
+    const setUserInfo = (id, name, email, role) => {
         userInfo.value.id = id
         userInfo.value.name = name
         userInfo.value.email = email
+        userInfo.value.role = role
     }
 
     return {
