@@ -81,8 +81,7 @@
           </template>
 
           <template v-slot:item.actions="{ item }">
-            <!-- change project.name to project.isarchived -->
-            <NuxtLink v-if="item.raw.project.name === 'Archived Project'" :to="'/workorders?id=' + item.raw.id" title="View work order">
+            <NuxtLink v-if="item.raw.project.isarchived == 1" :to="'/workorders?id=' + item.raw.id" title="View work order">
               <v-icon size="small" class="me-2">mdi-list-box-outline</v-icon>
             </NuxtLink>
             <NuxtLink v-else :to="'/workorders?id=' + item.raw.id" title="View and edit work order">

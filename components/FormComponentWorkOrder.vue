@@ -233,8 +233,7 @@ onMounted(async () => {
   await loadItem()
 
   // set form to readonly state if on a record page and WO project is archived
-  // change project.name to project.isarchived
-  if(props.recordId && editedItem.value.project.name === 'Archived Project') {
+  if(props.recordId && editedItem.value.project.isarchived == 1) {
     readonly.value = true
   }
 })
@@ -330,8 +329,7 @@ function loadPersons() {
 function loadProjects() {
   axios.get(`${runtimeConfig.public.API_URL}/projects`)
   .then((response) => {
-    // change project.name to project.isarchived
-    const filteredResponse = response.data.data.filter(item => item.name !== 'Archived Project')
+    const filteredResponse = response.data.data.filter(item => item.isarchived != 1)
 
     projects.value = filteredResponse.map((item) => {
       return {
