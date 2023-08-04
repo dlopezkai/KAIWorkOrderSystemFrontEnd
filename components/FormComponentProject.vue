@@ -318,10 +318,21 @@ async function save() {
 
 function subtaskClicked(subtask) {
   // grab the incoming subtask array index
-  subtask.index = editedItem.value.subtasks.map( subtask => subtask.id ).indexOf(subtask.id)
+  let indexValue = editedItem.value.subtasks.map( subtask => subtask.id ).indexOf(subtask.id)
+
+  let subtaskArr = []
+  const editableKeys = ['name'] // pick what fields are needed here...
+  for (const key in subtask) {
+    if(editableKeys.includes(key)) {
+      if (subtask.hasOwnProperty(key)) {
+        const obj = { id: subtask['id'], name: key, value: subtask[key], index: indexValue }
+        subtaskArr.push(obj)
+      }
+    }
+  }
 
   // assign subtask object to reactive field (to be used by form)
-  editedSubtask.value = Object.assign({}, subtask)
+  editedSubtask.value = subtaskArr
 
   // open a modal with a (text) field bound to editedSubtask.value.name property
   editSubtaskOverlay.value = true
@@ -333,11 +344,12 @@ async function updateSubtask(subtask) {
   submitStatus.value = 'submitting'
   submitStatusOverlay.value = true
 
+  // will need to do perform a loop if editing multiple fields at once
   try { 
     const response = await axios({
       method: 'PUT',
-      url: `${runtimeConfig.public.API_URL}/subtask/` + subtask.id,
-      data: { 'name': subtask.name },
+      url: `${runtimeConfig.public.API_URL}/subtask/` + subtask[0].id,
+      data: { 'name': subtask[0].value },
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
       }
@@ -348,7 +360,7 @@ async function updateSubtask(subtask) {
         submitStatus.value = 'updated_subtask'
 
         // update subtask name for the given subtask array's index
-        editedItem.value.subtasks[subtask.index].name = subtask.name
+        editedItem.value.subtasks[subtask[0].index].name = subtask[0].value
       } else {
         submitStatus.value = 'internal_api_error'
         submitInfo.value = data
