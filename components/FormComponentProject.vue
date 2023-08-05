@@ -31,6 +31,7 @@
       type="form"
       cardTitle="Edit subtask"
       cancelBtnText="Cancel"
+      cardText="If you need to modify this subtask, delete it and re-enter."
       confirmBtnText="Confirm"
       :fields="editedSubtask"
       @close="closeAndClearEditSubtaskModal"
@@ -59,7 +60,7 @@
 
               <v-combobox v-model="editedItem.subtasks" label="Subtask(s)" placeholder="Type in subtask name, and press Enter, or click away"
                 :items="editedItem.subtasks" item-title="name" item-value="name" :rules="[rules.required, rules.emptyArray]" chips multiple>
-                <template v-if="props.recordId" v-slot:chip="{ item }">
+                <!-- <template v-if="props.recordId" v-slot:chip="{ item }">
                   <v-chip
                     small
                     v-bind="attrs"
@@ -70,8 +71,13 @@
                   >
                     {{ item.raw.name }}
                   </v-chip>
+                </template> -->
+
+                <template v-if="props.recordId" v-slot:chip="{ item }">
+                  <v-chip @click="subtaskClicked(item.raw)">
+                    {{ (item.raw.name) ? item.raw.name : item.raw }}
+                  </v-chip>
                 </template>
-              
               </v-combobox>
               
             </v-col>

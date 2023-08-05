@@ -32,8 +32,11 @@
                         <v-card-text>
                             <v-form ref="form" @submit.prevent="submit">
                                 <v-row>
-                                    <v-col v-for="field in fields" cols="12" sm="12" md="12">
+                                    <v-col v-if="fields.length > 0" v-for="field in fields" cols="12" sm="12" md="12">
                                         <v-text-field v-model="field.value" :label="field.name"></v-text-field>
+                                    </v-col>
+                                    <v-col v-else>
+                                        <v-label>{{ cardText }}</v-label>
                                     </v-col>
                                 </v-row>
                             </v-form>
@@ -41,8 +44,8 @@
                         <v-card-actions>
                             <v-row>
                                 <v-col class="text-right">
-                                    <v-btn variant="plain" @click="emit('close')" :title=props.cancelBtnText>{{ props.cancelBtnText }}</v-btn>
-                                    <v-btn class="rounded" color="error" :title=props.confirmBtnText @click="emit('confirm', fields)">{{ props.confirmBtnText }}</v-btn>
+                                    <v-btn variant="plain" @click="emit('close')" :title=props.cancelBtnText>{{ (fields.length > 0) ? props.cancelBtnText : 'Close' }}</v-btn>
+                                    <v-btn v-if="fields.length > 0" :disabled="showConfirmBtn" class="rounded" color="error" :title=props.confirmBtnText @click="emit('confirm', fields)">{{ props.confirmBtnText }}</v-btn>
                                 </v-col>
                             </v-row>
                         </v-card-actions>
