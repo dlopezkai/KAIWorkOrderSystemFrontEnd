@@ -31,7 +31,6 @@
       type="form"
       cardTitle="Edit subtask"
       cancelBtnText="Cancel"
-      cardText="If you need to modify this subtask, delete it and re-enter."
       confirmBtnText="Confirm"
       :fields="editedSubtask"
       @close="closeAndClearEditSubtaskModal"
@@ -54,12 +53,14 @@
                 :rules="[rules.required]"></v-text-field>
             </v-col>
 
-            <v-col cols="12" sm="12" md="12">
-              <!-- <v-combobox v-model="editedItem.subtasks" label="Subtask(s)" placeholder="Type in subtask name, and press Enter, or click away"
-                :items="editedItem.subtasks" item-title="name" item-value="name" :rules="[rules.required, rules.emptyArray]" chips multiple></v-combobox> -->
-
+            <v-col v-if="!props.recordId" cols="12" sm="12" md="12">
               <v-combobox v-model="editedItem.subtasks" label="Subtask(s)" placeholder="Type in subtask name, and press Enter, or click away"
-                :items="editedItem.subtasks" item-title="name" item-value="name" :rules="[rules.required, rules.emptyArray]" chips multiple>
+                :items="editedItem.subtasks" item-title="name" item-value="name" :rules="[rules.required, rules.emptyArray]" chips multiple></v-combobox>
+            </v-col>
+
+            <v-col v-else cols="12" sm="12" md="12">
+              <v-combobox v-model="editedItem.newSubtasks" label="New subtasks(s)" placeholder="Add new subtasks here"
+                :items="editedItem.newSubtasks" item-title="name" item-value="name" chips multiple>
                 <!-- <template v-if="props.recordId" v-slot:chip="{ item }">
                   <v-chip
                     small
@@ -73,13 +74,17 @@
                   </v-chip>
                 </template> -->
 
-                <template v-if="props.recordId" v-slot:chip="{ item }">
+                <!-- <template v-if="props.recordId" v-slot:chip="{ item }">
                   <v-chip @click="subtaskClicked(item.raw)">
                     {{ (item.raw.name) ? item.raw.name : item.raw }}
                   </v-chip>
-                </template>
+                </template> -->
               </v-combobox>
-              
+
+              <v-label>Existing Subtasks: </v-label>
+              <v-chip v-for="subtask in editedItem.subtasks" @click="subtaskClicked(subtask)">
+                {{ subtask.name }}
+              </v-chip>
             </v-col>
 
             <v-col cols="12" sm="12" md="12">
@@ -263,15 +268,20 @@ async function save() {
 
   let data = Object.assign({}, editedItem.value)  // create a data object that will be passed to API to prevent user from seeing conversions
 
-  let subtasksTemp = []
-  editedItem.value.subtasks.forEach((subtask) => {
-    (subtask.name) ? subtasksTemp.push(subtask.name) : subtasksTemp.push(subtask)
-  })
-  data.subtasks = subtasksTemp
-
+  // let subtasksTemp = []
+  // editedItem.value.subtasks.forEach((subtask) => {
+  //   (subtask.name) ? subtasksTemp.push(subtask.name) : subtasksTemp.push(subtask)
+  // })
+  // data.subtasks = subtasksTemp
 
   try { 
     if (!props.recordId) {
+      let subtasksTemp = []
+      editedItem.value.subtasks.forEach((subtask) => {
+        (subtask.name) ? subtasksTemp.push(subtask.name) : subtasksTemp.push(subtask)
+      })
+      data.subtasks = subtasksTemp
+
       const projectPostRes = await axios({
         method: 'POST',
         url: `${runtimeConfig.public.API_URL}/project/`,
@@ -312,6 +322,11 @@ async function save() {
       })
 
     } else {
+      projectId = data.id
+
+      // clear out "subtasks" element and replace with "newSubtasks" element
+      delete data.subtasks
+
       const projectPutRes = await axios({
         method: 'PUT',
         url: `${runtimeConfig.public.API_URL}/project/` + data.id,
@@ -321,18 +336,51 @@ async function save() {
         }
       })
 
-      if (projectPutRes.status === 200) {
-        if (projectPutRes.data.response_code === 200) {
-          submitStatus.value = 'updated'
-        } else {
-          submitStatus.value = 'internal_api_error'
-          submitInfo.value = data
-          if (projectPutRes.data.response_code !== 200) {
-            console.log(projectPutRes)
+      if(data.newSubtasks) {
+        data.subtasks = data.newSubtasks
+        data.subtasks.forEach(async (subtask) => {
+          const subtasksPostRes = await axios({
+            method: 'POST',
+            url: `${runtimeConfig.public.API_URL}/project/` + projectId + `/subtask`,
+            data: { 'name': subtask },
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded'
+            }
+          })
+
+          if (projectPutRes.status === 200 && subtasksPostRes.status === 200) {
+            if (projectPutRes.data.response_code === 200 && subtasksPostRes.data.response_code === 200) {
+              submitStatus.value = 'updated'
+            } else {
+              submitStatus.value = 'internal_api_error'
+              submitInfo.value = data
+              if (projectPutRes.data.response_code !== 200) {
+                console.log(projectPutRes)
+              }
+              if (subtasksPostRes.data.response_code !== 200) {
+                console.log(subtasksPostRes)
+              }
+              return
+            }
           }
-          return
+
+        })
+      } else {
+        if (projectPutRes.status === 200) {
+          if (projectPutRes.data.response_code === 200) {
+            submitStatus.value = 'updated'
+          } else {
+            submitStatus.value = 'internal_api_error'
+            submitInfo.value = data
+            if (projectPutRes.data.response_code !== 200) {
+              console.log(projectPutRes)
+            }
+            return
+          }
         }
       }
+
+
     }
   } catch (err) {
     submitStatus.value = 'connection_failure'
