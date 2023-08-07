@@ -64,7 +64,7 @@
               </v-combobox>
 
               <v-label>Subtasks: </v-label>
-              <v-chip v-for="subtask in editedItem.subtasks" @click="openEditSubtaskModal(subtask)">
+              <v-chip v-for="subtask in editedItem.subtasks" @click="openEditSubtaskModal(subtask)" :disabled="readonly">
                 {{ subtask.name }}
               </v-chip>
             </v-col>
