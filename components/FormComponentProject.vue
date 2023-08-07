@@ -268,76 +268,26 @@ async function save() {
 
   let data = Object.assign({}, editedItem.value)  // create a data object that will be passed to API to prevent user from seeing conversions
 
-  // let subtasksTemp = []
-  // editedItem.value.subtasks.forEach((subtask) => {
-  //   (subtask.name) ? subtasksTemp.push(subtask.name) : subtasksTemp.push(subtask)
-  // })
-  // data.subtasks = subtasksTemp
-
   try { 
-    if (!props.recordId) {
-      let subtasksTemp = []
-      editedItem.value.subtasks.forEach((subtask) => {
-        (subtask.name) ? subtasksTemp.push(subtask.name) : subtasksTemp.push(subtask)
-      })
-      data.subtasks = subtasksTemp
+    const projectPostRes = await axios({
+      method: (!props.recordId) ? 'POST' : 'PUT',
+      url: (!props.recordId) ? `${runtimeConfig.public.API_URL}/project/` : `${runtimeConfig.public.API_URL}/project/` + data.id,
+      data: (!props.recordId) ? { 'name': data.name, 'link': data.link, 'billing_code': data.billing_code } 
+        : { 'name': data.name, 'link': data.link, 'billing_code': data.billing_code, 'isarchived': data.isarchived },
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    })
+    
+    // projectId = projectPostRes.data.data.id
+    projectId = (!props.recordId) ? projectPostRes.data.data.id : data.id
 
-      const projectPostRes = await axios({
-        method: 'POST',
-        url: `${runtimeConfig.public.API_URL}/project/`,
-        data: { 'name': data.name, 'link': data.link, 'billing_code': data.billing_code },
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
-        }
-      })
-      
-      projectId = projectPostRes.data.data.id
-
-      data.subtasks.forEach(async (subtask) => {
-        const subtasksPostRes = await axios({
-          method: 'POST',
-          url: `${runtimeConfig.public.API_URL}/project/` + projectId + `/subtask`,
-          data: { 'name': subtask },
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          }
-        })
-
-        if (projectPostRes.status === 200 && subtasksPostRes.status === 200) {
-          if (projectPostRes.data.response_code === 200 && subtasksPostRes.data.response_code === 200) {
-            submitStatus.value = (!props.recordId) ? 'success' : 'updated'
-            submitInfo.value = (!props.recordId) ? 'Project URL: ' + window.location.origin + '/projects?id=' + projectId : ''
-          } else {
-            submitStatus.value = 'internal_api_error'
-            submitInfo.value = data
-            if (projectPostRes.data.response_code !== 200) {
-              console.log(projectPostRes)
-            }
-            if (subtasksPostRes.data.response_code !== 200) {
-              console.log(subtasksPostRes)
-            }
-            return
-          }
-        }
-      })
-
-    } else {
-      projectId = data.id
-
-      // clear out "subtasks" element and replace with "newSubtasks" element
-      delete data.subtasks
-
-      const projectPutRes = await axios({
-        method: 'PUT',
-        url: `${runtimeConfig.public.API_URL}/project/` + data.id,
-        data: { 'name': data.name, 'link': data.link, 'billing_code': data.billing_code, 'isarchived': data.isarchived },
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
-        }
-      })
-
-      if(data.newSubtasks) {
+    if(data.subtasks || data.newSubtasks) {
+      if (props.recordId) {
         data.subtasks = data.newSubtasks
+      }
+      
+      if(data.subtasks) {
         data.subtasks.forEach(async (subtask) => {
           const subtasksPostRes = await axios({
             method: 'POST',
@@ -348,16 +298,20 @@ async function save() {
             }
           })
 
-          if (projectPutRes.status === 200 && subtasksPostRes.status === 200) {
-            if (projectPutRes.data.response_code === 200 && subtasksPostRes.data.response_code === 200) {
-              submitStatus.value = 'updated'
-              editedItem.value.subtasks.push(subtasksPostRes.data.data)
-              delete editedItem.value.newSubtasks
+          if (projectPostRes.status === 200 && subtasksPostRes.status === 200) {
+            if (projectPostRes.data.response_code === 200 && subtasksPostRes.data.response_code === 200) {
+              submitStatus.value = (!props.recordId) ? 'success' : 'updated'
+              submitInfo.value = (!props.recordId) ? 'Project URL: ' + window.location.origin + '/projects?id=' + projectId : ''
+              if(props.recordId) {
+                editedItem.value.subtasks.push(subtasksPostRes.data.data)
+                delete editedItem.value.newSubtasks
+              }
+
             } else {
               submitStatus.value = 'internal_api_error'
               submitInfo.value = data
-              if (projectPutRes.data.response_code !== 200) {
-                console.log(projectPutRes)
+              if (projectPostRes.data.response_code !== 200) {
+                console.log(projectPostRes)
               }
               if (subtasksPostRes.data.response_code !== 200) {
                 console.log(subtasksPostRes)
@@ -365,24 +319,21 @@ async function save() {
               return
             }
           }
-
         })
       } else {
-        if (projectPutRes.status === 200) {
-          if (projectPutRes.data.response_code === 200) {
+        if (projectPostRes.status === 200) {
+          if (projectPostRes.data.response_code === 200) {
             submitStatus.value = 'updated'
           } else {
             submitStatus.value = 'internal_api_error'
             submitInfo.value = data
-            if (projectPutRes.data.response_code !== 200) {
-              console.log(projectPutRes)
+            if (projectPostRes.data.response_code !== 200) {
+              console.log(projectPostRes)
             }
             return
           }
         }
       }
-
-
     }
   } catch (err) {
     submitStatus.value = 'connection_failure'
@@ -420,7 +371,6 @@ async function updateSubtask(subtask) {
   submitStatus.value = 'submitting'
   submitStatusOverlay.value = true
 
-  // will need to do perform a loop if editing multiple fields at once
   try { 
     const response = await axios({
       method: 'PUT',
