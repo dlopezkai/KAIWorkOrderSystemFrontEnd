@@ -403,6 +403,7 @@ function closeAndClearEditSubtaskModal() {
 
 
 function closeArchiveConfirmationModal() {
+  displayAddNewSubtaskField.value = false
   confirmArchiveOverlay.value = false
 }
 
