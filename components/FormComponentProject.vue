@@ -61,24 +61,6 @@
             <v-col v-else cols="12" sm="12" md="12">
               <v-combobox v-model="editedItem.newSubtasks" label="New subtasks(s)" placeholder="Add new subtasks here"
                 :items="editedItem.newSubtasks" item-title="name" item-value="name" chips multiple>
-                <!-- <template v-if="props.recordId" v-slot:chip="{ item }">
-                  <v-chip
-                    small
-                    v-bind="attrs"
-                    :input-value="selected"
-                    close
-                    @click="openEditSubtaskModal(item.raw)"
-                    @click:close="remove(item)"
-                  >
-                    {{ item.raw.name }}
-                  </v-chip>
-                </template> -->
-
-                <!-- <template v-if="props.recordId" v-slot:chip="{ item }">
-                  <v-chip @click="openEditSubtaskModal(item.raw)">
-                    {{ (item.raw.name) ? item.raw.name : item.raw }}
-                  </v-chip>
-                </template> -->
               </v-combobox>
 
               <v-label>Subtasks: </v-label>
