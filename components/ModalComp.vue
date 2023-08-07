@@ -35,12 +35,6 @@
                                     <v-col v-for="field in fields" cols="12" sm="12" md="12">
                                         <v-text-field v-model="field.value" :label="field.name"></v-text-field>
                                     </v-col>
-                                    <!-- <v-col v-if="fields.length > 0" v-for="field in fields" cols="12" sm="12" md="12">
-                                        <v-text-field v-model="field.value" :label="field.name"></v-text-field>
-                                    </v-col>
-                                    <v-col v-else>
-                                        <v-label>{{ cardText }}</v-label>
-                                    </v-col> -->
                                 </v-row>
                             </v-form>
                         </v-card-text>
