@@ -222,7 +222,6 @@ function closeArchiveConfirmationModal() {
 
 
 function resetSubmitStatus() {
-  close()
   submitStatus.value = ''
   submitStatusOverlay.value = false
   submitBtnDisabled.value = false

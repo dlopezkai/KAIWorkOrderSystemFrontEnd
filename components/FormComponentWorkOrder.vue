@@ -372,7 +372,9 @@ function loadPriorities() {
 
 
 function resetSubmitStatus() {
-  close()
+  // close()
+  if(!props.recordId) close()
+
   submitStatus.value = ''
   submitStatusOverlay.value = false
   submitBtnDisabled.value = false
@@ -474,12 +476,8 @@ function resetAndReloadSubtasks() {
 
 
 function close() {
-  if (!props.recordId) {
-    if(submitStatus.value === 'success') {
-      emit('closeAndReload')
-    } else {
-      emit('close')
-    }
+  if(submitStatus.value === 'success') {
+    emit('closeAndReload')
   } else {
     emit('close')
   }
