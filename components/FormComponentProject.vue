@@ -67,7 +67,7 @@
                     v-bind="attrs"
                     :input-value="selected"
                     close
-                    @click="subtaskClicked(item.raw)"
+                    @click="openEditSubtaskModal(item.raw)"
                     @click:close="remove(item)"
                   >
                     {{ item.raw.name }}
@@ -75,14 +75,14 @@
                 </template> -->
 
                 <!-- <template v-if="props.recordId" v-slot:chip="{ item }">
-                  <v-chip @click="subtaskClicked(item.raw)">
+                  <v-chip @click="openEditSubtaskModal(item.raw)">
                     {{ (item.raw.name) ? item.raw.name : item.raw }}
                   </v-chip>
                 </template> -->
               </v-combobox>
 
               <v-label>Subtasks: </v-label>
-              <v-chip v-for="subtask in editedItem.subtasks" @click="subtaskClicked(subtask)">
+              <v-chip v-for="subtask in editedItem.subtasks" @click="openEditSubtaskModal(subtask)">
                 {{ subtask.name }}
               </v-chip>
             </v-col>
@@ -342,7 +342,7 @@ async function save() {
 }
 
 
-function subtaskClicked(subtask) {
+function openEditSubtaskModal(subtask) {
   // grab the incoming subtask array index
   let indexValue = editedItem.value.subtasks.map( subtask => subtask.id ).indexOf(subtask.id)
 
