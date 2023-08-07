@@ -2,6 +2,11 @@
   <div v-if="loading && props.formAction === 'edit'" class="pa-1">
     Retrieving data ...
   </div>
+
+  <div v-else-if="!recordFound && props.formAction === 'edit'" class="pa-1">
+    Invalid record ID
+  </div>
+
   <div v-else class="pa-1">
     <modal-comp 
       v-model="submitStatusOverlay"
@@ -115,6 +120,7 @@ const submitInfo = ref('')
 const loading = ref(true)
 const confirmArchiveOverlay = ref(false)
 const readonly = ref(false)
+const recordFound = ref(true)
 const editSubtaskOverlay = ref(false)
 const displayAddNewSubtaskField = ref(false)
 
@@ -203,6 +209,14 @@ async function loadItem() {
     try {
       const response = await axios.get(`${runtimeConfig.public.API_URL}/project/` + props.recordId)
         loading.value = true
+
+        // if not record found, display invalid record message and cease loading page
+        if(response.data.data == 0) {
+          loading.value = false
+          recordFound.value = false
+          return
+        }
+
         editedItem.value = Object.assign({}, response.data.data[0])
 
         // for arrays

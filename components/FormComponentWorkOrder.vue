@@ -2,6 +2,11 @@
   <div v-if="loading && props.formAction === 'edit'" class="pa-1">
     Retrieving data ...
   </div>
+
+  <div v-else-if="!recordFound && props.formAction === 'edit'" class="pa-1">
+    Invalid record ID
+  </div>
+
   <div v-else class="pa-1">
     <modal-comp 
       v-model="submitStatusOverlay"
@@ -132,6 +137,7 @@ const priorities = ref([])
 const form = ref(null)
 const formTab = ref(null)
 const readonly = ref(false)
+const recordFound = ref(true)
 const submitBtnDisabled = ref(false)
 const submitStatusOverlay = ref(false)
 const submitStatus = ref('')
@@ -244,6 +250,14 @@ async function loadItem() {
     try {
       const response = await axios.get(`${runtimeConfig.public.API_URL}/workorder/` + props.recordId)
         loading.value = true
+
+        // if not record found, display invalid record message and cease loading page
+        if(response.data.data == 0) {
+          loading.value = false
+          recordFound.value = false
+          return
+        }
+
         editedItem.value = Object.assign({}, response.data.data[0])
         editedItem.value.time_estimate = minutesToHours(response.data.data[0].time_estimate)
 
