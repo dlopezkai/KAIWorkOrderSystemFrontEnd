@@ -58,15 +58,21 @@
                 :items="editedItem.subtasks" item-title="name" item-value="name" :rules="[rules.required, rules.emptyArray]" chips multiple></v-combobox>
             </v-col>
 
-            <v-col v-else cols="12" sm="12" md="12">
-              <v-combobox v-model="editedItem.newSubtasks" label="New subtasks(s)" placeholder="Add new subtasks here"
-                :items="editedItem.newSubtasks" item-title="name" item-value="name" chips multiple>
-              </v-combobox>
-
-              <v-label>Subtasks: </v-label>
+            <v-col v-if="props.recordId" cols="12" sm="12" md="12">
+              <v-label class="mr-2">Subtasks:</v-label>
               <v-chip v-for="subtask in editedItem.subtasks" @click="openEditSubtaskModal(subtask)" :disabled="readonly">
                 {{ subtask.name }}
               </v-chip>
+
+              <v-btn v-if="!readonly" color="blue" variant="plain" @click="displayAddNewSubtaskField=true" class="text-right">
+                Add more subtasks
+              </v-btn>
+            </v-col>
+
+            <v-col v-if="props.recordId && displayAddNewSubtaskField" cols="12" sm="12" md="12">
+              <v-combobox v-model="editedItem.newSubtasks" label="New subtasks(s)" placeholder="Add new subtasks here"
+                :items="editedItem.newSubtasks" item-title="name" item-value="name" chips multiple>
+              </v-combobox>
             </v-col>
 
             <v-col cols="12" sm="12" md="12">
@@ -110,6 +116,7 @@ const loading = ref(true)
 const confirmArchiveOverlay = ref(false)
 const readonly = ref(false)
 const editSubtaskOverlay = ref(false)
+const displayAddNewSubtaskField = ref(false)
 
 const props = defineProps({
     recordId: String,
@@ -286,6 +293,7 @@ async function save() {
               if(props.recordId) {
                 editedItem.value.subtasks.push(subtasksRequestResponse.data.data)
                 delete editedItem.value.newSubtasks
+                displayAddNewSubtaskField.value = false
               }
 
             } else {
