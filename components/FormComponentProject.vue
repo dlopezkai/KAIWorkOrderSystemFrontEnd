@@ -26,6 +26,17 @@
     >
     </modal-comp>
 
+    <modal-comp 
+      v-model="editSubtaskOverlay"
+      type="form"
+      cardTitle="Edit subtask"
+      cancelBtnText="Cancel"
+      confirmBtnText="Confirm"
+      :fields="editedSubtask"
+      @close="closeAndClearEditSubtaskModal"
+      @confirm="updateSubtask"
+    >
+    </modal-comp>
 
     <h3 v-if="props.formAction === 'edit'">{{ formTitle }}</h3>
 
@@ -42,9 +53,26 @@
                 :rules="[rules.required]"></v-text-field>
             </v-col>
 
-            <v-col cols="12" sm="12" md="12">
+            <v-col v-if="!props.recordId" cols="12" sm="12" md="12">
               <v-combobox v-model="editedItem.subtasks" label="Subtask(s)" placeholder="Type in subtask name, and press Enter, or click away"
                 :items="editedItem.subtasks" item-title="name" item-value="name" :rules="[rules.required, rules.emptyArray]" chips multiple></v-combobox>
+            </v-col>
+
+            <v-col v-if="props.recordId" cols="12" sm="12" md="12">
+              <v-label class="mr-2">Subtasks:</v-label>
+              <v-chip v-for="subtask in editedItem.subtasks" @click="openEditSubtaskModal(subtask)" :disabled="readonly">
+                {{ subtask.name }}
+              </v-chip>
+
+              <v-btn v-if="!readonly" color="blue" variant="plain" title="Add more subtasks" @click="displayAddNewSubtaskField=true">
+                Add more subtasks
+              </v-btn>
+            </v-col>
+
+            <v-col v-if="props.recordId && displayAddNewSubtaskField" cols="12" sm="12" md="12">
+              <v-combobox v-model="editedItem.newSubtasks" label="New subtasks(s)" placeholder="Add new subtasks here"
+                :items="editedItem.newSubtasks" item-title="name" item-value="name" chips multiple>
+              </v-combobox>
             </v-col>
 
             <v-col cols="12" sm="12" md="12">
@@ -87,6 +115,8 @@ const submitInfo = ref('')
 const loading = ref(true)
 const confirmArchiveOverlay = ref(false)
 const readonly = ref(false)
+const editSubtaskOverlay = ref(false)
+const displayAddNewSubtaskField = ref(false)
 
 const props = defineProps({
     recordId: String,
@@ -103,6 +133,8 @@ const editedItem = ref([
     link: '',
   }
 ])
+
+const editedSubtask = ref()
 
 const emit = defineEmits(['close', 'closeAndReload'])
 
@@ -141,6 +173,8 @@ const onSubmitMsg = computed(() => {
       return 'Project submitted successfully.'
     case 'updated':
       return 'Project updated successfully.'
+    case 'updated_subtask':
+      return 'Subtask updated successfully.'
     default:
       return ''
   }
@@ -223,56 +257,72 @@ async function save() {
 
   let data = Object.assign({}, editedItem.value)  // create a data object that will be passed to API to prevent user from seeing conversions
 
-  let subtasksTemp = []
-  editedItem.value.subtasks.forEach((subtask) => {
-    (subtask.name) ? subtasksTemp.push(subtask.name) : subtasksTemp.push(subtask)
-  })
-  data.subtasks = subtasksTemp
-
-
   try { 
-    if (!props.recordId) {
-      const projectPostRes = await axios({
-        method: 'POST',
-        url: `${runtimeConfig.public.API_URL}/project/`,
-        data: { 'name': data.name, 'link': data.link, 'billing_code': data.billing_code },
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
-        }
-      })
-      
-      projectId = projectPostRes.data.data.id
+    const projectRequestResponse = await axios({
+      method: (!props.recordId) ? 'POST' : 'PUT',
+      url: (!props.recordId) ? `${runtimeConfig.public.API_URL}/project/` : `${runtimeConfig.public.API_URL}/project/` + data.id,
+      data: (!props.recordId) ? { 'name': data.name, 'link': data.link, 'billing_code': data.billing_code } 
+        : { 'name': data.name, 'link': data.link, 'billing_code': data.billing_code, 'isarchived': data.isarchived },
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    })
+    
+    projectId = (!props.recordId) ? projectRequestResponse.data.data.id : data.id
 
-      data.subtasks.forEach(async (subtask) => {
-        const subtasksPostRes = await axios({
-          method: 'POST',
-          url: `${runtimeConfig.public.API_URL}/project/` + projectId + `/subtask`,
-          data: { 'name': subtask },
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
+    if(data.subtasks || data.newSubtasks) {
+      if (props.recordId) {
+        data.subtasks = data.newSubtasks
+      }
+      
+      if(data.subtasks) {
+        data.subtasks.forEach(async (subtask) => {
+          const subtasksRequestResponse = await axios({
+            method: 'POST',
+            url: `${runtimeConfig.public.API_URL}/project/` + projectId + `/subtask`,
+            data: { 'name': subtask },
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded'
+            }
+          })
+
+          if (projectRequestResponse.status === 200 && subtasksRequestResponse.status === 200) {
+            if (projectRequestResponse.data.response_code === 200 && subtasksRequestResponse.data.response_code === 200) {
+              submitStatus.value = (!props.recordId) ? 'success' : 'updated'
+              submitInfo.value = (!props.recordId) ? 'Project URL: ' + window.location.origin + '/projects?id=' + projectId : ''
+              if(props.recordId) {
+                editedItem.value.subtasks.push(subtasksRequestResponse.data.data)
+                delete editedItem.value.newSubtasks
+                displayAddNewSubtaskField.value = false
+              }
+
+            } else {
+              submitStatus.value = 'internal_api_error'
+              submitInfo.value = data
+              if (projectRequestResponse.data.response_code !== 200) {
+                console.log(projectRequestResponse)
+              }
+              if (subtasksRequestResponse.data.response_code !== 200) {
+                console.log(subtasksRequestResponse)
+              }
+              return
+            }
           }
         })
-
-        if (projectPostRes.status === 200 && subtasksPostRes.status === 200) {
-          if (projectPostRes.data.response_code === 200 && subtasksPostRes.data.response_code === 200) {
-            submitStatus.value = (!props.recordId) ? 'success' : 'updated'
-            submitInfo.value = (!props.recordId) ? 'Project URL: ' + window.location.origin + '/projects?id=' + projectId : ''
+      } else {
+        if (projectRequestResponse.status === 200) {
+          if (projectRequestResponse.data.response_code === 200) {
+            submitStatus.value = 'updated'
           } else {
             submitStatus.value = 'internal_api_error'
             submitInfo.value = data
-            if (projectPostRes.data.response_code !== 200) {
-              console.log(projectPostRes)
-            }
-            if (subtasksPostRes.data.response_code !== 200) {
-              console.log(subtasksPostRes)
+            if (projectRequestResponse.data.response_code !== 200) {
+              console.log(projectRequestResponse)
             }
             return
           }
         }
-      })
-
-    } else {
-      // PUT requests here...
+      }
     }
   } catch (err) {
     submitStatus.value = 'connection_failure'
@@ -282,26 +332,103 @@ async function save() {
 }
 
 
+function openEditSubtaskModal(subtask) {
+  // grab the incoming subtask array index
+  let indexValue = editedItem.value.subtasks.map( subtask => subtask.id ).indexOf(subtask.id)
+
+  let subtaskArr = []
+  const editableKeys = ['name'] // pick what fields are needed here...
+  for (const key in subtask) {
+    if(editableKeys.includes(key)) {
+      if (subtask.hasOwnProperty(key)) {
+        const obj = { id: subtask['id'], name: key, value: subtask[key], index: indexValue }
+        subtaskArr.push(obj)
+      }
+    }
+  }
+
+  // assign subtask object to reactive field (to be used by form)
+  editedSubtask.value = subtaskArr
+
+  // open a modal with a (text) field bound to editedSubtask.value.name property
+  editSubtaskOverlay.value = true
+}
+
+
+async function updateSubtask(subtask) {
+  submitInfo.value = ''
+  submitStatus.value = 'submitting'
+  submitStatusOverlay.value = true
+
+  try { 
+    const response = await axios({
+      method: 'PUT',
+      url: `${runtimeConfig.public.API_URL}/subtask/` + subtask[0].id,
+      data: { 'name': subtask[0].value },
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    })
+
+    if (response.status === 200) {
+      if (response.data.response_code === 200) {
+        submitStatus.value = 'updated_subtask'
+
+        // update subtask name for the given subtask array's index
+        editedItem.value.subtasks[subtask[0].index].name = subtask[0].value
+      } else {
+        submitStatus.value = 'internal_api_error'
+        submitInfo.value = data
+        if (response.data.response_code !== 200) {
+          console.log(response)
+        }
+        return
+      }
+    }
+  } catch (err) {
+    submitStatus.value = 'connection_failure'
+    submitInfo.value = err
+    console.log(err)
+  }
+
+  // close modal and reset field
+  closeAndClearEditSubtaskModal()
+}
+
+
+function closeAndClearEditSubtaskModal() {
+  editedSubtask.value = Object.assign({}, '')
+  editSubtaskOverlay.value = false
+}
+
+
 function closeArchiveConfirmationModal() {
+  displayAddNewSubtaskField.value = false
   confirmArchiveOverlay.value = false
 }
 
 
 function resetSubmitStatus() {
-  close()
+  if(!props.recordId) close()
+  
   submitStatus.value = ''
   submitStatusOverlay.value = false
   submitBtnDisabled.value = false
+
+  // put form in readonly state after save if archive flag is set to true
+  if(props.recordId) {
+    if(editedItem.value.isarchived == 1) {
+      readonly.value = true
+    }
+  }
+
+  closeArchiveConfirmationModal()
 }
 
 
 function close() {
-  if (!props.recordId) {
-    if(submitStatus.value === 'success') {
-      emit('closeAndReload')
-    } else {
-      emit('close')
-    }
+  if(submitStatus.value === 'success') {
+    emit('closeAndReload')
   } else {
     emit('close')
   }

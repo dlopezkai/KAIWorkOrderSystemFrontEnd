@@ -25,6 +25,28 @@
                             {{ props.confirmBtnText }}
                         </v-btn>
                     </v-card>
+
+                    <v-card v-if="props.type === 'form'" style="font-family:'Open Sans'; min-width: 500px;">
+                        <v-card-title>{{ props.cardTitle }}</v-card-title>
+                        <v-spacer></v-spacer>
+                        <v-card-text>
+                            <v-form ref="form" @submit.prevent="submit">
+                                <v-row>
+                                    <v-col v-for="field in fields" cols="12" sm="12" md="12">
+                                        <v-text-field v-model="field.value" :label="field.name"></v-text-field>
+                                    </v-col>
+                                </v-row>
+                            </v-form>
+                        </v-card-text>
+                        <v-card-actions>
+                            <v-row>
+                                <v-col class="text-right">
+                                    <v-btn variant="plain" @click="emit('close')" :title=props.cancelBtnText>{{ (fields.length > 0) ? props.cancelBtnText : 'Close' }}</v-btn>
+                                    <v-btn v-if="fields.length > 0" :disabled="showConfirmBtn" class="rounded" color="error" :title=props.confirmBtnText @click="emit('confirm', fields)">{{ props.confirmBtnText }}</v-btn>
+                                </v-col>
+                            </v-row>
+                        </v-card-actions>
+                    </v-card>
                 </v-col>
             </v-row>
         </v-container>
@@ -39,7 +61,10 @@ const props = defineProps({
     cancelBtnText: String,
     confirmBtnText: String,
     submitStatus: String,
+    fields: Object,
 })
+
+const { fields } = toRefs(props);
 
 const emit = defineEmits(['close', 'confirm'])
 </script>
