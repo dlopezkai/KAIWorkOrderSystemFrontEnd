@@ -269,7 +269,7 @@ async function save() {
   let data = Object.assign({}, editedItem.value)  // create a data object that will be passed to API to prevent user from seeing conversions
 
   try { 
-    const projectPostRes = await axios({
+    const projectRequestResponse = await axios({
       method: (!props.recordId) ? 'POST' : 'PUT',
       url: (!props.recordId) ? `${runtimeConfig.public.API_URL}/project/` : `${runtimeConfig.public.API_URL}/project/` + data.id,
       data: (!props.recordId) ? { 'name': data.name, 'link': data.link, 'billing_code': data.billing_code } 
@@ -279,8 +279,7 @@ async function save() {
       }
     })
     
-    // projectId = projectPostRes.data.data.id
-    projectId = (!props.recordId) ? projectPostRes.data.data.id : data.id
+    projectId = (!props.recordId) ? projectRequestResponse.data.data.id : data.id
 
     if(data.subtasks || data.newSubtasks) {
       if (props.recordId) {
@@ -289,7 +288,7 @@ async function save() {
       
       if(data.subtasks) {
         data.subtasks.forEach(async (subtask) => {
-          const subtasksPostRes = await axios({
+          const subtasksRequestResponse = await axios({
             method: 'POST',
             url: `${runtimeConfig.public.API_URL}/project/` + projectId + `/subtask`,
             data: { 'name': subtask },
@@ -298,37 +297,37 @@ async function save() {
             }
           })
 
-          if (projectPostRes.status === 200 && subtasksPostRes.status === 200) {
-            if (projectPostRes.data.response_code === 200 && subtasksPostRes.data.response_code === 200) {
+          if (projectRequestResponse.status === 200 && subtasksRequestResponse.status === 200) {
+            if (projectRequestResponse.data.response_code === 200 && subtasksRequestResponse.data.response_code === 200) {
               submitStatus.value = (!props.recordId) ? 'success' : 'updated'
               submitInfo.value = (!props.recordId) ? 'Project URL: ' + window.location.origin + '/projects?id=' + projectId : ''
               if(props.recordId) {
-                editedItem.value.subtasks.push(subtasksPostRes.data.data)
+                editedItem.value.subtasks.push(subtasksRequestResponse.data.data)
                 delete editedItem.value.newSubtasks
               }
 
             } else {
               submitStatus.value = 'internal_api_error'
               submitInfo.value = data
-              if (projectPostRes.data.response_code !== 200) {
-                console.log(projectPostRes)
+              if (projectRequestResponse.data.response_code !== 200) {
+                console.log(projectRequestResponse)
               }
-              if (subtasksPostRes.data.response_code !== 200) {
-                console.log(subtasksPostRes)
+              if (subtasksRequestResponse.data.response_code !== 200) {
+                console.log(subtasksRequestResponse)
               }
               return
             }
           }
         })
       } else {
-        if (projectPostRes.status === 200) {
-          if (projectPostRes.data.response_code === 200) {
+        if (projectRequestResponse.status === 200) {
+          if (projectRequestResponse.data.response_code === 200) {
             submitStatus.value = 'updated'
           } else {
             submitStatus.value = 'internal_api_error'
             submitInfo.value = data
-            if (projectPostRes.data.response_code !== 200) {
-              console.log(projectPostRes)
+            if (projectRequestResponse.data.response_code !== 200) {
+              console.log(projectRequestResponse)
             }
             return
           }
