@@ -64,7 +64,7 @@
                 {{ subtask.name }}
               </v-chip>
 
-              <v-btn v-if="!readonly" color="blue" variant="plain" @click="displayAddNewSubtaskField=true">
+              <v-btn v-if="!readonly" color="blue" variant="plain" title="Add more subtasks" @click="displayAddNewSubtaskField=true">
                 Add more subtasks
               </v-btn>
             </v-col>
