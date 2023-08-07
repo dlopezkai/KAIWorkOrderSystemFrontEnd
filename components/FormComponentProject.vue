@@ -81,7 +81,7 @@
                 </template> -->
               </v-combobox>
 
-              <v-label>Existing Subtasks: </v-label>
+              <v-label>Subtasks: </v-label>
               <v-chip v-for="subtask in editedItem.subtasks" @click="subtaskClicked(subtask)">
                 {{ subtask.name }}
               </v-chip>
@@ -351,6 +351,8 @@ async function save() {
           if (projectPutRes.status === 200 && subtasksPostRes.status === 200) {
             if (projectPutRes.data.response_code === 200 && subtasksPostRes.data.response_code === 200) {
               submitStatus.value = 'updated'
+              editedItem.value.subtasks.push(subtasksPostRes.data.data)
+              delete editedItem.value.newSubtasks
             } else {
               submitStatus.value = 'internal_api_error'
               submitInfo.value = data
