@@ -415,6 +415,11 @@ function save() {
   // create a data object that will be passed to API to prevent user from seeing conversions
   let data = Object.assign({}, editedItem.value)
 
+  // if subtask comes in as object, pull only the ID
+  if ( typeof data.subtask === 'object' && data.subtask.id ) {
+    data.subtask = data.subtask.id
+  }
+
   /* 
     to clear-out assignees, watchers and/or tags while modifying a workorder, 
     the API requires a value of '0' to be sent over for that specific field.
