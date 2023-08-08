@@ -440,6 +440,10 @@ function save() {
     // PUT endpoint requrires 'subtaskid', whereas POST requires 'subtask'
     data.subtaskid = data.subtask
     delete data.subtask
+
+    // PUT endpoint requrires 'statusid', but GET returns status as object
+    data.statusid = data.status
+    delete data.status
   }
 
   // hack warning: since API only accepts "priorityid" to set priority, but fetched data contains a "priority" object.
