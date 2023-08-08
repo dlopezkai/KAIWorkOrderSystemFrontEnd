@@ -437,11 +437,11 @@ function save() {
       data.tags = 0
     }
 
-    // PUT endpoint requrires 'subtaskid', whereas POST requires 'subtask'
+    // PUT endpoint requires 'subtaskid', whereas POST requires 'subtask'
     data.subtaskid = data.subtask
     delete data.subtask
 
-    // PUT endpoint requrires 'statusid', but GET returns status as object
+    // PUT endpoint requires 'statusid', but GET returns status as object
     data.statusid = data.status
     delete data.status
   }
