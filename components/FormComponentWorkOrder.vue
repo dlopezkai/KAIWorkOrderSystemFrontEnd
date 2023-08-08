@@ -431,6 +431,10 @@ function save() {
     if (data.tags && data.tags.length === 0) {
       data.tags = 0
     }
+
+    // PUT endpoint requrires 'subtaskid', whereas POST requires 'subtask'
+    data.subtaskid = data.subtask
+    delete data.subtask
   }
 
   // hack warning: since API only accepts "priorityid" to set priority, but fetched data contains a "priority" object.
