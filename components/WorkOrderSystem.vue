@@ -172,11 +172,11 @@ const headers = [
 
 
 onBeforeMount(() => {
-  setMenuItems(userInfoStore.userInfo)
+  setMenuItems()
 })
 
 watch(() => route.query, () => 
-  setMenuItems(userInfoStore.userInfo)
+  setMenuItems()
 )
 
 // set the selectedAssignee back to logged-in user
@@ -222,8 +222,7 @@ watch(selectedAssignee, (currentValue, newValue) => {
 })
 
 
-// passing in userInfo in prep for ACL logic of menu itmes
-function setMenuItems(userInfo) {
+function setMenuItems() {
   let navigationItems = []
   let filterItems = []
   let settingsItems = []
