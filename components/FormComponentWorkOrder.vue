@@ -94,8 +94,11 @@
 
           <v-card-actions>
             <v-row>
+              <v-col class="text-left">
+                <v-btn variant="plain" class="rounded" @click="copyLink" title="Copy record link">{{ copyUrlBtnText }}</v-btn>
+              </v-col>
               <v-col class="text-right">
-                <v-btn variant="plain" @click="close" :title="`${ cancelBtnText }`">{{ cancelBtnText }}</v-btn>
+                <v-btn variant="plain" class="rounded" @click="close" :title="`${ cancelBtnText }`">{{ cancelBtnText }}</v-btn>
                 <v-btn v-if="!readonly" :disabled="submitBtnDisabled" class="rounded" color="blue" @click="submit" :title="`${ submitBtnText } work order`">{{ submitBtnText }}</v-btn>
               </v-col>
             </v-row>
@@ -141,6 +144,7 @@ const submitBtnDisabled = ref(false)
 const submitStatusOverlay = ref(false)
 const submitStatus = ref('')
 const submitInfo = ref('')
+const urlCopied = ref(false)
 const props = defineProps({
     recordId: String,
     formAction: String,
@@ -195,6 +199,11 @@ const submitBtnText = computed(() => {
 const cancelBtnText = computed(() => {
   return (!props.recordId) ? 'Cancel' : 
     (readonly.value) ? 'Close' : 'Cancel'
+})
+
+// computed value for copy record link button text
+const copyUrlBtnText = computed(() => {
+  return (urlCopied.value) ? 'Record Link Copied' : 'Copy Record Link'
 })
 
 // computed value for work order submit progress messages
@@ -509,6 +518,13 @@ function close() {
   } else {
     emit('close')
   }
+}
+
+
+function copyLink() {
+  const url = window.location.href
+  window.navigator.clipboard.writeText(url)
+  urlCopied.value = true
 }
 
 
