@@ -14,6 +14,8 @@
             single-line
             class="pr-5"
             hide-details
+            @keydown.enter="submitSearch()"
+            @keyup="checkIfSearchFieldIsEmpty()"
           ></v-text-field>
 
           <v-btn color="blue" class="rounded" @click="submitSearch()">Search</v-btn>
@@ -317,6 +319,13 @@ function close() {
 function closeAndReload() {
   dialog.value = false
   loadItems()
+}
+
+
+function checkIfSearchFieldIsEmpty() {
+  if(searchString.value.length === 0) {
+    submitSearch()
+  }
 }
 
 
