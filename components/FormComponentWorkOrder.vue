@@ -95,7 +95,7 @@
           <v-card-actions>
             <v-row>
               <v-col class="text-right">
-                <v-btn variant="plain" @click="close" title="Cancel">Cancel</v-btn>
+                <v-btn variant="plain" @click="close" :title="`${ cancelBtnText }`">{{ cancelBtnText }}</v-btn>
                 <v-btn v-if="!readonly" :disabled="submitBtnDisabled" class="rounded" color="blue" @click="submit" :title="`${ submitBtnText } work order`">{{ submitBtnText }}</v-btn>
               </v-col>
             </v-row>
@@ -189,6 +189,12 @@ const formTitle = computed(() => {
 // computed value for save/submit button text
 const submitBtnText = computed(() => {
   return (!props.recordId) ? 'Submit' : 'Save'
+})
+
+// computed value for close/cancel button text
+const cancelBtnText = computed(() => {
+  return (!props.recordId) ? 'Cancel' : 
+    (readonly.value) ? 'Close' : 'Cancel'
 })
 
 // computed value for work order submit progress messages
