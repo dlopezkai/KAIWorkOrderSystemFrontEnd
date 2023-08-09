@@ -121,7 +121,10 @@ const selectedAssignee = ref(userInfoStore.userInfo.id)
 const dialog = inject('dialog')
 const isRecordPage = inject('isRecordPage')
 const filterByUserTrigger = inject('filterByUserTrigger')
-const showCompleted = inject('showCompleted')
+const showNonCompletedTrigger = inject('showNonCompletedTrigger')
+const showCompletedTrigger = inject('showCompletedTrigger')
+
+const showCompleted = ref(false)
 
 const props = defineProps({
   statuses: Array,
@@ -177,21 +180,42 @@ watch(() => route.query, () =>
 )
 
 // set the selectedAssignee back to logged-in user
+// set the showCompleted flag to false
 watch(filterByUserTrigger, (currentValue, newValue) => {
   if(currentValue !== newValue) {
+    showCompleted.value = false
     selectedAssignee.value = userInfoStore.userInfo.id
+  }
+})
+
+// sets the show complete filter to false, and sets the selected user to '0' if not already set to '0'
+// if selectedAssignee is set to '0' here, it will trigger the selectedAssignee to reload the table
+watch(showNonCompletedTrigger, (currentValue, newValue) => {
+  if(currentValue !== newValue) {
+    showCompleted.value = false
+    if(selectedAssignee.value != '0') {
+      selectedAssignee.value = '0'
+    } else {
+      loadItems()
+    }
+  }
+})
+
+// sets the show complete filter to true, and sets the selected user to '0' if not already set to '0'
+// if selectedAssignee is set to '0' here, it will trigger the selectedAssignee to reload the table
+watch(showCompletedTrigger, (currentValue, newValue) => {
+  if(currentValue !== newValue) {
+    showCompleted.value = true
+    if(selectedAssignee.value != '0') {
+      selectedAssignee.value = '0'
+    } else {
+      loadItems()
+    }
   }
 })
 
 // reload table when selectedAssignee data is changed
 watch(selectedAssignee, (currentValue, newValue) => {
-  if(currentValue !== newValue) {
-    loadItems()
-  }
-})
-
-// reload table when showCompleted data is changed
-watch(showCompleted, (currentValue, newValue) => {
   if(currentValue !== newValue) {
     loadItems()
   }
@@ -215,9 +239,9 @@ function setMenuItems(userInfo) {
       { 'label': 'Users', 'destination': '/users', 'icon': 'mdi-account-multiple' },
     ] : []
     filterItems = [
-      { 'label': 'My Work Orders', 'icon': 'mdi-account-box', 'filter_name': 'filterByUserTrigger', 'filter_value': true },
-      { 'label': 'All Work Orders', 'icon': 'mdi-format-list-bulleted', 'filter_name': 'showCompleted', 'filter_value': false },
-      { 'label': 'Completed', 'icon': 'mdi-playlist-check', 'filter_name': 'showCompleted', 'filter_value': true },
+      { 'label': 'My Work Orders', 'icon': 'mdi-account-box', 'filter_name': 'filterByUser' },
+      { 'label': 'All Work Orders', 'icon': 'mdi-format-list-bulleted', 'filter_name': 'showNonCompleted' },
+      { 'label': 'Completed', 'icon': 'mdi-playlist-check', 'filter_name': 'showCompleted' },
     ]
   }
 

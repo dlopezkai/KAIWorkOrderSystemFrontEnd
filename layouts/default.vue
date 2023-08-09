@@ -81,7 +81,7 @@
                   </v-btn>
                 </v-col>
               </v-row>
-              <v-list-item v-for="menuItem in navMenuStore.menuItems.filterItemsGroup" :prepend-icon="menuItem.icon" @click="filteringMethod(menuItem.filter_name, menuItem.filter_value)">
+              <v-list-item v-for="menuItem in navMenuStore.menuItems.filterItemsGroup" :prepend-icon="menuItem.icon" @click="filteringMethod(menuItem.filter_name)">
                 <v-list-item-title :title="`Filter by ` + menuItem.label" v-text="menuItem.label"></v-list-item-title>
               </v-list-item>
 
@@ -135,8 +135,11 @@
   const filterByUserTrigger = ref(0)
   provide('filterByUserTrigger', filterByUserTrigger)
 
-  const showCompleted = ref(false)
-  provide('showCompleted', showCompleted)
+  const showNonCompletedTrigger = ref(0)
+  provide('showNonCompletedTrigger', showNonCompletedTrigger)
+
+  const showCompletedTrigger = ref(0)
+  provide('showCompletedTrigger', showCompletedTrigger)
 
   const isRecordPage = ref(false)
   provide('isRecordPage', isRecordPage)
@@ -178,15 +181,18 @@
     showModal.value = true
   }
 
-
-  function filteringMethod(filter_name, filter_value) {
-    // increment counter to guarantee new value in component watcher 
-    if (filter_name === 'filterByUserTrigger') {
+  // increment counter to guarantee new value in component watcher 
+  function filteringMethod(filter_name) {
+    if (filter_name === 'filterByUser') {
       filterByUserTrigger.value++
     }
 
+    if (filter_name === 'showNonCompleted') {
+      showNonCompletedTrigger.value++
+    }
+
     if (filter_name === 'showCompleted') {
-      showCompleted.value = filter_value
+      showCompletedTrigger.value++
     }
   }
 
