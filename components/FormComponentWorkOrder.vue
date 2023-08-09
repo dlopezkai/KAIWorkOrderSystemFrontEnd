@@ -385,16 +385,6 @@ function loadPriorities() {
 }
 
 
-function resetSubmitStatus() {
-  // close()
-  if(!props.recordId) close()
-
-  submitStatus.value = ''
-  submitStatusOverlay.value = false
-  submitBtnDisabled.value = false
-}
-
-
 // form submit process
 async function submit() {
   const { valid } = await form.value.validate()
@@ -499,6 +489,15 @@ function resetAndReloadSubtasks() {
   editedItem.value.subtask = ''
   subtasks.value = ''
   loadSubtasks(editedItem.value.project)
+}
+
+
+function resetSubmitStatus() {
+  close()
+
+  submitStatus.value = ''
+  submitStatusOverlay.value = false
+  submitBtnDisabled.value = false
 }
 
 

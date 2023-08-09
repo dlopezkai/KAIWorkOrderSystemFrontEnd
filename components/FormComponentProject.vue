@@ -423,7 +423,7 @@ function closeArchiveConfirmationModal() {
 
 
 function resetSubmitStatus() {
-  if(!props.recordId) close()
+  close()
   
   submitStatus.value = ''
   submitStatusOverlay.value = false
