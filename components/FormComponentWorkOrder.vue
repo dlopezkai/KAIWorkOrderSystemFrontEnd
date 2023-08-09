@@ -94,7 +94,7 @@
 
           <v-card-actions>
             <v-row>
-              <v-col class="text-left">
+              <v-col v-if="props.recordId" class="text-left">
                 <v-btn variant="plain" class="rounded" @click="copyLink" title="Copy record link">{{ copyUrlBtnText }}</v-btn>
               </v-col>
               <v-col class="text-right">
