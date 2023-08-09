@@ -14,8 +14,11 @@
       :cardTitle="onSubmitMsg"
       :cardText="submitInfo"
       confirmBtnText="OK"
+      :shareBtn=true
+      shareBtnText="Copy URL"
       :submitStatus="submitStatus"
       @confirm="resetSubmitStatus"
+      @copyShareLink="copyLink"
     >
     </modal-comp>
 
@@ -145,6 +148,8 @@ const submitStatusOverlay = ref(false)
 const submitStatus = ref('')
 const submitInfo = ref('')
 const urlCopied = ref(false)
+const displayShareBtn = ref(false)
+const shareUrl = ref('')
 const props = defineProps({
     recordId: String,
     formAction: String,
@@ -479,7 +484,9 @@ function save() {
       if (response.status === 200) {
         if (response.data.response_code === 200) {
           submitStatus.value = (!props.recordId) ? 'success' : 'updated'
-          submitInfo.value = (!props.recordId) ? 'Work order URL: ' + window.location.origin + '/workorders?id=' + response.data.data.id : ''
+          shareUrl.value = (!props.recordId) ? window.location.origin + '/workorders?id=' + response.data.data.id : ''
+          submitInfo.value = (!props.recordId) ? 'Work order URL: ' + shareUrl.value : ''
+          displayShareBtn.value = (!props.recordId) ? true : false
         } else {
           submitStatus.value = 'internal_api_error'
           submitInfo.value = data
@@ -522,7 +529,7 @@ function close() {
 
 
 function copyLink() {
-  const url = window.location.href
+  const url = (!props.recordId) ? shareUrl.value : window.location.href
   window.navigator.clipboard.writeText(url)
   urlCopied.value = true
 }
