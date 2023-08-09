@@ -121,7 +121,6 @@ import axios from 'axios'
 import { useAuthStore } from '~/store/auth';
 import { useUserInfoStore } from '~/store/userInfoStore'
 import CommentsComp from './CommentsComp.vue';
-import { convertToDate, hoursToMinutes, minutesToHours } from '~/helpers/datetimeConversions.js';
 import { capitalizeFirstLetter } from '~/helpers/capitalizeFirstLetter.js';
 import '~/assets/css/main.css'
 
@@ -259,7 +258,6 @@ async function loadItem() {
         }
 
         editedItem.value = Object.assign({}, response.data.data[0])
-        editedItem.value.time_estimate = minutesToHours(response.data.data[0].time_estimate)
 
         // for arrays
         if(editedItem.value.tags) {
@@ -444,8 +442,6 @@ function save() {
       data.priorityid = data.priority
     }
   }
-
-  if(data.time_estimate) data.time_estimate = hoursToMinutes(data.time_estimate)
 
   if (!props.recordId) {
     data.creatorid = userInfoStore.userInfo.id
