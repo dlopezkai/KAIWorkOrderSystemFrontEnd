@@ -160,9 +160,10 @@
     recordPageCheck()
   )
 
+  // used to set the active filter when user redirects back to table page
   watch(() => route.query, () => {
     setTimeout(() => {
-      (!isRecordPage.value) ? filteringMethod(activeFilter.value) : '' 
+      if(!isRecordPage.value) filteringMethod(activeFilter.value)
     }, "100")
   })
 
