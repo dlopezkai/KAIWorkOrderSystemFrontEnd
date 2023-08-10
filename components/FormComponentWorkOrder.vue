@@ -99,7 +99,7 @@
                   </div>
                     
                   <div class="d-flex mb-2">
-                    <v-chip v-for="link in editedItem.links" :href=link target="_blank" :closable="!readonly">
+                    <v-chip v-for="link in editedItem.links" :href=link target="_blank" :closable="!readonly" @click:close="deleteLink(link)">
                       <span class="wrapclass" style="width:250px"> {{ link }} </span>
                     </v-chip>
                   </div>
@@ -610,6 +610,11 @@ function pushLink() {
   }
   editedItem.value.links.push(linkTemp.value)
   linkTemp.value = ''
+}
+
+
+function deleteLink(link) {
+  editedItem.value.links = editedItem.value.links.filter(e => e !== link)
 }
 
 </script>
