@@ -22,7 +22,7 @@
 
                         <v-card-text v-if="props.cardText">
                             {{ props.cardText }}<br/>
-                            <v-btn v-if="props.shareBtn" size="small" class="rounded" variant="plain" @click="emit('copyShareLink')">{{ props.shareBtnText }}</v-btn>
+                            <v-btn v-if="props.displayShareBtn" size="small" class="rounded" variant="plain" @click="emit('copyShareLink')">{{ props.shareBtnText }}</v-btn>
                         </v-card-text>
 
                         <v-progress-circular v-if="props.submitStatus === 'submitting'" color="#92D5D5" indeterminate size="64" class="mb-4"></v-progress-circular>
@@ -67,7 +67,7 @@ const props = defineProps({
     confirmBtnText: String,
     submitStatus: String,
     fields: Object,
-    shareBtn: Boolean,
+    displayShareBtn: Boolean,
     shareBtnText: String,
 })
 

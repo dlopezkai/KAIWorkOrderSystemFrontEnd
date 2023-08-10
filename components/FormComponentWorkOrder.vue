@@ -14,7 +14,7 @@
       :cardTitle="onSubmitMsg"
       :cardText="submitInfo"
       confirmBtnText="OK"
-      :shareBtn=true
+      :displayShareBtn=displayShareBtn
       shareBtnText="Copy URL"
       :submitStatus="submitStatus"
       @confirm="resetSubmitStatus"
@@ -439,6 +439,7 @@ function save() {
   submitStatus.value = 'submitting'
   submitStatusOverlay.value = true
   submitBtnDisabled.value = true
+  displayShareBtn.value = false
   let method = ''
   let url = ''
 
