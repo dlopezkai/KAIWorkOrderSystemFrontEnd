@@ -323,8 +323,10 @@ async function loadItem() {
 
         // make an array of links. used to make individual clickable v-chips
         // delimiter is a comma - update later if this isn't acceptable
-        const linksArray = editedItem.value.links.split(',');
-        editedItem.value.links = linksArray
+        if(editedItem.value.links.length > 0) {
+          const linksArray = editedItem.value.links.split(',');
+          editedItem.value.links = linksArray
+        }
 
         loadProjects()
         loadSubtasks(editedItem.value.project.id)
