@@ -88,18 +88,18 @@
                 </v-col>
 
                 <v-col cols="12" sm="12" md="12" class="mt-5">
-                  <div class="d-flex mb-2">
+                  <div v-if="!readonly" class="d-flex mb-2">
                     <v-text-field 
                       v-model="linkTemp" 
                       label="Add SharePoint Link(s)"
                       @keydown.enter="pushLink()"
                       class="pr-5"
                     ></v-text-field>
-                    <v-btn v-if="!readonly" href="https://kauffmaninc.sharepoint.com/" target="_blank" variant="tonal" class="rounded" color="#428086" title="Open SharePoint">Open SharePoint site</v-btn>
+                    <v-btn href="https://kauffmaninc.sharepoint.com/" target="_blank" variant="tonal" class="rounded" color="#428086" title="Open SharePoint">Open SharePoint site</v-btn>
                   </div>
                     
                   <div class="d-flex mb-2">
-                    <v-chip v-for="link in editedItem.links" closable class="wrapclass" :href=link target="_blank" :disabled="readonly" >
+                    <v-chip v-for="link in editedItem.links" :href=link target="_blank" :closable="!readonly">
                       <span class="wrapclass" style="width:250px"> {{ link }} </span>
                     </v-chip>
                   </div>
@@ -620,6 +620,7 @@ function pushLink() {
   }
 
   .wrapclass {
+    width: 250px;
     max-width: 99%;
     overflow: hidden;
     text-overflow: ellipsis;
