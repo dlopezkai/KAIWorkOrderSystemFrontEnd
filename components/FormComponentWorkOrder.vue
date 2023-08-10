@@ -14,8 +14,11 @@
       :cardTitle="onSubmitMsg"
       :cardText="submitInfo"
       confirmBtnText="OK"
+      :displayShareBtn=displayShareBtn
+      shareBtnText="Copy URL"
       :submitStatus="submitStatus"
       @confirm="resetSubmitStatus"
+      @copyShareLink="copyLink"
     >
     </modal-comp>
 
@@ -49,7 +52,7 @@
                 </v-col>
 
                 <v-col cols="12" sm="12" md="12">
-                  <v-select v-model="editedItem.tags" label="Type" :items="tags" item-title="title" item-value="value" multiple chips clearable></v-select>
+                  <v-select v-model="editedItem.tags" label="Type" :items="tags" item-title="title" item-value="value" :rules="[rules.select]" multiple chips clearable></v-select>
                 </v-col>
 
                 <v-col v-if="props.recordId" cols="12" sm="6" md="6">
@@ -85,8 +88,22 @@
                 </v-col>
 
                 <v-col cols="12" sm="12" md="12" class="mt-5">
-                  <v-text-field v-model="editedItem.links" label="SharePoint Link"></v-text-field>
-                  <v-btn v-if="!readonly" href="https://kauffmaninc.sharepoint.com/" target="_blank" variant="tonal" class="rounded" color="#428086" title="Open SharePoint">Open SharePoint site</v-btn>
+                  <div v-if="!readonly" class="d-flex mb-2">
+                    <v-text-field 
+                      v-model="linkTemp" 
+                      label="Add SharePoint Link(s)"
+                      @keydown.enter="pushLink()"
+                      @blur="pushLink()"
+                      class="pr-5"
+                    ></v-text-field>
+                    <v-btn href="https://kauffmaninc.sharepoint.com/" target="_blank" variant="tonal" class="rounded" color="#428086" title="Open SharePoint">Open SharePoint site</v-btn>
+                  </div>
+                    
+                  <div class="d-flex mb-2">
+                    <v-chip v-for="link in editedItem.links" :href=link target="_blank" :closable="!readonly" @click:close="deleteLink(link)">
+                      <span class="wrapclass" style="width:250px"> {{ link }} </span>
+                    </v-chip>
+                  </div>
                 </v-col>
               </v-row>
             </v-form>
@@ -94,8 +111,11 @@
 
           <v-card-actions>
             <v-row>
+              <v-col v-if="props.recordId" class="text-left">
+                <v-btn variant="plain" class="rounded" @click="copyLink" title="Copy record link">{{ copyUrlBtnText }}</v-btn>
+              </v-col>
               <v-col class="text-right">
-                <v-btn variant="plain" @click="close" title="Cancel">Cancel</v-btn>
+                <v-btn variant="plain" class="rounded" @click="close" :title="`${ cancelBtnText }`">{{ cancelBtnText }}</v-btn>
                 <v-btn v-if="!readonly" :disabled="submitBtnDisabled" class="rounded" color="blue" @click="submit" :title="`${ submitBtnText } work order`">{{ submitBtnText }}</v-btn>
               </v-col>
             </v-row>
@@ -121,7 +141,6 @@ import axios from 'axios'
 import { useAuthStore } from '~/store/auth';
 import { useUserInfoStore } from '~/store/userInfoStore'
 import CommentsComp from './CommentsComp.vue';
-import { convertToDate, hoursToMinutes, minutesToHours } from '~/helpers/datetimeConversions.js';
 import { capitalizeFirstLetter } from '~/helpers/capitalizeFirstLetter.js';
 import '~/assets/css/main.css'
 
@@ -142,6 +161,10 @@ const submitBtnDisabled = ref(false)
 const submitStatusOverlay = ref(false)
 const submitStatus = ref('')
 const submitInfo = ref('')
+const urlCopied = ref(false)
+const displayShareBtn = ref(false)
+const shareUrl = ref('')
+const linkTemp = ref('')
 const props = defineProps({
     recordId: String,
     formAction: String,
@@ -190,6 +213,17 @@ const formTitle = computed(() => {
 // computed value for save/submit button text
 const submitBtnText = computed(() => {
   return (!props.recordId) ? 'Submit' : 'Save'
+})
+
+// computed value for close/cancel button text
+const cancelBtnText = computed(() => {
+  return (!props.recordId) ? 'Cancel' : 
+    (readonly.value) ? 'Close' : 'Cancel'
+})
+
+// computed value for copy record link button text
+const copyUrlBtnText = computed(() => {
+  return (urlCopied.value) ? 'Record Link Copied' : 'Copy Record Link'
 })
 
 // computed value for work order submit progress messages
@@ -259,7 +293,6 @@ async function loadItem() {
         }
 
         editedItem.value = Object.assign({}, response.data.data[0])
-        editedItem.value.time_estimate = minutesToHours(response.data.data[0].time_estimate)
 
         // for arrays
         if(editedItem.value.tags) {
@@ -288,6 +321,13 @@ async function loadItem() {
 
         // for objects
         editedItem.value.status = editedItem.value.status.id
+
+        // make an array of links. used to make individual clickable v-chips
+        // delimiter is a comma - update later if this isn't acceptable
+        if(editedItem.value.links && editedItem.value.links.length > 0) {
+          const linksArray = editedItem.value.links.split(',');
+          editedItem.value.links = linksArray
+        }
 
         loadProjects()
         loadSubtasks(editedItem.value.project.id)
@@ -385,16 +425,6 @@ function loadPriorities() {
 }
 
 
-function resetSubmitStatus() {
-  // close()
-  if(!props.recordId) close()
-
-  submitStatus.value = ''
-  submitStatusOverlay.value = false
-  submitBtnDisabled.value = false
-}
-
-
 // form submit process
 async function submit() {
   const { valid } = await form.value.validate()
@@ -409,6 +439,7 @@ function save() {
   submitStatus.value = 'submitting'
   submitStatusOverlay.value = true
   submitBtnDisabled.value = true
+  displayShareBtn.value = false
   let method = ''
   let url = ''
 
@@ -455,7 +486,10 @@ function save() {
     }
   }
 
-  if(data.time_estimate) data.time_estimate = hoursToMinutes(data.time_estimate)
+  // transform links array back to a string since that's what DB is expecting
+  if(data.links) {
+    data.links = data.links.toString()
+  }
 
   if (!props.recordId) {
     data.creatorid = userInfoStore.userInfo.id
@@ -478,7 +512,9 @@ function save() {
       if (response.status === 200) {
         if (response.data.response_code === 200) {
           submitStatus.value = (!props.recordId) ? 'success' : 'updated'
-          submitInfo.value = (!props.recordId) ? 'Work order URL: ' + window.location.origin + '/workorders?id=' + response.data.data.id : ''
+          shareUrl.value = (!props.recordId) ? window.location.origin + '/workorders?id=' + response.data.data.id : ''
+          submitInfo.value = (!props.recordId) ? 'Work order URL: ' + shareUrl.value : ''
+          displayShareBtn.value = (!props.recordId) ? true : false
         } else {
           submitStatus.value = 'internal_api_error'
           submitInfo.value = data
@@ -502,12 +538,28 @@ function resetAndReloadSubtasks() {
 }
 
 
+function resetSubmitStatus() {
+  close()
+
+  submitStatus.value = ''
+  submitStatusOverlay.value = false
+  submitBtnDisabled.value = false
+}
+
+
 function close() {
   if(submitStatus.value === 'success') {
     emit('closeAndReload')
   } else {
     emit('close')
   }
+}
+
+
+function copyLink() {
+  const url = (!props.recordId) ? shareUrl.value : window.location.href
+  window.navigator.clipboard.writeText(url)
+  urlCopied.value = true
 }
 
 
@@ -550,10 +602,43 @@ function convertToYyyymmddFormat(value) {
     + "-" 
     + (value.getDate().toString().length != 2 ? "0" + value.getDate() : value.getDate());
 }
+
+
+// create a editedItem.value.links array if it doesn't already exist
+// push each linkTemp.value string to editedItem.value.links array
+function pushLink() {
+  if(linkTemp.value.length > 0) {
+    if (!editedItem.value.links) {
+        editedItem.value.links = []
+      }
+      editedItem.value.links.push(linkTemp.value)
+      linkTemp.value = ''
+    }
+  }
+
+function deleteLink(link) {
+  editedItem.value.links = editedItem.value.links.filter(e => e !== link)
+}
+
 </script>
 
 <style scoped>
   .modal-form {
     height: 80vh;
+  }
+
+  .wrapclass {
+    width: 250px;
+    max-width: 99%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-right: 10px
+  }
+</style>
+
+<style>
+  .v-chip__close {
+    position: absolute;
+    right: 5%;
   }
 </style>

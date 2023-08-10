@@ -14,6 +14,8 @@
             single-line
             class="pr-5"
             hide-details
+            @keydown.enter="submitSearch()"
+            @keyup="checkIfSearchFieldIsEmpty()"
           ></v-text-field>
 
           <v-btn color="blue" class="rounded" @click="submitSearch()">Search</v-btn>
@@ -121,7 +123,10 @@ const selectedAssignee = ref(userInfoStore.userInfo.id)
 const dialog = inject('dialog')
 const isRecordPage = inject('isRecordPage')
 const filterByUserTrigger = inject('filterByUserTrigger')
-const showCompleted = inject('showCompleted')
+const showNonCompletedTrigger = inject('showNonCompletedTrigger')
+const showCompletedTrigger = inject('showCompletedTrigger')
+
+const showCompleted = ref(false)
 
 const props = defineProps({
   statuses: Array,
@@ -169,17 +174,48 @@ const headers = [
 
 
 onBeforeMount(() => {
-  setMenuItems(userInfoStore.userInfo)
+  setMenuItems()
 })
 
 watch(() => route.query, () => 
-  setMenuItems(userInfoStore.userInfo)
+  setMenuItems()
 )
 
 // set the selectedAssignee back to logged-in user
+// set the showCompleted flag to false
 watch(filterByUserTrigger, (currentValue, newValue) => {
   if(currentValue !== newValue) {
+    showCompleted.value = false
     selectedAssignee.value = userInfoStore.userInfo.id
+  }
+})
+
+// sets the show complete filter to false, and sets the selected user to '0' if not already set to '0'
+watch(showNonCompletedTrigger, (currentValue, newValue) => {
+  if(currentValue !== newValue) {
+    if(showCompleted.value === true || selectedAssignee.value != '0') {
+      showCompleted.value = false
+      if(selectedAssignee.value != '0') {
+        selectedAssignee.value = '0' // this will trip the selectedAssignee watcher, and thus, perform loadItems() method again
+      } else {
+        loadItems()
+      }
+    }
+  }
+})
+
+// sets the show complete filter to true, and sets the selected user to '0' if not already set to '0'
+// if selectedAssignee is set to '0' here, it will trigger the selectedAssignee to reload the table
+watch(showCompletedTrigger, (currentValue, newValue) => {
+  if(currentValue !== newValue) {
+    if(showCompleted.value === false || selectedAssignee.value != '0') {
+      showCompleted.value = true
+      if(selectedAssignee.value != '0') {
+        selectedAssignee.value = '0' // this will trip the selectedAssignee watcher, and thus, perform loadItems() method again
+      } else {
+        loadItems()
+      }
+    }
   }
 })
 
@@ -190,16 +226,8 @@ watch(selectedAssignee, (currentValue, newValue) => {
   }
 })
 
-// reload table when showCompleted data is changed
-watch(showCompleted, (currentValue, newValue) => {
-  if(currentValue !== newValue) {
-    loadItems()
-  }
-})
 
-
-// passing in userInfo in prep for ACL logic of menu itmes
-function setMenuItems(userInfo) {
+function setMenuItems() {
   let navigationItems = []
   let filterItems = []
   let settingsItems = []
@@ -215,9 +243,9 @@ function setMenuItems(userInfo) {
       { 'label': 'Users', 'destination': '/users', 'icon': 'mdi-account-multiple' },
     ] : []
     filterItems = [
-      { 'label': 'My Work Orders', 'icon': 'mdi-account-box', 'filter_name': 'filterByUserTrigger', 'filter_value': true },
-      { 'label': 'All Work Orders', 'icon': 'mdi-format-list-bulleted', 'filter_name': 'showCompleted', 'filter_value': false },
-      { 'label': 'Completed', 'icon': 'mdi-playlist-check', 'filter_name': 'showCompleted', 'filter_value': true },
+      { 'label': 'My Work Orders', 'icon': 'mdi-account-box', 'filter_name': 'filterByUser', 'default_class': 'active' },
+      { 'label': 'All Work Orders', 'icon': 'mdi-format-list-bulleted', 'filter_name': 'showNonCompleted', 'default_active': '' },
+      { 'label': 'Completed', 'icon': 'mdi-playlist-check', 'filter_name': 'showCompleted', 'default_active': '' },
     ]
   }
 
@@ -294,6 +322,13 @@ function close() {
 function closeAndReload() {
   dialog.value = false
   loadItems()
+}
+
+
+function checkIfSearchFieldIsEmpty() {
+  if(searchString.value.length === 0) {
+    submitSearch()
+  }
 }
 
 

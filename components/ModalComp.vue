@@ -19,7 +19,12 @@
 
                     <v-card v-if="props.type === 'formSubmit'" style="font-family:'Open Sans;'">
                         <v-card-title>{{ props.cardTitle }}</v-card-title>
-                        <v-card-text v-if="props.cardText">{{ props.cardText }}</v-card-text>
+
+                        <v-card-text v-if="props.cardText">
+                            {{ props.cardText }}<br/>
+                            <v-btn v-if="props.displayShareBtn" size="small" class="rounded" variant="plain" @click="emit('copyShareLink')">{{ props.shareBtnText }}</v-btn>
+                        </v-card-text>
+
                         <v-progress-circular v-if="props.submitStatus === 'submitting'" color="#92D5D5" indeterminate size="64" class="mb-4"></v-progress-circular>
                         <v-btn v-if="props.submitStatus != 'submitting'" color="blue-darken-1" variant="text" class="mb-4" @click="emit('confirm')">
                             {{ props.confirmBtnText }}
@@ -62,11 +67,13 @@ const props = defineProps({
     confirmBtnText: String,
     submitStatus: String,
     fields: Object,
+    displayShareBtn: Boolean,
+    shareBtnText: String,
 })
 
 const { fields } = toRefs(props);
 
-const emit = defineEmits(['close', 'confirm'])
+const emit = defineEmits(['close', 'confirm', 'copyShareLink'])
 </script>
 
 <style lang="scss" scoped>
