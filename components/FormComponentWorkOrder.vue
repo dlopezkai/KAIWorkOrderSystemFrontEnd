@@ -324,7 +324,7 @@ async function loadItem() {
 
         // make an array of links. used to make individual clickable v-chips
         // delimiter is a comma - update later if this isn't acceptable
-        if(editedItem.value.links.length > 0) {
+        if(editedItem.value.links && editedItem.value.links.length > 0) {
           const linksArray = editedItem.value.links.split(',');
           editedItem.value.links = linksArray
         }
