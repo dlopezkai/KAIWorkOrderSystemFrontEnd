@@ -178,7 +178,6 @@ const editedItem = ref([
     creator: '',
     description: '',
     due_date: '',
-    project: '',
     id: '',
     links: '',
     subtask: '',
@@ -329,6 +328,10 @@ async function loadItem() {
           editedItem.value.links = linksArray
         }
 
+        if (editedItem.value.project.isarchived === '1') {
+          editedItem.value.project.name = editedItem.value.project.name + ' (' + editedItem.value.project.billing_code + ')'
+        }
+
         loadProjects()
         loadSubtasks(editedItem.value.project.id)
     } catch (err) {
@@ -388,7 +391,7 @@ function loadProjects() {
     projects.value = filteredResponse.map((item) => {
       return {
         id: item.id,
-        name: item.name
+        name: item.name + ' (' + item.billing_code + ')'
       }
     })
   })

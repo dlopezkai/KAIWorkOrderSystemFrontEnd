@@ -48,7 +48,7 @@
           </template>
 
           <template v-slot:item.project="{ item }">
-            {{ item.raw.project.name + ' | ' + item.raw.subtask.name  }}
+            {{ item.raw.project.name + ' (' + item.raw.project.billing_code + ') | ' + item.raw.subtask.name  }}
           </template>
 
           <template v-slot:item.creator="{ item }">
