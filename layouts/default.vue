@@ -81,7 +81,7 @@
                   </v-btn>
                 </v-col>
               </v-row>
-              <v-list-item v-for="menuItem in navMenuStore.menuItems.filterItemsGroup" :id="menuItem.filter_name" :prepend-icon="menuItem.icon" @click="filteringMethod(menuItem.filter_name)">
+              <v-list-item v-for="menuItem in navMenuStore.menuItems.filterItemsGroup" :id="menuItem.filter_name" :class="menuItem.default_class" :prepend-icon="menuItem.icon" @click="filteringMethod(menuItem.filter_name)">
                 <v-list-item-title :title="`Filter by ` + menuItem.label" v-text="menuItem.label"></v-list-item-title>
               </v-list-item>
 

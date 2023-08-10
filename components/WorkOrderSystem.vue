@@ -240,9 +240,9 @@ function setMenuItems() {
       { 'label': 'Users', 'destination': '/users', 'icon': 'mdi-account-multiple' },
     ] : []
     filterItems = [
-      { 'label': 'My Work Orders', 'icon': 'mdi-account-box', 'filter_name': 'filterByUser' },
-      { 'label': 'All Work Orders', 'icon': 'mdi-format-list-bulleted', 'filter_name': 'showNonCompleted' },
-      { 'label': 'Completed', 'icon': 'mdi-playlist-check', 'filter_name': 'showCompleted' },
+      { 'label': 'My Work Orders', 'icon': 'mdi-account-box', 'filter_name': 'filterByUser', 'default_class': 'active' },
+      { 'label': 'All Work Orders', 'icon': 'mdi-format-list-bulleted', 'filter_name': 'showNonCompleted', 'default_active': '' },
+      { 'label': 'Completed', 'icon': 'mdi-playlist-check', 'filter_name': 'showCompleted', 'default_active': '' },
     ]
   }
 
