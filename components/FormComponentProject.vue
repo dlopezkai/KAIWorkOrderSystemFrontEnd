@@ -91,6 +91,7 @@
                   v-model="linkTemp" 
                   label="Add SharePoint Link(s)"
                   @keydown.enter="pushLink()"
+                  @blur="pushLink()"
                   class="pr-5"
                 ></v-text-field>
                 <v-btn href="https://kauffmaninc.sharepoint.com/" target="_blank" variant="tonal" class="rounded" color="#428086" title="Open SharePoint">Open SharePoint site</v-btn>
@@ -485,12 +486,16 @@ function close() {
 // create a editedItem.value.links array if it doesn't already exist
 // push each linkTemp.value string to editedItem.value.links array
 function pushLink() {
-  if (!editedItem.value.link) {
-    editedItem.value.link = []
+  if(linkTemp.value.length > 0) {
+    if (!editedItem.value.link) {
+      editedItem.value.link = []
+    }
+    editedItem.value.link.push(linkTemp.value)
+    linkTemp.value = ''
   }
-  editedItem.value.link.push(linkTemp.value)
-  linkTemp.value = ''
 }
+
+
 function deleteLink(link) {
   editedItem.value.link = editedItem.value.link.filter(e => e !== link)
 }

@@ -93,6 +93,7 @@
                       v-model="linkTemp" 
                       label="Add SharePoint Link(s)"
                       @keydown.enter="pushLink()"
+                      @blur="pushLink()"
                       class="pr-5"
                     ></v-text-field>
                     <v-btn href="https://kauffmaninc.sharepoint.com/" target="_blank" variant="tonal" class="rounded" color="#428086" title="Open SharePoint">Open SharePoint site</v-btn>
@@ -605,13 +606,14 @@ function convertToYyyymmddFormat(value) {
 // create a editedItem.value.links array if it doesn't already exist
 // push each linkTemp.value string to editedItem.value.links array
 function pushLink() {
-  if (!editedItem.value.links) {
-    editedItem.value.links = []
+  if(linkTemp.value.length > 0) {
+    if (!editedItem.value.links) {
+        editedItem.value.links = []
+      }
+      editedItem.value.links.push(linkTemp.value)
+      linkTemp.value = ''
+    }
   }
-  editedItem.value.links.push(linkTemp.value)
-  linkTemp.value = ''
-}
-
 
 function deleteLink(link) {
   editedItem.value.links = editedItem.value.links.filter(e => e !== link)
