@@ -191,14 +191,15 @@ watch(filterByUserTrigger, (currentValue, newValue) => {
 })
 
 // sets the show complete filter to false, and sets the selected user to '0' if not already set to '0'
-// if selectedAssignee is set to '0' here, it will trigger the selectedAssignee to reload the table
 watch(showNonCompletedTrigger, (currentValue, newValue) => {
   if(currentValue !== newValue) {
-    showCompleted.value = false
-    if(selectedAssignee.value != '0') {
-      selectedAssignee.value = '0'
-    } else {
-      loadItems()
+    if(showCompleted.value === true || selectedAssignee.value != '0') {
+      showCompleted.value = false
+      if(selectedAssignee.value != '0') {
+        selectedAssignee.value = '0' // this will trip the selectedAssignee watcher, and thus, perform loadItems() method again
+      } else {
+        loadItems()
+      }
     }
   }
 })
@@ -207,11 +208,13 @@ watch(showNonCompletedTrigger, (currentValue, newValue) => {
 // if selectedAssignee is set to '0' here, it will trigger the selectedAssignee to reload the table
 watch(showCompletedTrigger, (currentValue, newValue) => {
   if(currentValue !== newValue) {
-    showCompleted.value = true
-    if(selectedAssignee.value != '0') {
-      selectedAssignee.value = '0'
-    } else {
-      loadItems()
+    if(showCompleted.value === false || selectedAssignee.value != '0') {
+      showCompleted.value = true
+      if(selectedAssignee.value != '0') {
+        selectedAssignee.value = '0' // this will trip the selectedAssignee watcher, and thus, perform loadItems() method again
+      } else {
+        loadItems()
+      }
     }
   }
 })
