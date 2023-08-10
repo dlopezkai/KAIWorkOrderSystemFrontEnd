@@ -86,8 +86,22 @@
             </v-col>
 
             <v-col cols="12" sm="12" md="12">
-              <v-text-field v-model="editedItem.link" label="SharePoint Link"></v-text-field>
-              <v-btn v-if="!readonly" href="https://kauffmaninc.sharepoint.com/" target="_blank" variant="tonal" class="rounded" color="#428086" title="Open SharePoint">Open SharePoint site</v-btn>
+              <div v-if="!readonly" class="d-flex mb-2">
+                <v-text-field 
+                  v-model="linkTemp" 
+                  label="Add SharePoint Link(s)"
+                  @keydown.enter="pushLink()"
+                  @blur="pushLink()"
+                  class="pr-5"
+                ></v-text-field>
+                <v-btn href="https://kauffmaninc.sharepoint.com/" target="_blank" variant="tonal" class="rounded" color="#428086" title="Open SharePoint">Open SharePoint site</v-btn>
+              </div>
+
+              <div class="d-flex mb-2">
+                <v-chip v-for="link in editedItem.link" :href=link target="_blank" :closable="!readonly" @click:close="deleteLink(link)">
+                  <span class="wrapclass" style="width:250px"> {{ link }} </span>
+                </v-chip>
+              </div>
             </v-col>
 
             <v-col v-if="props.recordId" cols="12" sm="12" md="12">
@@ -123,6 +137,7 @@ const readonly = ref(false)
 const recordFound = ref(true)
 const editSubtaskOverlay = ref(false)
 const displayAddNewSubtaskField = ref(false)
+const linkTemp = ref('')
 
 const props = defineProps({
     recordId: String,
@@ -236,6 +251,14 @@ async function loadItem() {
 
         // for objects
         // editedItem.value.status = editedItem.value.status.id
+
+        // make an array of links. used to make individual clickable v-chips
+        // delimiter is a comma - update later if this isn't acceptable
+        if(editedItem.value.link.length > 0) {
+          const linksArray = editedItem.value.link.split(',');
+          editedItem.value.link = linksArray
+        }
+
     } catch (err) {
       console.log(err)
     }
@@ -276,6 +299,11 @@ async function save() {
   let projectId = ''
 
   let data = Object.assign({}, editedItem.value)  // create a data object that will be passed to API to prevent user from seeing conversions
+
+  // transform links array back to a string since that's what DB is expecting
+  if(data.link) {
+    data.link = data.link.toString()
+  }
 
   try { 
     const projectRequestResponse = await axios({
@@ -455,8 +483,39 @@ function close() {
 }
 
 
+// create a editedItem.value.links array if it doesn't already exist
+// push each linkTemp.value string to editedItem.value.links array
+function pushLink() {
+  if(linkTemp.value.length > 0) {
+    if (!editedItem.value.link) {
+      editedItem.value.link = []
+    }
+    editedItem.value.link.push(linkTemp.value)
+    linkTemp.value = ''
+  }
+}
+
+
+function deleteLink(link) {
+  editedItem.value.link = editedItem.value.link.filter(e => e !== link)
+}
+
+
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
+.wrapclass {
+    width: 250px;
+    max-width: 99%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-right: 10px
+  }
+</style>
 
+<style>
+  .v-chip__close {
+    position: absolute;
+    right: 5%;
+  }
 </style>
