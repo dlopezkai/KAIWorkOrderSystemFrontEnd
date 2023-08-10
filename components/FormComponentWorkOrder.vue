@@ -99,8 +99,8 @@
                   </div>
                     
                   <div class="d-flex mb-2">
-                    <v-chip v-for="link in editedItem.links" closable :href=link target="_blank" :disabled="readonly" >
-                      {{ link }}
+                    <v-chip v-for="link in editedItem.links" closable class="wrapclass" :href=link target="_blank" :disabled="readonly" >
+                      <span class="wrapclass" style="width:250px"> {{ link }} </span>
                     </v-chip>
                   </div>
                 </v-col>
@@ -615,5 +615,19 @@ function pushLink() {
 <style scoped>
   .modal-form {
     height: 80vh;
+  }
+
+  .wrapclass {
+    max-width: 99%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-right: 10px
+  }
+</style>
+
+<style>
+  .v-chip__close {
+    position: absolute;
+    right: 5%;
   }
 </style>
