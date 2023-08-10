@@ -123,6 +123,7 @@
   const userInfoStore = useUserInfoStore()
   const route = useRoute()
   const drawer = ref(true)
+  const activeFilter = ref('')
 
   const displayLoadingMessage = ref(false)
   provide('displayLoadingMessage', displayLoadingMessage)
@@ -159,6 +160,12 @@
     recordPageCheck()
   )
 
+  watch(() => route.query, () => {
+    setTimeout(() => {
+      (!isRecordPage.value) ? filteringMethod(activeFilter.value) : '' 
+    }, "100")
+  })
+
 
   async function signInAction() {
     await signIn()
@@ -184,6 +191,8 @@
   // increment counter to guarantee new value in component watcher 
   // TODO: figure out a better to toggle CSS classes. just make it work for now.
   function filteringMethod(filter_name) {
+    activeFilter.value = filter_name
+
     if (filter_name === 'filterByUser') {
       filterByUserTrigger.value++
 
