@@ -110,8 +110,7 @@ const runtimeConfig = useRuntimeConfig()
 const authStore = useAuthStore()
 const navMenuStore = useNavMenuStore()
 const userInfoStore = useUserInfoStore()
-// const itemsPerPage = ref(10)
-const itemsPerPage = ref(5) // reset this back when jim fixes his fucking crap
+const itemsPerPage = ref(10)
 const loading = ref(true)
 const totalItems = ref(0)
 const page = ref(1)
@@ -241,9 +240,9 @@ function setMenuItems() {
       { 'label': 'Users', 'destination': '/users', 'icon': 'mdi-account-multiple' },
     ] : []
     filterItems = [
-      { 'label': 'My Work Orders', 'icon': 'mdi-account-box', 'filter_name': 'filterByUser', 'default_active': true },
-      { 'label': 'All Work Orders', 'icon': 'mdi-format-list-bulleted', 'filter_name': 'showNonCompleted', 'default_active': false },
-      { 'label': 'Completed', 'icon': 'mdi-playlist-check', 'filter_name': 'showCompleted', 'default_active': false },
+      { 'label': 'My Work Orders', 'icon': 'mdi-account-box', 'filter_name': 'filterByUser' },
+      { 'label': 'All Work Orders', 'icon': 'mdi-format-list-bulleted', 'filter_name': 'showNonCompleted' },
+      { 'label': 'Completed', 'icon': 'mdi-playlist-check', 'filter_name': 'showCompleted' },
     ]
   }
 
