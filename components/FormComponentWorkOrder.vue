@@ -364,7 +364,7 @@ function loadTags() {
   .then((response) => {
     tags.value = response.data.data.map((item) => {
       return {
-        title: item.name,
+        title: item.name.toUpperCase(),
         value: item.id
       }
     })
@@ -408,6 +408,10 @@ function loadProjects() {
         link: item.link
       }
     })
+
+    // sort projects list
+    projects.value = projects.value.sort((a, b) => 
+      a.name.localeCompare(b.name))
   })
   .catch(err => console.log(err))
 }
@@ -422,6 +426,10 @@ function loadSubtasks(projectId) {
         name: item.name
       }
     })
+
+    // sort subtasks list
+    subtasks.value = subtasks.value.sort((a, b) => 
+      a.name.localeCompare(b.name))
   })
   .catch(err => console.log(err))
 }

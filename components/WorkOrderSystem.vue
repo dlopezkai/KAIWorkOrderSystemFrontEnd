@@ -6,7 +6,7 @@
       </v-card>
       <v-card v-else width="100vw">
         <div class="d-flex mb-2">
-          <v-select v-model="selectedAssignee" hide-details=true label="Filter by Assignee" :items="props.persons" class="pr-10"></v-select>
+          <v-autocomplete v-model="selectedAssignee" hide-details=true label="Filter by Assignee" :items="props.persons" class="pr-10"></v-autocomplete>
           <v-text-field
             v-model="searchString"
             prepend-icon="mdi-magnify"
@@ -60,7 +60,7 @@
           </template>
 
           <template v-slot:item.tags="{ item }">
-            <v-chip v-for="tag in item.raw.tags">{{ tag.name }}</v-chip>
+            <v-chip v-for="tag in item.raw.tags">{{ tag.name.toUpperCase() }}</v-chip>
           </template>
 
           <template v-slot:item.status="{ item }">
