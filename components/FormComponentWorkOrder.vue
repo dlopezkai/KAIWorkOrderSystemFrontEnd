@@ -96,7 +96,7 @@
                       @blur="pushLink()"
                       class="pr-5"
                     ></v-text-field>
-                    <v-btn href="https://kauffmaninc.sharepoint.com/" target="_blank" variant="tonal" class="rounded" color="#428086" title="Open SharePoint">Open SharePoint site</v-btn>
+                    <v-btn :href="sharePointBtnUrl" target="_blank" variant="tonal" class="rounded" color="#428086" title="Open SharePoint">Open SharePoint site</v-btn>
                   </div>
                     
                   <div class="d-flex mb-2">
@@ -253,6 +253,19 @@ const priorityMessages = computed(() => {
   }
 })
 
+// computed value for Sharepoint link href
+const sharePointBtnUrl = computed(() => {
+  if (editedItem.value.project === null || editedItem.value.project === undefined) {
+    return 'https://kauffmaninc.sharepoint.com/'
+  } else {
+    const index = (typeof editedItem.value.project === 'object') ? editedItem.value.project.id : editedItem.value.project
+    const link = projects.value[index - 1].link
+
+    // not sure why DB stores a string of "null" instead of keyword, but account of the string also...
+    return (link === null || link === 'null' || link === undefined || link.length < 1 ) ? 'https://kauffmaninc.sharepoint.com/' : link
+  }
+})
+
 // computed CSS class to control scrolling of the form
 const scrollingClasses = computed(() => {
   if (props.formAction === 'new') {
@@ -391,7 +404,8 @@ function loadProjects() {
     projects.value = filteredResponse.map((item) => {
       return {
         id: item.id,
-        name: item.name + ' (' + item.billing_code + ')'
+        name: item.name + ' (' + item.billing_code + ')',
+        link: item.link
       }
     })
   })
