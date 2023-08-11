@@ -364,7 +364,7 @@ function loadTags() {
   .then((response) => {
     tags.value = response.data.data.map((item) => {
       return {
-        title: item.name,
+        title: item.name.toUpperCase(),
         value: item.id
       }
     })
