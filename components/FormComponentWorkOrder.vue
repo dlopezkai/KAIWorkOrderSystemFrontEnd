@@ -258,8 +258,9 @@ const sharePointBtnUrl = computed(() => {
   if (editedItem.value.project === null || editedItem.value.project === undefined) {
     return 'https://kauffmaninc.sharepoint.com/'
   } else {
-    const index = (typeof editedItem.value.project === 'object') ? editedItem.value.project.id : editedItem.value.project
-    const link = projects.value[index - 1].link
+    const needle = (typeof editedItem.value.project === 'object') ? editedItem.value.project.id : editedItem.value.project
+    const index = projects.value.findIndex(item => item.id === needle)
+    const link = projects.value[index].link
 
     // not sure why DB stores a string of "null" instead of keyword, but account of the string also...
     return (link === null || link === 'null' || link === undefined || link.length < 1 ) ? 'https://kauffmaninc.sharepoint.com/' : link
