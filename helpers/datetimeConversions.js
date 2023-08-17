@@ -34,7 +34,7 @@ export function minutesToHours(value) {
   return value / 60
 }
 
-export function formatToMMDDYYY(date) {
+export function formatToMMDDYYYY(date) {
   const dateObj = new Date(date + 'T00:00:00');
   console.log(dateObj)
   return new Intl.DateTimeFormat('en-US').format(dateObj);

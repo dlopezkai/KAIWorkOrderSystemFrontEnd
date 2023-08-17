@@ -78,7 +78,7 @@
 
           <template v-slot:item.due_date="{ item }">
             <v-chip v-if="item.raw.due_date" :color="getDueDateColor(item.raw.due_date, item.raw.status.name)">
-              {{ formatToMMDDYYY(item.raw.due_date) }}
+              {{ formatToMMDDYYYY(item.raw.due_date) }}
             </v-chip>
           </template>
 
@@ -104,7 +104,7 @@ import { useAuthStore } from '~/store/auth';
 import { useNavMenuStore } from '~/store/navMenuStore'
 import { useUserInfoStore } from '~/store/userInfoStore'
 import { capitalizeFirstLetter } from '~/helpers/capitalizeFirstLetter.js';
-import { formatToMMDDYYY } from '~/helpers/datetimeConversions.js';
+import { formatToMMDDYYYY } from '~/helpers/datetimeConversions.js';
 
 const route = useRoute()
 const runtimeConfig = useRuntimeConfig()
