@@ -30,7 +30,7 @@
             >
                 <v-row>
                     <v-col>
-                        <v-list-item-title><strong>{{ comment.author_name + ' (' + comment.post_date + ')' }}</strong></v-list-item-title>
+                        <v-list-item-title><strong>{{ comment.author_name + ' (' + formatToMMDDYYYY(comment.post_date) + ')' }}</strong></v-list-item-title>
                     </v-col>
                     <v-col v-if="userInfoStore.userInfo.id === comment.authorid" align="right">
                         <v-btn density="compact" icon="mdi-trash-can-outline" variant="plain" title="Remove comment" @click="displayConfirmDeleteModal(comment.id)"></v-btn>
@@ -54,6 +54,7 @@
 import { ref } from 'vue'
 import axios from 'axios'
 import { useUserInfoStore } from '~/store/userInfoStore'
+import { formatToMMDDYYYY } from '~/helpers/datetimeConversions.js';
 
 const runtimeConfig = useRuntimeConfig()
 const userInfoStore = useUserInfoStore()
