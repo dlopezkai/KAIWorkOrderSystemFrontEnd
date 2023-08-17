@@ -248,7 +248,8 @@ const priorityMessages = computed(() => {
   if (editedItem.value.priority === null || editedItem.value.priority === undefined) {
     return ''
   } else {
-    const index = (typeof editedItem.value.priority === 'object') ? editedItem.value.priority.id : editedItem.value.priority
+    const needle = (typeof editedItem.value.priority === 'object') ? editedItem.value.priority.id : editedItem.value.priority
+    const index = priorities.value.findIndex(item => item.id === needle)
     return priorities.value[index].description
   }
 })
