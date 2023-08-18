@@ -139,10 +139,10 @@ const headers = [
   { title: 'Project', key: 'project', align: 'start', sortable: false },
   { title: 'Created By', key: 'creator', align: 'start', sortable: false },
   { title: 'Assignee(s)', key: 'assignees', align: 'start', sortable: false },
-  { title: 'Type', key: 'tags', align: 'start', sortable: false },
-  { title: 'Status', key: 'status', align: 'center', sortable: false },
-  { title: 'Priority', key: 'priority', align: 'center', sortable: false },
-  { title: 'Due Date', key: 'due_date', align: 'center', sortable: false },
+  { title: 'Type', key: 'tags', align: 'start', sortable: true },
+  { title: 'Status', key: 'status', align: 'center', sortable: true },
+  { title: 'Priority', key: 'priority', align: 'center', sortable: true },
+  { title: 'Due Date', key: 'due_date', align: 'center', sortable: true },
   { title: 'Actions', key: 'actions', align: 'center', sortable: false },
 ]
 
@@ -256,7 +256,7 @@ function setMenuItems() {
 }
 
 
-function loadItems() {
+function loadItems({ sortBy }) {
   loading.value = true
 
   let axiosGetRequestURL = `${runtimeConfig.public.API_URL}/workorders?page=` + page.value + `&page_size=` + itemsPerPage.value
@@ -282,6 +282,14 @@ function loadItems() {
     )
 
     axiosGetRequestURL = axiosGetRequestURL + statusQueryStr
+  }
+
+  // set sorting params here
+  if(sortBy[0]) {
+    let sortingQueryStr = ''
+    sortingQueryStr = (sortBy[0].order === 'desc') ? `&orderby=` + sortBy[0].key + `&reverse=true` : `&orderby=` + sortBy[0].key
+
+    axiosGetRequestURL = axiosGetRequestURL + sortingQueryStr
   }
 
   axios.get(axiosGetRequestURL)
