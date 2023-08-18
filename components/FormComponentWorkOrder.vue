@@ -112,7 +112,8 @@
           <v-card-actions>
             <v-row>
               <v-col v-if="props.recordId" class="text-left">
-                <v-btn variant="plain" class="rounded" @click="copyLink" title="Copy record link">{{ copyUrlBtnText }}</v-btn>
+                <v-btn variant="plain" class="rounded" append-icon="mdi-share" @click="copyLink" title="Share record link">Share</v-btn><br/>
+                <v-label v-if="showUrlCopyConfirmMsg" class="pr-2 pl-2">Record link copied</v-label>
               </v-col>
               <v-col class="text-right">
                 <v-btn variant="plain" class="rounded" @click="close" :title="`${ cancelBtnText }`">{{ cancelBtnText }}</v-btn>
@@ -161,7 +162,7 @@ const submitBtnDisabled = ref(false)
 const submitStatusOverlay = ref(false)
 const submitStatus = ref('')
 const submitInfo = ref('')
-const urlCopied = ref(false)
+const showUrlCopyConfirmMsg = ref(false)
 const displayShareBtn = ref(false)
 const shareUrl = ref('')
 const linkTemp = ref('')
@@ -218,11 +219,6 @@ const submitBtnText = computed(() => {
 const cancelBtnText = computed(() => {
   return (!props.recordId) ? 'Cancel' : 
     (readonly.value) ? 'Close' : 'Cancel'
-})
-
-// computed value for copy record link button text
-const copyUrlBtnText = computed(() => {
-  return (urlCopied.value) ? 'Record Link Copied' : 'Copy Record Link'
 })
 
 // computed value for work order submit progress messages
@@ -586,7 +582,12 @@ function close() {
 function copyLink() {
   const url = (!props.recordId) ? shareUrl.value : window.location.href
   window.navigator.clipboard.writeText(url)
-  urlCopied.value = true
+  showUrlCopyConfirmMsg.value = true
+
+  // hide message after 3 seconds
+  setTimeout(() => {
+    showUrlCopyConfirmMsg.value = false
+  }, 3000)
 }
 
 
