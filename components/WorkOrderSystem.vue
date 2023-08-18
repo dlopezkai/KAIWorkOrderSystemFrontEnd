@@ -287,7 +287,7 @@ function loadItems({ sortBy }) {
   // set sorting params here
   if(sortBy[0]) {
     let sortingQueryStr = ''
-    sortingQueryStr = (sortBy[0].order === 'desc') ? `&orderby=` + sortBy[0].key + `&reverse=true` : `&orderby=` + sortBy[0].key
+    sortingQueryStr = (sortBy[0].order === 'desc') ? `&order_by=` + sortBy[0].key + `&reverse=true` : `&order_by=` + sortBy[0].key
 
     axiosGetRequestURL = axiosGetRequestURL + sortingQueryStr
   }
