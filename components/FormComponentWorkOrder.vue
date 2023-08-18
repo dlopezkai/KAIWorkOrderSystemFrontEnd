@@ -112,8 +112,8 @@
           <v-card-actions>
             <v-row>
               <v-col v-if="props.recordId" class="text-left">
-                <v-btn variant="plain" class="rounded" append-icon="mdi-share" @click="copyLink" title="Share record link">Share</v-btn><br/>
-                <v-fade-transition><v-label v-if="showUrlCopyConfirmMsg" class="pr-2 pl-2">Record link copied</v-label></v-fade-transition>
+                <v-btn variant="tonal" class="rounded" color="#428086" size="small" append-icon="mdi-share" @click="copyLink" title="Share record link">Share</v-btn><br/>
+                <v-fade-transition><v-label v-if="showUrlCopyConfirmMsg" style="font-size:13px">Record link copied</v-label></v-fade-transition>
               </v-col>
               <v-col class="text-right">
                 <v-btn variant="plain" class="rounded" @click="close" :title="`${ cancelBtnText }`">{{ cancelBtnText }}</v-btn>
