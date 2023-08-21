@@ -60,7 +60,7 @@
           </template>
 
           <template v-slot:item.tag="{ item }">
-            <v-chip v-for="tag in item.raw.tag">{{ tag.name.toUpperCase() }}</v-chip>
+            <v-chip>{{ item.raw.tag.name.toUpperCase() }}</v-chip>
           </template>
 
           <template v-slot:item.status="{ item }">
@@ -307,7 +307,7 @@ function loadItems({ sortBy }) {
         project: item.project,
         status: item.status,
         subtask: item.subtask,
-        tag: item.tags,
+        tag: item.tag,
         time_estimate: item.time_estimate,
         watchers: item.watchers
       }
