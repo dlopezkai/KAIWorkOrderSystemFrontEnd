@@ -52,7 +52,7 @@
                 </v-col>
 
                 <v-col cols="12" sm="12" md="12">
-                  <v-select v-model="editedItem.tag" label="Type" :items="tags" item-title="title" item-value="value" :rules="[rules.select]" chips></v-select>
+                  <v-select v-model="editedItem.tag" label="Type" :items="tags" item-title="title" item-value="value" :rules="[rules.select]"></v-select>
                 </v-col>
 
                 <v-col v-if="props.recordId" cols="12" sm="6" md="6">
@@ -485,10 +485,6 @@ function save() {
       data.watchers = 0
     }
 
-    if (data.tags && data.tags.length === 0) {
-      data.tags = 0
-    }
-
     // PUT endpoint requires 'subtaskid', whereas POST requires 'subtask'
     data.subtaskid = data.subtask
     delete data.subtask
@@ -504,6 +500,15 @@ function save() {
       data.priorityid = data.priority.id
     } else {
       data.priorityid = data.priority
+    }
+  }
+
+  // hack warning: since API only accepts "tagid" to set tag/type, but fetched data contains a "tag" object.
+  if(data.tag) {
+    if(data.tag.id) {
+      data.tagid = data.tag.id
+    } else {
+      data.tagid = data.tag
     }
   }
 
