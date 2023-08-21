@@ -21,8 +21,9 @@
                         <v-card-title>{{ props.cardTitle }}</v-card-title>
 
                         <v-card-text v-if="props.cardText">
-                            {{ props.cardText }}<br/>
-                            <v-btn v-if="props.displayShareBtn" size="small" class="rounded" variant="plain" @click="emit('copyShareLink')">{{ props.shareBtnText }}</v-btn>
+                            {{ props.cardText }}
+                            <v-spacer v-if="props.displayShareBtn" ></v-spacer>
+                            <v-btn v-if="props.displayShareBtn" size="small" class="rounded mt-3" variant="tonal" color="#428086" @click="emit('copyShareLink')">{{ props.shareBtnText }}</v-btn>
                         </v-card-text>
 
                         <v-progress-circular v-if="props.submitStatus === 'submitting'" color="#92D5D5" indeterminate size="64" class="mb-4"></v-progress-circular>
