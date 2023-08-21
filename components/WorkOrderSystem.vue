@@ -59,8 +59,8 @@
             <v-chip v-for="assignee in item.raw.assignees">{{ assignee.name }}</v-chip>
           </template>
 
-          <template v-slot:item.tags="{ item }">
-            <v-chip v-for="tag in item.raw.tags">{{ tag.name.toUpperCase() }}</v-chip>
+          <template v-slot:item.tag="{ item }">
+            <v-chip v-for="tag in item.raw.tag">{{ tag.name.toUpperCase() }}</v-chip>
           </template>
 
           <template v-slot:item.status="{ item }">
@@ -139,10 +139,10 @@ const headers = [
   { title: 'Project', key: 'project', align: 'start', sortable: false },
   { title: 'Created By', key: 'creator', align: 'start', sortable: false },
   { title: 'Assignee(s)', key: 'assignees', align: 'start', sortable: false },
-  { title: 'Type', key: 'tags', align: 'start', sortable: false },
-  { title: 'Status', key: 'status', align: 'center', sortable: false },
-  { title: 'Priority', key: 'priority', align: 'center', sortable: false },
-  { title: 'Due Date', key: 'due_date', align: 'center', sortable: false },
+  { title: 'Type', key: 'tag', align: 'start', sortable: true },
+  { title: 'Status', key: 'status', align: 'center', sortable: true },
+  { title: 'Priority', key: 'priority', align: 'center', sortable: true },
+  { title: 'Due Date', key: 'due_date', align: 'center', sortable: true },
   { title: 'Actions', key: 'actions', align: 'center', sortable: false },
 ]
 
@@ -199,7 +199,7 @@ watch(showNonCompletedTrigger, (currentValue, newValue) => {
       if(selectedAssignee.value != '0') {
         selectedAssignee.value = '0' // this will trip the selectedAssignee watcher, and thus, perform loadItems() method again
       } else {
-        loadItems()
+        loadItems({ sortBy: [] })
       }
     }
   }
@@ -214,7 +214,7 @@ watch(showCompletedTrigger, (currentValue, newValue) => {
       if(selectedAssignee.value != '0') {
         selectedAssignee.value = '0' // this will trip the selectedAssignee watcher, and thus, perform loadItems() method again
       } else {
-        loadItems()
+        loadItems({ sortBy: [] })
       }
     }
   }
@@ -223,7 +223,7 @@ watch(showCompletedTrigger, (currentValue, newValue) => {
 // reload table when selectedAssignee data is changed
 watch(selectedAssignee, (currentValue, newValue) => {
   if(currentValue !== newValue) {
-    loadItems()
+    loadItems({ sortBy: [] })
   }
 })
 
@@ -256,7 +256,7 @@ function setMenuItems() {
 }
 
 
-function loadItems() {
+function loadItems({ sortBy }) {
   loading.value = true
 
   let axiosGetRequestURL = `${runtimeConfig.public.API_URL}/workorders?page=` + page.value + `&page_size=` + itemsPerPage.value
@@ -284,6 +284,14 @@ function loadItems() {
     axiosGetRequestURL = axiosGetRequestURL + statusQueryStr
   }
 
+  // set sorting params here
+  if(sortBy[0]) {
+    let sortingQueryStr = ''
+    sortingQueryStr = (sortBy[0].order === 'desc') ? `&order_by=` + sortBy[0].key + `&reverse=true` : `&order_by=` + sortBy[0].key
+
+    axiosGetRequestURL = axiosGetRequestURL + sortingQueryStr
+  }
+
   axios.get(axiosGetRequestURL)
   .then((response) => {
     data.value = response.data.data.map((item) => {
@@ -299,7 +307,7 @@ function loadItems() {
         project: item.project,
         status: item.status,
         subtask: item.subtask,
-        tags: item.tags,
+        tag: item.tags,
         time_estimate: item.time_estimate,
         watchers: item.watchers
       }
@@ -322,7 +330,7 @@ function close() {
 
 function closeAndReload() {
   dialog.value = false
-  loadItems()
+  loadItems({ sortBy: [] })
 }
 
 

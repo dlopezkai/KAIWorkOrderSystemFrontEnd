@@ -52,7 +52,7 @@
                 </v-col>
 
                 <v-col cols="12" sm="12" md="12">
-                  <v-select v-model="editedItem.tags" label="Type" :items="tags" item-title="title" item-value="value" :rules="[rules.select]" multiple chips clearable></v-select>
+                  <v-select v-model="editedItem.tags" label="Type" :items="tags" item-title="title" item-value="value" :rules="[rules.select]" chips></v-select>
                 </v-col>
 
                 <v-col v-if="props.recordId" cols="12" sm="6" md="6">
@@ -443,6 +443,11 @@ function loadPriorities() {
         description: item.description,
       }
     })
+
+    // set priority to "normal" when creating a new work order. 
+    if(!props.recordId) {
+      editedItem.value.priority = '3'
+    }
   })
   .catch(err => console.log(err))
 }
