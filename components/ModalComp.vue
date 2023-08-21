@@ -22,12 +22,11 @@
 
                         <v-card-text v-if="props.cardText">
                             {{ props.cardText }}
-                            <v-spacer v-if="props.displayShareBtn" ></v-spacer>
-                            <v-btn v-if="props.displayShareBtn" size="small" class="rounded mt-3" variant="tonal" color="#428086" @click="emit('copyShareLink')">{{ props.shareBtnText }}</v-btn>
+                            <v-btn v-if="props.displayShareBtn" size="x-small" class="rounded ml-2" variant="tonal" color="#428086" @click="emit('copyShareLink')">{{ props.shareBtnText }}</v-btn>
                         </v-card-text>
 
                         <v-progress-circular v-if="props.submitStatus === 'submitting'" color="#92D5D5" indeterminate size="64" class="mb-4"></v-progress-circular>
-                        <v-btn v-if="props.submitStatus != 'submitting'" color="blue-darken-1" variant="text" class="mb-4" @click="emit('confirm')">
+                        <v-btn v-if="props.submitStatus != 'submitting'" color="blue-darken-1" variant="tonal" class="rounded mb-4" size="small" @click="emit('confirm')">
                             {{ props.confirmBtnText }}
                         </v-btn>
                     </v-card>
