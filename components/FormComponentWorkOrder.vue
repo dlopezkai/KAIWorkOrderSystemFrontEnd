@@ -52,7 +52,7 @@
                 </v-col>
 
                 <v-col cols="12" sm="12" md="12">
-                  <v-select v-model="editedItem.tags" label="Type" :items="tags" item-title="title" item-value="value" :rules="[rules.select]" chips></v-select>
+                  <v-select v-model="editedItem.tag" label="Type" :items="tags" item-title="title" item-value="value" :rules="[rules.select]" chips></v-select>
                 </v-col>
 
                 <v-col v-if="props.recordId" cols="12" sm="6" md="6">
@@ -186,7 +186,7 @@ const editedItem = ref([
     priority: '',
     project: '',
     status: '',
-    tags: '',
+    tag: '',
     time_estimate: '',
     watchers: ''
   },
@@ -305,14 +305,6 @@ async function loadItem() {
         editedItem.value = Object.assign({}, response.data.data[0])
 
         // for arrays
-        if(editedItem.value.tags) {
-          let tagsTemp = []
-          editedItem.value.tags.forEach((tag) => {
-            tagsTemp.push(tag.id)
-          })
-          editedItem.value.tags = tagsTemp
-        }
-
         if(editedItem.value.assignees) {
           let assigneesTemp = []
           editedItem.value.assignees.forEach((assignee) => {
@@ -331,6 +323,7 @@ async function loadItem() {
 
         // for objects
         editedItem.value.status = editedItem.value.status.id
+        editedItem.value.tag = editedItem.value.tag.id
 
         // make an array of links. used to make individual clickable v-chips
         // delimiter is a comma - update later if this isn't acceptable
