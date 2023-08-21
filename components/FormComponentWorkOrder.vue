@@ -25,8 +25,8 @@
     <h3 v-if="props.formAction === 'edit'">{{ formTitle }}</h3>
 
     <v-tabs v-if="props.recordId" v-model="formTab" color="#428086">
-      <v-tab value="one" title="Switch to details tab">Details</v-tab>
-      <v-tab value="two" title="Switch to comments tab">Comments</v-tab>
+      <v-tab value="one" title="Switch to details tab" class="rounded">Details</v-tab>
+      <v-tab value="two" title="Switch to comments tab" class="rounded">Comments</v-tab>
     </v-tabs>
 
     <v-window v-model="formTab">
