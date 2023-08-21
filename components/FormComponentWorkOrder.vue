@@ -58,7 +58,14 @@
                 <v-col v-if="props.recordId" cols="12" sm="6" md="6">
                   <v-select v-model="editedItem.status" label="Status" :items="statuses" item-title="title" item-value="id"></v-select>
                 </v-col>
-                <v-col cols="12" sm="6" md="6">
+                <v-col v-if="props.recordId" cols="12" sm="6" md="6">
+                  <div class="d-flex">
+                    <v-autocomplete v-model="editedItem.assignees" label="Assignee(s)" :items="persons" item-title="title" item-value="value" multiple chips clearable></v-autocomplete>
+                    <v-checkbox-btn v-model="notifyAssignees" label="Notify Assignee(s)" class="pb-3" style="flex:none"></v-checkbox-btn>
+                  </div>
+                </v-col>
+
+                <v-col v-else cols="12" sm="6" md="6">
                   <v-autocomplete v-model="editedItem.assignees" label="Assignee(s)" :items="persons" item-title="title" item-value="value" multiple chips clearable></v-autocomplete>
                 </v-col>
 
@@ -166,6 +173,7 @@ const showUrlCopyConfirmMsg = ref(false)
 const displayShareBtn = ref(false)
 const shareUrl = ref('')
 const linkTemp = ref('')
+const notifyAssignees = ref(false)
 const props = defineProps({
     recordId: String,
     formAction: String,
