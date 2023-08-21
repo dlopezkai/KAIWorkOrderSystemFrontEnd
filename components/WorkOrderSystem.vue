@@ -59,8 +59,8 @@
             <v-chip v-for="assignee in item.raw.assignees">{{ assignee.name }}</v-chip>
           </template>
 
-          <template v-slot:item.tags="{ item }">
-            <v-chip v-for="tag in item.raw.tags">{{ tag.name.toUpperCase() }}</v-chip>
+          <template v-slot:item.tag="{ item }">
+            <v-chip v-for="tag in item.raw.tag">{{ tag.name.toUpperCase() }}</v-chip>
           </template>
 
           <template v-slot:item.status="{ item }">
@@ -139,7 +139,7 @@ const headers = [
   { title: 'Project', key: 'project', align: 'start', sortable: false },
   { title: 'Created By', key: 'creator', align: 'start', sortable: false },
   { title: 'Assignee(s)', key: 'assignees', align: 'start', sortable: false },
-  { title: 'Type', key: 'tags', align: 'start', sortable: true },
+  { title: 'Type', key: 'tag', align: 'start', sortable: true },
   { title: 'Status', key: 'status', align: 'center', sortable: true },
   { title: 'Priority', key: 'priority', align: 'center', sortable: true },
   { title: 'Due Date', key: 'due_date', align: 'center', sortable: true },
@@ -307,7 +307,7 @@ function loadItems({ sortBy }) {
         project: item.project,
         status: item.status,
         subtask: item.subtask,
-        tags: item.tags,
+        tag: item.tags,
         time_estimate: item.time_estimate,
         watchers: item.watchers
       }
