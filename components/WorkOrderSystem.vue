@@ -264,7 +264,7 @@ function loadItems({ sortBy }) {
   if(search.value) axiosGetRequestURL = axiosGetRequestURL + `&search=` + search.value
 
   // filter by user if a valid user is selected
-  if(selectedAssignee.value !== '0') axiosGetRequestURL = axiosGetRequestURL + `&assignees[]=` + selectedAssignee.value
+  if(selectedAssignee.value !== '0') axiosGetRequestURL = axiosGetRequestURL + `&assignee=` + selectedAssignee.value
 
   // set display completed work order filter
   if(showCompleted.value) {
