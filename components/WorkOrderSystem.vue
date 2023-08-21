@@ -199,7 +199,7 @@ watch(showNonCompletedTrigger, (currentValue, newValue) => {
       if(selectedAssignee.value != '0') {
         selectedAssignee.value = '0' // this will trip the selectedAssignee watcher, and thus, perform loadItems() method again
       } else {
-        loadItems()
+        loadItems({ sortBy: [] })
       }
     }
   }
@@ -214,7 +214,7 @@ watch(showCompletedTrigger, (currentValue, newValue) => {
       if(selectedAssignee.value != '0') {
         selectedAssignee.value = '0' // this will trip the selectedAssignee watcher, and thus, perform loadItems() method again
       } else {
-        loadItems()
+        loadItems({ sortBy: [] })
       }
     }
   }
@@ -223,7 +223,7 @@ watch(showCompletedTrigger, (currentValue, newValue) => {
 // reload table when selectedAssignee data is changed
 watch(selectedAssignee, (currentValue, newValue) => {
   if(currentValue !== newValue) {
-    loadItems()
+    loadItems({ sortBy: [] })
   }
 })
 
@@ -330,7 +330,7 @@ function close() {
 
 function closeAndReload() {
   dialog.value = false
-  loadItems()
+  loadItems({ sortBy: [] })
 }
 
 
