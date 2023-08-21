@@ -443,6 +443,11 @@ function loadPriorities() {
         description: item.description,
       }
     })
+
+    // set priority to "normal" when creating a new work order. 
+    if(!props.recordId) {
+      editedItem.value.priority = '3'
+    }
   })
   .catch(err => console.log(err))
 }
