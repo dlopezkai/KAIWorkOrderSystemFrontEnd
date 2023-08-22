@@ -18,7 +18,7 @@
             @keyup="checkIfSearchFieldIsEmpty()"
           ></v-text-field>
 
-          <v-btn color="blue" class="rounded" @click="submitSearch()">Search</v-btn>
+          <v-btn color="blue" class="rounded mt-2" @click="submitSearch()">Search</v-btn>
         </div>
 
         <!-- to make row clickable again, add @click:row="(pointerEvent, {item}) => editItem(item.raw)" -->
