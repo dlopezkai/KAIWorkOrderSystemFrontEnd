@@ -9,7 +9,7 @@
             <br />
             <p>Please login using your Active Directory credentials</p>
             <br />
-            <v-btn @click.stop="signInAction" v-if="!authStore.loggedIn" color="#428086" variant="tonal" class="rounded">Sign In</v-btn>
+            <v-btn @click.stop="signInAction" v-if="!authStore.loggedIn" color="#428086" variant="tonal">Sign In</v-btn>
           </v-card-text>
         </v-card>
       </div>

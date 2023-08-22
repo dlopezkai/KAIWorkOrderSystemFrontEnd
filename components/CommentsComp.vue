@@ -45,7 +45,7 @@
 
         <v-form v-if="!readonly" ref="form" @submit.prevent="submitComment" class="d-flex mt-2">
             <v-text-field v-model="commentForm.message" class="pr-5" placeholder="Enter a comment" outlined clearable></v-text-field>
-            <v-btn color="blue" class="rounded mt-2" @click="submitComment" title="Submit comment">Submit</v-btn>
+            <v-btn color="blue" class="mt-2" @click="submitComment" title="Submit comment">Submit</v-btn>
         </v-form>
     </div> 
 </template>

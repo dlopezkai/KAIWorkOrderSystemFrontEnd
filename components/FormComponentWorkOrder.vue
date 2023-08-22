@@ -96,7 +96,7 @@
                       @blur="pushLink()"
                       class="pr-5"
                     ></v-text-field>
-                    <v-btn :href="sharePointBtnUrl" target="_blank" variant="tonal" class="rounded" color="#428086" title="Open SharePoint">Open SharePoint site</v-btn>
+                    <v-btn :href="sharePointBtnUrl" target="_blank" variant="tonal" class="mt-2" color="#428086" title="Open SharePoint">Open SharePoint site</v-btn>
                   </div>
                     
                   <div class="d-flex mb-2">
@@ -112,7 +112,7 @@
           <v-card-actions>
             <v-row>
               <v-col v-if="props.recordId" class="text-left">
-                <v-btn variant="tonal" class="rounded" color="#428086" size="small" append-icon="mdi-share" @click="copyLink" title="Share record link">Share</v-btn><br/>
+                <v-btn variant="tonal" color="#428086" size="small" append-icon="mdi-share" @click="copyLink" title="Share record link">Share</v-btn><br/>
                 <v-fade-transition><v-label v-if="showUrlCopyConfirmMsg" style="font-size:13px">Record link copied</v-label></v-fade-transition>
               </v-col>
               <v-col class="text-right">
