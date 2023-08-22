@@ -94,7 +94,7 @@
                   @blur="pushLink()"
                   class="pr-5"
                 ></v-text-field>
-                <v-btn href="https://kauffmaninc.sharepoint.com/" target="_blank" variant="tonal" class="rounded" color="#428086" title="Open SharePoint">Open SharePoint site</v-btn>
+                <v-btn href="https://kauffmaninc.sharepoint.com/" target="_blank" variant="tonal" class="mt-2" color="#428086" title="Open SharePoint">Open SharePoint site</v-btn>
               </div>
 
               <div class="d-flex mb-2">
@@ -114,7 +114,7 @@
       <v-card-actions>
         <v-row>
           <v-col class="text-right">
-            <v-btn variant="plain" @click="close" :title="`${ cancelBtnText }`">{{ cancelBtnText }}</v-btn>
+            <v-btn variant="plain" class="rounded" @click="close" :title="`${ cancelBtnText }`">{{ cancelBtnText }}</v-btn>
             <v-btn v-if="!readonly" :disabled="submitBtnDisabled" class="rounded" color="blue" @click="submit" :title="`${ submitBtnText } project`">{{ submitBtnText }}</v-btn>
           </v-col>
         </v-row>

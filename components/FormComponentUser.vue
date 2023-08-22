@@ -57,7 +57,7 @@
       <v-card-actions>
         <v-row>
           <v-col class="text-right">
-            <v-btn variant="plain" @click="close" title="Cancel">Cancel</v-btn>
+            <v-btn variant="plain" class="rounded" @click="close" title="Cancel">Cancel</v-btn>
             <v-btn v-if="!readonly" :disabled="submitBtnDisabled" class="rounded" color="blue" @click="submit" title="Save user">Save</v-btn>
           </v-col>
         </v-row>
