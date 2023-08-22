@@ -10,7 +10,7 @@
                         <v-card-actions>
                             <v-row>
                                 <v-col class="text-right">
-                                    <v-btn variant="plain" @click="emit('close')" :title=props.cancelBtnText>{{ props.cancelBtnText }}</v-btn>
+                                    <v-btn variant="plain" class="rounded" @click="emit('close')" :title=props.cancelBtnText>{{ props.cancelBtnText }}</v-btn>
                                     <v-btn class="rounded" color="error" :title=props.confirmBtnText @click="emit('confirm')">{{ props.confirmBtnText }}</v-btn>
                                 </v-col>
                             </v-row>
