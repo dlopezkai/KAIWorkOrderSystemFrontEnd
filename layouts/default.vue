@@ -162,9 +162,11 @@
 
   // used to set the active filter when user redirects back to table page
   watch(() => route.query, () => {
-    setTimeout(() => {
-      if(!isRecordPage.value) filteringMethod(activeFilter.value)
-    }, "100")
+    if(window.location.pathname === '/workorders') {
+      setTimeout(() => {
+        if(!isRecordPage.value) filteringMethod(activeFilter.value)
+      }, "100")
+    }
   })
 
 
