@@ -45,7 +45,7 @@
 
         <v-form v-if="!readonly" ref="form" @submit.prevent="submitComment" class="d-flex mt-2">
             <v-text-field v-model="commentForm.message" class="pr-5" placeholder="Enter a comment" outlined clearable></v-text-field>
-            <v-btn color="blue" class="mt-2" @click="submitComment" title="Submit comment">Submit</v-btn>
+            <v-btn :disabled="submitBtnDisabled" color="blue" class="mt-2" @click="submitComment" title="Submit comment">Submit</v-btn>
         </v-form>
     </div> 
 </template>
@@ -93,6 +93,11 @@ const onDeleteMsg = computed(() => {
     default:
       return ''
   }
+})
+
+// computed value for disabling / enabling comment submit button
+const submitBtnDisabled = computed(() => {
+    return (commentForm.value.message.length < 1) ? true : false
 })
 
 
