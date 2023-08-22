@@ -60,7 +60,7 @@
           </template>
 
           <template v-slot:item.tag="{ item }">
-            <v-chip>{{ item.raw.tag.name.toUpperCase() }}</v-chip>
+            <v-chip v-if="item.raw.tag">{{ item.raw.tag.name.toUpperCase() }}</v-chip>
           </template>
 
           <template v-slot:item.status="{ item }">
