@@ -1,4 +1,20 @@
-# Nuxt 3 Minimal Starter
+# KAI Work Order System Front End 
+
+## Project Description
+This application provides the user interface for the revised Work Order System for KAI. Data is supplied via a backend [API service](http://workorderapi.kauffmaninc.com/v2). 
+
+The user interface allows user to manage work orders, and for those with higher privledges, allows them to manage projects and users.
+
+User management is handled via Microsoft Authentication Library (MSAL).
+
+Technologies used for this app are:
+- [Vue3](https://vuejs.org/)
+- [Nuxt3](https://nuxt.com/)
+- [Vuetify3](https://vuetifyjs.com/)
+
+See below information on how to get this application started locally, and for information regarding current known issues.
+
+## Nuxt 3 Minimal Starter
 
 Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
 
