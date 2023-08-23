@@ -267,7 +267,7 @@ const sharePointBtnUrl = computed(() => {
     const index = projects.value.findIndex(item => item.id === needle)
     const link = projects.value[index].link
 
-    // not sure why DB stores a string of "null" instead of keyword, but account of the string also...
+    // not sure why DB stores a string of "null" instead of keyword, but account for string variant also...
     return (link === null || link === 'null' || link === undefined || link.length < 1 ) ? 'https://kauffmaninc.sharepoint.com/' : link
   }
 })
@@ -530,6 +530,7 @@ function save() {
     method = 'post'
     url = `${runtimeConfig.public.API_URL}/subtask/` + data.subtask + `/workorder`
   } else {
+    data.notify_assignees = (notifyAssignees.value) ? true : false
     method = 'put'
     url = `${runtimeConfig.public.API_URL}/workorder/` + data.id
   }
