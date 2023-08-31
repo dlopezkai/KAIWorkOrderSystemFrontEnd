@@ -604,6 +604,7 @@ function copyLink() {
 
 
 // checks for the 2 business days rule
+// false will flag validator, true will not
 function dateValidation(input) {
   if(input) {
     // get day of week
@@ -622,13 +623,17 @@ function dateValidation(input) {
     let twoDaysFromNowFormatted = convertToYyyymmddFormat(twoDaysFromNowDateObj)
 
     // logic to determine if selected date is valid
-    if(selectedDateDay !== 5 && selectedDateDay !== 6) {
-      if(input >= twoDaysFromNowFormatted) {
-        return true
-      } else {
-        return false
-      }
+    // check for saturday or sunday is selected in both new and edit WO form
+    if(selectedDateDay == 5 || selectedDateDay == 6) {
+      return false
     }
+
+    // only check for 2-day threshold in new WO form
+    if(input < twoDaysFromNowFormatted && props.formAction === 'new') {
+      return false
+    }
+
+    return true
   } else {
     return true
   }
