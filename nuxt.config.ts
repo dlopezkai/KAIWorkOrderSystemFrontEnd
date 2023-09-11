@@ -7,7 +7,7 @@ const { resolve } = createResolver(import.meta.url)
 export default defineNuxtConfig({
     app: {
       head: {
-        title: 'Work Order System'
+        title: 'Kauffman Project Tracker'
       }
     },
     runtimeConfig:{

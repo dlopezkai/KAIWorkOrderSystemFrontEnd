@@ -5,7 +5,7 @@
         <v-card flat class="text-center">
           <v-card-text>
             <nuxt-img src="/images/kai-logo.svg" sizes="sm:100vw md:50vw lg:400px" width="200px" class="mb-5"/>
-            <h2>Work Order System</h2>
+            <h2>Kauffman Project Tracker</h2>
             <br />
             <p>Please login using your Active Directory credentials</p>
             <br />
@@ -97,7 +97,7 @@
 
           <v-app-bar flat app clipped-left dark color="#92D5D5">
             <v-app-bar-nav-icon @click.stop="drawer = !drawer" title="Toggle menu display"></v-app-bar-nav-icon>
-            <v-toolbar-title>Work Order System</v-toolbar-title>
+            <v-toolbar-title>Kauffman Project Tracker</v-toolbar-title>
             <AuthN></AuthN>
           </v-app-bar>
 
