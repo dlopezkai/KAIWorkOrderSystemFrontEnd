@@ -126,6 +126,7 @@ const isRecordPage = inject('isRecordPage')
 const filterByUserTrigger = inject('filterByUserTrigger')
 const showNonCompletedTrigger = inject('showNonCompletedTrigger')
 const showCompletedTrigger = inject('showCompletedTrigger')
+const viewByTypeTrigger = inject('viewByTypeTrigger')
 
 const showCompleted = ref(false)
 
@@ -227,6 +228,17 @@ watch(selectedAssignee, (currentValue, newValue) => {
   }
 })
 
+// reload table when viewByTypeTrigger is activated
+watch(viewByTypeTrigger, (currentValue, newValue) => {
+  if(currentValue !== newValue) {
+
+    showCompleted.value = false
+    // hide Filter by Assignee dropdown
+    // display Filter by Type dropdown
+    loadItems({ sortBy: [] })
+  }
+})
+
 
 function setMenuItems() {
   let navigationItems = []
@@ -247,6 +259,7 @@ function setMenuItems() {
       { 'label': 'My Work Orders', 'icon': 'mdi-account-box', 'filter_name': 'filterByUser', 'default_class': 'active' },
       { 'label': 'All Work Orders', 'icon': 'mdi-format-list-bulleted', 'filter_name': 'showNonCompleted', 'default_active': '' },
       { 'label': 'Completed', 'icon': 'mdi-playlist-check', 'filter_name': 'showCompleted', 'default_active': '' },
+      { 'label': 'Request View', 'icon': 'mdi-playlist-check', 'filter_name': 'viewByType', 'default_active': '' },
     ]
   }
 
