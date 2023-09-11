@@ -3,7 +3,7 @@
   both root index.vue and /workorders/index.vue utilize it
 -->
 <template>
-  <work-order-system v-if="!loading" :statuses="statuses" :persons="persons"></work-order-system>
+  <work-order-system v-if="!loading" :statuses="statuses" :persons="persons" :tags="tags"></work-order-system>
 </template>
 
 <script setup>
@@ -18,6 +18,7 @@ const { $msal } = useNuxtApp()
 const runtimeConfig = useRuntimeConfig()
 const statuses = ref()
 const persons = ref()
+const tags = ref()
 const loading = inject('displayLoadingMessage')
 const isRecordPage = inject('isRecordPage')
 
@@ -58,6 +59,24 @@ onBeforeMount(async () => {
 
     // sort persons list
     persons.value = persons.value.sort((a, b) => 
+      a.title.localeCompare(b.title))
+
+  } catch (err) {
+    console.log(err)
+  }
+
+  try {
+    const response = await axios.get(`${runtimeConfig.public.API_URL}/tags`)
+      tags.value = response.data.data.map((item) => {
+        return {
+          title: item.name.toUpperCase(),
+          value: item.id
+        }
+      })
+      tags.value.push({'title': '-- None --', 'value': '0'})
+
+    // sort tags list
+    tags.value = tags.value.sort((a, b) => 
       a.title.localeCompare(b.title))
 
   } catch (err) {

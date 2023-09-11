@@ -133,6 +133,7 @@ const showCompleted = ref(false)
 const props = defineProps({
   statuses: Array,
   persons: Array,
+  tags: Array,
 })
 
 const headers = [
