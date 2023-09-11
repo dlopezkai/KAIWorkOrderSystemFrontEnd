@@ -40,7 +40,7 @@
             <v-form ref="form" @submit.prevent="submit" :readonly="readonly">
               <v-row>
                 <v-col cols="12" sm="12" md="12">
-                  <v-text-field v-model="editedItem.name" label="Name" 
+                  <v-text-field v-model="editedItem.name" label="Title" 
                     :rules="[rules.required]"></v-text-field>
                 </v-col>
 

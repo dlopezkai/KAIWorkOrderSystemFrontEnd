@@ -135,7 +135,7 @@ const props = defineProps({
 })
 
 const headers = [
-  { title: 'Name', key: 'name', align: 'start', sortable: false, width: '25%' },
+  { title: 'Title', key: 'title', align: 'start', sortable: false, width: '25%' },
   { title: 'Project', key: 'project', align: 'start', sortable: false },
   { title: 'Created By', key: 'creator', align: 'start', sortable: false },
   { title: 'Assignee(s)', key: 'assignees', align: 'start', sortable: false },
@@ -302,7 +302,7 @@ function loadItems({ sortBy }) {
         due_date: item.due_date,
         id: item.id,
         links: item.links,
-        name: item.name,
+        title: item.name,
         priority: item.priority,
         project: item.project,
         status: item.status,
