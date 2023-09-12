@@ -245,13 +245,15 @@ watch(selectedAssignee, (currentValue, newValue) => {
 // reload table when viewByTypeTrigger is activated
 watch(viewByTypeTrigger, (currentValue, newValue) => {
   if(currentValue !== newValue) {
-    showCompleted.value = false
-    showFilterByAssigneeDropDown.value = false
-    showFilterByTypeDropDown.value = true
-    if(selectedAssignee.value != '0') {
-      selectedAssignee.value = '0' // this will trip the selectedAssignee watcher, and thus, perform loadItems() method again
-    } else {
-      loadItems({ sortBy: [] })
+    if(showFilterByTypeDropDown.value === false) {
+      showCompleted.value = false
+      showFilterByAssigneeDropDown.value = false
+      showFilterByTypeDropDown.value = true
+      if(selectedAssignee.value != '0') {
+        selectedAssignee.value = '0' // this will trip the selectedAssignee watcher, and thus, perform loadItems() method again
+      } else {
+        loadItems({ sortBy: [] })
+      }
     }
   }
 })
