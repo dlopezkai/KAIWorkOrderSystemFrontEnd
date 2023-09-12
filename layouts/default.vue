@@ -168,7 +168,7 @@
     if(window.location.pathname === '/workorders') {
       setTimeout(() => {
         if(!isRecordPage.value) filteringMethod(activeFilter.value)
-      }, "100")
+      }, "150")
     }
   })
 
