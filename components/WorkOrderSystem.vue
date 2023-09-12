@@ -6,7 +6,8 @@
       </v-card>
       <v-card v-else width="100vw">
         <div class="d-flex mb-2">
-          <v-autocomplete v-model="selectedAssignee" hide-details=true label="Filter by Assignee" :items="props.persons" class="pr-10"></v-autocomplete>
+          <v-autocomplete v-if="showFilterByAssigneeDropDown" v-model="selectedAssignee" hide-details=true label="Filter by Assignee" :items="props.persons" class="pr-10"></v-autocomplete>
+          <v-select v-if="showFilterByTypeDropDown" v-model="selectedType" hide-details=true label="Filter by Type" :items="props.tags" class="pr-10"></v-select>
           <v-text-field
             v-model="searchString"
             prepend-icon="mdi-magnify"
@@ -119,6 +120,9 @@ const data = ref([])
 const search = ref('')
 const searchString = ref('')
 const selectedAssignee = ref(userInfoStore.userInfo.id)
+const selectedType = ref('0')
+const showFilterByAssigneeDropDown = ref(true)
+const showFilterByTypeDropDown = ref(false)
 
 // use provide/inject pattern to receive data from layout
 const dialog = inject('dialog')
@@ -126,12 +130,14 @@ const isRecordPage = inject('isRecordPage')
 const filterByUserTrigger = inject('filterByUserTrigger')
 const showNonCompletedTrigger = inject('showNonCompletedTrigger')
 const showCompletedTrigger = inject('showCompletedTrigger')
+const viewByTypeTrigger = inject('viewByTypeTrigger')
 
 const showCompleted = ref(false)
 
 const props = defineProps({
   statuses: Array,
   persons: Array,
+  tags: Array,
 })
 
 const headers = [
@@ -186,6 +192,9 @@ watch(() => route.query, () =>
 // set the showCompleted flag to false
 watch(filterByUserTrigger, (currentValue, newValue) => {
   if(currentValue !== newValue) {
+    showFilterByAssigneeDropDown.value = true
+    showFilterByTypeDropDown.value = false
+    selectedType.value = '0'
     showCompleted.value = false
     selectedAssignee.value = userInfoStore.userInfo.id
   }
@@ -194,7 +203,10 @@ watch(filterByUserTrigger, (currentValue, newValue) => {
 // sets the show complete filter to false, and sets the selected user to '0' if not already set to '0'
 watch(showNonCompletedTrigger, (currentValue, newValue) => {
   if(currentValue !== newValue) {
-    if(showCompleted.value === true || selectedAssignee.value != '0') {
+    if(showCompleted.value === true || selectedAssignee.value != '0' || showFilterByTypeDropDown.value === true) {
+      showFilterByAssigneeDropDown.value = true
+      showFilterByTypeDropDown.value = false
+      selectedType.value = '0'
       showCompleted.value = false
       if(selectedAssignee.value != '0') {
         selectedAssignee.value = '0' // this will trip the selectedAssignee watcher, and thus, perform loadItems() method again
@@ -210,6 +222,9 @@ watch(showNonCompletedTrigger, (currentValue, newValue) => {
 watch(showCompletedTrigger, (currentValue, newValue) => {
   if(currentValue !== newValue) {
     if(showCompleted.value === false || selectedAssignee.value != '0') {
+      showFilterByAssigneeDropDown.value = true
+      showFilterByTypeDropDown.value = false
+      selectedType.value = '0'
       showCompleted.value = true
       if(selectedAssignee.value != '0') {
         selectedAssignee.value = '0' // this will trip the selectedAssignee watcher, and thus, perform loadItems() method again
@@ -224,6 +239,31 @@ watch(showCompletedTrigger, (currentValue, newValue) => {
 watch(selectedAssignee, (currentValue, newValue) => {
   if(currentValue !== newValue) {
     loadItems({ sortBy: [] })
+  }
+})
+
+// reload table when viewByTypeTrigger is activated
+watch(viewByTypeTrigger, (currentValue, newValue) => {
+  if(currentValue !== newValue) {
+    if(showFilterByTypeDropDown.value === false) {
+      showCompleted.value = false
+      showFilterByAssigneeDropDown.value = false
+      showFilterByTypeDropDown.value = true
+      if(selectedAssignee.value != '0') {
+        selectedAssignee.value = '0' // this will trip the selectedAssignee watcher, and thus, perform loadItems() method again
+      } else {
+        loadItems({ sortBy: [] })
+      }
+    }
+  }
+})
+
+// reload table when selectedAssignee data is changed
+watch(selectedType, (currentValue, newValue) => {
+  if(currentValue !== newValue) {
+    if(showFilterByTypeDropDown.value === true) {
+      loadItems({ sortBy: [] })
+    }
   }
 })
 
@@ -247,6 +287,7 @@ function setMenuItems() {
       { 'label': 'My Work Orders', 'icon': 'mdi-account-box', 'filter_name': 'filterByUser', 'default_class': 'active' },
       { 'label': 'All Work Orders', 'icon': 'mdi-format-list-bulleted', 'filter_name': 'showNonCompleted', 'default_active': '' },
       { 'label': 'Completed', 'icon': 'mdi-playlist-check', 'filter_name': 'showCompleted', 'default_active': '' },
+      { 'label': 'Request View', 'icon': 'mdi-playlist-check', 'filter_name': 'viewByType', 'default_active': '' },
     ]
   }
 
@@ -283,6 +324,9 @@ function loadItems({ sortBy }) {
 
     axiosGetRequestURL = axiosGetRequestURL + statusQueryStr
   }
+
+  // filter by tag/type
+  if(selectedType.value !== '0') axiosGetRequestURL = axiosGetRequestURL + `&tag=` + selectedType.value
 
   // set sorting params here
   if(sortBy[0]) {

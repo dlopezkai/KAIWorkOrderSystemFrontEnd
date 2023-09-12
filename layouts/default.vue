@@ -142,6 +142,9 @@
   const showCompletedTrigger = ref(0)
   provide('showCompletedTrigger', showCompletedTrigger)
 
+  const viewByTypeTrigger = ref(0)
+  provide('viewByTypeTrigger', viewByTypeTrigger)
+
   const isRecordPage = ref(false)
   provide('isRecordPage', isRecordPage)
 
@@ -165,7 +168,7 @@
     if(window.location.pathname === '/workorders') {
       setTimeout(() => {
         if(!isRecordPage.value) filteringMethod(activeFilter.value)
-      }, "100")
+      }, "150")
     }
   })
 
@@ -202,6 +205,7 @@
       document.getElementById('filterByUser').classList.add('active')
       document.getElementById('showNonCompleted').classList.remove('active')
       document.getElementById('showCompleted').classList.remove('active')
+      document.getElementById('viewByType').classList.remove('active')
     }
 
     if (filter_name === 'showNonCompleted') {
@@ -210,6 +214,7 @@
       document.getElementById('showNonCompleted').classList.add('active')
       document.getElementById('filterByUser').classList.remove('active')
       document.getElementById('showCompleted').classList.remove('active')
+      document.getElementById('viewByType').classList.remove('active')
     }
 
     if (filter_name === 'showCompleted') {
@@ -218,6 +223,16 @@
       document.getElementById('showCompleted').classList.add('active')
       document.getElementById('filterByUser').classList.remove('active')
       document.getElementById('showNonCompleted').classList.remove('active')
+      document.getElementById('viewByType').classList.remove('active')
+    }
+
+    if (filter_name === 'viewByType') {
+      viewByTypeTrigger.value++
+
+      document.getElementById('viewByType').classList.add('active')
+      document.getElementById('filterByUser').classList.remove('active')
+      document.getElementById('showNonCompleted').classList.remove('active')
+      document.getElementById('showCompleted').classList.remove('active')
     }
   }
 
